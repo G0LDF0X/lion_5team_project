@@ -14,10 +14,17 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "react-bootstrap/Button";
 // import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Filter from "../components/Filter";
+import HomeHeader from "../components/HomeHeader";
+import ProductCarousel from "../components/ProductCarousel";
+import ProductReviews from "../components/ProductReviews";
+import QA from "../components/QA";
+import Creators from "../components/Creators";
+import Board from "../components/Board";
 // import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
@@ -38,13 +45,15 @@ function HomeScreen() {
     return (
       <div>
         {/* {!query && <ProductCarousel />} */}
-        
+        <HomeHeader />
+        <ProductCarousel />
         <Row>
-          <Col md={3}>
+          {/* <Col md={3}>
             <Filter />
-          </Col>
+          </Col> */}
           <Col md={9}>
             <h1>Products</h1>
+          {/* <Button style={{ width: '1px', height: '33px', borderRadius: '100%' }}></Button> */}
             {/* {loading ? (
               <Loading />
             ) : error ? (
@@ -59,6 +68,10 @@ function HomeScreen() {
               </Row>
             )} */}
           </Col>
+          <ProductReviews />
+          <Creators />
+          <Board />
+          <QA />
         </Row>
         <div className="pagination-container">
         {/* <Paginate pages={pages} page={page} keyword={query} /> */}
