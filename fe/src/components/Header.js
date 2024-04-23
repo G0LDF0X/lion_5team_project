@@ -8,7 +8,7 @@ import SearchBox from "./SearchBox";
 
 function Header() {
   return (
-    <Navbar bg="primary">
+    <Navbar >
       <Container fluid>
         <Navbar.Brand href="/">PetPals</Navbar.Brand>
         
@@ -20,7 +20,7 @@ function Header() {
             <Nav.Link href="/">
               <i class="fa-solid fa-dog"></i>Home
             </Nav.Link>
-            <Nav.Link href="/products">
+            <Nav.Link href="/items">
               <i class="fa-solid fa-dog"></i>Products
             </Nav.Link>
             <Nav.Link href="/creators">

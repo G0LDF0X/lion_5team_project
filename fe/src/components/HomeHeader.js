@@ -5,7 +5,8 @@ function HomeHeader() {
   return (
     <div>
       HomeHeaders
-      <Button style={{ width: '20px', height: '20px', borderRadius: '50%' }}></Button>     </div>
+      {/* <Button style={{ width: '20px', height: '20px', borderRadius: '50%' }}></Button>    */}
+        </div>
   )
 }
 
