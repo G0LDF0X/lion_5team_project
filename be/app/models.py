@@ -1,31 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
-class Item(models.Model):
-    seller_id = models.ForeignKey(User, on_delete=models.SET_NULL)
-    category_id = models.ForeignKey(Category, on_delete=models.SET_NULL)
-    # Assuming Tag model is defined elsewhere
-    tag_id = models.ForeignKey(Tag, on_delete=models.SET_NULL, related_name='items', null=True)
+class Seller(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    price = models.IntegerField()
+    phone = models.CharField(max_length=100)
     description = models.TextField()
-    image_url = models.URLField()  # Assuming image URLs are stored as strings
+    number = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    rate = models.FloatField(null=True, blank=True)  # Assuming rate can be null
+class Tag(models.Model):
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='tags')
+    name = models.CharField(max_length=100)
 
-class Item_QnA(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.SET_NULL, )
-    item_id = models.ForeignKey(Item, on_delete=models.SET_NULL)
+
+class Review(models.Model):
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews_made')
     title = models.CharField(max_length=100)
     content = models.TextField()
-    image_url = models.ImageField(null=True, blank=True) # Assuming the image is optional
-    created_at = models.DateTimeField(auto_now_add=True)
-
-class Item_Answer(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.SET_NULL,)
-    item_id = models.ForeignKey(Item, on_delete=models.SET_NULL,)
-    item_qna = models.ForeignKey(Item_QnA, on_delete=models.SET_NULL, )
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    rate = models.FloatField()
+    image_url = models.ImageField()
