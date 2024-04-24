@@ -23,7 +23,7 @@ export const login = (email, password) => async (dispatch) => {
     const response = await fetch("/api/users/login/", {
       method: "POST",
       headers: config.headers,
-      body: JSON.stringify({ username: email, password: password }),
+      body: JSON.stringify({ 'username': email, 'password': password }),
     });
 
     const data = await response.json();

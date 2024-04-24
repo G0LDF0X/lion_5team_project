@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 function ProductReviews({ reviews }) {
     return (
         <Card className="my-3 p-3 rounded">
-            <Link to={`/reviews/${reviews._id}`}> 
-                <Card.Img src={reviews.image} variant="top" />
+            <Link to={`/reviews/${reviews.id}`}> 
+                <Card.Img src={reviews.image_url} variant="top" />
             </Link>
 
             <Card.Body>
-                <Link to={`/reviews/${reviews._id}`}> 
+                <Link to={`/reviews/${reviews.id}`}> 
                     <Card.Title as="div">
                         <strong>{reviews.name}</strong>
                     </Card.Title>
@@ -20,13 +20,13 @@ function ProductReviews({ reviews }) {
                     <div className="my-3">
                         {reviews.rating} 
                         <Rating
-                            value={reviews.rating}
-                            text={`${reviews.numReviews} reviews`}
+                            value={reviews.ratie}
+                            text={`reviews`}
                             color={"#f8e825"}
                         />
                     </div>
                 </Card.Text>
-                <Card.Text as="h3">${reviews.price}</Card.Text>
+                {/* <Card.Text as="h3">${reviews.price}</Card.Text> */}
             </Card.Body>
         </Card>
     );

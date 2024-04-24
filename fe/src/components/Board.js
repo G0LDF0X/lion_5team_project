@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 function Board({ board }) {
     return (
         <Card className="my-3 p-3 rounded">
-            <Link to={`/items/detail/${board._id}`}> 
-                <Card.Img src={board.image} variant="top" />
+            <Link to={`/items/detail/${board.id}`}> 
+                <Card.Img src={board.image_url} variant="top" />
             </Link>
 
             <Card.Body>
-                <Link to={`/board/${board._id}`}> 
+                <Link to={`/board/${board.id}`}> 
                     <Card.Title as="div">
                         <strong>{board.name}</strong>
                     </Card.Title>
@@ -18,15 +18,15 @@ function Board({ board }) {
 
                 <Card.Text as="div">
                     <div className="my-3">
-                        {board.rating} 
+                        {board.like} 
                         <Rating
-                            value={board.rating}
-                            text={`${board.numReviews} reviews`}
+                            value={board.like}
+                            text={"likes"}
                             color={"#f8e825"}
                         />
                     </div>
                 </Card.Text>
-                <Card.Text as="h3">${board.price}</Card.Text>
+                {/* <Card.Text as="h3">${board.price}</Card.Text> */}
             </Card.Body>
         </Card>
     );
