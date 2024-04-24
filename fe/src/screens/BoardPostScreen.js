@@ -1,6 +1,6 @@
 import React from 'react'
 
-function UserProfileScreen() {
+function BoardPostScreen() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function UserProfileScreen() {
   )
 }
 
-export default UserProfileScreen
+export default BoardPostScreen
