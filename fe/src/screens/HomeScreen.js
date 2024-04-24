@@ -9,12 +9,13 @@
 // }
 
 // export default HomeScreen
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
+import {listReviews} from "../actions/reviewActions";
 // import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -29,8 +30,10 @@ import Board from "../components/Board";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
 function HomeScreen() {
-  // const location = useLocation();
-  // const dispatch = useDispatch();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const reviewList = useSelector((state) => state.reviewList);
+  const { loading, error, reviews } = reviewList;
   // const productList = useSelector(state => state.productList);
   // const { loading, error, products, pages } = productList;
   // const params = new URLSearchParams(location.search);
@@ -42,19 +45,19 @@ function HomeScreen() {
   //   dispatch(listProducts(query, page));
   // }
   // , [dispatch, query, page]);
-    return (
-      <div>
-        {/* {!query && <ProductCarousel />} */}
-        <HomeHeader />
-        <ProductCarousel />
-        <Row>
-          {/* <Col md={3}>
+  return (
+    <div>
+      {/* {!query && <ProductCarousel />} */}
+      <HomeHeader />
+      <ProductCarousel />
+      <Row>
+        {/* <Col md={3}>
             <Filter />
           </Col> */}
-          <Col md={9}>
-            <h1>Products</h1>
+        <Col md={9}>
+          <h1>Products</h1>
           {/* <Button style={{ width: '1px', height: '33px', borderRadius: '100%' }}></Button> */}
-            {/* {loading ? (
+          {/* {loading ? (
               <Loading />
             ) : error ? (
               <Message variant={'danger'}>{error}</Message>
@@ -67,19 +70,23 @@ function HomeScreen() {
                 ))}
               </Row>
             )} */}
-          </Col>
-          <ProductReviews />
-          <Creators />
-          <Board />
-          <QA />
+        </Col>
+        <Row>
+          {reviews.map((review) => (
+            <Col key={review._id} sm={12} md={6} lg={4} xl={3}>
+              <Product product={review} />
+            </Col>
+          ))}
         </Row>
-        <div className="pagination-container">
+        <Creators />
+        <Board />
+        <QA />
+      </Row>
+      <div className="pagination-container">
         {/* <Paginate pages={pages} page={page} keyword={query} /> */}
       </div>
-      </div>
-    );
-  
+    </div>
+  );
 }
 
 export default HomeScreen;
-

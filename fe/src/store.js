@@ -9,17 +9,18 @@ import {
 //   productUpdateReducer,
 //   productReviewCreateReducer,
 //   productTopRatedReducer,
-} from "./reducers/ProductReducers";
+} from "./reducers/productReducers";
+import { reviewListReducer } from "./reducers/reviewReducers";
 // import { cartReducer } from "./reducers/cartReducers";
-// import {
-//   userLoginReducer,
-//   userRegisterReducer,
+import {
+  userLoginReducer,
+  userRegisterReducer,
 //   userDetailsReducer,
 //   userUpdateProfileReducer,
 //   userListReducer,
 //   userDeleteReducer,
 //   userUpdateReducer,
-// } from "./reducers/userReducers";
+} from "./reducers/userReducers";
 // import {
 //   orderCreateReducer,
 //   orderDetailsReducer,
@@ -39,8 +40,8 @@ const reducer = combineReducers({
 //   productTopRated : productTopRatedReducer,
   
 //   cart: cartReducer,
-//   userLogin: userLoginReducer,
-//   userRegister: userRegisterReducer,
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
 //   userDetails: userDetailsReducer,
 //   userUpdateProfile: userUpdateProfileReducer,
 //   userList: userListReducer,
@@ -53,15 +54,22 @@ const reducer = combineReducers({
 //   orderListMY: orderListMyReducer,
 //   orderList: orderListReducer,
 //   orderDeliver: orderDeliverReducer,
+
+  reviewList: reviewListReducer,
 });
 
-
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? JSON.parse(localStorage.getItem("shippingAddress"))
+  : {};
 const initialState = {
 //   cart: {
 //     cartItems: cartItemsFromStorage,
 //     shippingAddress: shippingAddressFromStorage,
 //   },
-//   userLogin: { userInfo: userInfoFromStorage },
+  userLogin: { userInfo: userInfoFromStorage },
 };
 
 const middleware = [thunk];
