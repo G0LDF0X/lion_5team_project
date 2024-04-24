@@ -32,7 +32,7 @@ function Header() {
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link> */}
-            <Card className="ms-auto me-5 bg-primary">
+            <Card className="ms-auto me-5 bg-info">
           <Nav className="ms-auto me-5">
             <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">

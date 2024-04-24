@@ -8,7 +8,7 @@ BOARD_DETAILS_SUCCESS,
 BOARD_DETAILS_FAIL,
 } from "../constants/boardConstants";
 
-export const listBoard = () => async (dispatch) => {
+export const listBoards = () => async (dispatch) => {
 try {
     dispatch({ type: BOARD_LIST_REQUEST });
 
