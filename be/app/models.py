@@ -27,3 +27,4 @@ class User_QnA(models.Model):
     content = models.TextField('content', blank=True) 
     image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
+sdf
