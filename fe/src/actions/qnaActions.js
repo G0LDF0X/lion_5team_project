@@ -1,0 +1,53 @@
+import {
+    QNA_LIST_REQUEST,
+    QNA_LIST_SUCCESS,
+    QNA_LIST_FAIL,
+
+    QNA_DETAILS_REQUEST,
+    QNA_DETAILS_SUCCESS,
+    QNA_DETAILS_FAIL,
+} from "../constants/qnaConstants";
+
+
+export const listQNA = () => async (dispatch) => {
+    try {
+        dispatch({ type: QNA_LIST_REQUEST });
+
+        const { data } = await axios.get(`/api/qna`);
+
+        dispatch({
+            type: QNA_LIST_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: QNA_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+export const listQNADetails = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: QNA_DETAILS_REQUEST });
+
+        const { data } = await axios.get(`/api/qna/${id}`);
+
+        dispatch({
+            type: QNA_DETAILS_SUCCESS,
+            payload: data,
+        });
+    }
+    catch (error) {
+        dispatch({
+            type: QNA_DETAILS_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}

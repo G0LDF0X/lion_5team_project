@@ -3,23 +3,26 @@ import { thunk } from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
   productListReducer,
-//   productDetailsReducer,
-//   productDeleteReducer,
-//   productCreateReducer,
-//   productUpdateReducer,
-//   productReviewCreateReducer,
-//   productTopRatedReducer,
+  productDetailsReducer,
+  //   productDeleteReducer,
+  //   productCreateReducer,
+  //   productUpdateReducer,
+  //   productReviewCreateReducer,
+  //   productTopRatedReducer,
 } from "./reducers/productReducers";
-import { reviewListReducer } from "./reducers/reviewReducers";
+import {
+  reviewListReducer,
+  reviewDetailsReducer,
+} from "./reducers/reviewReducers";
 // import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
-//   userDetailsReducer,
-//   userUpdateProfileReducer,
-//   userListReducer,
-//   userDeleteReducer,
-//   userUpdateReducer,
+  //   userDetailsReducer,
+  //   userUpdateProfileReducer,
+  //   userListReducer,
+  //   userDeleteReducer,
+  //   userUpdateReducer,
 } from "./reducers/userReducers";
 // import {
 //   orderCreateReducer,
@@ -30,32 +33,43 @@ import {
 //   orderDeliverReducer,
 // } from "./reducers/OrderReducers";
 
+import {
+  qnaListReducer,
+  qnaDetailsReducer,
+} from "./reducers/qnaReducers";
+
 const reducer = combineReducers({
   productList: productListReducer,
-//   productDetails: productDetailsReducer,
-//   productUpdate: productUpdateReducer,
-//   productDelete: productDeleteReducer,
-//   productCreate: productCreateReducer,
-//   productReviewCreate: productReviewCreateReducer, 
-//   productTopRated : productTopRatedReducer,
-  
-//   cart: cartReducer,
+  productDetails: productDetailsReducer,
+  //   productUpdate: productUpdateReducer,
+  //   productDelete: productDeleteReducer,
+  //   productCreate: productCreateReducer,
+  //   productReviewCreate: productReviewCreateReducer,
+  //   productTopRated : productTopRatedReducer,
+
+  //   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-//   userDetails: userDetailsReducer,
-//   userUpdateProfile: userUpdateProfileReducer,
-//   userList: userListReducer,
-//   userDelete: userDeleteReducer,
-//   userUpdate: userUpdateReducer,
+  //   userDetails: userDetailsReducer,
+  //   userUpdateProfile: userUpdateProfileReducer,
+  //   userList: userListReducer,
+  //   userDelete: userDeleteReducer,
+  //   userUpdate: userUpdateReducer,
 
-//   orderCreate: orderCreateReducer,
-//   orderDetails: orderDetailsReducer,
-//   orderPay: orderPayReducer,
-//   orderListMY: orderListMyReducer,
-//   orderList: orderListReducer,
-//   orderDeliver: orderDeliverReducer,
+  //   orderCreate: orderCreateReducer,
+  //   orderDetails: orderDetailsReducer,
+  //   orderPay: orderPayReducer,
+  //   orderListMY: orderListMyReducer,
+  //   orderList: orderListReducer,
+  //   orderDeliver: orderDeliverReducer,
 
   reviewList: reviewListReducer,
+  reviewDetail: reviewDetailsReducer,
+
+
+
+  qnaList: qnaListReducer,
+  qnaDetails: qnaDetailsReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
@@ -65,10 +79,10 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 const initialState = {
-//   cart: {
-//     cartItems: cartItemsFromStorage,
-//     shippingAddress: shippingAddressFromStorage,
-//   },
+  //   cart: {
+  //     cartItems: cartItemsFromStorage,
+  //     shippingAddress: shippingAddressFromStorage,
+  //   },
   userLogin: { userInfo: userInfoFromStorage },
 };
 
