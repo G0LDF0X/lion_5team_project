@@ -14,7 +14,7 @@ import {
   reviewListReducer,
   reviewDetailsReducer,
 } from "./reducers/reviewReducers";
-// import { cartReducer } from "./reducers/cartReducers";
+import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -24,14 +24,14 @@ import {
   //   userDeleteReducer,
   //   userUpdateReducer,
 } from "./reducers/userReducers";
-// import {
-//   orderCreateReducer,
-//   orderDetailsReducer,
+import {
+  orderCreateReducer,
+  orderDetailsReducer,
 //   orderPayReducer,
 //   orderListMyReducer,
 //   orderListReducer,
 //   orderDeliverReducer,
-// } from "./reducers/OrderReducers";
+} from "./reducers/orderReducers";
 
 import {
   qnaListReducer,
@@ -52,7 +52,7 @@ const reducer = combineReducers({
   //   productReviewCreate: productReviewCreateReducer,
   //   productTopRated : productTopRatedReducer,
 
-  //   cart: cartReducer,
+    cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   //   userDetails: userDetailsReducer,
@@ -61,8 +61,8 @@ const reducer = combineReducers({
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
 
-  //   orderCreate: orderCreateReducer,
-  //   orderDetails: orderDetailsReducer,
+    orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
   //   orderListMY: orderListMyReducer,
   //   orderList: orderListReducer,
