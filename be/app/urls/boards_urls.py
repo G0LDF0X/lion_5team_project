@@ -4,7 +4,7 @@ from app.views.boards_views import get_Boards, get_Board, get_TopBoards, create_
 
 urlpatterns = [
     path('', get_Boards, name='board_index'),   #
-    path('<str:pk>/', get_Board, name='board_detail'),  #
+    path('detail/<str:pk>/', get_Board, name='board_detail'),  #
     path('top/', get_TopBoards, name='board_top'),  #
 
 
