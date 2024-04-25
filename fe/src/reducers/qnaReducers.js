@@ -6,6 +6,11 @@ import {
     QNA_DETAILS_REQUEST,
     QNA_DETAILS_SUCCESS,
     QNA_DETAILS_FAIL,
+
+    QNA_CREATE_REQUEST,
+    QNA_CREATE_SUCCESS,
+    QNA_CREATE_FAIL,
+    QNA_CREATE_RESET,
 } from "../constants/qnaConstants";
 
 
@@ -35,6 +40,21 @@ export const qnaDetailsReducer = (state = { qna: {} }, action) => {
             return { loading: false, qna: action.payload };
         case QNA_DETAILS_FAIL:
             return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const qnaCreateReducer = (state = {}, action) => {
+    switch (action.type) {
+        case QNA_CREATE_REQUEST:
+            return { loading: true };
+        case QNA_CREATE_SUCCESS:
+            return { loading: false, success: true, qna: action.payload };
+        case QNA_CREATE_FAIL:
+            return { loading: false, error: action.payload };
+        case QNA_CREATE_RESET:
+            return {};
         default:
             return state;
     }

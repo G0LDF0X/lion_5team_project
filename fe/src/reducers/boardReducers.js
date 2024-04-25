@@ -5,6 +5,10 @@ import {
     BOARD_DETAILS_REQUEST,
     BOARD_DETAILS_SUCCESS,
     BOARD_DETAILS_FAIL,
+    BOARD_CREATE_REQUEST,
+    BOARD_CREATE_SUCCESS,
+    BOARD_CREATE_FAIL,
+    BOARD_CREATE_RESET,
 } from '../constants/boardConstants';
 
 
@@ -34,6 +38,21 @@ export const boardDetailsReducer = (state = { board: { reviews: [] } }, action) 
             return { loading: false, board: action.payload };
         case BOARD_DETAILS_FAIL:
             return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+export const boardCreateReducer = (state = {}, action) => {
+    switch (action.type) {
+        case BOARD_CREATE_REQUEST:
+            return { loading: true };
+        case BOARD_CREATE_SUCCESS:
+            return { loading: false, success: true, board: action.payload };
+        case BOARD_CREATE_FAIL:
+            return { loading: false, error: action.payload };
+        case BOARD_CREATE_RESET:
+            return {};
         default:
             return state;
     }
