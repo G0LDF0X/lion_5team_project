@@ -2,34 +2,34 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
-function Product({ product }) {
+function Review({ review }) {
     return (
         <Card className="my-3 p-3 rounded">
-            <Link to={`/items/detail/${product.id}`}> 
-                <Card.Img src={product.image_url} variant="top" />
+            <Link to={`/items/detail/${review._id}`}> 
+                <Card.Img src={review.image} variant="top" />
             </Link>
 
             <Card.Body>
-                <Link to={`/product/${product.id}`}> 
+                <Link to={`/review/${review._id}`}> 
                     <Card.Title as="div">
-                        <strong>{product.name}</strong>
+                        <strong>{review.name}</strong>
                     </Card.Title>
                 </Link>
 
                 <Card.Text as="div">
                     <div className="my-3">
-                        {product.rate} 
+                        {review.rating} 
                         <Rating
-                            value={product.rate}
-                            text={` reviews`}
+                            value={review.rating}
+                            text={`${review.numReviews} reviews`}
                             color={"#f8e825"}
                         />
                     </div>
                 </Card.Text>
-                <Card.Text as="h3">${product.price}</Card.Text>
+                <Card.Text as="h3">${review.price}</Card.Text>
             </Card.Body>
         </Card>
     );
 }
 
-export default Product;
+export default Review;

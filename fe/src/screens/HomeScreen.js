@@ -1,21 +1,17 @@
-// import React from 'react'
 
-// function HomeScreen() {
-//   return (
-//     <div>
-//       Hello World
-//     </div>
-//   )
-// }
-
-// export default HomeScreen
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
+import Review from "../components/Review";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-// import { listProducts } from "../actions/productActions";
+import {listReviews} from "../actions/reviewActions";
+import { listProducts } from "../actions/productActions";
+import { listBoards } from "../actions/boardActions";
+import { listQNA } from "../actions/qnaActions";
+// import { listCreators } from "../actions/creatorActions";
+
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Filter from "../components/Filter";
@@ -29,35 +25,52 @@ import Board from "../components/Board";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
 function HomeScreen() {
-  // const location = useLocation();
-  // const dispatch = useDispatch();
-  // const productList = useSelector(state => state.productList);
-  // const { loading, error, products, pages } = productList;
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const reviewList = useSelector((state) => state.reviewList);
+  const { loading:reviewLoading, error:reviewError, reviews } = reviewList;
+  
+  const productList = useSelector(state => state.productList);
+  const { loading: productLoading, error: productError, products, pages } = productList;
+
+  const boardList = useSelector(state => state.boardList);
+  const { loading: boardLoading, error: boardError, boards } = boardList;
+
+  const qnaList = useSelector(state => state.qnaList);
+  const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
+
+  // const creatorList = useSelector(state => state.creatorList);
+  // const { loading: creatorLoading, error: creatorError, creators } = creatorList;
   // const params = new URLSearchParams(location.search);
   // const query = params.get('query') || '';
   // const page = params.get('page') || 1;
-  // useEffect(() => {
+  useEffect(() => {
   //   console.log("query:",query);
   //   console.log("page:",page);
   //   dispatch(listProducts(query, page));
   // }
-  // , [dispatch, query, page]);
-    return (
-      <div>
-        {/* {!query && <ProductCarousel />} */}
-        <HomeHeader />
-        <ProductCarousel />
-        <Row>
-          {/* <Col md={3}>
+  dispatch(listProducts());
+  dispatch(listReviews());
+  dispatch(listBoards());
+  dispatch(listQNA());
+  // dispatch(listCreators());
+  }
+  , [dispatch, location]);
+  return (
+    <div>
+      {/* {!query && <ProductCarousel />} */}
+      <HomeHeader />
+      <ProductCarousel />
+      <Row>
+        {/* <Col md={3}>
             <Filter />
           </Col> */}
-          <Col md={9}>
-            <h1>Products</h1>
-          {/* <Button style={{ width: '1px', height: '33px', borderRadius: '100%' }}></Button> */}
-            {/* {loading ? (
+        <Col md={9}>
+          <h1>Products</h1>
+          {productLoading ? (
               <Loading />
-            ) : error ? (
-              <Message variant={'danger'}>{error}</Message>
+            ) : productError ? (
+              <Message variant={'danger'}>{productError}</Message>
             ) : (
               <Row>
                 {products.map((product) => (
@@ -66,20 +79,79 @@ function HomeScreen() {
                   </Col>
                 ))}
               </Row>
-            )} */}
-          </Col>
-          <ProductReviews />
-          <Creators />
-          <Board />
-          <QA />
-        </Row>
-        <div className="pagination-container">
+            )}
+        </Col>
+        <Col md={9}>
+          <h1>Reviews</h1>
+          {reviewLoading ? (
+            <Loading />
+          ) : reviewError ? (
+            <Message variant={"danger"}>{reviewError}</Message>
+          ) : (
+            <Row>
+              {reviews.map((review) => (
+                <Col key={review._id} sm={12} md={6} lg={4} xl={3}>
+                  <ProductReviews reviews={review} />
+                </Col>
+              ))}
+            </Row>
+          )}
+        
+        </Col>  
+        {/* <Col md={9}>
+          <h1>Creators</h1>
+          {creatorLoading ? (
+            <Loading />
+          ) : creatorError ? (
+            <Message variant={"danger"}>{creatorError}</Message>
+          ) : (
+            <Row>
+              {creators.map((creator) => (
+                <Col key={creator._id} sm={12} md={6} lg={4} xl={3}>
+                  <Creators creator={creator} />
+                </Col>
+              ))}
+            </Row>
+          )}
+        </Col> */}
+        <Col md={9}>
+          <h1>Boards</h1>
+          {boardLoading ? (
+            <Loading />
+          ) : boardError ? (
+            <Message variant={"danger"}>{boardError}</Message>
+          ) : (
+            <Row>
+              {boards.map((board) => (
+                <Col key={board._id} sm={12} md={6} lg={4} xl={3}>
+                  <Board board={board} />
+                </Col>
+              ))}
+            </Row>
+          )}
+        </Col>
+        <Col md={9}>  
+          <h1>Q&A</h1>
+          {qnaLoading ? (
+            <Loading />
+          ) : qnaError ? (
+            <Message variant={"danger"}>{qnaError}</Message>
+          ) : (
+            <Row>
+              {qnas.map((qna) => (
+                <Col key={qna._id} sm={12} md={6} lg={4} xl={3}>
+                  <QA qna={qna} />
+                </Col>
+              ))}
+            </Row>
+          )}
+        </Col>
+      </Row>
+      <div className="pagination-container">
         {/* <Paginate pages={pages} page={page} keyword={query} /> */}
       </div>
-      </div>
-    );
-  
+    </div>
+  );
 }
 
 export default HomeScreen;
-

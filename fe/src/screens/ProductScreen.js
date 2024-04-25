@@ -3,7 +3,7 @@ import { Row, Col, Image, ListGroup, Button, Card, Form} from "react-bootstrap";
 import { Link, useParams, useNavigate} from "react-router-dom";
 import Rating from "../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
-// import { listProductDetails, createProductReview } from "../actions/productActions";
+import { listProductDetails, createProductReview } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 // import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
@@ -145,7 +145,7 @@ function Productcreen() {
                   <p>{review.comment}</p>
                 </ListGroup.Item>
               ))}
-              <ListGroup.Item>
+              {/* <ListGroup.Item>
                 <h2>Write a Customer Review</h2>
                 {errorProductReview && <Message variant="danger">{errorProductReview}</Message>}
                 {loadingProductRiview && <Loading />}
@@ -174,7 +174,7 @@ function Productcreen() {
                     <Button type="submit" variant="primary" disabled={loadingProductRiview} >Submit</Button>
                   </Form>
                 ) : <Message>Please <Link to="/login">Sign In</Link> to write a review</Message>}
-              </ListGroup.Item>
+              </ListGroup.Item> */}
             </ListGroup>
           </Col>
         </Row>
