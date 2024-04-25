@@ -12,7 +12,7 @@ export const listBoards = () => async (dispatch) => {
 try {
     dispatch({ type: BOARD_LIST_REQUEST });
 
-    const response = await fetch("/api/boards");
+    const response = await fetch("/board");
     const data = await response.json();
 
     dispatch({
@@ -34,7 +34,7 @@ export const listBoardDetails = (id) => async (dispatch) => {
 try {
     dispatch({ type: BOARD_DETAILS_REQUEST });
 
-    const response = await fetch(`/api/boards/${id}`);
+    const response = await fetch(`board/${id}`);
     const data = await response.json();
 
     dispatch({

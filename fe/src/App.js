@@ -30,6 +30,7 @@ import QADetailScreen from './screens/QADetailScreen';
 import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ProductScreen from './screens/ProductScreen';
 function App() {
   return (
     <Router>
@@ -40,7 +41,7 @@ function App() {
           <Routes>
             <Route path='' element={<HomeScreen/>} />
             <Route path='/items' element={<ProductsScreen/>} />
-            <Route path='/items/detail/:id' element={<ProductsScreen/>} />
+            <Route path='/items/detail/:id' element={<ProductScreen/>} />
             <Route path='/cart' element={<CartScreen/>} />
 
             <Route path='/order/:id' element={<PaymentScreen/>} />

@@ -87,6 +87,7 @@ class User_QnA(models.Model):
     content = models.TextField('content', blank=True) 
     image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
+    updated_at = models.DateTimeField('updated_at', auto_now=True)
 
 class User_Answer(models.Model):
     user_id=models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -95,6 +96,7 @@ class User_Answer(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at= models.DateTimeField(auto_now_add=True)
+    updated_at= models.DateTimeField(auto_now=True)
 
 class Shipping_Address(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.DO_NOTHING)

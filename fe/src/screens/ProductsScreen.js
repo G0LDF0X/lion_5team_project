@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 // import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-// import Filter from "../components/Filter";
+import ProductFilter from "../components/ProductFilter";
+import ProductHeader from "../components/ProductHeader";
 // import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
@@ -18,14 +19,21 @@ function ProductsScreen() {
   const dispatch = useDispatch();
   const productList = useSelector(state => state.productList);
   const { loading, error, products, pages } = productList;
+  const params = new URLSearchParams(location.search);
+  const query = params.get('q');
+  const page = params.get('page') || 1;
+  const category = params.get('category');
+  const tag = params.get('tag');
   return (
     <div>
+        {/* <ProductHeader /> */}
        <Row>
           <Col md={3}>
-            {/* <Filter /> */}
+
+            {/* <ProductFilter /> */}
           </Col>
           <Col md={9}>
-            <h1>Latest Products</h1>
+            {/* <h1>Latest Products</h1> */}
             {loading ? (
               <Loading />
             ) : error ? (
