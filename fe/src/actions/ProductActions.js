@@ -13,7 +13,7 @@ import {
  export const listProducts = (query = '', page='') => async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
-      const res = await fetch(`/api/products?query=${query}&page=${page}`);
+      const res = await fetch(`/items?query=${query}&page=${page}`);
       const data = await res.json();
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
@@ -29,7 +29,7 @@ import {
 export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
-    const res = await fetch(`/api/products/${id}`);
+    const res = await fetch(`/items/${id}`);
     const data = await res.json();
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
