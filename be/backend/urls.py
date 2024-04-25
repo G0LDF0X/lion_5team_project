@@ -14,8 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
+# from app.views.users_views import LoginView, LogoutView, UserView, RegisterView
+# from django.contrib.auth import views as auth_views
+
+"""사용자가 로그인하기 위해 아이디와 비밀번호에 입력한 데이터를
+해당 url에 POST메서드로 body에 전달해서 보내면
+아이디와 비밀번호에 맞는 유저가 존재하면 access토큰과 refresh토큰을 응답메시지에 넣어 보내줍니다."""
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('app/', include('app.urls.users_urls'))
+
 ]
