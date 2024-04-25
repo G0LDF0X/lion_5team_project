@@ -97,13 +97,13 @@ function Header() {
           <Card className="ms-auto me-5 bg-info">
             <Nav className="ms-auto me-5">
               <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
-                <NavDropdown.Item href="#action3">
+                <NavDropdown.Item href="/editor">
                   <i class="fa-regular fa-image"></i>사진/영상올리기
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action4">
+                <NavDropdown.Item href="/editor">
                   집들이 글쓰기
                 </NavDropdown.Item>
-                <NavDropdown.Item href="#action5">
+                <NavDropdown.Item href="/editor">
                   노하우 글쓰기
                 </NavDropdown.Item>
               </NavDropdown>
