@@ -7,7 +7,13 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from rest_framework_simplejwt.serializers import TokenObtainPair
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from .models import User
+from rest_framework.views import APIView
+from .models import User
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -15,16 +21,19 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add custom claims
         token['username'] = user.username
+        token['id'] = user.id
         token['email'] = user.email
 
         return token
     
 class RegisterSerializer(serializers.ModelSerializer):
+    nickname = serializers.CharField(max_length=20)
+    
     email = serializers.EmailField(
             required=True,
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
-    username = serializers.CharField(
+    name = serializers.CharField(
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
     id = serializers.IntegerField(read_only=True)
@@ -33,21 +42,19 @@ class RegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
     
     phone = serializers.CharField(max_length=11)
+
     address = serializers.CharField(max_length=100)
 
-    nickname = serializers.CharField(max_length=20)
-    desription = serializers.CharField(max_length=100, blank=True)
+    description = serializers.CharField(max_length=100, required=False)
 
-    image = serializers.ImageField(blank=True)
+    image = serializers.ImageField()
 
 
     class Meta:
         model = User
-        fields = ('username', 'id', 'password', 'password2', 'email', 'phone', 'address', 'nickname', 'description', 'image')
-        extra_kwargs = {
-            'password': {'write_only': True},
-        }
-    
+        fields = ('name', 'nickname','id', 'password', 'password2', 'email', 'phone', 'address', 'description', 'image')
+
+    # 비밀번호 확인
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "비밀번호가 일치하지 않습니다."})
@@ -55,9 +62,13 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         user = User.objects.create(
-                username=validated_data['username'],
+                name=validated_data['name'],
                 email=validated_data['email']
                 )
         user.set_password(validated_data['password'])
         user.save()
         return user
+    
+
+
+
