@@ -65,7 +65,7 @@ function HomeScreen() {
         {/* <Col md={3}>
             <Filter />
           </Col> */}
-        <Col md={9}>
+        {/* <Col md={9}>
           <h1>Products</h1>
           {productLoading ? (
               <Loading />
@@ -80,7 +80,7 @@ function HomeScreen() {
                 ))}
               </Row>
             )}
-        </Col>
+        </Col> */}
         <Col md={9}>
           <h1>Reviews</h1>
           {reviewLoading ? (

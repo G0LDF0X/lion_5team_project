@@ -29,6 +29,7 @@ import QACreateScreen from './screens/QACreateScreen';
 import QADetailScreen from './screens/QADetailScreen';
 import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 function App() {
   return (
     <Router>
@@ -45,8 +46,9 @@ function App() {
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />
 
-            <Route path='/login/' element = {<LoginScreen/>} />
-            <Route path='/users/bookmark/' element={<BookmarkScreen/>} />
+            <Route path='/login' element = {<LoginScreen/>} />
+            <Route path='/register' element = {<RegisterScreen/>} />
+            <Route path='/users/bookmark' element={<BookmarkScreen/>} />
             <Route path='/users/profile' element={<UserProfileScreen/>} />
             <Route path='/users/myshopping'element={<MyShoppingScreen/>} />
             <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
