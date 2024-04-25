@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User as auth_user
 
 # Create your models here.
-
-
 class User(models.Model):
     user_id = models.ForeignKey(auth_user, on_delete=models.CASCADE)
     name = models.CharField('name', max_length=100)
@@ -87,7 +85,6 @@ class User_QnA(models.Model):
     content = models.TextField('content', blank=True) 
     image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
-    updated_at = models.DateTimeField('updated_at', auto_now=True)
 
 class User_Answer(models.Model):
     user_id=models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -96,7 +93,6 @@ class User_Answer(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at= models.DateTimeField(auto_now_add=True)
-    updated_at= models.DateTimeField(auto_now=True)
 
 class Shipping_Address(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
@@ -114,8 +110,8 @@ class Follow(models.Model):
 
 class Item_QnA(models.Model):
     # 외래키
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
@@ -124,9 +120,9 @@ class Item_QnA(models.Model):
 
 class Item_Answer(models.Model):
     # 외래키
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
-    item_qna = models.ForeignKey(Item_QnA, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item_qna_id = models.ForeignKey(Item_QnA, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
@@ -137,17 +133,17 @@ class Board(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     product_url = models.CharField(max_length=200)
-    tile = models.CharField(max_length=100)
-    content = models.TextField()
+    title = models.CharField(max_length=100)
+    content = models.TextField(blank=True)
     image_url = models.ImageField()
-    show = models.IntegerField(default="0")
-    like = models.IntegerField(default="0")
+    show = models.IntegerField(default=0)
+    like = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Reply(models.Model):
     # 외래키
     board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     
     content = models.TextField()
     replied_id = models.IntegerField()
@@ -159,4 +155,3 @@ class Bookmark(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
