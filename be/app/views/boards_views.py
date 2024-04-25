@@ -3,35 +3,13 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from app.models import Board
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import BoardSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(['GET'])
 def get_Boards(request):
-    # query = request.GET.get('query')
-    # print('query=', query)
-    # if query == None:
-    #     query = ''
-    # boards = Board.objects.filter(name__icontains=query)
-    # page = request.GET.get('page', 1)
-    # try:
-    #     page = int(page)
-    # except:
-    #     page = 1
-    # paginator = Paginator(boards, 10)
-    # print("pages=", paginator.num_pages)
-    # try:
-    #     boards = paginator.page(page)
-    # except PageNotAnInteger:
-    #     boards = paginator.page(1)
-    # except EmptyPage:
-    #     boards = paginator.page(paginator.num_pages)
-
-    # if page == None:
-    #     page = 1
     boards = Board.objects.all()
-    # page = int(page)
 
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
@@ -84,3 +62,29 @@ def update_Board(request, pk):
     board.save()
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
+
+
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def delete_Board(request, pk):
+    board = Board.objects.get(_id=pk)
+    board.delete()
+    return Response('Board Deleted')
+
+
+
+
+
+@api_view(['POST'])
+def upload_Board(response, request):
+    data = response.data
+    
+    board_id = data['board_id']
+    board = Board.objects.get(_id=board_id)
+
+    board.image = request.FILES.get('image')
+    board.save()
+
+    return Response('board was uploaded')

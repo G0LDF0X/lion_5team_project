@@ -135,7 +135,7 @@ class Board(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     product_url = models.CharField(max_length=200)
-    tile = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
     content = models.TextField()
     image_url = models.ImageField()
     show = models.IntegerField(default="0")
