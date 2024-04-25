@@ -14,7 +14,7 @@ export const listQNA = () => async (dispatch) => {
 try {
     dispatch({ type: QNA_LIST_REQUEST });
 
-    const response = await fetch(`/api/qna`);
+    const response = await fetch(`/qna`);
     const data = await response.json();
 
     dispatch({
@@ -36,7 +36,7 @@ export const listQNADetails = (id) => async (dispatch) => {
 try {
     dispatch({ type: QNA_DETAILS_REQUEST });
 
-    const response = await fetch(`/api/qna/${id}`);
+    const response = await fetch(`/qna//detail/${id}`);
     const data = await response.json();
 
     dispatch({
