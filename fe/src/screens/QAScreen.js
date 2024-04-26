@@ -1,15 +1,15 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, Col, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { listqnas } from '../actions/qnaActions'
+import { listQNA } from '../actions/qnaActions'
 
 function QAScreen() {
   const dispatch = useDispatch()
   const qnaList = useSelector(state => state.qnaList)
   const { loading, error, qnas } = qnaList
 useEffect(() => {
-  dispatch(listqnas())
+  dispatch(listQNA())
 }
 , [dispatch]);
 

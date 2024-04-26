@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Card, Col, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,3 +27,4 @@ useEffect(() => {
     </div>
   )
 }
+export default BoardScreen
