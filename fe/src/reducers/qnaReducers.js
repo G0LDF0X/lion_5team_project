@@ -21,9 +21,7 @@ export const qnaListReducer = (state = { qnas: [] }, action) => {
         case QNA_LIST_SUCCESS:
             return {
                 loading: false,
-                qnas: action.payload.qnas,
-                page: action.payload.page,
-                pages: action.payload.pages,
+                qnas: action.payload,
             };
         case QNA_LIST_FAIL:
             return { loading: false, error: action.payload };
