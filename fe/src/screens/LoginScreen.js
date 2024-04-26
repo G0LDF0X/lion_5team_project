@@ -69,7 +69,7 @@ function LoginScreen() {
       {loading && <Loading />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="id">
-          <Form.Label>id Address</Form.Label>
+          <Form.Label>ID</Form.Label>
           <Form.Control
             type="id"
             placeholder="Enter id"
