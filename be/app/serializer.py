@@ -50,7 +50,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.username
     
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
@@ -74,7 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
     isseller = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = User
+        model = auth_user
         fields = '__all__'
     
     def get_username(self, obj):
@@ -114,8 +114,13 @@ class RegisterSerializer(serializers.ModelSerializer):
     # password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
+<<<<<<< HEAD
         model = User
         fields = ('username', 'password')
+=======
+        model = auth_user
+        fields = ('username', 'email', 'password', 'password2')
+>>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2
 
     def validate(self, attrs):
         # if attrs['password'] != attrs['password2']:
@@ -125,11 +130,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
-            username=validated_data['username']
+        user = auth_user.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email']
         )
 
         user.set_password(validated_data['password'])
         user.save()
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2
         return user

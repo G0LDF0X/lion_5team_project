@@ -63,7 +63,7 @@ export const logout = () => (dispatch) => {
 }
 
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (name, email, password, confirmPassword) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST,
@@ -80,7 +80,11 @@ export const register = (name, email, password) => async (dispatch) => {
             {
                 method: "POST",
                 headers: config.headers,
+<<<<<<< HEAD
                 body: JSON.stringify({ 'username':name, 'password':password }),
+=======
+                body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'password2':confirmPassword }),
+>>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2
             }
         );
 
@@ -104,7 +108,7 @@ export const register = (name, email, password) => async (dispatch) => {
                 payload:
                     data && data.message ? data.message : "Registration failed",
             });
-        }
+        } 
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
