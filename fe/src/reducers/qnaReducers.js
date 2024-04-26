@@ -35,7 +35,7 @@ export const qnaDetailsReducer = (state = { qna: {} }, action) => {
         case QNA_DETAILS_REQUEST:
             return { loading: true, ...state };
         case QNA_DETAILS_SUCCESS:
-            return { loading: false, qna: action.payload };
+            return { loading: false, qna: action.payload.question , answers: action.payload.answers};
         case QNA_DETAILS_FAIL:
             return { loading: false, error: action.payload };
         default:

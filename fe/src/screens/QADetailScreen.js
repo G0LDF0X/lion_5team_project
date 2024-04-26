@@ -14,7 +14,7 @@ function QADetailSceen() {
   const navigate = useNavigate();
   const { id } = useParams();
   const qnaDetails = useSelector((state) => state.qnaDetails);
-  const { loading, error, qna } = qnaDetails;
+  const { loading, error, qna, answers } = qnaDetails;
 
 
 
@@ -34,17 +34,33 @@ function QADetailSceen() {
          : (
          <div><Row>
           
-          <Col md={3}>
-            <Card className="my-3 p-3 rounded">
+          <Col md={12}>
             <ListGroup variant="flush">
+              <Card className='my-3 p-3 rounded'>
+
               <ListGroup.Item>
                 <h3>{qna.title}</h3>
-                <h3>{qna.content}</h3>
               </ListGroup.Item>
-              
+              <Card className="my-3 p-3">
+                <h3>{qna.content}</h3>
+                </Card>
+              </Card>
+              <Card className='my-3 p-3 rounded'>
+              <ListGroup.Item>
+                <h3>Answers</h3>
+                {/* {answers.map((answer) => (
+                  <ListGroup.Item key={answer._id}>
+                    <strong>{answer.name}</strong>
+                    <Rating value={answer.rating} />
+                    <p>{answer.createdAt.substring(0, 10)}</p>
+                    <p>{answer.comment}</p>
+                  </ListGroup.Item>
+                ))} */}
+
+              </ListGroup.Item>
+              </Card>
              
             </ListGroup>
-              </Card>  
           </Col>
         </Row>
         
