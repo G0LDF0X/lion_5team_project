@@ -57,7 +57,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-<<<<<<< Updated upstream
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
@@ -108,7 +108,7 @@ class UserSerializer(serializers.ModelSerializer):
     #     user.save()
 
     #     return user
-=======
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     def get_token(cls, user):
         token = super().get_token(user)
@@ -116,7 +116,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
         token['username'] = user.username
         token['email'] = user.email
         return token
->>>>>>> Stashed changes
+
 
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
