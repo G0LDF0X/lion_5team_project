@@ -27,7 +27,7 @@ useEffect(() => {
             {qnas.map((qna) => (
               <Col key={qna.id} sm={12} md={6} lg={4} xl={3}>
                 <Card className='my-3 p-3 rounded'>
-                  <Link to={`/qna/${qna.id}`}>
+                  <Link to={`/qna/detail/${qna.id}`}>
                     <Card.Title as='div'>
                       <strong>{qna.title}</strong>
                     </Card.Title>
