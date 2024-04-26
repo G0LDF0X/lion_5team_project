@@ -42,7 +42,7 @@ export const listQNADetails = (id) => async (dispatch) => {
 
     dispatch({
       type: QNA_DETAILS_SUCCESS,
-      payload: data.question,
+      payload: data,
     });
   } catch (error) {
     dispatch({
