@@ -13,10 +13,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+# @api_view(['post'])
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+
+   
 
 
 @api_view(['GET'])
