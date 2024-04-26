@@ -16,7 +16,7 @@ useEffect(() => {
   return (
     <div>
       <div>
-        {boards.map((board) => (
+        {boards && boards.map((board) => (
           <div key={board.id}>
             <h2>{board.title}</h2>
             <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
