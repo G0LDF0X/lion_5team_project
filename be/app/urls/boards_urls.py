@@ -14,4 +14,5 @@ urlpatterns = [
     path('update/<str:pk>/', update_Board, name='board_update'),    #
     path('delete/<str:pk>/', delete_Board, name='board_delete'),   # 
     
+    
 ]

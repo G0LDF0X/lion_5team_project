@@ -27,16 +27,14 @@ class BoardSerializer(serializers.ModelSerializer):
             return response.url
         except requests.exceptions.RequestException as e:
             return f"Error fetching product URL: {e}"
-        # return obj.product_url
-        # return requests.get(obj.product_url)
+
     def get_image_url(self, obj):
         try:
             response = requests.get(obj.image_url)
             return response.url
         except requests.exceptions.RequestException as e:
             return f"Error fetching product URL: {e}"
-        # return obj.image_url
-        # return requests.get(obj.image_url)
+
     def get_show(self, obj):
         return obj.show
     
