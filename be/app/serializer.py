@@ -22,11 +22,21 @@ class BoardSerializer(serializers.ModelSerializer):
         return obj.content
     
     def get_product_url(self, obj):
-        return requests.get(obj.product_url)
-    
+        try:
+            response = requests.get(obj.product_url)
+            return response.url
+        except requests.exceptions.RequestException as e:
+            return f"Error fetching product URL: {e}"
+        # return obj.product_url
+        # return requests.get(obj.product_url)
     def get_image_url(self, obj):
-        return requests.get(obj.image_url)
-    
+        try:
+            response = requests.get(obj.image_url)
+            return response.url
+        except requests.exceptions.RequestException as e:
+            return f"Error fetching product URL: {e}"
+        # return obj.image_url
+        # return requests.get(obj.image_url)
     def get_show(self, obj):
         return obj.show
     
@@ -35,6 +45,8 @@ class BoardSerializer(serializers.ModelSerializer):
     
     def get_created_at(self, obj):
         return obj.created_at
+    
+    
     
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:

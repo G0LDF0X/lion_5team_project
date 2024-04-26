@@ -8,31 +8,31 @@ from app.serializer import BoardSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @api_view(['GET'])
-def get_Boards(request):
+def get_Boards(request):     #board_index
     boards = Board.objects.all()
 
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
     # return Response({'boards': serializer.data, 'page': page, 'pages': paginator.num_pages})
-    
 
 
 
-@api_view(['GET'])
+
+@api_view(['GET'])      #board_detail
 def get_Board(request, pk):
     board = get_object_or_404(Board, _id=pk)
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET'])      #board_top
 def get_TopBoards(request):
     boards = Board.objects.filter(rating__gte=4).order_by('-rating')[0:5]
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['POST'])    #board_create
 @permission_classes([IsAuthenticated])
 def create_Board(request):
     user = request.user
@@ -49,7 +49,7 @@ def create_Board(request):
     return Response(serializer.data)
 
     
-@api_view(['PUT'])
+@api_view(['PUT'])  #board_update
 @permission_classes([IsAuthenticated])
 def update_Board(request, pk):
     data = request.data
@@ -66,7 +66,7 @@ def update_Board(request, pk):
 
 
 
-@api_view(['DELETE'])
+@api_view(['DELETE'])   #board_delete
 @permission_classes([IsAdminUser])
 def delete_Board(request, pk):
     board = Board.objects.get(_id=pk)
@@ -77,7 +77,7 @@ def delete_Board(request, pk):
 
 
 
-@api_view(['POST'])
+@api_view(['POST'])  #board_upload
 def upload_Board(response, request):
     data = response.data
     
