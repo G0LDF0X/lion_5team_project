@@ -76,11 +76,11 @@ export const register = (name, email, password) => async (dispatch) => {
         };
 
         const response = await fetch(
-            "/api/users/register/",
+            "/app/register/",
             {
                 method: "POST",
                 headers: config.headers,
-                body: JSON.stringify({ 'name':name, 'email':email, 'password':password }),
+                body: JSON.stringify({ 'username':name, 'password':password }),
             }
         );
 

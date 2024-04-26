@@ -60,7 +60,7 @@ function Header() {
               </LinkContainer>
             </Card>
           )}
-          {/* {userInfo && userInfo.isAdmin && (
+          {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/userlist">
                     <NavDropdown.Item>Users</NavDropdown.Item>
@@ -72,7 +72,7 @@ function Header() {
                     <NavDropdown.Item>Orders</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
-              )} */}
+              )}
           {userInfo && userInfo.isSeller && (
             <Card className="ms-auto me-5 bg-info">
               <NavDropdown title="Seller" id="adminmenu">
