@@ -115,6 +115,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'password')
         model = auth_user
         fields = ('username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
         # if attrs['password'] != attrs['password2']:
@@ -124,11 +125,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = auth_user.objects.create(
-            username=validated_data['username'],
-            # email=validated_data['email']
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
+        user = auth_user.objects.create_user(**validated_data)
         return user
