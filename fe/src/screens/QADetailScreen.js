@@ -35,6 +35,7 @@ function QADetailSceen() {
          <div><Row>
           
           <Col md={3}>
+            <Card className="my-3 p-3 rounded">
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h3>{qna.title}</h3>
@@ -43,6 +44,7 @@ function QADetailSceen() {
               
              
             </ListGroup>
+              </Card>  
           </Col>
         </Row>
         
