@@ -19,9 +19,7 @@ export const boardListReducer = (state = { boards: [] }, action) => {
         case BOARD_LIST_SUCCESS:
             return {
                 loading: false,
-                boards: action.payload.boards,
-                page: action.payload.page,
-                pages: action.payload.pages,
+                boards: action.payload.data
             };
         case BOARD_LIST_FAIL:
             return { loading: false, error: action.payload };
