@@ -38,7 +38,7 @@ export const listBoardDetails = (id) => async (dispatch) => {
 try {
     dispatch({ type: BOARD_DETAILS_REQUEST });
 
-    const response = await fetch(`board/${id}`);
+    const response = await fetch(`/board/detail/${id}`);
     const data = await response.json();
 
     dispatch({

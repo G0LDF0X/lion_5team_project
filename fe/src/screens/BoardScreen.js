@@ -24,14 +24,14 @@ useEffect(() => {
       ) : (
         <Row>
           {boards.map((board) => (
-            <Col key={board._id} sm={12} md={6} lg={4} xl={3}>
+            <Col key={board.id} sm={12} md={6} lg={4} xl={3}>
               <Card className="my-3 p-3 rounded">
                 <Link to={`/board/detail/${board._id}`}>
 
                   {/* <Card.Img src={board.image} variant="top" /> */}
                 </Link>
                 <Card.Body>
-                  <Link to={`/board/${board._id}`}>
+                  <Link to={`/board/${board.id}`}>
                     <Card.Title as="div">
                       <strong>{board.title}</strong>
                       <strong>{board.name}</strong>

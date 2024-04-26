@@ -20,7 +20,7 @@ def get_Boards(request):     #board_index
 
 @api_view(['GET'])      #board_detail
 def get_Board(request, pk):
-    board = get_object_or_404(Board, _id=pk)
+    board = get_object_or_404(Board, id=pk)
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
