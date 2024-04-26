@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import requests
 
 class BoardSerializer(serializers.ModelSerializer):
     # title = serializers.SerializerMethodField(read_only=True)
@@ -13,7 +14,38 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = '__all__'
+    
+    def get_title(self, obj):
+        return obj.title
+    
+    def get_content(self, obj):
+        return obj.content
+    
+    def get_product_url(self, obj):
+        try:
+            response = requests.get(obj.product_url)
+            return response.url
+        except requests.exceptions.RequestException as e:
+            return f"Error fetching product URL: {e}"
 
+    def get_image_url(self, obj):
+        try:
+            response = requests.get(obj.image_url)
+            return response.url
+        except requests.exceptions.RequestException as e:
+            return f"Error fetching product URL: {e}"
+
+    def get_show(self, obj):
+        return obj.show
+    
+    def get_like(self, obj):
+        return obj.like
+    
+    def get_created_at(self, obj):
+        return obj.created_at
+    
+    
+    
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
@@ -57,6 +89,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -105,7 +138,16 @@ class UserSerializer(serializers.ModelSerializer):
     
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # Frontend에서 더 필요한 정보가 있다면 여기에 추가적으로 작성하면 됩니다. token["is_superuser"] = user.is_superuser 이런식으로요.
+        token['username'] = user.username
+        token['email'] = user.email
+        return token
+
+
+class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     # password2 = serializers.CharField(write_only=True, required=True)
