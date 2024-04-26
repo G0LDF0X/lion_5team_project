@@ -80,11 +80,11 @@ export const register = (name, email, password, confirmPassword) => async (dispa
             {
                 method: "POST",
                 headers: config.headers,
-<<<<<<< HEAD
+
                 body: JSON.stringify({ 'username':name, 'password':password }),
-=======
-                body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'password2':confirmPassword }),
->>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2
+
+//                 body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'password2':confirmPassword }),
+// >>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2
             }
         );
 
