@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import *
-import requests
+# import requests
 
 class BoardSerializer(serializers.ModelSerializer):
     # title = serializers.SerializerMethodField(read_only=True)
@@ -15,34 +15,34 @@ class BoardSerializer(serializers.ModelSerializer):
         model = Board
         fields = '__all__'
     
-    def get_title(self, obj):
-        return obj.title
+    # def get_title(self, obj):
+    #     return obj.title
     
-    def get_content(self, obj):
-        return obj.content
+    # def get_content(self, obj):
+    #     return obj.content
     
-    def get_product_url(self, obj):
-        try:
-            response = requests.get(obj.product_url)
-            return response.url
-        except requests.exceptions.RequestException as e:
-            return f"Error fetching product URL: {e}"
+    # def get_product_url(self, obj):
+    #     try:
+    #         response = requests.get(obj.product_url)
+    #         return response.url
+    #     except requests.exceptions.RequestException as e:
+    #         return f"Error fetching product URL: {e}"
 
-    def get_image_url(self, obj):
-        try:
-            response = requests.get(obj.image_url)
-            return response.url
-        except requests.exceptions.RequestException as e:
-            return f"Error fetching product URL: {e}"
+    # def get_image_url(self, obj):
+    #     try:
+    #         response = requests.get(obj.image_url)
+    #         return response.url
+    #     except requests.exceptions.RequestException as e:
+    #         return f"Error fetching product URL: {e}"
 
-    def get_show(self, obj):
-        return obj.show
+    # def get_show(self, obj):
+    #     return obj.show
     
-    def get_like(self, obj):
-        return obj.like
+    # def get_like(self, obj):
+    #     return obj.like
     
-    def get_created_at(self, obj):
-        return obj.created_at
+    # def get_created_at(self, obj):
+    #     return obj.created_at
     
     
     
