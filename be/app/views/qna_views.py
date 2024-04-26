@@ -13,9 +13,9 @@ def qna_board(request):
 
 @api_view(['GET'])
 def qna_detail(request, pk):
-    question = User_QnA.objects.get(pk=pk)
+    question = User_QnA.objects.get(id=pk)
     question_serializer = UserQnASerializer(question)
-    answers = User_Answer.objects.filter(question=question)
+    answers = User_Answer.objects.filter(user_qna_id_id=pk)
     answer_serializer = UserAnswerSerializer(answers, many=True)
     return Response({
         'question': question_serializer.data,

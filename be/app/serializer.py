@@ -49,6 +49,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
     
     def get_user(self, obj):
         return obj.user.username
+
     
 from django.contrib.auth.models import User as auth_user
 from django.contrib.auth.password_validation import validate_password
