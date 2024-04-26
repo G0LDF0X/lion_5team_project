@@ -71,7 +71,7 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
     id = serializers.SerializerMethodField(read_only=True)
     isadmin = serializers.SerializerMethodField(read_only=True)
-    isseller = serializers.SerializerMethodField(read_only=True)
+    # isseller = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = auth_user
@@ -83,8 +83,8 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.id
     def get_isadmin(self, obj):
         return obj.is_staff
-    def get_isseller(self, obj):
-        return obj.is_seller
+    # def get_isseller(self, obj):
+    #     return obj.is_seller
     
     # class Meta:
     #     model = User
