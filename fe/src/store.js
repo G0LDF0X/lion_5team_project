@@ -36,11 +36,13 @@ import {
 import {
   qnaListReducer,
   qnaDetailsReducer,
+  qnaCreateReducer,
 } from "./reducers/qnaReducers";
 
 import {
   boardListReducer,
   boardDetailsReducer,
+  boardCreateReducer
 } from "./reducers/boardReducers";
 
 const reducer = combineReducers({
@@ -75,10 +77,12 @@ const reducer = combineReducers({
 
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
+  qnaCreate: qnaCreateReducer,
 
 
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,
+  boardCreate: boardCreateReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

@@ -31,6 +31,7 @@ import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProductScreen from './screens/ProductScreen';
+import SampleEditorScreen from './screens/SampleEditorScreen';
 function App() {
   return (
     <Router>
@@ -71,6 +72,8 @@ function App() {
             <Route path='/qna' element={<QAScreen/>} />
             <Route path='/qna/create' element={<QACreateScreen/>} />
             <Route path='/qna/detail/:id' element={<QADetailScreen/>} />
+
+            <Route path='/editor' element={<SampleEditorScreen/>} />
           </Routes>
         </Container>  
       </main>

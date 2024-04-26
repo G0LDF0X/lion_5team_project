@@ -2,7 +2,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import React, { useState } from 'react';
 
-function SampleEditorScreen({props}) {
+function Editor({props}) {
     const [editorData, setEditorData] = useState('');
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,4 +31,4 @@ function SampleEditorScreen({props}) {
         </>);
 }
 
-export default SampleEditorScreen;
+export default Editor;
