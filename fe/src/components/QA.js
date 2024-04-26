@@ -6,7 +6,7 @@ function Qa({ qa }) {
     return (
         <Card className="my-3 p-3 rounded">
             <Link to={`/items/detail/${qa.id}`}> 
-                <Card.Img src={qa.image_url} variant="top" />
+                {/* <Card.Img src={qa.image_url} variant="top" /> */}
             </Link>
 
             <Card.Body>
