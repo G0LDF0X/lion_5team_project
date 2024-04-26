@@ -8,7 +8,7 @@ import {
   USER_REGISTER_SUCCESS,
 } from "../constants/userConstants";
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (id, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -20,10 +20,10 @@ export const login = (email, password) => async (dispatch) => {
       },
     };
 
-    const response = await fetch("/api/users/login/", {
+    const response = await fetch("/app/token/", {
       method: "POST",
       headers: config.headers,
-      body: JSON.stringify({ 'username': email, 'password': password }),
+      body: JSON.stringify({ 'username': id, 'password': password }),
     });
 
     const data = await response.json();

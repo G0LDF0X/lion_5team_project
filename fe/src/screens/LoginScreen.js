@@ -8,7 +8,8 @@ import Loading from "../components/Loading";
 import FormContainer from "../components/FormContainer";
 
 function LoginScreen() {
-  const [email, setEmail] = useState("");
+  // const [id, setid] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function LoginScreen() {
   const submitHandler = (e) => {
     e.preventDefault();
     console.log("LOGIN");
-    dispatch(login(email, password));
+    dispatch(login(id, password));
     // DISPATCH LOGIN
   };
   //   useEffect(() => {
@@ -67,13 +68,13 @@ function LoginScreen() {
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loading />}
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email">
-          <Form.Label>Email Address</Form.Label>
+        <Form.Group controlId="id">
+          <Form.Label>id Address</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="id"
+            placeholder="Enter id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId="password">
