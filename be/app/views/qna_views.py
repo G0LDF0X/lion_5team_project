@@ -35,10 +35,22 @@ def create_user_qna(request):
     )
     serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def uploadImage(response):
+    data = response.data
+
+    id = data['qna_id']
+    qna = User_QnA.objects.get(id=id)
+
+    qna.image_url = response.FILES.get('image_url')
+    qna.save()
+
+    return Response('Image was uploaded')
     
 @api_view(['PUT'])
 def update_user_qna(request, pk):
-    qna_board = User_QnA.objects.get(pk=pk)
+    qna_board = User_QnA.objects.get(id=pk)
     qna_board.title = request.data['title']
     qna_board.content = request.data['content'] 
     qna_board.image_url = request.data['image_url'] 
