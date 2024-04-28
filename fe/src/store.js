@@ -42,7 +42,8 @@ import {
 import {
   boardListReducer,
   boardDetailsReducer,
-  boardCreateReducer
+  boardCreateReducer,
+  boardUpdateReducer,
 } from "./reducers/boardReducers";
 
 const reducer = combineReducers({
@@ -83,6 +84,7 @@ const reducer = combineReducers({
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,
   boardCreate: boardCreateReducer,
+  boardUpdate: boardUpdateReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

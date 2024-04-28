@@ -9,6 +9,10 @@ import {
     BOARD_CREATE_SUCCESS,
     BOARD_CREATE_FAIL,
     BOARD_CREATE_RESET,
+    BOARD_UPDATE_REQUEST,
+    BOARD_UPDATE_SUCCESS,
+    BOARD_UPDATE_FAIL,
+    BOARD_UPDATE_RESET,
 } from '../constants/boardConstants';
 
 
@@ -51,6 +55,21 @@ export const boardCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload };
         case BOARD_CREATE_RESET:
             return {};
+        default:
+            return state;
+    }
+}
+
+export const boardUpdateReducer = (state = { board: {} }, action) => {
+    switch (action.type) {
+        case BOARD_UPDATE_REQUEST:
+            return { loading: true };
+        case BOARD_UPDATE_SUCCESS:
+            return { loading: false, success: true, board: action.payload };
+        case BOARD_UPDATE_FAIL:
+            return { loading: false, error: action.payload };
+        case BOARD_UPDATE_RESET:
+            return { board: {} };
         default:
             return state;
     }

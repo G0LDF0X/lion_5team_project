@@ -6,12 +6,9 @@ import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { updateBoard } from "../actions/boardActions";
 
-function BoardUpdateScreen() {
+function UpdateBoardScreen() {
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
-  const [title, setTitle] = useState("");
-  const [product_url, setProduct_url] = useState("");
-
   const dispatch = useDispatch();
   const boardDetails = useSelector((state) => state.boardDetails);
   const { board } = boardDetails;
@@ -28,7 +25,7 @@ function BoardUpdateScreen() {
 
         return new Promise((resolve, reject) => {
           const data = new FormData();
-          // data.append("name", file.name);
+          data.append("name", file.name);
           data.append("file", file);
 
           fetch(`/board/update/image/${board.id}/`, {
@@ -64,8 +61,8 @@ function BoardUpdateScreen() {
     });
     const serializer = new XMLSerializer();
     const updatedData = serializer.serializeToString(parsedHtml);
-    // setEditorData({ content: updatedData, id: board.id, title:"title", product_url:"product_url" });
-    // console.log(editorData);
+    setEditorData({ content: updatedData, id: board.id, title:"title", product_url:"product_url" });
+    console.log(editorData);
   }, [fileName, editorData]);
   function uploadPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
@@ -76,29 +73,19 @@ function BoardUpdateScreen() {
   //     console.log(data);
   //   }
   function submithandler() {
-    
-    dispatch(updateBoard({ id: board.id, content: editorData, title: title, product_url: "product_url"}));
+    dispatch(updateBoard({ board:board, data: editorData }));
 
-    // const res = fetch("/api/updateBoardd/", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ content: editorData }),
-    // });
-    // console.log("fetch " + editorData);
+    const res = fetch("/api/updateBoardd/", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: editorData }),
+    });
+    console.log("fetch " + editorData);
   }
   return (
     <>
-                <Form.Group controlId="title">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="title"
-                placeholder="Enter title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
       <CKEditor
         data={"<p>Hello from CKEditor 5!</p>"}
         editor={ClassicEditor}
@@ -115,4 +102,4 @@ function BoardUpdateScreen() {
   );
 }
 
-export default BoardUpdateScreen;
+export default UpdateBoardScreen;
