@@ -7,25 +7,6 @@ function Board({ board }) {
 
     return (
         <div>
-            {userinfo ? ( 
-                <>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                        <Button variant="light" className="btn-sm">
-                            <i className="fas fa-edit"></i>
-                        </Button>
-                    </LinkContainer>
-                
-                    <Button
-                        variant="danger"
-                        className="btn-sm"
-                        onClick={() => deleteHandler(product._id)}
-                    >
-                        <i className="fas fa-trash"></i>
-                    </Button>
-                </>
-            ) : null
-            }
-
             <Card className="my-3 p-3 rounded">
                 <Link to={`/items/detail/${board.id}`}> 
                     <Card.Img src={board.image_url} variant="top" />

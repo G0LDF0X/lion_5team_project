@@ -37,7 +37,7 @@ def get_TopBoards(request):
 def create_Board(request):
     user = request.user
     board = Board.objects.create(
-        user_id=user,
+        user_id=user.id,
         title='nomal title',
         content='',
         image_url='',

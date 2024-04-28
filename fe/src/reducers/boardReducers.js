@@ -13,6 +13,9 @@ import {
     BOARD_UPDATE_SUCCESS,
     BOARD_UPDATE_FAIL,
     BOARD_UPDATE_RESET,
+    BOARD_DELETE_REQUEST,
+    BOARD_DELETE_FAIL,
+    BOARD_DELETE_SUCCESS,
 } from '../constants/boardConstants';
 
 
@@ -32,10 +35,10 @@ export const boardListReducer = (state = { boards: [] }, action) => {
     }
 }
 
-export const boardDetailsReducer = (state = { board: { reviews: [] } }, action) => {
+export const boardDetailsReducer = (state = { board: {} }, action) => {
     switch (action.type) {
         case BOARD_DETAILS_REQUEST:
-            return { ...state, loading: true };
+            return { loading: true, ...state };
         case BOARD_DETAILS_SUCCESS:
             return { loading: false, board: action.payload };
         case BOARD_DETAILS_FAIL:
@@ -70,6 +73,20 @@ export const boardUpdateReducer = (state = { board: {} }, action) => {
             return { loading: false, error: action.payload };
         case BOARD_UPDATE_RESET:
             return { board: {} };
+        default:
+            return state;
+    }
+}
+
+
+export const boardDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case BOARD_DELETE_REQUEST:
+            return { loading: true };
+        case BOARD_DELETE_SUCCESS:
+            return { loading: false, success: true };
+        case BOARD_DELETE_FAIL:
+            return { loading: false, error: action.payload };
         default:
             return state;
     }

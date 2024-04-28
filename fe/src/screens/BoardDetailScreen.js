@@ -7,6 +7,8 @@ import { listBoardDetails } from "../actions/boardActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
+import { LinkContainer } from "react-router-bootstrap";
+
 
 function BoardDetailScreen() {
   const dispatch = useDispatch();
@@ -14,13 +16,40 @@ function BoardDetailScreen() {
   const { id } = useParams();
   const boardDetails = useSelector((state) => state.boardDetails);
   const { loading, error, board } = boardDetails;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   useEffect(() => {
     dispatch(listBoardDetails(id));
 
   }, [dispatch, id]);
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you sure?")) {
+      // DELETE BOARD
+    }
+  }
   // const board = board.find((p) => p._id === id)s
   return (
     <div>
+
+{userInfo.id = board.user_id ? ( 
+                <>
+                    <LinkContainer to={`board/update/${board.id}`}>
+                        <Button variant="light" className="btn-sm">
+                            <i className="fas fa-edit"></i>
+                        </Button>
+                    </LinkContainer>
+                
+                    <Button
+                        variant="danger"
+                        className="btn-sm"
+                        onClick={() => deleteHandler(board.id)}
+                    >
+                        <i className="fas fa-trash"></i>
+                    </Button>
+                </>
+            ) : null
+            }
+
       <Link to="/" className="btn btn-light my-2">Go Back
       </Link>
         {loading ? 

@@ -5,12 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { updateBoard } from "../actions/boardActions";
+import { Form } from "react-bootstrap";
 
 function BoardUpdateScreen() {
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
   const [title, setTitle] = useState("");
   const [product_url, setProduct_url] = useState("");
+  const [uploading, setUploading] = useState(false);  
 
   const dispatch = useDispatch();
   const boardDetails = useSelector((state) => state.boardDetails);
@@ -30,7 +32,7 @@ function BoardUpdateScreen() {
           const data = new FormData();
           // data.append("name", file.name);
           data.append("file", file);
-
+          setUploading(true);
           fetch(`/board/update/image/${board.id}/`, {
             method: "POST",
             body: data,
@@ -39,10 +41,12 @@ function BoardUpdateScreen() {
             .then((data) => {
               if (data.error) {
                 reject(data.error);
+                setUploading(false);
               } else {
                 resolve({
                   default: data.url, // Assuming the server responds with JSON that has a 'url' property
                 });
+                setUploading(false);
               }
             })
             .catch((error) => {

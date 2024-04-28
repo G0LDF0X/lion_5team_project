@@ -14,6 +14,9 @@ BOARD_UPDATE_REQUEST,
 BOARD_UPDATE_SUCCESS,
 BOARD_UPDATE_FAIL,
 BOARD_UPDATE_RESET,
+BOARD_DELETE_REQUEST,
+BOARD_DELETE_SUCCESS,
+BOARD_DELETE_FAIL,
 } from "../constants/boardConstants";
 
 export const listBoards = () => async (dispatch) => {
@@ -121,6 +124,37 @@ try {
 catch (error) {
     dispatch({
         type: BOARD_UPDATE_FAIL,
+        payload:
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message,
+    });
+}
+}
+
+
+export const deleteBoard = (id) => async (dispatch, getState) => {
+try {
+    dispatch({
+        type: BOARD_DELETE_REQUEST,
+    });
+
+    const { userLogin: { userInfo } } = getState();
+
+    const response = await fetch(`/board/delete/${id}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+        },
+    });
+
+    dispatch({
+        type: BOARD_DELETE_SUCCESS,
+    });
+}
+catch (error) {
+    dispatch({
+        type: BOARD_DELETE_FAIL,
         payload:
             error.response && error.response.data.message
                 ? error.response.data.message
