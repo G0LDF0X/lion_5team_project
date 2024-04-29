@@ -51,8 +51,13 @@ def delete_item(request, pk):
 
 @api_view(['GET','PUT'])
 def update_item(request, pk):
-    item = Item.objects.get(pk=pk)
-    serializer = ItemSerializer(instance=item, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+    data = request.data
+    item = Item.objects.get(id=pk)
+
+    item.name = data['name']
+    item.price = data['price']
+    item.description = data['description']
+    item.save()
+    serializer = ItemSerializer(item, many=False)
+    
     return Response(serializer.data)
