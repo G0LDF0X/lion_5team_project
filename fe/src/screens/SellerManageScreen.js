@@ -83,7 +83,7 @@ function ProductListScreen() {
             <th>NAME</th>
             <th>PRICE</th>
             <th>CATEGORY</th>
-            <th>BRAND</th>
+            {/* <th>BRAND</th> */}
             <th></th>
           </tr>
         </thead>
@@ -99,7 +99,7 @@ function ProductListScreen() {
                   <td>간식</td>
                 ) : null }
               {/* <td>{product.category}</td> */}
-              <td>{product.brand}</td>
+              {/* <td>{product.brand}</td> */}
               <td>
                 <LinkContainer to={`/items/update/${product.id}`}>
                   <Button variant="light" className="btn-sm">
