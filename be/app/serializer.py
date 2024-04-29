@@ -247,3 +247,9 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     def create(self, validated_data):
         user = auth_user.objects.create_user(**validated_data)
         return user
+
+class SellerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seller
+        fields = '__all__'
+
