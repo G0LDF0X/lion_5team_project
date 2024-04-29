@@ -14,7 +14,13 @@ function QA({ qna }) {
                 <Link to={`/qa/${qna.id}`}> 
                     <Card.Title as="div">
                         <strong>{qna.title}</strong>
+                        
                     </Card.Title>
+                    <Card.Text as="div">
+                        <div className="my-3">
+                            {qna.content}
+                        </div>
+                    </Card.Text>
                 </Link>
 
             </Card.Body>
