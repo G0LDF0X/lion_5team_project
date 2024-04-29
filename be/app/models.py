@@ -136,6 +136,9 @@ class Item_QnA(models.Model):
     image_url = models.ImageField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
 class Item_Answer(models.Model):
     # 외래키
     seller_id = models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
