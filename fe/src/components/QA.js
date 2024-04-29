@@ -3,7 +3,9 @@ import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
 function Qa({ qa }) {
+    if (!qa) return <div>QA not found</div>;
     return (
+
         <Card className="my-3 p-3 rounded">
             <Link to={`/items/detail/${qa.id}`}> 
                 {/* <Card.Img src={qa.image_url} variant="top" /> */}

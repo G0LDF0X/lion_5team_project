@@ -56,16 +56,19 @@ function HomeScreen() {
   // dispatch(listCreators());
   }
   , [dispatch, location]);
+  console.log(qnas)
   return (
     <div>
       {/* {!query && <ProductCarousel />} */}
       <HomeHeader />
-      <Row>
+      {/* <Row>
         <Link to="/items">
          <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Products</h1>
+            
           </Card>
+          
           </Col>
         </Link>
         <Link to="/reviews">
@@ -96,8 +99,8 @@ function HomeScreen() {
           </Card>
         </Col> 
         </Link>
-      </Row>
-      {/* <Row>
+      </Row> */}
+      { <Row>
      
         <Col md={9}>
           <h1>Products</h1>
@@ -115,7 +118,7 @@ function HomeScreen() {
               </Row>
             )}
         </Col>
-        <Col md={9}>
+        {/* <Col md={9}>
           <h1>Reviews</h1>
           {reviewLoading ? (
             <Loading />
@@ -131,8 +134,8 @@ function HomeScreen() {
             </Row>
           )}
         
-        </Col>  
-        <Col md={9}>
+        </Col>   */}
+        {/* <Col md={9}>
           <h1>Creators</h1>
           {creatorLoading ? (
             <Loading />
@@ -147,7 +150,7 @@ function HomeScreen() {
               ))}
             </Row>
           )}
-        </Col>
+        </Col> */}
         <Col md={9}>
           <h1>Boards</h1>
           {boardLoading ? (
@@ -157,7 +160,7 @@ function HomeScreen() {
           ) : (
             <Row>
               {boards.map((board) => (
-                <Col key={board._id} sm={12} md={6} lg={4} xl={3}>
+                <Col key={board.id} sm={12} md={6} lg={4} xl={3}>
                   <Board board={board} />
                 </Col>
               ))}
@@ -173,14 +176,14 @@ function HomeScreen() {
           ) : (
             <Row>
               {qnas.map((qna) => (
-                <Col key={qna._id} sm={12} md={6} lg={4} xl={3}>
+                <Col key={qna.id} sm={12} md={6} lg={4} xl={3}>
                   <QA qna={qna} />
                 </Col>
               ))}
             </Row>
           )}
         </Col>
-      </Row> */}
+      </Row> }
       <div className="pagination-container">
       </div>
     </div>
