@@ -25,11 +25,7 @@ def get_Board(request, pk):
     return Response(serializer.data)
 
 
-# @api_view(['GET'])      #board_top 조회수 기준으로 하는중.
-# def get_TopBoards(request):
-#     boards = Board.objects.filter(show__gte=25).order_by('-show')[0:5]
-#     serializer = BoardSerializer(boards, many=True)
-#     return Response(serializer.data)
+
 @api_view(['GET'])      #annotate함수 사용, show와 like필드 모두 고려, 게시물 필터링.
 def get_TopBoards(request):                                 #like엔 5배의 가중치 부여.
     boards = Board.objects.annotate(popularity=F('show')+5*F('like')).order_by('-popularity')[0:5]
@@ -45,11 +41,7 @@ def get_TopBoards(request):                                 #like엔 5배의 가
 def create_Board(request):
     user = User.objects.get(name=request.user)
     # request.user는 User모델의 id값을 가지고 있음
-    # user = request.user
-    # Check if the user exists in the User model
-    # if not User.objects.filter(id=user.id).exists():
-    #     return Response({'error': 'User does not exist'}, status=400)
-
+ 
     board = Board.objects.create(
         user_id=user,
         title='nomal title',
@@ -84,16 +76,6 @@ def update_Board(request, detail_pk, update_pk):
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def updateBoardImage(request, pk):
-    board = Board.objects.get(id=pk)
-    image_url = request.FILES.get('image_url')
-    if image_url is not None:
-        board.image_url = image_url
-        board.save()
-    serializer = BoardSerializer(board, many=False)
-    return Response(serializer.data)
 
 
 
@@ -107,16 +89,27 @@ def delete_Board(request, pk):
 
 
 
+#계륵
 
-
-# @api_view(['POST'])  #board_upload
-# def upload_Board(response, request):
-#     data = response.data
+@api_view(['POST'])  #board_upload
+def upload_Board(response, request):
+    data = response.data
     
-#     board_id = data['board_id']
-#     board = Board.objects.get(_id=board_id)
+    board_id = data['board_id']
+    board = Board.objects.get(_id=board_id)
 
-#     board.image = request.FILES.get('image')
-#     board.save()
+    board.image = request.FILES.get('image')
+    board.save()
 
-#     return Response('board was uploaded')
+    return Response('board was uploaded')
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateBoardImage(request, pk):
+    board = Board.objects.get(id=pk)
+    image_url = request.FILES.get('image_url')
+    if image_url is not None:
+        board.image_url = image_url
+        board.save()
+    serializer = BoardSerializer(board, many=False)
+    return Response(serializer.data)
