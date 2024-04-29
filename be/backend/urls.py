@@ -22,4 +22,5 @@ urlpatterns = [
     path('qna/', include('app.urls.qna_urls')),
     path('board/', include('app.urls.boards_urls')),
     path('app/', include('app.urls.users_urls')),
+    path('seller/', include('app.urls.sellers_urls')),
 ]
