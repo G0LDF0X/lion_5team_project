@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller
+from app.models import Seller, User
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import SellerSerializer, UserSerializer
@@ -12,7 +12,8 @@ def get_Seller_Apply(request):
     serializer = SellerSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save(user_id=request.user)
+        user = User.objects.get(name=request.user)
+        serializer.save(user_id=user)
 
         # User의 is_seller를 True로 변경
         user = request.user
