@@ -108,18 +108,20 @@ from rest_framework.response import Response
 from .models import User
 from rest_framework.views import APIView
 from .models import User
+from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
 
-        # Add custom claims
-        token['username'] = user.username
-        token['id'] = user.id
-        token['email'] = user.email
+#         # Add custom claims
+#         token['username'] = user.username
+#         token['id'] = user.id
+#         token['email'] = user.email
 
-        return token
+#         return token
     
 class RegisterSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField(max_length=20)
@@ -169,15 +171,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        serializer = UserSerializer(self.user).data
-        for k, v in serializer.items():
-            data[k] = v
-
-        return data
 
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
@@ -195,6 +188,27 @@ class UserSerializer(serializers.ModelSerializer):
         return obj.id
     def get_isadmin(self, obj):
         return obj.is_staff
+    
+class UserSerializerWithToken(UserSerializer):
+    token = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = auth_user
+        fields = '__all__'
+
+    def get_token(self, obj):
+        token = RefreshToken.for_user(obj)
+        return str(token.access_token)
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        serializer = UserSerializerWithToken(self.user).data
+        for k, v in serializer.items():
+            data[k] = v
+
+        return data
 # class UserSerializer(serializers.ModelSerializer):
 #     username = serializers.SerializerMethodField(read_only=True)
 #     id = serializers.SerializerMethodField(read_only=True)

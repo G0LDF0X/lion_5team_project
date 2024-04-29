@@ -3,7 +3,7 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { listProducts } from "../actions/productActions";
+import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import ProductFilter from "../components/ProductFilter";
@@ -20,10 +20,15 @@ function ProductsScreen() {
   const productList = useSelector(state => state.productList);
   const { loading, error, products, pages } = productList;
   const params = new URLSearchParams(location.search);
+  console.log(products)
   const query = params.get('q');
   const page = params.get('page') || 1;
   const category = params.get('category');
   const tag = params.get('tag');
+  useEffect(() => {
+    dispatch(listProducts());
+  }
+  , [dispatch, query, category, tag, page]);
   return (
     <div>
         {/* <ProductHeader /> */}

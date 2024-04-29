@@ -13,12 +13,21 @@ import { LinkContainer } from "react-router-bootstrap";
 function BoardDetailScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isUploader, setIsUploader] = useState(false);
+  
   const { id } = useParams();
   const boardDetails = useSelector((state) => state.boardDetails);
   const { loading, error, board } = boardDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  console.log(userInfo);
+
+  console.log(board);
   useEffect(() => {
+    if(id ===board.user_id) {
+      setIsUploader(true);
+    }
     dispatch(listBoardDetails(id));
 
   }, [dispatch, id]);
@@ -31,7 +40,7 @@ function BoardDetailScreen() {
   return (
     <div>
 
-{userInfo.id = board.user_id || userInfo.isadmin ? ( 
+{ isUploader || userInfo.isadmin ? ( 
                 <>
                     <LinkContainer to={`board/update/${board.id}`}>
                         <Button variant="light" className="btn-sm">
