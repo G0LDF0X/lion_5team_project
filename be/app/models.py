@@ -138,7 +138,7 @@ class Item_QnA(models.Model):
 
 class Item_Answer(models.Model):
     # 외래키
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    seller_id = models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
     item_qna_id = models.ForeignKey(Item_QnA, on_delete=models.CASCADE)
 
