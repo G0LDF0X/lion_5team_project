@@ -32,6 +32,7 @@ function ProductListScreen() {
       dispatch(createProduct());
       // dispatch(createProduct(product));
   }
+  
     useEffect(() => {
       // if(!userInfo.isAdmin) {
         //     navigate("/login");
@@ -95,7 +96,7 @@ function ProductListScreen() {
               <td>{product.category}</td>
               <td>{product.brand}</td>
               <td>
-                <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                <LinkContainer to={`/items/update/${product.id}`}>
                   <Button variant="light" className="btn-sm">
                     <i className="fas fa-edit"></i>
                   </Button>
@@ -103,7 +104,7 @@ function ProductListScreen() {
                 <Button
                   variant="danger"
                   className="btn-sm"
-                  onClick={() => deleteHandler(product._id)}
+                  onClick={() => deleteHandler(product.id)}
                 >
                   <i className="fas fa-trash"></i>
                 </Button>

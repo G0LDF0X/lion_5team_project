@@ -31,22 +31,22 @@ function ProductUpdateScreen() {
   } = productUpdate;
 
   useEffect(() => {
-    // if (successUpdate) {
-    //   dispatch({ type: PRODUCT_UPDATE_RESET });
-    //   navigate("/admin/productlist");
-    // } else {
-    //   if (!product.name || product._id !== Number(productId)) {
-    //     dispatch(listProductDetails(productId));
-    //   } else {
-    //     setName(product.name);
-    //     setPrice(product.price);
-    //     setImage(product.image);
-    //     setBrand(product.brand);
-    //     setCategory(product.category);
-    //     setCountInStock(product.countInStock);
-    //     setDescription(product.description);
-    //   }
-    // }
+    if (successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+      navigate("/seller/manage");
+    } else {
+      if (!product.name  ) {
+        dispatch(listProductDetails(productId));
+      } else {
+        setName(product.name);
+        setPrice(product.price);
+        setImage(product.image);
+        setBrand(product.brand);
+        setCategory(product.category);
+        setCountInStock(product.countInStock);
+        setDescription(product.description);
+      }
+    }
   }, [product, productId, dispatch, navigate, successUpdate]);
 
   const submitHandler = (e) => {
@@ -94,7 +94,7 @@ function ProductUpdateScreen() {
 
   return (
     <div>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+      <Link to="/seller/manage" className="btn btn-light my-3">
         Go Back
       </Link>
       <FormContainer>
