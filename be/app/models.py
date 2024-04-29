@@ -22,12 +22,21 @@ class Seller(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.user_id.name
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Tag(models.Model):
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='tags')
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Item(models.Model):
     # 외래키
@@ -41,6 +50,9 @@ class Item(models.Model):
     image_url = models.ImageField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     rate = models.FloatField()
+
+    def __str__(self):
+        return self.name
 
 class Review(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')

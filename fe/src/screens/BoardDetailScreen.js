@@ -31,7 +31,7 @@ function BoardDetailScreen() {
   return (
     <div>
 
-{userInfo.id = board.user_id ? ( 
+{userInfo.id = board.user_id || userInfo.isadmin ? ( 
                 <>
                     <LinkContainer to={`board/update/${board.id}`}>
                         <Button variant="light" className="btn-sm">

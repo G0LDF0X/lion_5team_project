@@ -7,6 +7,9 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_DETAILS_RESET,
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
 } from "../constants/userConstants";
 
 export const login = (id, password) => async (dispatch) => {
@@ -113,6 +116,37 @@ export const register = (name, email, password, confirmPassword) => async (dispa
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_DETAILS_REQUEST });
+        const {
+          userLogin: { userInfo },
+      } = getState();
+        const response = await fetch(`/app/user/${id}/`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getState().userLogin.userInfo.access}`,
+            },
+        });
+
+        const data = await response.json();
+
+        dispatch({
+            type: USER_DETAILS_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: USER_DETAILS_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
