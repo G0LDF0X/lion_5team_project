@@ -14,7 +14,7 @@ export const listReviews = () => async (dispatch) => {
     try {
         dispatch({ type: REVIEW_LIST_REQUEST });
 
-        const response = await fetch('/api/reviews');
+        const response = await fetch('/reviews');
         const data = await response.json();
 
         dispatch({

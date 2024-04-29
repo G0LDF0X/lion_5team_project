@@ -46,7 +46,7 @@ function App() {
             <Route path='/items' element={<ProductsScreen/>} />
             <Route path='/items/detail/:id' element={<ProductDetailScreen/>} />
             <Route path='/cart' element={<CartScreen/>} />
-            <Route path='/product/update/:id' element={<ProductUpdateScreen/>} />
+            <Route path='/items/update/:id' element={<ProductUpdateScreen/>} />
 
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />

@@ -36,6 +36,25 @@ function Header() {
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <SearchBox />
+          <Card className="ms-auto me-5 bg-info">
+              <NavDropdown title="Seller" id="adminmenu">
+                <LinkContainer to="/seller/index">
+                  <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/seller/manage">
+                  <NavDropdown.Item>Manage Products</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/seller/revenue">
+                  <NavDropdown.Item>Revenue</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/seller/qna">
+                  <NavDropdown.Item>Q&A</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/seller/settings">
+                  <NavDropdown.Item>Settings</NavDropdown.Item>
+                </LinkContainer>
+              </NavDropdown>
+            </Card>
           {/* <Nav.Link href="#action2"><i class="fa-solid fa-dog"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
@@ -51,6 +70,7 @@ function Header() {
                 </NavDropdown.Item>
               </NavDropdown>
             </Card>
+            
           ) : (
             <Card className="ms-auto me-5 bg-info">
               <LinkContainer to="/login">

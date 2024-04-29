@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import Item
+from app.models import Item, Category, Tag, Seller
 from app.serializer import ItemSerializer
+from datetime import datetime
 
 @api_view(['GET'])
 def get_items(request):
@@ -18,9 +19,24 @@ def item_details(request, pk):
 
 @api_view(['GET','POST'])
 def create_item(request):
-    serializer = ItemSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
+    user = request.user
+    seller = Seller.objects.get(id=2)
+    tag = Tag.objects.get(id=1)
+    category = Category.objects.get(id=1)
+    item = Item.objects.create(
+        seller_id = seller,
+        category_id = category, 
+        tag_id = tag,
+        name = "",
+        price = 0,
+        description = "",
+        image_url = "",
+        rate = 0,
+        created_at = datetime.now()
+        
+        )
+    serializer = ItemSerializer(item, many=False)
+
     return Response(serializer.data)
 
 
