@@ -43,7 +43,7 @@ function ProductUpdateScreen() {
         setImage(product.image);
         setBrand(product.brand);
         setCategory(product.category);
-        setCountInStock(product.countInStock);
+        // setCountInStock(product.countInStock);
         setDescription(product.description);
       }
     }
@@ -160,15 +160,15 @@ function ProductUpdateScreen() {
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="countInStock">
+            {/* <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter Count In Stock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              ></Form.Control> */}
+            {/* </Form.Group> */}
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Control
