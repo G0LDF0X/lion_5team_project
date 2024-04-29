@@ -49,17 +49,24 @@ def create_Board(request):
     return Response(serializer.data)
 
     
-@api_view(['PUT'])  #board_update
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_Board(request, pk):
+def update_Board(request, detail_pk, update_pk):
     data = request.data
-    board = Board.objects.get(id=pk)
+    try:
+        board = Board.objects.get(id=update_pk)
+    except Board.DoesNotExist:
+        return Response({'detail': 'Board not found'}, status=404)
 
-    board.title = data['title']
-    board.content = data['content']
-    # board.image_url = data['image_url']
-    board.product_url = data['product_url']
-    board.save()
+    update_fields = []
+    for field in ['title', 'content', 'product_url']:
+        if field in data:
+            setattr(board, field, data[field])
+            update_fields.append(field)
+
+    if update_fields:
+        board.save(update_fields=update_fields)
+
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 

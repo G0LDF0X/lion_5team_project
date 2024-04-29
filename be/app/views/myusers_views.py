@@ -23,3 +23,4 @@ def get_Seller_Apply(request):
         return Response(serializer.data, status=201)
     else:
         return Response(serializer.errors, status=400)
+    
