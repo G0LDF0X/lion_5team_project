@@ -46,8 +46,19 @@ class BoardSerializer(serializers.ModelSerializer):
     
     # def get_created_at(self, obj):
     #     return obj.created_at
-    
-    
+
+from app.models import Seller, OrderItem
+
+class SellerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seller
+        fields = '__all__'  # replace with your fields
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'  # replace with your fields
+
     
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -236,4 +247,3 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     def create(self, validated_data):
         user = auth_user.objects.create_user(**validated_data)
         return user
-
