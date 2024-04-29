@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import SellerSerializer, UserSerializer
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated]) 
 def get_Seller_Apply(request):
     serializer = SellerSerializer(data=request.data)
 
