@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Board
+from app.models import Board, User
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import BoardSerializer
@@ -35,9 +35,14 @@ def get_TopBoards(request):
 @api_view(['POST'])    #board_create
 @permission_classes([IsAuthenticated])
 def create_Board(request):
-    user = request.user
+    user = User.objects.get(name=request.user)
+    # user = request.user
+    # Check if the user exists in the User model
+    # if not User.objects.filter(id=user.id).exists():
+    #     return Response({'error': 'User does not exist'}, status=400)
+
     board = Board.objects.create(
-        user_id=user.id,
+        user_id=user,
         title='nomal title',
         content='',
         image_url='',
@@ -82,9 +87,9 @@ def updateBoarddImage(request, pk):
 
 
 @api_view(['DELETE'])   #board_delete
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def delete_Board(request, pk):
-    board = Board.objects.get(_id=pk)
+    board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
 
