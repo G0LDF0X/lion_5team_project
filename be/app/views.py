@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -35,17 +34,5 @@ class RegisterDoneView(generics.GenericAPIView):
 
     
 
-@api_view(['GET'])
-def getRoutes(request):
-    if request.method == 'GET':
-        routes = [
-            '/app/token/',
-            '/app/register/',
-            '/app/register/done/',
-            '/app/token/refresh/',
-        ]
-        return Response(routes)
-=======
 # Create your views here.
->>>>>>> main
 

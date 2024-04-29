@@ -15,16 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-<<<<<<< HEAD
 
 # from app.views.users_views import LoginView, LogoutView, UserView, RegisterView
 # from django.contrib.auth import views as auth_views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('app/', include('app.urls.users_urls')),
 
-=======
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,5 +27,5 @@ urlpatterns = [
     path('qna/', include('app.urls.qna_urls')),
     path('board/', include('app.urls.boards_urls')),
     path('app/', include('app.urls.users_urls')),
->>>>>>> main
+
 ]

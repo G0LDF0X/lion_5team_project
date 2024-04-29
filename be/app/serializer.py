@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from .models import *
-<<<<<<< HEAD
-
 
 from django.contrib.auth.models import User
-=======
+
 # import requests
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -89,13 +87,11 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 
     
 from django.contrib.auth.models import User as auth_user
->>>>>>> main
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-<<<<<<< HEAD
 from rest_framework import status
 from rest_framework.response import Response
 from .models import User
@@ -160,7 +156,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 
-=======
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -241,4 +236,4 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     def create(self, validated_data):
         user = auth_user.objects.create_user(**validated_data)
         return user
->>>>>>> main
+
