@@ -1,6 +1,6 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from app.models import User_QnA, User_Answer
+from app.models import User_QnA, User_Answer, User
 from rest_framework.permissions import IsAuthenticated
 from app.serializer import UserQnASerializer, UserAnswerSerializer
 from datetime import datetime
@@ -23,11 +23,12 @@ def qna_detail(request, pk):
     })
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_user_qna(request):
-    user = request.user
+    user = User.objects.get(name=request.user)
     current_time = datetime.now()
     qna_board = User_QnA.objects.create(
-        user_id_id=user.id,
+        user_id=user,
         title='',
         content='',
         image_url='',

@@ -59,8 +59,25 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = '__all__'  # replace with your fields
 
-    
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+class ItemAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item_Answer
+        fields = '__all__'
+
+class ItemQnASerializer(serializers.ModelSerializer):
+    item_answer_set = ItemAnswerSerializer(many=True, read_only=True)
+    class Meta:
+        model = Item_QnA
+        fields = '__all__'
+
 class ItemSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True, read_only=True)
+    item_qna_set = ItemQnASerializer(many=True, read_only=True)
     class Meta:
         model = Item
         fields = '__all__'
@@ -71,8 +88,6 @@ class ItemSerializer(serializers.ModelSerializer):
     # def get_qna(self, obj):
     #     return obj.qna_set.all()
     
-
-
 class UserQnASerializer(serializers.ModelSerializer):
     class Meta:
         model = User_QnA
