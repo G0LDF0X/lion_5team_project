@@ -40,7 +40,7 @@ export const listProducts =
 export const listProductDetails = (id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
-    const res = await fetch(`/items/${id}`);
+    const res = await fetch(`/items/detail/${id}`);
     const data = await res.json();
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {

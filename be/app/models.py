@@ -98,13 +98,19 @@ class User_QnA(models.Model):
     image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
 class User_Answer(models.Model):
-    user_id=models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    seller_id=models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
     user_qna_id=models.ForeignKey(User_QnA, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at= models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
 class Shipping_Address(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.DO_NOTHING)
@@ -152,6 +158,9 @@ class Board(models.Model):
     like = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
 class Reply(models.Model):
     # 외래키
     board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
@@ -160,6 +169,9 @@ class Reply(models.Model):
     content = models.TextField()
     replied_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.content
 
 class Bookmark(models.Model):
     # 외래 키

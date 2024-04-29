@@ -3,7 +3,7 @@ import { Row, Col, Image, ListGroup, Button, Card, Form} from "react-bootstrap";
 import { Link, useParams, useNavigate} from "react-router-dom";
 import Rating from "../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
-import { listProductDetails, createProductReview } from "../actions/productActions";
+import { listProductDetails} from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 // import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
@@ -26,23 +26,23 @@ function Productcreen() {
 
 
   useEffect(() => {
-    if (successProductReview) {
-      dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
-      setRating(0);
-      setComment('');
+    // if (successProductReview) {
+    //   dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
+    //   setRating(0);
+    //   setComment('');
       
-    }
+    // }
     dispatch(listProductDetails(id));
 
-  }, [dispatch, id, successProductReview]);
+  }, [dispatch, id]);
   const addToCartHandler = () => {
     navigate(`/cart/${id}`, {state: {qty}});
   }
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(createProductReview(id, {rating, comment}));
-  }
-  // const product = product.find((p) => p._id === id)s
+  // const submitHandler = (e) => {
+  //   e.preventDefault();
+  //   dispatch(createProductReview(id, {rating, comment}));
+  // }
+  // // const product = product.find((p) => p._id === id)s
   return (
     <div>
       <Link to="/" className="btn btn-light my-2">Go Back
@@ -132,7 +132,7 @@ function Productcreen() {
           </Col>
         </Row>
         
-        <Row> 
+        {/* <Row> 
           <Col md={6}>
             <h2>Reviews</h2>
             {product.reviews.length === 0 && <Message>No Reviews</Message>}
@@ -148,7 +148,7 @@ function Productcreen() {
               
             </ListGroup>
           </Col>
-        </Row>
+        </Row> */}
         </div>
   )}
         
