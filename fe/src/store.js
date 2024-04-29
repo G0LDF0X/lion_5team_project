@@ -18,7 +18,7 @@ import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
-  //   userDetailsReducer,
+    userDetailsReducer,
   //   userUpdateProfileReducer,
   //   userListReducer,
   //   userDeleteReducer,
@@ -37,6 +37,8 @@ import {
   qnaListReducer,
   qnaDetailsReducer,
   qnaCreateReducer,
+  qnaDeleteReducer,
+  qnaUpdateReducer,
 } from "./reducers/qnaReducers";
 
 import {
@@ -59,7 +61,7 @@ const reducer = combineReducers({
     cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  //   userDetails: userDetailsReducer,
+    userDetails: userDetailsReducer,
   //   userUpdateProfile: userUpdateProfileReducer,
   //   userList: userListReducer,
   //   userDelete: userDeleteReducer,
@@ -80,6 +82,8 @@ const reducer = combineReducers({
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
   qnaCreate: qnaCreateReducer,
+  qnaUpdate: qnaUpdateReducer,
+  qnaDelete: qnaDeleteReducer,
 
 
   boardList: boardListReducer,

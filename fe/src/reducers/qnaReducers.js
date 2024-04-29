@@ -11,6 +11,16 @@ import {
     QNA_CREATE_SUCCESS,
     QNA_CREATE_FAIL,
     QNA_CREATE_RESET,
+
+    QNA_UPDATE_REQUEST,
+    QNA_UPDATE_SUCCESS,
+    QNA_UPDATE_FAIL,
+    QNA_UPDATE_RESET,
+
+    QNA_DELETE_REQUEST,
+    QNA_DELETE_SUCCESS,
+    QNA_DELETE_FAIL,
+
 } from "../constants/qnaConstants";
 
 
@@ -53,6 +63,34 @@ export const qnaCreateReducer = (state = {}, action) => {
             return { loading: false, error: action.payload };
         case QNA_CREATE_RESET:
             return {};
+        default:
+            return state;
+    }
+}
+
+export const qnaUpdateReducer = (state = { qna: {} }, action) => {
+    switch (action.type) {
+        case QNA_UPDATE_REQUEST:
+            return { loading: true };
+        case QNA_UPDATE_SUCCESS:
+            return { loading: false, success: true, qna: action.payload };
+        case QNA_UPDATE_FAIL:
+            return { loading: false, error: action.payload };
+        case QNA_UPDATE_RESET:
+            return { qna: {} };
+        default:
+            return state;
+    }
+}
+
+export const qnaDeleteReducer = (state = {}, action) => {
+    switch (action.type) {
+        case QNA_DELETE_REQUEST:
+            return { loading: true };
+        case QNA_DELETE_SUCCESS:
+            return { loading: false, success: true };
+        case QNA_DELETE_FAIL:
+            return { loading: false, error: action.payload };
         default:
             return state;
     }
