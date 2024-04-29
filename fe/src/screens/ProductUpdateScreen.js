@@ -53,7 +53,7 @@ function ProductUpdateScreen() {
     e.preventDefault();
     dispatch(
       updateProduct({
-        _id: productId,
+        id: productId,
         name,
         price,
         image,
@@ -171,12 +171,15 @@ function ProductUpdateScreen() {
             {/* </Form.Group> */}
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              ></Form.Control>
+              <Form.Select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+  >
+    <option value="1">산책용품</option>
+    <option value="2">간식</option>
+    {/* <option value="Clothing">Clothing</option> */}
+    {/* Add more options as needed */}
+  </Form.Select>
             </Form.Group>
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
@@ -187,7 +190,7 @@ function ProductUpdateScreen() {
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="">
               Update
             </Button>
           </Form>

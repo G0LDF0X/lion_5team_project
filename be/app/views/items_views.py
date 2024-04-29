@@ -17,7 +17,7 @@ def item_details(request, pk):
     serializer = ItemSerializer(item)
     return Response(serializer.data)
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def create_item(request):
     user = request.user
     seller = Seller.objects.get(id=2)
@@ -40,7 +40,7 @@ def create_item(request):
     return Response(serializer.data)
 
 
-@api_view(['GET','DELETE'])
+@api_view(['DELETE'])
 def delete_item(request, pk):
     try:
         item = Item.objects.get(pk=pk)
@@ -49,13 +49,15 @@ def delete_item(request, pk):
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
-@api_view(['GET','PUT'])
+@api_view(['PUT'])
 def update_item(request, pk):
     data = request.data
+    category = Category.objects.get(id=data['category'])
     item = Item.objects.get(id=pk)
 
     item.name = data['name']
     item.price = data['price']
+    item.category_id = category
     item.description = data['description']
     item.save()
     serializer = ItemSerializer(item, many=False)
