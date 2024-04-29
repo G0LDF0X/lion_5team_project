@@ -14,7 +14,7 @@ function ProductUpdateScreen() {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(0);
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -41,7 +41,7 @@ function ProductUpdateScreen() {
         setName(product.name);
         setPrice(product.price);
         setImage(product.image);
-        setBrand(product.brand);
+        // setBrand(product.brand);
         setCategory(product.category);
         // setCountInStock(product.countInStock);
         setDescription(product.description);
@@ -50,9 +50,9 @@ function ProductUpdateScreen() {
   }, [product, productId, dispatch, navigate, successUpdate]);
 
   const submitHandler = (e) => {
+    
     e.preventDefault();
-    dispatch(
-      updateProduct({
+    console.log({
         id: productId,
         name,
         price,
@@ -60,6 +60,17 @@ function ProductUpdateScreen() {
         brand,
         category,
         countInStock,
+        description,
+      })
+    dispatch(
+      updateProduct({
+        id: productId,
+        name,
+        price,
+        image,
+        // brand,
+        category,
+        // countInStock,
         description,
       })
     );
@@ -122,7 +133,7 @@ function ProductUpdateScreen() {
                 type="number"
                 placeholder="Enter Price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(e.target.value) }
               ></Form.Control>
             </Form.Group>
             {/* <Form.Group controlId="image">
@@ -151,7 +162,7 @@ function ProductUpdateScreen() {
               />
               {uploading && <Loading />}
             </Form.Group>
-            <Form.Group controlId="brand">
+            {/* <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
@@ -159,7 +170,7 @@ function ProductUpdateScreen() {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
-            </Form.Group>
+            </Form.Group> */}
             {/* <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control

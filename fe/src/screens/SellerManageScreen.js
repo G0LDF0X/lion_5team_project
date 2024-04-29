@@ -92,7 +92,7 @@ function ProductListScreen() {
             <tr key={product.id}>
               <td>{product.id}</td>
               <td>{product.name}</td>
-              <td>${product.price}</td>
+              <td>{product.price}₩</td>
               {product.category_id === 1 ? (
                 <td>산책용품</td> ) :
                 product.category_id === 2 ? (
