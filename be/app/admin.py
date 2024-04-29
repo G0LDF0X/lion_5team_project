@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Seller,Board,Tag,Category,User,User_QnA,User_Answer
+from .models import Seller,Board,Tag,Category,User,User_QnA,User_Answer, Item
+admin.site.register(Item)
 admin.site.register(Board)
 admin.site.register(Seller)
 admin.site.register(Tag)
