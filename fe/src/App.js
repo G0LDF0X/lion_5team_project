@@ -22,13 +22,16 @@ import SellerQAScreen from './screens/SellerQAScreen';
 import SellerSettingScreen from './screens/SellerSettingScreen';
 import BoardScreen from './screens/BoardScreen';
 import BoardDetailScreen from './screens/BoardDetailScreen';
-import BoardPostScreen from './screens/BoardPostScreen';
+
 import BoardUpdateScreen from './screens/BoardUpdateScreen';
 import QAScreen from './screens/QAScreen';
 import QACreateScreen from './screens/QACreateScreen';
 import QADetailScreen from './screens/QADetailScreen';
 import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import ProductScreen from './screens/ProductScreen';
+import SampleEditorScreen from './screens/SampleEditorScreen';
 function App() {
   return (
     <Router>
@@ -39,14 +42,15 @@ function App() {
           <Routes>
             <Route path='' element={<HomeScreen/>} />
             <Route path='/items' element={<ProductsScreen/>} />
-            <Route path='/items/detail/:id' element={<ProductsScreen/>} />
+            <Route path='/items/detail/:id' element={<ProductScreen/>} />
             <Route path='/cart' element={<CartScreen/>} />
 
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />
 
-            <Route path='/login/' element = {<LoginScreen/>} />
-            <Route path='/users/bookmark/' element={<BookmarkScreen/>} />
+            <Route path='/login' element = {<LoginScreen/>} />
+            <Route path='/register' element = {<RegisterScreen/>} />
+            <Route path='/users/bookmark' element={<BookmarkScreen/>} />
             <Route path='/users/profile' element={<UserProfileScreen/>} />
             <Route path='/users/myshopping'element={<MyShoppingScreen/>} />
             <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
@@ -62,12 +66,14 @@ function App() {
 
             <Route path='/board' element={<BoardScreen/>} />
             <Route path='/board/detail/:id' element={<BoardDetailScreen/>} />
-            <Route path='/board/post' element={<BoardPostScreen/>} />
+            {/* <Route path='/board/post' element={<BoardPostScreen/>} /> */}
             <Route path='/board/update/:id' element={<BoardUpdateScreen/>} />
 
             <Route path='/qna' element={<QAScreen/>} />
             <Route path='/qna/create' element={<QACreateScreen/>} />
             <Route path='/qna/detail/:id' element={<QADetailScreen/>} />
+
+            <Route path='/editor' element={<SampleEditorScreen/>} />
           </Routes>
         </Container>  
       </main>

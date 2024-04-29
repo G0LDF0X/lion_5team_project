@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.http import JsonResponse
@@ -44,4 +45,7 @@ def getRoutes(request):
             '/app/token/refresh/',
         ]
         return Response(routes)
+=======
+# Create your views here.
+>>>>>>> main
 

@@ -14,7 +14,7 @@ import {
   reviewListReducer,
   reviewDetailsReducer,
 } from "./reducers/reviewReducers";
-// import { cartReducer } from "./reducers/cartReducers";
+import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -24,23 +24,27 @@ import {
   //   userDeleteReducer,
   //   userUpdateReducer,
 } from "./reducers/userReducers";
-// import {
-//   orderCreateReducer,
-//   orderDetailsReducer,
+import {
+  orderCreateReducer,
+  orderDetailsReducer,
 //   orderPayReducer,
 //   orderListMyReducer,
 //   orderListReducer,
 //   orderDeliverReducer,
-// } from "./reducers/OrderReducers";
+} from "./reducers/orderReducers";
 
 import {
   qnaListReducer,
   qnaDetailsReducer,
+  qnaCreateReducer,
 } from "./reducers/qnaReducers";
 
 import {
   boardListReducer,
   boardDetailsReducer,
+  boardCreateReducer,
+  boardUpdateReducer,
+  boardDeleteReducer
 } from "./reducers/boardReducers";
 
 const reducer = combineReducers({
@@ -52,7 +56,7 @@ const reducer = combineReducers({
   //   productReviewCreate: productReviewCreateReducer,
   //   productTopRated : productTopRatedReducer,
 
-  //   cart: cartReducer,
+    cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   //   userDetails: userDetailsReducer,
@@ -61,8 +65,8 @@ const reducer = combineReducers({
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
 
-  //   orderCreate: orderCreateReducer,
-  //   orderDetails: orderDetailsReducer,
+    orderCreate: orderCreateReducer,
+    orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
   //   orderListMY: orderListMyReducer,
   //   orderList: orderListReducer,
@@ -75,10 +79,15 @@ const reducer = combineReducers({
 
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
+  qnaCreate: qnaCreateReducer,
 
 
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,
+  boardCreate: boardCreateReducer,
+  boardUpdate: boardUpdateReducer,
+  boardDelete: boardDeleteReducer,
+
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
