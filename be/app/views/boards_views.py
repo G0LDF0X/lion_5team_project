@@ -20,7 +20,7 @@ def get_Boards(request):     #board_index
 
 @api_view(['GET'])      #board_detail
 def get_Board(request, pk):
-    board = get_object_or_404(Board, _id=pk)
+    board = get_object_or_404(Board, id=pk)
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
@@ -37,7 +37,7 @@ def get_TopBoards(request):
 def create_Board(request):
     user = request.user
     board = Board.objects.create(
-        user_id=user,
+        user_id=user.id,
         title='nomal title',
         content='',
         image_url='',
@@ -53,12 +53,20 @@ def create_Board(request):
 @permission_classes([IsAuthenticated])
 def update_Board(request, pk):
     data = request.data
-    board = Board.objects.get(_id=pk)
+    board = Board.objects.get(id=pk)
 
     board.title = data['title']
     board.content = data['content']
-    board.image_url = data['image_url']
+    # board.image_url = data['image_url']
     board.product_url = data['product_url']
+    board.save()
+    serializer = BoardSerializer(board, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def updateBoarddImage(request, pk):
+    board = Board.objects.get(id=pk)
+    board.image_url = request.FILES['file']
     board.save()
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)

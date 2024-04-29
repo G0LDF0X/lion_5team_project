@@ -15,3 +15,28 @@ def item_details(request, pk):
     item = Item.objects.get(pk=pk)
     serializer = ItemSerializer(item)
     return Response(serializer.data)
+
+@api_view(['GET','POST'])
+def create_item(request):
+    serializer = ItemSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(['GET','DELETE'])
+def delete_item(request, pk):
+    try:
+        item = Item.objects.get(pk=pk)
+        item.delete()
+        return Response("Item deleted")
+    except Item.DoesNotExist:
+        return Response("Item does not exist")
+
+@api_view(['GET','PUT'])
+def update_item(request, pk):
+    item = Item.objects.get(pk=pk)
+    serializer = ItemSerializer(instance=item, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
