@@ -63,13 +63,13 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = '__all__'
+        fields = 'name','price','description','image','category'
 
-    def get_reviews(self, obj):
-        return obj.review_set.all()
+    # def get_reviews(self, obj):
+    #     return obj.review_set.all()
     
-    def get_qna(self, obj):
-        return obj.qna_set.all()
+    # def get_qna(self, obj):
+    #     return obj.qna_set.all()
     
 
 

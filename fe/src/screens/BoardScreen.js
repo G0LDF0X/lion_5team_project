@@ -14,7 +14,14 @@ function BoardScreen() {
   const { loading, error, boards } = boardList;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
   console.log(userInfo);
+>>>>>>> origin
+=======
+  console.log(userInfo);
+>>>>>>> main
   const boardCreate = useSelector((state) => state.boardCreate);
   const { loading:loadingCreate, error: errorCreate, success: successCreate, board: createdBoard} = boardCreate;
   console.log(boards);

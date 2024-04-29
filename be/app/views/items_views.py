@@ -18,7 +18,8 @@ def item_details(request, pk):
 
 @api_view(['GET','POST'])
 def create_item(request):
-    serializer = ItemSerializer(data=request.data)
+    item = request.data
+    serializer = ItemSerializer(data=item)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -36,7 +37,7 @@ def delete_item(request, pk):
 @api_view(['GET','PUT'])
 def update_item(request, pk):
     item = Item.objects.get(pk=pk)
-    serializer = ItemSerializer(instance=item, data=request.data)
+    serializer = ItemSerializer(item, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
