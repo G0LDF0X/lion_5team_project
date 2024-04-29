@@ -17,8 +17,6 @@ function BoardScreen() {
 
   console.log(userInfo);
 
-  console.log(userInfo);
-
   const boardCreate = useSelector((state) => state.boardCreate);
   const { loading:loadingCreate, error: errorCreate, success: successCreate, board: createdBoard} = boardCreate;
   console.log(boards);
