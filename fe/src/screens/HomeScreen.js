@@ -100,7 +100,7 @@ function HomeScreen() {
         </Col> 
         </Link>
       </Row> */}
-      { <Row>
+       <Row>
      
         <Col md={9}>
           <Link to="/items">
@@ -189,7 +189,7 @@ function HomeScreen() {
             </Row>
           )}
         </Col>
-      </Row> }
+      </Row> 
       <div className="pagination-container">
       </div>
     </div>
