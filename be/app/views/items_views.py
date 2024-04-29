@@ -3,11 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import Item, Category, Tag, Seller
 from app.serializer import ItemSerializer
-<<<<<<< HEAD
 from datetime import datetime
-=======
-from rest_framework import status
->>>>>>> 98c8f6d3bf02ea320cbe58c4aad37c8552979855
 
 @api_view(['GET'])
 def get_items(request):
@@ -21,9 +17,8 @@ def item_details(request, pk):
     serializer = ItemSerializer(item)
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def create_item(request):
-<<<<<<< HEAD
     user = request.user
     seller = Seller.objects.get(id=2)
     tag = Tag.objects.get(id=1)
@@ -43,15 +38,6 @@ def create_item(request):
     serializer = ItemSerializer(item, many=False)
 
     return Response(serializer.data)
-=======
-    if request.method == 'POST':
-        serializer = ItemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
->>>>>>> 98c8f6d3bf02ea320cbe58c4aad37c8552979855
 
 
 @api_view(['GET','DELETE'])
@@ -66,7 +52,7 @@ def delete_item(request, pk):
 @api_view(['GET','PUT'])
 def update_item(request, pk):
     item = Item.objects.get(pk=pk)
-    serializer = ItemSerializer(item, data=request.data)
+    serializer = ItemSerializer(instance=item, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
