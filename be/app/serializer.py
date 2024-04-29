@@ -5,7 +5,13 @@ from django.contrib.auth.models import User
 
 # import requests
 
+class ReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reply
+        fields = '__all__'
+
 class BoardSerializer(serializers.ModelSerializer):
+    reply_set = ReplySerializer(many=True, read_only=True)
     # title = serializers.SerializerMethodField(read_only=True)
     # content = serializers.SerializerMethodField(read_only=True)
     # product_url = serializers.SerializerMethodField(read_only=True)
@@ -16,8 +22,8 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = '__all__'
-    
+        fields =  '__all__'
+
     # def get_title(self, obj):
     #     return obj.title
     
