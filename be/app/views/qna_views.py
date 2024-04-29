@@ -54,11 +54,11 @@ def update_user_qna(request, pk):
     # qna_board.image_url = request.data['image_url'] 
     qna_board.save()    
 
-    # 유효성 검사를 수행하고 에러를 확인합니다.
+    # ??? ??? ???? ??? ?????.
     serializer = UserQnASerializer(qna_board, data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    # 유효한 경우에만 데이터를 저장합니다.
+    # ??? ???? ???? ?????.
     serializer.save()
 
     return Response(serializer.data)
