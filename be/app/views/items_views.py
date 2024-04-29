@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import Item
 from app.serializer import ItemSerializer
+from rest_framework import status
 
 @api_view(['GET'])
 def get_items(request):
@@ -18,11 +19,13 @@ def item_details(request, pk):
 
 @api_view(['POST'])
 def create_item(request):
-    item = request.data
-    serializer = ItemSerializer(data=item)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    if request.method == 'POST':
+        serializer = ItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET','DELETE'])

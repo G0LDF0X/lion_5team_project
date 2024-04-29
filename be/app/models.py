@@ -102,7 +102,7 @@ class User_QnA(models.Model):
         return self.title
 
 class User_Answer(models.Model):
-    seller_id=models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
+    user_id=models.ForeignKey(User, on_delete=models.DO_NOTHING)
     user_qna_id=models.ForeignKey(User_QnA, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
