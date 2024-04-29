@@ -92,11 +92,11 @@ export const updateProduct = (product) => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState();
-    const res = await fetch(`/items/update/${product._id}`, {
+    const res = await fetch(`/items/update/${product.id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        // Authorization: `Bearer ${userInfo.token}`,
       },
       body: JSON.stringify(product),
     });

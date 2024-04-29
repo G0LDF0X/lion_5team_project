@@ -32,6 +32,7 @@ function ProductListScreen() {
       dispatch(createProduct());
       // dispatch(createProduct(product));
   }
+  
     useEffect(() => {
       // if(!userInfo.isAdmin) {
         //     navigate("/login");
@@ -82,7 +83,7 @@ function ProductListScreen() {
             <th>NAME</th>
             <th>PRICE</th>
             <th>CATEGORY</th>
-            <th>BRAND</th>
+            {/* <th>BRAND</th> */}
             <th></th>
           </tr>
         </thead>
@@ -91,11 +92,16 @@ function ProductListScreen() {
             <tr key={product.id}>
               <td>{product.id}</td>
               <td>{product.name}</td>
-              <td>${product.price}</td>
-              <td>{product.category}</td>
-              <td>{product.brand}</td>
+              <td>{product.price}₩</td>
+              {product.category_id === 1 ? (
+                <td>산책용품</td> ) :
+                product.category_id === 2 ? (
+                  <td>간식</td>
+                ) : null }
+              {/* <td>{product.category}</td> */}
+              {/* <td>{product.brand}</td> */}
               <td>
-                <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                <LinkContainer to={`/items/update/${product.id}`}>
                   <Button variant="light" className="btn-sm">
                     <i className="fas fa-edit"></i>
                   </Button>
@@ -103,7 +109,7 @@ function ProductListScreen() {
                 <Button
                   variant="danger"
                   className="btn-sm"
-                  onClick={() => deleteHandler(product._id)}
+                  onClick={() => deleteHandler(product.id)}
                 >
                   <i className="fas fa-trash"></i>
                 </Button>

@@ -14,7 +14,7 @@ function ProductUpdateScreen() {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(0);
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -31,35 +31,46 @@ function ProductUpdateScreen() {
   } = productUpdate;
 
   useEffect(() => {
-    // if (successUpdate) {
-    //   dispatch({ type: PRODUCT_UPDATE_RESET });
-    //   navigate("/admin/productlist");
-    // } else {
-    //   if (!product.name || product._id !== Number(productId)) {
-    //     dispatch(listProductDetails(productId));
-    //   } else {
-    //     setName(product.name);
-    //     setPrice(product.price);
-    //     setImage(product.image);
-    //     setBrand(product.brand);
-    //     setCategory(product.category);
-    //     setCountInStock(product.countInStock);
-    //     setDescription(product.description);
-    //   }
-    // }
+    if (successUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+      navigate("/seller/manage");
+    } else {
+      if (!product.name  ) {
+        dispatch(listProductDetails(productId));
+      } else {
+        setName(product.name);
+        setPrice(product.price);
+        setImage(product.image);
+        // setBrand(product.brand);
+        setCategory(product.category);
+        // setCountInStock(product.countInStock);
+        setDescription(product.description);
+      }
+    }
   }, [product, productId, dispatch, navigate, successUpdate]);
 
   const submitHandler = (e) => {
+    
     e.preventDefault();
-    dispatch(
-      updateProduct({
-        _id: productId,
+    console.log({
+        id: productId,
         name,
         price,
         image,
         brand,
         category,
         countInStock,
+        description,
+      })
+    dispatch(
+      updateProduct({
+        id: productId,
+        name,
+        price,
+        image,
+        // brand,
+        category,
+        // countInStock,
         description,
       })
     );
@@ -94,7 +105,7 @@ function ProductUpdateScreen() {
 
   return (
     <div>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+      <Link to="/seller/manage" className="btn btn-light my-3">
         Go Back
       </Link>
       <FormContainer>
@@ -122,7 +133,7 @@ function ProductUpdateScreen() {
                 type="number"
                 placeholder="Enter Price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => setPrice(e.target.value) }
               ></Form.Control>
             </Form.Group>
             {/* <Form.Group controlId="image">
@@ -151,7 +162,7 @@ function ProductUpdateScreen() {
               />
               {uploading && <Loading />}
             </Form.Group>
-            <Form.Group controlId="brand">
+            {/* <Form.Group controlId="brand">
               <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
@@ -159,24 +170,27 @@ function ProductUpdateScreen() {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="countInStock">
+            </Form.Group> */}
+            {/* <Form.Group controlId="countInStock">
               <Form.Label>Count In Stock</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter Count In Stock"
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              ></Form.Control> */}
+            {/* </Form.Group> */}
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              ></Form.Control>
+              <Form.Select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+  >
+    <option value="1">산책용품</option>
+    <option value="2">간식</option>
+    {/* <option value="Clothing">Clothing</option> */}
+    {/* Add more options as needed */}
+  </Form.Select>
             </Form.Group>
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
@@ -187,7 +201,7 @@ function ProductUpdateScreen() {
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="">
               Update
             </Button>
           </Form>

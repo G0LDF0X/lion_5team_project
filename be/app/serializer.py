@@ -4,7 +4,7 @@ from app.models import *
 from django.contrib.auth.models import User
 
 # import requests
-    
+
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
@@ -12,9 +12,48 @@ class ReplySerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)
+    # title = serializers.SerializerMethodField(read_only=True)
+    # content = serializers.SerializerMethodField(read_only=True)
+    # product_url = serializers.SerializerMethodField(read_only=True)
+    # image_url = serializers.SerializerMethodField(read_only=True)
+    # show = serializers.SerializerMethodField(read_only=True)
+    # like = serializers.SerializerMethodField(read_only=True)
+    # created_at = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Board
-        fields = '__all__'
+        fields =  '__all__'
+
+    # def get_title(self, obj):
+    #     return obj.title
+    
+    # def get_content(self, obj):
+    #     return obj.content
+    
+    # def get_product_url(self, obj):
+    #     try:
+    #         response = requests.get(obj.product_url)
+    #         return response.url
+    #     except requests.exceptions.RequestException as e:
+    #         return f"Error fetching product URL: {e}"
+
+    # def get_image_url(self, obj):
+    #     try:
+    #         response = requests.get(obj.image_url)
+    #         return response.url
+    #     except requests.exceptions.RequestException as e:
+    #         return f"Error fetching product URL: {e}"
+
+    # def get_show(self, obj):
+    #     return obj.show
+    
+    # def get_like(self, obj):
+    #     return obj.like
+    
+    # def get_created_at(self, obj):
+    #     return obj.created_at
+
+from app.models import Seller, OrderItem
 
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
