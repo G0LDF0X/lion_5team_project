@@ -102,7 +102,7 @@ class User_QnA(models.Model):
         return self.title
 
 class User_Answer(models.Model):
-    seller_id=models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
+    user_id=models.ForeignKey(User, on_delete=models.DO_NOTHING)
     user_qna_id=models.ForeignKey(User_QnA, on_delete=models.CASCADE)
 
     title = models.CharField(max_length=100)
@@ -138,7 +138,7 @@ class Item_QnA(models.Model):
 
 class Item_Answer(models.Model):
     # 외래키
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    seller_id = models.ForeignKey(Seller, on_delete=models.DO_NOTHING)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
     item_qna_id = models.ForeignKey(Item_QnA, on_delete=models.CASCADE)
 
