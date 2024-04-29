@@ -65,11 +65,11 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = '__all__'
 
-    def get_reviews(self, obj):
-        return obj.review_set.all()
+    # def get_reviews(self, obj):
+    #     return obj.review_set.all()
     
-    def get_qna(self, obj):
-        return obj.qna_set.all()
+    # def get_qna(self, obj):
+    #     return obj.qna_set.all()
     
 
 
@@ -110,6 +110,7 @@ from rest_framework.views import APIView
 from .models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+
 
 # class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     @classmethod
@@ -209,6 +210,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             data[k] = v
 
         return data
+
 # class UserSerializer(serializers.ModelSerializer):
 #     username = serializers.SerializerMethodField(read_only=True)
 #     id = serializers.SerializerMethodField(read_only=True)

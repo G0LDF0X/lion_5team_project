@@ -12,7 +12,7 @@ urlpatterns = [
     path('upload/', upload_Board, name='board_upload'), #
 
     path('update/image/<str:pk>/', updateBoarddImage, name='board_update_image'), #
-    path('update/<str:pk>/', update_Board, name='board_update'),    #
+    path('detail/<str:detail_pk>/board/update/<str:update_pk>/', update_Board, name='board_update'),    #
     path('delete/<str:pk>/', delete_Board, name='board_delete'),   # 
     
     
