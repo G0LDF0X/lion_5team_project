@@ -16,7 +16,7 @@ def item_details(request, pk):
     serializer = ItemSerializer(item)
     return Response(serializer.data)
 
-@api_view(['GET','POST'])
+@api_view(['POST'])
 def create_item(request):
     item = request.data
     serializer = ItemSerializer(data=item)
