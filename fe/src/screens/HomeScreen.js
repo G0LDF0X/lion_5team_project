@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import Product from "../components/Product";
 import Review from "../components/Review";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import {listReviews} from "../actions/reviewActions";
@@ -61,32 +61,41 @@ function HomeScreen() {
       {/* {!query && <ProductCarousel />} */}
       <HomeHeader />
       <Row>
-        <Col md={20}>
+        <Link to="/items">
+         <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Products</h1>
           </Card>
           </Col>
+        </Link>
+        <Link to="/reviews">
         <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Reviews</h1>
           </Card>
         </Col>
+        </Link>
+        <Link to="/creators">
         <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Creators</h1>
           </Card>
         </Col>
+        </Link>
+        <Link to="/board">
         <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Boards</h1>
           </Card>
         </Col>
+        </Link>
+        <Link to="/qna">
         <Col md={20}>
           <Card style={{height:'300px', borderRadius:'0'}}>
             <h1>Q&A</h1>
           </Card>
-        </Col>
-        
+        </Col> 
+        </Link>
       </Row>
       {/* <Row>
      

@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.boards_views import get_Boards, get_Board, get_TopBoards, create_Board, update_Board, delete_Board, upload_Board
+from app.views.boards_views import get_Boards, get_Board, get_TopBoards, create_Board, update_Board, delete_Board, upload_Board, updateBoarddImage
 
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     path('create/', create_Board, name='board_create'), #
     path('upload/', upload_Board, name='board_upload'), #
 
+    path('update/image/<str:pk>/', updateBoarddImage, name='board_update_image'), #
     path('update/<str:pk>/', update_Board, name='board_update'),    #
     path('delete/<str:pk>/', delete_Board, name='board_delete'),   # 
     
