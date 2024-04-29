@@ -4,9 +4,9 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import {
   productListReducer,
   productDetailsReducer,
-  //   productDeleteReducer,
-  //   productCreateReducer,
-  //   productUpdateReducer,
+  productDeleteReducer,
+  productCreateReducer,
+  productUpdateReducer,
   //   productReviewCreateReducer,
   //   productTopRatedReducer,
 } from "./reducers/productReducers";
@@ -18,7 +18,7 @@ import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
-    userDetailsReducer,
+  userDetailsReducer,
   //   userUpdateProfileReducer,
   //   userListReducer,
   //   userDeleteReducer,
@@ -27,10 +27,10 @@ import {
 import {
   orderCreateReducer,
   orderDetailsReducer,
-//   orderPayReducer,
-//   orderListMyReducer,
-//   orderListReducer,
-//   orderDeliverReducer,
+  //   orderPayReducer,
+  //   orderListMyReducer,
+  //   orderListReducer,
+  //   orderDeliverReducer,
 } from "./reducers/orderReducers";
 
 import {
@@ -46,29 +46,29 @@ import {
   boardDetailsReducer,
   boardCreateReducer,
   boardUpdateReducer,
-  boardDeleteReducer
+  boardDeleteReducer,
 } from "./reducers/boardReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
-  //   productUpdate: productUpdateReducer,
-  //   productDelete: productDeleteReducer,
-  //   productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
   //   productReviewCreate: productReviewCreateReducer,
   //   productTopRated : productTopRatedReducer,
 
-    cart: cartReducer,
+  cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-    userDetails: userDetailsReducer,
+  userDetails: userDetailsReducer,
   //   userUpdateProfile: userUpdateProfileReducer,
   //   userList: userListReducer,
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
 
-    orderCreate: orderCreateReducer,
-    orderDetails: orderDetailsReducer,
+  orderCreate: orderCreateReducer,
+  orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
   //   orderListMY: orderListMyReducer,
   //   orderList: orderListReducer,
@@ -77,21 +77,17 @@ const reducer = combineReducers({
   reviewList: reviewListReducer,
   reviewDetail: reviewDetailsReducer,
 
-
-
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
   qnaCreate: qnaCreateReducer,
   qnaUpdate: qnaUpdateReducer,
   qnaDelete: qnaDeleteReducer,
 
-
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,
   boardCreate: boardCreateReducer,
   boardUpdate: boardUpdateReducer,
   boardDelete: boardDeleteReducer,
-
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -105,10 +101,10 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 const initialState = {
-    cart: {
-      cartItems: cartItemsFromStorage,
-      shippingAddress: shippingAddressFromStorage,
-    },
+  cart: {
+    cartItems: cartItemsFromStorage,
+    shippingAddress: shippingAddressFromStorage,
+  },
   userLogin: { userInfo: userInfoFromStorage },
 };
 
