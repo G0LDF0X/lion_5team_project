@@ -1,33 +1,43 @@
 import {
-  CART_ADD_ITEM,
-  CART_REMOVE_ITEM,
-  CART_SAVE_SHIPPING_ADDRESS,
-  CART_SAVE_PAYMENT_METHOD,
+  CART_ITEM_LIST_REQUEST,
+  CART_ITEM_LIST_SUCCESS,
+  CART_ITEM_LIST_FAIL,
+  CART_ADD_ITEM_REQUEST,
+  CART_ADD_ITEM_SUCCESS,
+  CART_ADD_ITEM_FAIL,
+  CART_REMOVE_ITEM_REQUEST,
+  CART_REMOVE_ITEM_SUCCESS,
+  CART_REMOVE_ITEM_FAIL,
 } from "../constants/cartConstants";
 
-export const addToCart = (id, qty) => async (dispatch, getState) => {
-  const res = await fetch(`/api/products/${id}`);
-  const data = await res.json();
-
-  const cartItems = getState().cart.cartItems;
-  const existsItem = cartItems.find((x) => x.product == id);
-  console.log(existsItem);
-  // console.log(cartItems);
-  if (existsItem) {
-    dispatch({
-      type: CART_ADD_ITEM,
-      payload: {
-        product: data._id,
-        name: data.name,
-        image: data.image,
-        price: data.price,
-        countInStock: data.countInStock,
-        qty: existsItem.qty + qty,
+export const listCartItems = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CART_ITEM_LIST_REQUEST });
+    const res = await fetch(`/cart/`, {
+      headers: {
+        // Authorization: `Bearer ${getState().userLogin.userInfo.token}`,
       },
     });
-  } else {
+    const data = await res.json();
+    dispatch({ type: CART_ITEM_LIST_SUCCESS, payload: data });
+  } catch (error) {
     dispatch({
-      type: CART_ADD_ITEM,
+      type: CART_ITEM_LIST_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+}
+
+export const addToCart = (id, qty) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: CART_ADD_ITEM_REQUEST });
+    const res = await fetch(`/items/detail/${id}`);
+    const data = await res.json();
+    dispatch({
+      type: CART_ADD_ITEM_SUCCESS,
       payload: {
         product: data._id,
         name: data.name,
@@ -37,30 +47,34 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
         qty,
       },
     });
+    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+  } catch (error) {
+    dispatch({
+      type: CART_ADD_ITEM_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
   }
-
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
-};
+}
 
 export const removeFromCart = (id) => (dispatch, getState) => {
-  dispatch({
-    type: CART_REMOVE_ITEM,
-    payload: id,
-  });
-  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
-};
-
-export const saveShippingAddress = (data) => (dispatch) => {
-  dispatch({
-    type: CART_SAVE_SHIPPING_ADDRESS,
-    payload: data,
-  });
-  localStorage.setItem("shippingAddress", JSON.stringify(data));
-};
-export const savePaymentMethod = (data) => (dispatch) => {
-  dispatch({
-    type: CART_SAVE_PAYMENT_METHOD,
-    payload: data,
-  });
-  localStorage.setItem("paymentMethod", JSON.stringify(data));
-};
+  try {
+    dispatch({ type: CART_REMOVE_ITEM_REQUEST });
+    dispatch({
+      type: CART_REMOVE_ITEM_SUCCESS,
+      payload: id,
+    });
+    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+  }
+  catch (error) {
+    dispatch({
+      type: CART_REMOVE_ITEM_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+}

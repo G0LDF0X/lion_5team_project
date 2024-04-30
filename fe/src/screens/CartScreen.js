@@ -36,8 +36,8 @@ function CartScreen() {
   const qty =
     location.state && location.state.qty ? Number(location.state.qty) : 1;
   // console.log(qty)
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const cartList = useSelector((state) => state.cartList);
+  const { cartItems } = cartList;
   // console.log('cartItem',cartItems)
   // const cart = useSelector(state => state.cart)
   // const { cartItems } = cart

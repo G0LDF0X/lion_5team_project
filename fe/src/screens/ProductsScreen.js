@@ -23,7 +23,7 @@ function ProductsScreen() {
   const productList = useSelector(state => state.productList);
   const { loading, error, products, pages } = productList;
   const params = new URLSearchParams(location.search);
-  console.log(products)
+  // console.log(products)
   const query = params.get('q');
   const page = params.get('page') || 1;
   const category = params.get('category');
@@ -59,6 +59,7 @@ function ProductsScreen() {
             type={'checkbox'}
             id={category.id}
             label={category.name}
+            key = {category.id}
             value={category.id}
             onChange={(e) => { 
               if (e.target.checked) {
@@ -85,7 +86,7 @@ function ProductsScreen() {
             ) : (
               <Row>
                 {products.map((product) => (
-                  <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                  <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
                     <Product product={product} />
                   </Col>
                 ))}

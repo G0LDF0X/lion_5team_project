@@ -253,7 +253,34 @@ class SellerSerializer(serializers.ModelSerializer):
         model = Seller
         fields = '__all__'
 
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
+
+class MyUserQnASerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_QnA
+        fields = '__all__'
+
+
+class SellerAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_Answer
+        fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+class UserprofileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name','nickname','description','image_url']

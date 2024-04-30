@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User
+from app.models import Seller, User , User_QnA, Order,OrderItem, Review
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, UserSerializer, User_Serializer, UserSerializerWithToken
+from app.serializer import *
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -25,6 +26,18 @@ def get_Seller_Apply(request):
         return Response(serializer.errors, status=400)
     
 
+
+
+@api_view(['GET'])
+def my_shopping(request):
+    user = User.objects.get(name=request.user)
+    orders = Order.objects.filter(user_id=user)
+    orders_ids = orders.values_list('id', flat=True)
+    order_items = OrderItem.objects.filter(order_id__in=orders_ids)
+    serializer = OrderItemSerializer(order_items, many=True)
+    
+    # 시리얼라이즈된 주문 정보를 응답으로 반환합니다.
+    return Response(serializer.data)
 
 
 # def get_mypage_profile(request):
@@ -70,3 +83,30 @@ def update_User_Profile(request):
     user.save()
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyUserQnA(request):
+    user = User.objects.get(name=request.user)
+    my_user_qna_list = User_QnA.objects.filter(user_id=user)
+    serializer = MyUserQnASerializer(my_user_qna_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyReview(request):
+    user = User.objects.get(name=request.user)
+    reviews = Review.objects.filter(user_id=user)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_userprofile(request, pk):
+    try: 
+        user = User.objects.get(pk=pk)
+        serializer = UserprofileSerializer(user)
+        return Response(serializer.data)
+    
+    except User.DoesNotExist:
+        return Response("User does not exist")

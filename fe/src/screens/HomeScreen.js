@@ -5,7 +5,6 @@ import Product from "../components/Product";
 import Review from "../components/Review";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
 import {listReviews} from "../actions/reviewActions";
 import { listProducts } from "../actions/productActions";
 import { listBoards } from "../actions/boardActions";
@@ -21,7 +20,6 @@ import ProductReviews from "../components/ProductReviews";
 import QA from "../components/QA";
 import Creators from "../components/Creators";
 import Board from "../components/Board";
-// import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
 function HomeScreen() {
@@ -56,11 +54,11 @@ function HomeScreen() {
   // dispatch(listCreators());
   }
   , [dispatch, location]);
-  console.log(qnas)
+  // console.log(qnas)
   return (
     <div>
       {/* {!query && <ProductCarousel />} */}
-      <HomeHeader />
+      {/* <HomeHeader /> */}
       {/* <Row>
         <Link to="/items">
          <Col md={20}>

@@ -62,11 +62,17 @@ function Header() {
           {userInfo ? (
             <Card className="ms-auto me-5 bg-info ">
               <NavDropdown title={userInfo.username} id="username">
-                <LinkContainer to="/profile">
+                <LinkContainer to="/users/profile">
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>
                 <LinkContainer to="/users/myshopping/myqna">
                   <NavDropdown.Item>My Q&A</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/cart">
+                  <NavDropdown.Item>Cart</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/users/settings">
+                  <NavDropdown.Item>Settings</NavDropdown.Item>
                 </LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>
                   Logout
@@ -83,7 +89,7 @@ function Header() {
               </LinkContainer>
             </Card>
           )}
-          {userInfo && userInfo.isAdmin && (
+          {userInfo && userInfo.is_staff && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/userlist">
                     <NavDropdown.Item>Users</NavDropdown.Item>
