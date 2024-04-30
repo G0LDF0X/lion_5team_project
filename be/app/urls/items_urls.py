@@ -3,6 +3,7 @@ from app.views.items_views import *
 
 urlpatterns = [
     path('', get_items, name="item_index"),
+    path('category/', get_category, name="get_category"),
     path('detail/<int:pk>/', item_details, name="item_details"),
     path('create/', create_item, name="create_item"),
     path('delete/<int:pk>/', delete_item, name="delete_item"),

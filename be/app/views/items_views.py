@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import *
-from app.serializer import ItemSerializer, ReviewSerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer
 from datetime import datetime
 from rest_framework import viewsets
 
@@ -65,7 +65,6 @@ def update_item(request, pk):
     
     return Response(serializer.data)
 
-
 @api_view(['POST'])
 def create_review(request, item_id):
     user = User.objects.get(name=request.user)
@@ -126,3 +125,9 @@ def delete_review(request, pk):
     
     review.delete()
     return Response(status=204)
+
+@api_view(['GET'])
+def get_category(request):
+    category = Category.objects.all()
+    serializer = CategorySerializer(category, many=True)
+    return Response(serializer.data)
