@@ -5,6 +5,7 @@ from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmar
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import *
+from django.contrib.auth.models import User as auth_user
 import datetime
 
 
@@ -116,19 +117,20 @@ def my_bookmarks(request):
 
 @api_view(['PUT'])
 def add_bookmark(request, pk):
-    user = User.objects.get(name=request.user)
+    print(request.user)
+    user = User.objects.get(username=request.user.username)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.create(
-          user_id=user,
+          user_id=user.id,
           item_id=item,
-          created_at=datetime.now()
+          created_at=datetime.datetime.now()
           )
     serializer = BookmarkSerializer(bookmark)
     return Response(serializer.data)   
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
-    user = User.objects.get(name=request.user)
+    user = auth_user.objects.get(name=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.get(user_id=user, item_id=item)
     bookmark.delete()

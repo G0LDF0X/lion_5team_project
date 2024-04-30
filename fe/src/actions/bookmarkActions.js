@@ -36,10 +36,15 @@ export const addToBookMark = (id) => async (dispatch, getState) => {
     type: BookMark_ADD_ITEM_REQUEST,
   });
   try {
-    const { res } = await fetch(`/users/bookmark/add/${id}/`, {
+    const {
+        userLogin: { userInfo },
+        } = getState();
+    
+    const  res  = await fetch(`/users/bookmark/add/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
       },
     });
     const data = await data.json();
