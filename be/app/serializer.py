@@ -32,7 +32,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['item_id', 'user_id', 'title', 'content', 'rate', 'image_url']
 
 class ItemAnswerSerializer(serializers.ModelSerializer):
     class Meta:
