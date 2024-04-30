@@ -73,4 +73,3 @@ def SellerSettingsView(request):
         seller.bs_number = request.data.get('bs_number', seller.bs_number)
         seller.save()
         return Response({'message': 'Seller information updated successfully'})
-
