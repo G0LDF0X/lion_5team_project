@@ -62,7 +62,7 @@ function Header() {
           {userInfo ? (
             <Card className="ms-auto me-5 bg-info ">
               <NavDropdown title={userInfo.username} id="username">
-                <LinkContainer to="/profile">
+                <LinkContainer to="/users/profile">
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>
                 <LinkContainer to="/users/myshopping/myqna">
@@ -70,6 +70,9 @@ function Header() {
                 </LinkContainer>
                 <LinkContainer to="/cart">
                   <NavDropdown.Item>Cart</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/users/settings">
+                  <NavDropdown.Item>Settings</NavDropdown.Item>
                 </LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>
                   Logout
