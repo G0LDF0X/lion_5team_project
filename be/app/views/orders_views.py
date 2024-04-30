@@ -31,25 +31,30 @@ def create_order(request):
     order_serializer = OrderSerializer(data=order_data)
 
     if order_serializer.is_valid():
-        order = order_serializer.save()
 
         shipping_address_data = {"order_id": order.id, "address": request.data["address"], "city": request.data["city"], "postal_code": request.data["postal_code"], "country": request.data["country"], "shipping_price": 5000}
         shipping_address_serializer = ShippingAddressSerializer(data=shipping_address_data)
         if shipping_address_serializer.is_valid():
+            order = order_serializer.save()
             shipping_address_serializer.save()
         else:
             return Response(shipping_address_serializer.errors, status=400)
 
+        total_price = 0
         cart_items = Cart.objects.filter(user_id=user)
         for cart_item in cart_items:
             image = cart_item.image if cart_item.image else "path/to/default/image.jpg"
-            order_item_data = {"order_id": order.id, "item_id": cart_item.item_id.id, "qty": cart_item.qty, "name": cart_item.item_id.name, "price_multi_qty": cart_item.item_id.price * cart_item.qty, "image": image}
+            price_multi_qty = cart_item.item_id.price * cart_item.qty
+            order_item_data = {"order_id": order.id, "item_id": cart_item.item_id.id, "qty": cart_item.qty, "name": cart_item.item_id.name, "price_multi_qty": price_multi_qty, "image": image}
             order_item_serializer = OrderItemSerializer(data=order_item_data)
             if order_item_serializer.is_valid():
                 order_item_serializer.save()
+                total_price += price_multi_qty
             else:
                 return Response(order_item_serializer.errors, status=400)
         cart_items.delete()
+        order.total_price = total_price
+        order.save()
 
         return Response(order_serializer.data, status=201)
     else:
