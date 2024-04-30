@@ -2,8 +2,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Seller, OrderItem, User, Item
-from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer
+from app.models import Seller, OrderItem, User, Item, User_Answer
+from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer
+
 @api_view(['GET'])
 def index(request):
     sellers = Seller.objects.all()
@@ -29,8 +30,6 @@ class SellerItemManageView(APIView):
         items = Item.objects.filter(seller_id=seller)
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
-
-
 
 
 
@@ -73,4 +72,21 @@ def SellerSettingsView(request):
         seller.bs_number = request.data.get('bs_number', seller.bs_number)
         seller.save()
         return Response({'message': 'Seller information updated successfully'})
+    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def seller_qna_view(request):
+    user = User.objects.get(name=request.user)
+
+    seller_answer_list = User_Answer.objects.filter(user_id_id=user.id)
+    serializer = SellerAnswerSerializer(seller_answer_list, many=True)
+
+    return Response(serializer.data)
+
+    
+    
+
+
+
 
