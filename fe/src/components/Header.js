@@ -60,8 +60,8 @@ function Header() {
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link> */}
           {userInfo ? (
-            <Card className="ms-auto me-5 ">
-              <NavDropdown title={userInfo.name} id="username">
+            <Card className="ms-auto me-5 bg-info ">
+              <NavDropdown title={userInfo.username} id="username">
                 <LinkContainer to="/profile">
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>

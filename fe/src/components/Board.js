@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
 function Board({ board }) {
-    const {userinfo} = JSON.parse(localStorage.getItem("userInfo"));
+    // const {userinfo} = JSON.parse(localStorage.getItem("userInfo"));
 
     return (
         <div>
@@ -15,18 +15,18 @@ function Board({ board }) {
                 <Card.Body>
                     <Link to={`/board/${board.id}`}> 
                         <Card.Title as="div">
-                            <strong>{board.name}</strong>
+                            <strong>{board.title}</strong>
                         </Card.Title>
                     </Link>
 
                     <Card.Text as="div">
                         <div className="my-3">
-                            {board.like} 
-                            <Rating
+                            {board.like} <i class="fa-solid fa-heart"></i>
+                            {/* <Rating
                                 value={board.like}
                                 text={"likes"}
                                 color={"#f8e825"}
-                            />
+                            /> */}
                         </div>
                     </Card.Text>
                 </Card.Body>
