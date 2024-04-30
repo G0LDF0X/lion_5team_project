@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Seller, OrderItem, User, Item
 from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer
+
 @api_view(['GET'])
 def index(request):
     sellers = Seller.objects.all()
@@ -29,3 +30,8 @@ class SellerItemManageView(APIView):
         items = Item.objects.filter(seller_id=seller)
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
+
+
+# @api_view(['GET'])
+# class SellerQnaView(APIView):
+#     permission_classes = [IsAuthenticated]

@@ -265,3 +265,7 @@ class SellerSerializer(serializers.ModelSerializer):
         model = Seller
         fields = '__all__'
 
+class MyUserQnASerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item_QnA
+        fields = '__all__'
