@@ -285,3 +285,8 @@ class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['name','nickname','description','image_url']
+
+class Board_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
