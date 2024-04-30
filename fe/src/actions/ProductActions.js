@@ -23,7 +23,7 @@ export const listProducts =
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
-      const res = await fetch(`/items?query=${query}&page=${page}&category=${category.join(",")}`);
+      const res = await fetch(`/items?query=${query}&page=${page}${category?`&category=${category.join(",")}`:null}`);
       const data = await res.json();
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {

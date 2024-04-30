@@ -60,7 +60,8 @@ function ProductsScreen() {
             id={category.id}
             label={category.name}
             value={category.id}
-            onChange={(e) => { if (e.target.checked) {
+            onChange={(e) => { 
+              if (e.target.checked) {
               setSelectedCategory(prev => [...prev, e.target.value]);
             } else {
               setSelectedCategory(prev => prev.filter(cat => cat !== e.target.value));
