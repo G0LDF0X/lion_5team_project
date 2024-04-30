@@ -269,3 +269,25 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipping_Address
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    user_id = UserSerializer()
+    order_items = OrderItemSerializer(many=True, read_only=True)
+    shipping_address = ShippingAddressSerializer()
+
+    class Meta:
+        model = Order
+        fields = ['user_id', 'payment_method', 'shipping_price', 'total_price', 'paid_at', 'is_delivered', 'created_at', 'delivered_at', 'order_items', 'shipping_address']
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    item_id = ItemSerializer()
+    order_id = OrderSerializer()
+
+    class Meta:
+        model = OrderItem
+        fields = '__all__' 
