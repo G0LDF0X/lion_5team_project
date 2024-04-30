@@ -285,3 +285,8 @@ class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['name','nickname','description','image_url']
+
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = '__all__'

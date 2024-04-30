@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile
+from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, my_bookmarks
 
 urlpatterns = [
     path('apply/', get_Seller_Apply, name='seller_apply_index'),
@@ -8,5 +8,5 @@ urlpatterns = [
     path('myshopping/myqna/', getMyUserQnA),
     path('myreview/', getMyReview, name='my_review'),
     path('<int:pk>/', get_userprofile, name='user_profile'),
-
+    path('bookmark/', my_bookmarks, name='my_bookmarks'),
 ]
