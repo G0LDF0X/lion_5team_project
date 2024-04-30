@@ -1,53 +1,75 @@
 import {
-  CART_ADD_ITEM,
-  CART_REMOVE_ITEM,
-  CART_SAVE_SHIPPING_ADDRESS,
-  CART_SAVE_PAYMENT_METHOD,
-  CART_CLEAR_ITEMS
+  CART_ITEM_LIST_REQUEST,
+  CART_ITEM_LIST_SUCCESS,
+  CART_ITEM_LIST_FAIL,
+  CART_ADD_ITEM_REQUEST,
+  CART_ADD_ITEM_SUCCESS,
+  CART_ADD_ITEM_FAIL,
+  CART_REMOVE_ITEM_REQUEST,
+  CART_REMOVE_ITEM_SUCCESS,
+  CART_REMOVE_ITEM_FAIL,
+
 } from "../constants/cartConstants";
 
-export const cartReducer = (
-  state = { cartItems: [], shippingAddress: {} },
-  action
-) => {
+
+export const cartListReducer = (state = { cartItems: [] }, action) => {
   switch (action.type) {
-    case CART_ADD_ITEM:
+    case CART_ITEM_LIST_REQUEST:
+      return { loading: true, cartItems: [] };
+    case CART_ITEM_LIST_SUCCESS:
+      return { loading: false, cartItems: action.payload };
+    case CART_ITEM_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
+
+export const cartAddReducer = (state = { cartItems: [] }, action) => {
+  switch (action.type) {
+    case CART_ADD_ITEM_REQUEST:
+      return { loading: true, cartItems: [] };
+    case CART_ADD_ITEM_SUCCESS:
       const item = action.payload;
       const existItem = state.cartItems.find((x) => x.product === item.product);
       if (existItem) {
         return {
-          ...state,
+          loading: false,
           cartItems: state.cartItems.map((x) =>
             x.product === existItem.product ? item : x
           ),
         };
       } else {
-        return {
-          ...state,
-          cartItems: [...state.cartItems, item],
-        };
+        return { loading: false, cartItems: [...state.cartItems, item] };
       }
-    case CART_REMOVE_ITEM:
+    case CART_ADD_ITEM_FAIL:
+      return { loading: false, error: action.payload };
+    case CART_REMOVE_ITEM_REQUEST:
+      return { loading: true, cartItems: [] };
+    case CART_REMOVE_ITEM_SUCCESS:
       return {
-        ...state,
+        loading: false,
         cartItems: state.cartItems.filter((x) => x.product !== action.payload),
       };
-    case CART_SAVE_SHIPPING_ADDRESS:
-      return {
-        ...state,
-        shippingAddress: action.payload,
-      };
-    case CART_SAVE_PAYMENT_METHOD:
-      return {
-        ...state,
-        paymentMethod: action.payload,
-      };
-    case CART_CLEAR_ITEMS:
-      return {
-        ...state,
-        cartItems: []
-      };
+    case CART_REMOVE_ITEM_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
-};
+}
+
+export const cartRemoveReducer = (state = { cartItems: [] }, action) => {
+  switch (action.type) {
+    case CART_REMOVE_ITEM_REQUEST:
+      return { loading: true, cartItems: [] };
+    case CART_REMOVE_ITEM_SUCCESS:
+      return {
+        loading: false,
+        cartItems: state.cartItems.filter((x) => x.product !== action.payload),
+      };
+    case CART_REMOVE_ITEM_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}

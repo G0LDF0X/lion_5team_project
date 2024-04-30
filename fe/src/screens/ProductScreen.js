@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 // import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
+import Filter from "../components/Filter";
 // import Filter from "../components/Filter";
 // import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
@@ -41,9 +42,9 @@ function ProductsScreen() {
             )}
           </Col>
         </Row>
-        <div className="pagination-container">
+        {/* <div className="pagination-container"> */}
         {/* <Paginate pages={pages} page={page} keyword={query} /> */}
-      </div>
+      {/* </div> */}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Badge } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
 function Product({ product }) {
@@ -12,7 +12,9 @@ function Product({ product }) {
             <Card.Body>
                 <Link to={`/items/detail/${product.id}`}> 
                     <Card.Title as="div">
-                        <strong>{product.name}</strong>
+                        <strong> <h6>
+         <Badge bg="secondary">New</Badge>
+      </h6>{product.name}</strong>
                     </Card.Title>
                 </Link>
 
@@ -21,7 +23,7 @@ function Product({ product }) {
                         {product.rate} 
                         <Rating
                             value={product.rate}
-                            text={` reviews`}
+                            text={``}
                             color={"#f8e825"}
                         />
                     </div>

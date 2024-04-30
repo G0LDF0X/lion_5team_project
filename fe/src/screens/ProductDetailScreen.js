@@ -10,8 +10,8 @@ import Message from "../components/Message";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);  
-  const [rating, setRating] = useState(0)
-  const [comment, setComment] = useState('')
+  // const [rating, setRating] = useState(0)
+  // const [comment, setComment] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -92,7 +92,7 @@ function Productcreen() {
                   </Row>
                 </ListGroup.Item>
   
-                {product.countInStock > 0 && (
+                
                   <ListGroup.Item>
                     <Row>
                       <Col>Qty</Col>
@@ -111,11 +111,11 @@ function Productcreen() {
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                )}
+                
                 <ListGroup.Item>
                   {!userInfo ? (
                     <Link to="/login">
-                      <Button className="btn-block">Login to Add to Cart</Button>
+                      <Button className= " ms-auto me-5 bg-info">Login to Add to Cart</Button>
                     </Link>
                   ) : <Button
                   onClick={addToCartHandler}
