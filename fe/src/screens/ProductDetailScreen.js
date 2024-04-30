@@ -26,6 +26,8 @@ function Productcreen() {
   const { success: successProductReview } = reviewCreate;  
   // let totalRate = product.reviews.reduce((acc, review) => acc + review.rate, 0);
   // let avgRate = totalRate / product.reviews.length;
+  let totalRate = product && product.reviews ? product.reviews.reduce((acc, review) => acc + review.rate, 0) : 0;
+let avgRate = product && product.reviews ? totalRate / product.reviews.length : 0;
 
 
 
@@ -71,8 +73,8 @@ function Productcreen() {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Rating
-                  // value={avgRate}
-                  // text={`${avgRate}`}
+                  value={avgRate}
+                  text={`${avgRate}`}
                   color={"#f8e825"}
                 />
               </ListGroup.Item>
@@ -140,10 +142,12 @@ function Productcreen() {
           </Col>
         </Row>
         
-        <Row> 
-          <Col md={6}>
+        <Row className="d-flex justify-content-between align-items-center"> 
+          <Col md={9}>
             <h2>Reviews</h2>
-            <Button className="btn-block" onClick={createReviewHandler}>Create a Review</Button>
+            <Col className="text-end">
+            <Button className="btn-block" onClick={createReviewHandler} key="1">Create a Review</Button>
+            </Col>
              {/* {product.reviews.length === 0 && <Message>No Reviews</Message>} */}
              {product.reviews?  (
             <ListGroup variant="flush">
@@ -153,7 +157,7 @@ function Productcreen() {
                 <ListGroup.Item key={review.id}>
                   <strong>{review.title}</strong>
                   <div className="my-3">
-                  <Rating value={review.rate} text={product.rate} color={"#f8e825"} />
+                  <Rating value={review.rate} text={review.rate} color={"#f8e825"} />
                   </div>
                   <p>{review.comment}</p>
                 </ListGroup.Item>

@@ -56,6 +56,12 @@ import {
   boardDeleteReducer,
 } from "./reducers/boardReducers";
 
+import {
+  bookMarkListReducer,
+  bookMarkAddReducer,
+  bookMarkRemoveReducer,
+} from "./reducers/bookmarkReducer";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -101,6 +107,10 @@ const reducer = combineReducers({
   boardCreate: boardCreateReducer,
   boardUpdate: boardUpdateReducer,
   boardDelete: boardDeleteReducer,
+
+  bookMarkList: bookMarkListReducer,
+  bookMarkAdd: bookMarkAddReducer,
+  bookMarkRemove: bookMarkRemoveReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
