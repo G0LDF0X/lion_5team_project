@@ -8,7 +8,13 @@ from rest_framework import viewsets
 
 @api_view(['GET'])
 def get_items(request):
-    items = Item.objects.all()
+    categories = request.query_params.getlist('category')
+    categories = [c for c in categories if c]
+    if categories:
+        items = Item.objects.filter(category_id_id__in=categories)
+        print(categories)
+    else:
+        items = Item.objects.all()
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 

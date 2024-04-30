@@ -23,7 +23,13 @@ export const listProducts =
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
-      const res = await fetch(`/items?query=${query}&page=${page}&category=${category.join(",")}`);
+      let categoryParams = ""; // Add this line
+      if (category === "") {
+        categoryParams = "";
+      } else {
+        categoryParams = category.map((cat) => `category=${cat}`).join("&");
+      }
+      const res = await fetch(`/items?query=${query}&page=${page}&${categoryParams}`);
       const data = await res.json();
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
