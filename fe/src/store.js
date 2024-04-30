@@ -13,6 +13,9 @@ import {
 import {
   reviewListReducer,
   reviewDetailsReducer,
+  reviewCreateReducer,
+  reviewDeleteReducer,
+  reviewUpdateReducer,
 } from "./reducers/reviewReducers";
 import {
   cartListReducer,
@@ -83,6 +86,9 @@ const reducer = combineReducers({
 
   reviewList: reviewListReducer,
   reviewDetail: reviewDetailsReducer,
+  reviewCreate: reviewCreateReducer,
+  reviewDelete: reviewDeleteReducer,
+  reviewUpdate: reviewUpdateReducer,
 
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
@@ -108,10 +114,10 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 const initialState = {
-  cart: {
-    cartItems: cartItemsFromStorage,
-    shippingAddress: shippingAddressFromStorage,
-  },
+  // cart: {
+  //   cartItems: cartItemsFromStorage,
+  //   shippingAddress: shippingAddressFromStorage,
+  // },
   userLogin: { userInfo: userInfoFromStorage },
 };
 

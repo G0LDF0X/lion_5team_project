@@ -25,8 +25,8 @@ import Board from "../components/Board";
 function HomeScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const reviewList = useSelector((state) => state.reviewList);
-  const { loading:reviewLoading, error:reviewError, reviews } = reviewList;
+  // const reviewList = useSelector((state) => state.reviewList);
+  // const { loading:reviewLoading, error:reviewError, reviews } = reviewList;
   
   const productList = useSelector(state => state.productList);
   const { loading: productLoading, error: productError, products, pages } = productList;

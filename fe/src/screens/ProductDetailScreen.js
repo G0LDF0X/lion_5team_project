@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProductDetails} from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
+import { createReview } from "../actions/reviewActions";
 // import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 function Productcreen() {
@@ -21,33 +22,35 @@ function Productcreen() {
   const { loading, error, product } = productDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  // const productReviewCreate = useSelector((state) => state.productReviewCreate);
-  // const { success: successProductReview, error: errorProductReview, loading:loadingProductRiview } = productReviewCreate;
-  
-  let totalRate = product.reviews.reduce((acc, review) => acc + review.rate, 0);
-  let avgRate = totalRate / product.reviews.length;
+  const reviewCreate = useSelector((state) => state.reviewCreate);
+  const { success: successProductReview } = reviewCreate;  
+  // let totalRate = product.reviews.reduce((acc, review) => acc + review.rate, 0);
+  // let avgRate = totalRate / product.reviews.length;
 
 
 
   useEffect(() => {
-    // if (successProductReview) {
+    
+    if (successProductReview) {
+      navigate(`/item/review/${id}`); 
     //   dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
     //   setRating(0);
     //   setComment('');
       
-    // }
+    }
     dispatch(listProductDetails(id));
+    console.log(product)
     // console.log(product.reviews)
 
-  }, [dispatch, id]);
+  }, [dispatch, id, successProductReview]);
   const addToCartHandler = () => {
     navigate(`/cart/${id}`, {state: {qty}});
   }
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
-  //   dispatch(createProductReview(id, {rating, comment}));
-  // }
-  // // const product = product.find((p) => p._id === id)s
+  const createReviewHandler = () => {
+    dispatch (createReview(id));
+  }
+
+  
   return (
     <div>
       <Link to="/" className="btn btn-light my-2">Go Back
@@ -68,8 +71,8 @@ function Productcreen() {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Rating
-                  value={avgRate}
-                  text={`${avgRate}`}
+                  // value={avgRate}
+                  // text={`${avgRate}`}
                   color={"#f8e825"}
                 />
               </ListGroup.Item>
@@ -140,15 +143,17 @@ function Productcreen() {
         <Row> 
           <Col md={6}>
             <h2>Reviews</h2>
-            {product.reviews.length === 0 && <Message>No Reviews</Message>}
+            <Button className="btn-block" onClick={createReviewHandler}>Create a Review</Button>
+             {/* {product.reviews.length === 0 && <Message>No Reviews</Message>} */}
+             {product.reviews?  (
             <ListGroup variant="flush">
+            
               {product.reviews.map((review) => (
                 <div>
                 <ListGroup.Item key={review.id}>
                   <strong>{review.title}</strong>
                   <div className="my-3">
                   <Rating value={review.rate} text={product.rate} color={"#f8e825"} />
-                  {/* <p>{review.createdAt.substring(0, 10)}</p> */}
                   </div>
                   <p>{review.comment}</p>
                 </ListGroup.Item>
@@ -159,6 +164,9 @@ function Productcreen() {
               ))}
               
               </ListGroup>
+
+             ) : <Message>No Reviews</Message>
+             }
           </Col>
         </Row>
         </div>
