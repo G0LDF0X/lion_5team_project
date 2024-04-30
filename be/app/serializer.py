@@ -276,7 +276,6 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    user_id = UserSerializer()
     order_items = OrderItemSerializer(many=True, read_only=True)
     shipping_address = ShippingAddressSerializer()
 
