@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import Item, Category, Tag, Seller
-from app.serializer import ItemSerializer
+from app.serializer import ItemSerializer, CategorySerializer
 from datetime import datetime
 
 @api_view(['GET'])
@@ -62,4 +62,10 @@ def update_item(request, pk):
     item.save()
     serializer = ItemSerializer(item, many=False)
     
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_category(request):
+    category = Category.objects.all()
+    serializer = CategorySerializer(category, many=True)
     return Response(serializer.data)

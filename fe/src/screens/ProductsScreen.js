@@ -35,7 +35,7 @@ function ProductsScreen() {
        <Row>
           <Col md={3}>
 
-            {/* <ProductFilter /> */}
+            <ProductFilter />
           </Col>
           <Col md={9}>
             {/* <h1>Latest Products</h1> */}
