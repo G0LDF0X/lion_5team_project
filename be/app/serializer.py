@@ -280,3 +280,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
+
+class UserprofileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['name','nickname','description','image_url']
