@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA, Order,OrderItem, Review
+from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Board
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, User_Serializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer, ReviewSerializer, UserprofileSerializer
-
+from app.serializer import *
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -60,6 +59,28 @@ def get_mypage_profile(request):
         seller_data = None
     return JsonResponse({'user': user_data, 'seller': seller_data})
 
+#username, email, password, 수정가능 (auth_user 테이블서 바뀜)
+
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.hashers import make_password
+
+@api_view(['PUT'])  # POST -> PUT       
+@permission_classes([IsAuthenticated])
+def update_User_Profile(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+    data = request.data
+    print(data)
+    
+    if hasattr(user, 'username'):
+        user.username = data.get('username', user.username)
+    if hasattr(user, 'email'):
+        user.email = data.get('email', user.email)
+    
+    if data.get('password'):
+        user.password = make_password(data['password'])
+    user.save()
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -81,13 +102,27 @@ def getMyReview(request):
 
 @api_view(['GET'])
 def get_userprofile(request, pk):
-    try: 
-        user = User.objects.get(pk=pk)
-        serializer = UserprofileSerializer(user)
-        return Response(serializer.data)
-    
-    except User.DoesNotExist:
-        return Response("User does not exist")
+    user = User.objects.get(pk=pk)
+    serializer = UserprofileSerializer(user)
 
+    # 해당 사용자가 게시판에 작성한 글을 가져오기
+    board_posts = Board.objects.filter(user_id=user)
+    board_serializer = Board_Serializer(board_posts, many=True)
 
+    # 해당 사용자가 Q&A에 작성한 글을 가져오기
+    qna_posts = User_QnA.objects.filter(user_id=user)
+    qna_serializer = MyUserQnASerializer(qna_posts, many=True)
+    # 모든 정보를 하나의 데이터로 합치기
 
+    # 작성한 리뷰
+    review = Review.objects.filter(user_id=user)
+    review_serializer = ReviewSerializer(review, many=True)
+
+    data = {
+        'user': serializer.data,
+        'Board_posts': board_serializer.data,
+        'QnA_posts': qna_serializer.data,
+        'Review': review_serializer.data
+    }
+
+    return Response(data)

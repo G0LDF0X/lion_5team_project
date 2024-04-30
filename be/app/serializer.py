@@ -186,7 +186,7 @@ class User_Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-
+        
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     @classmethod
     def get_token(cls, user):
@@ -265,7 +265,6 @@ class UserprofileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['name','nickname','description','image_url']
 
-
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
@@ -275,3 +274,9 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shipping_Address
         fields = '__all__'
+
+class Board_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
+

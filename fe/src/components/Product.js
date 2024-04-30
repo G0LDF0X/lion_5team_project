@@ -6,7 +6,8 @@ function Product({ product }) {
     return (
         <Card className="my-3 p-3 rounded">
             <Link to={`/items/detail/${product.id}`}> 
-                <Card.Img src={product.image_url} variant="top" />
+                {/* <Card.Img src={product.image_url} variant="top" /> */}
+                <Card.Img src={decodeURIComponent(product.image_url)} variant="top" />
             </Link>
 
             <Card.Body>
