@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, my_bookmarks, update_User_Profile, 
+from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, my_bookmarks, update_User_Profile
 
 urlpatterns = [
     path('apply/', get_Seller_Apply, name='seller_apply_index'),
