@@ -77,3 +77,5 @@ def getMyReview(request):
     reviews = Review.objects.filter(user_id=user)
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
+
+
