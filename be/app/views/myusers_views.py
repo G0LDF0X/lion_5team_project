@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from app.models import Seller, User , User_QnA, Order,OrderItem, Review
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, User_Serializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer, ReviewSerializer, UserprofileSerializer
+from app.serializer import *
 
 
 @api_view(['POST'])
@@ -60,6 +60,28 @@ def get_mypage_profile(request):
         seller_data = None
     return JsonResponse({'user': user_data, 'seller': seller_data})
 
+#username, email, password, 수정가능 (auth_user 테이블서 바뀜)
+
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.hashers import make_password
+
+@api_view(['PUT'])  # POST -> PUT       
+@permission_classes([IsAuthenticated])
+def update_User_Profile(request):
+    user = request.user
+    serializer = UserSerializerWithToken(user, many=False)
+    data = request.data
+    print(data)
+    
+    if hasattr(user, 'username'):
+        user.username = data.get('username', user.username)
+    if hasattr(user, 'email'):
+        user.email = data.get('email', user.email)
+    
+    if data.get('password'):
+        user.password = make_password(data['password'])
+    user.save()
+    return Response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -88,6 +110,3 @@ def get_userprofile(request, pk):
     
     except User.DoesNotExist:
         return Response("User does not exist")
-
-
-
