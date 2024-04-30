@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA
+from app.models import Seller, User , User_QnA, Order,OrderItem
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, UserSerializer, User_Serializer, MyUserQnASerializer
+from app.serializer import SellerSerializer, UserSerializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer 
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -26,6 +27,17 @@ def get_Seller_Apply(request):
     
 
 
+
+@api_view(['GET'])
+def my_shopping(request):
+    user = User.objects.get(name=request.user)
+    orders = Order.objects.filter(user_id=user)
+    orders_ids = orders.values_list('id', flat=True)
+    order_items = OrderItem.objects.filter(order_id__in=orders_ids)
+    serializer = OrderItemSerializer(order_items, many=True)
+    
+    # 시리얼라이즈된 주문 정보를 응답으로 반환합니다.
+    return Response(serializer.data)
 
 
 # def get_mypage_profile(request):
@@ -56,6 +68,3 @@ def getMyUserQnA(request):
     my_user_qna_list = User_QnA.objects.filter(user_id=user)
     serializer = MyUserQnASerializer(my_user_qna_list, many=True)
     return Response(serializer.data)
-
-    
-

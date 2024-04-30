@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Seller,Board,Tag,Category,User,User_QnA,User_Answer,Item, Review, Reply, Item_Answer, Item_QnA
+from .models import Seller,Board,Tag,Category,User,User_QnA,User_Answer,Item, Review, Reply, Item_Answer, Item_QnA,Order,OrderItem
 
 admin.site.register(Item)
 
@@ -16,4 +16,6 @@ admin.site.register(Review)
 admin.site.register(Item_QnA)
 admin.site.register(Item_Answer)
 admin.site.register(Reply)
+admin.site.register(Order)
+admin.site.register(OrderItem)
 # Register your models here.
