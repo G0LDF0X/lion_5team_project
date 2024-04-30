@@ -4,11 +4,6 @@ import Product from '../components/Product';
 function UserSettingScreen() {
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route path="/items" element={<Product />} />
-        </Routes>
-      </Router>
     </div>
   )
 }
