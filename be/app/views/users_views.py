@@ -9,6 +9,7 @@ from django.contrib.auth.models import User as auth_user
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from app.models import User
 
+
 # Create your views here.
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -45,3 +46,6 @@ def getUser(request, pk):
     user = request.user(id=pk)
     serializer = RegisterSerializer(user, many=False)
     return Response(serializer.data)
+
+
+
