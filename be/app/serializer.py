@@ -197,24 +197,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
 
-# class UserSerializer(serializers.ModelSerializer):
-#     username = serializers.SerializerMethodField(read_only=True)
-#     id = serializers.SerializerMethodField(read_only=True)
-#     isadmin = serializers.SerializerMethodField(read_only=True)
-#     isseller = serializers.SerializerMethodField(read_only=True)
-
-#     class Meta:
-#         model = User
-#         fields = '__all__'
+class User_Serializer(serializers.ModelSerializer):
     
-#     def get_username(self, obj):
-#         return obj.username
-#     def get_id(self, obj):
-#         return obj.id
-#     def get_isadmin(self, obj):
-#         return obj.is_staff
-#     def get_isseller(self, obj):
-#         return obj.is_seller
+    class Meta:
+        model = User
+        fields = '__all__'
+
+    
     
 from django.contrib.auth import get_user_model
 
