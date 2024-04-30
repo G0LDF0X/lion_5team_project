@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Seller, OrderItem, User, Item
-from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer
+from app.models import Seller, OrderItem, User, Item, User_Answer
+from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer
 
 @api_view(['GET'])
 def index(request):
@@ -30,12 +30,6 @@ class SellerItemManageView(APIView):
         items = Item.objects.filter(seller_id=seller)
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
-
-
-# @api_view(['GET'])
-# class SellerQnaView(APIView):
-#     permission_classes = [IsAuthenticated]
-
 
 
 
@@ -78,4 +72,24 @@ def SellerSettingsView(request):
         seller.bs_number = request.data.get('bs_number', seller.bs_number)
         seller.save()
         return Response({'message': 'Seller information updated successfully'})
+    
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def seller_qna_view(request):
+    user = User.objects.get(name=request.user)
+    seller = Seller.objects.get(user_id_id=user.id)
+
+    # seller = Seller.objects.get(user_id_id=request.user.id)
+    # 판매자가 답변한 Q&A를 가져오기
+    seller_answer_list = User_Answer.objects.filter(seller=seller)
+    serializer = SellerAnswerSerializer(seller_answer_list, many=True)
+
+    return Response(serializer.data)
+
+    
+    
+
+
+
 

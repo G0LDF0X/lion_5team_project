@@ -263,5 +263,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class MyUserQnASerializer(serializers.ModelSerializer):
     class Meta:
-        model = Item_QnA
+        model = User_QnA
+        fields = '__all__'
+
+
+class SellerAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_Answer
         fields = '__all__'
