@@ -84,9 +84,3 @@ def seller_qna_view(request):
 
     return Response(serializer.data)
 
-    
-    
-
-
-
-

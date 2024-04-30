@@ -9,7 +9,8 @@ function Board({ board }) {
         <div>
             <Card className="my-3 p-3 rounded">
                 <Link to={`/board/detail/${board.id}`}> 
-                    <Card.Img src={board.image_url} variant="top" />
+                    {/* <Card.Img src={board.image_url} variant="top" /> */}
+                    <Card.Img src={decodeURIComponent(board.image_url)} variant="top" />
                 </Link>
 
                 <Card.Body>
