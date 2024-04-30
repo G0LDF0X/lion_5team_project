@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import Item, Category, Tag, Seller
-from app.serializer import ItemSerializer
+from app.models import *
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer
 from datetime import datetime
+from rest_framework import viewsets
 
 @api_view(['GET'])
 def get_items(request):
@@ -62,4 +63,71 @@ def update_item(request, pk):
     item.save()
     serializer = ItemSerializer(item, many=False)
     
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def create_review(request, item_id):
+    user = User.objects.get(name=request.user)
+
+    try:
+        item = Item.objects.get(pk=item_id)
+    except Item.DoesNotExist:
+        return Response({"error": "Item not found"})
+    
+    data = request.data.copy()
+    data['item_id'] = item.id
+    data['user_id'] = user.id
+
+    serializer = ReviewSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def update_review(request, pk):
+    try:
+        review = Review.objects.get(pk=pk)
+    except Review.DoesNotExist:
+        return Response({"error": "Review not found"})
+    
+    item_id = review.item_id.id
+    user = User.objects.get(name=request.user)
+    user_auth = auth_user.objects.get(username=request.user)
+
+    # 리뷰 작성자와 수정자의 id가 다르거나 관리자가 아닐 경우 수정 불가능
+    if user.id != review.user_id.id:
+        if user_auth.is_superuser == False:
+            return Response({"error": "You are not allowed to edit this review"})
+    data = request.data.copy()
+    data['item_id'] = item_id
+    data['user_id'] = user.id
+    
+    serializer = ReviewSerializer(review, data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def delete_review(request, pk):
+    try:
+        review = Review.objects.get(pk=pk)
+    except Review.DoesNotExist:
+        return Response({"error": "Review not found"})
+    
+    # 리뷰 작성자와 수정자의 id가 다르거나 관리자가 아닐 경우 삭제 불가능
+    user = User.objects.get(name=request.user)
+    user_auth = auth_user.objects.get(username=request.user)
+    if user.id != review.user_id.id:
+        if user_auth.is_superuser == False:
+            return Response({"error": "You are not allowed to delete this review"})
+    
+    review.delete()
+    return Response(status=204)
+
+@api_view(['GET'])
+def get_category(request):
+    category = Category.objects.all()
+    serializer = CategorySerializer(category, many=True)
     return Response(serializer.data)

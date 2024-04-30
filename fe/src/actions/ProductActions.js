@@ -19,11 +19,11 @@ import {
 } from "../constants/productConstants";
 
 export const listProducts =
-  (query = "", page = "") =>
+  (query = "", page = "", category="") =>
   async (dispatch) => {
     try {
       dispatch({ type: PRODUCT_LIST_REQUEST });
-      const res = await fetch(`/items?query=${query}&page=${page}`);
+      const res = await fetch(`/items?query=${query}&page=${page}&category=${category.join(",")}`);
       const data = await res.json();
       dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
     } catch (error) {
