@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from app.models import Seller, User , User_QnA, Order,OrderItem, Review
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, User_Serializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer, ReviewSerializer
+from app.serializer import SellerSerializer, User_Serializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer, ReviewSerializer, UserprofileSerializer
 
 
 @api_view(['POST'])
@@ -77,5 +77,17 @@ def getMyReview(request):
     reviews = Review.objects.filter(user_id=user)
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_userprofile(request, pk):
+    try: 
+        user = User.objects.get(pk=pk)
+        serializer = UserprofileSerializer(user)
+        return Response(serializer.data)
+    
+    except User.DoesNotExist:
+        return Response("User does not exist")
+
 
 
