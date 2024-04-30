@@ -11,6 +11,7 @@ import { createReview } from "../actions/reviewActions";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);  
+  const [isClicked, setIsClicked] = useState(false);
   // const [rate, setRate] = useState(0) 
   
   // const [rating, setRating] = useState(0)
@@ -127,15 +128,24 @@ let avgRate = product && product.reviews ? totalRate / product.reviews.length : 
                     <Link to="/login">
                       <Button className= " ms-auto me-5 bg-info">Login to Add to Cart</Button>
                     </Link>
-                  ) : <Button
+                  ) :
+                  <div>
+                  <Button
                   onClick={addToCartHandler}
                   className="btn-block"
                   type="button"
                   disabled={product.countInStock === 0}
                 >
+                  <i class="fa-solid fa-cart-shopping"></i>
                   Add to Cart
-                </Button>}
-                  
+                </Button>
+                {/* <Col className="d-flex jstify-content-end"> */}
+                <Button className="btn-block justify-content-end" onClick={() => setIsClicked(!isClicked)}>               
+                <i className={isClicked ? "fa-solid fa-bookmark" : "fa-regular fa-bookmark"}></i>
+                                  </Button>
+                {/* </Col> */}
+                      </div>
+                      }
                 </ListGroup.Item>
               </ListGroup>
             </Card>
