@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA, Order,OrderItem
+from app.models import Seller, User , User_QnA, Order,OrderItem, Review
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, UserSerializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer 
+from app.serializer import SellerSerializer, User_Serializer, OrderSerializer, OrderItemSerializer, MyUserQnASerializer, ReviewSerializer
 
 
 @api_view(['POST'])
@@ -67,4 +67,13 @@ def getMyUserQnA(request):
     user = User.objects.get(name=request.user)
     my_user_qna_list = User_QnA.objects.filter(user_id=user)
     serializer = MyUserQnASerializer(my_user_qna_list, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyReview(request):
+    user = User.objects.get(name=request.user)
+    reviews = Review.objects.filter(user_id=user)
+    serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)

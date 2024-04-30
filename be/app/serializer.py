@@ -276,3 +276,7 @@ class SellerAnswerSerializer(serializers.ModelSerializer):
         model = User_Answer
         fields = '__all__'
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
