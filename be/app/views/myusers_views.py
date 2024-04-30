@@ -5,6 +5,7 @@ from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmar
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.serializer import *
+import datetime
 
 
 @api_view(['POST'])
@@ -112,6 +113,27 @@ def my_bookmarks(request):
 
     # 시리얼라이즈된 북마크 정보를 응답으로 반환합니다.
     return Response(serializer.data)
+
+@api_view(['PUT'])
+def add_bookmark(request, pk):
+    user = User.objects.get(name=request.user)
+    item = Item.objects.get(pk=pk)
+    bookmark = Bookmark.objects.create(
+          user_id=user,
+          item_id=item,
+          created_at=datetime.now()
+          )
+    serializer = BookmarkSerializer(bookmark)
+    return Response(serializer.data)   
+
+@api_view(['DELETE'])
+def delete_bookmark(request, pk):
+    user = User.objects.get(name=request.user)
+    item = Item.objects.get(pk=pk)
+    bookmark = Bookmark.objects.get(user_id=user, item_id=item)
+    bookmark.delete()
+    return Response('Bookmark deleted')
+
 
 @api_view(['GET'])
 def get_userprofile(request, pk):
