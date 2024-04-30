@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from app.models import Seller, User
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.serializer import SellerSerializer, UserSerializer
+from app.serializer import SellerSerializer, UserSerializer, User_Serializer
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -24,3 +24,25 @@ def get_Seller_Apply(request):
     else:
         return Response(serializer.errors, status=400)
     
+
+
+
+# def get_mypage_profile(request):
+#     user = request.user
+#     serializer = UserSerializer(user)
+#     return JsonResponse(serializer.data)
+
+
+from django.core.exceptions import ObjectDoesNotExist
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def get_mypage_profile(request):
+    user = User.objects.get(name=request.user)
+    user_data = User_Serializer(user).data
+    try:
+        seller = Seller.objects.get(user_id=user)
+        seller_data = SellerSerializer(seller).data
+    except ObjectDoesNotExist:
+        seller_data = None
+    return JsonResponse({'user': user_data, 'seller': seller_data})
