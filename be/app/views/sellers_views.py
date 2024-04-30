@@ -75,14 +75,11 @@ def SellerSettingsView(request):
     
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def seller_qna_view(request):
     user = User.objects.get(name=request.user)
-    seller = Seller.objects.get(user_id_id=user.id)
 
-    # seller = Seller.objects.get(user_id_id=request.user.id)
-    # 판매자가 답변한 Q&A를 가져오기
-    seller_answer_list = User_Answer.objects.filter(seller=seller)
+    seller_answer_list = User_Answer.objects.filter(user_id_id=user.id)
     serializer = SellerAnswerSerializer(seller_answer_list, many=True)
 
     return Response(serializer.data)

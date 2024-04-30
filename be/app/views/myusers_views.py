@@ -50,7 +50,7 @@ def get_mypage_profile(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getMyUserQnA(request):
     user = User.objects.get(name=request.user)
     my_user_qna_list = User_QnA.objects.filter(user_id=user)
