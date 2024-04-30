@@ -74,6 +74,9 @@ function Header() {
                 <LinkContainer to="/users/settings">
                   <NavDropdown.Item>Settings</NavDropdown.Item>
                 </LinkContainer>
+                <LinkContainer to="/users/bookmark">
+                  <NavDropdown.Item>Bookmark</NavDropdown.Item>
+                </LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>
                   Logout
                 </NavDropdown.Item>
