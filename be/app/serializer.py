@@ -284,6 +284,15 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['user_id', 'payment_method', 'shipping_price', 'total_price', 'paid_at', 'is_delivered', 'created_at', 'delivered_at', 'order_items', 'shipping_address']
 
+    def create(self, validated_data):
+        shipping_address_data = validated_data.pop('shipping_address')
+        shipping_address_serializer = ShippingAddressSerializer(data=shipping_address_data)
+        if shipping_address_serializer.is_valid():
+            shipping_address = shipping_address_serializer.save()
+            validated_data['shipping_address'] = shipping_address
+        order = Order.objects.create(**validated_data)
+        return order
+
 class OrderItemSerializer(serializers.ModelSerializer):
     item_id = ItemSerializer()
     order_id = OrderSerializer()
