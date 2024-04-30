@@ -61,17 +61,16 @@ def get_mypage_profile(request):
 
 #username, email, password, 수정가능 (auth_user 테이블서 바뀜)
 
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+
 from django.contrib.auth.hashers import make_password
 
 @api_view(['PUT'])  # POST -> PUT       
 @permission_classes([IsAuthenticated])
-def update_User_Profile(request):
+def update_Auth_Profile(request):
     user = request.user
     serializer = UserSerializerWithToken(user, many=False)
     data = request.data
-    print(data)
-    
+
     if hasattr(user, 'username'):
         user.username = data.get('username', user.username)
     if hasattr(user, 'email'):
@@ -81,6 +80,23 @@ def update_User_Profile(request):
         user.password = make_password(data['password'])
     user.save()
     return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_User_Profile(request):
+    user = User.objects.filter(username=request.user.username)
+    if not request.data:  # request data가 empty인지 확인
+        serializer = UserprofileSerializer(user)
+        return Response(serializer.data)
+    serializer = UserprofileSerializer(user, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
