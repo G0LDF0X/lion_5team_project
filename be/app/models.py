@@ -80,7 +80,7 @@ class OrderItem(models.Model):
     name = models.CharField(max_length =200)
     qty = models.IntegerField()
     price_multi_qty = models.IntegerField()
-    image = models.ImageField()
+    image = models.ImageField(blank=True)
 
 class Refund(models.Model):
     order_item_id = models.ForeignKey(OrderItem, on_delete = models.DO_NOTHING)
@@ -182,3 +182,12 @@ class Bookmark(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Cart(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
+    qty = models.IntegerField()
+    image = models.ImageField(blank=True)
+
+    def __str__(self):
+        return self.item_id.name

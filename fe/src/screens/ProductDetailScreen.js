@@ -10,8 +10,10 @@ import Message from "../components/Message";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);  
-  const [rating, setRating] = useState(0)
-  const [comment, setComment] = useState('')
+  // const [rate, setRate] = useState(0) 
+  
+  // const [rating, setRating] = useState(0)
+  // const [comment, setComment] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -21,7 +23,9 @@ function Productcreen() {
   const { userInfo } = userLogin;
   // const productReviewCreate = useSelector((state) => state.productReviewCreate);
   // const { success: successProductReview, error: errorProductReview, loading:loadingProductRiview } = productReviewCreate;
-
+  
+  let totalRate = product.reviews.reduce((acc, review) => acc + review.rate, 0);
+  let avgRate = totalRate / product.reviews.length;
 
 
 
@@ -33,6 +37,7 @@ function Productcreen() {
       
     // }
     dispatch(listProductDetails(id));
+    // console.log(product.reviews)
 
   }, [dispatch, id]);
   const addToCartHandler = () => {
@@ -63,12 +68,12 @@ function Productcreen() {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Rating
-                  value={product.rating}
-                  text={`${product.numReviews} reviews`}
+                  value={avgRate}
+                  text={`${avgRate}`}
                   color={"#f8e825"}
                 />
               </ListGroup.Item>
-              <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+              <ListGroup.Item>Price: {product.price}₩</ListGroup.Item>
               <ListGroup.Item>Description: {product.description}</ListGroup.Item>
             </ListGroup>
           </Col>
@@ -79,7 +84,7 @@ function Productcreen() {
                   <Row>
                     <Col>Price:</Col>
                     <Col>
-                      <strong>${product.price}</strong>
+                      <strong>{product.price}₩</strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>
@@ -92,7 +97,7 @@ function Productcreen() {
                   </Row>
                 </ListGroup.Item>
   
-                {product.countInStock > 0 && (
+                
                   <ListGroup.Item>
                     <Row>
                       <Col>Qty</Col>
@@ -111,11 +116,11 @@ function Productcreen() {
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                )}
+                
                 <ListGroup.Item>
                   {!userInfo ? (
                     <Link to="/login">
-                      <Button className="btn-block">Login to Add to Cart</Button>
+                      <Button className= " ms-auto me-5 bg-info">Login to Add to Cart</Button>
                     </Link>
                   ) : <Button
                   onClick={addToCartHandler}
@@ -132,23 +137,30 @@ function Productcreen() {
           </Col>
         </Row>
         
-        {/* <Row> 
+        <Row> 
           <Col md={6}>
             <h2>Reviews</h2>
             {product.reviews.length === 0 && <Message>No Reviews</Message>}
             <ListGroup variant="flush">
               {product.reviews.map((review) => (
-                <ListGroup.Item key={review._id}>
-                  <strong>{review.name}</strong>
-                  <Rating value={review.rating} color={"#f8e825"} />
-                  <p>{review.createdAt.substring(0, 10)}</p>
+                <div>
+                <ListGroup.Item key={review.id}>
+                  <strong>{review.title}</strong>
+                  <div className="my-3">
+                  <Rating value={review.rate} text={product.rate} color={"#f8e825"} />
+                  {/* <p>{review.createdAt.substring(0, 10)}</p> */}
+                  </div>
                   <p>{review.comment}</p>
                 </ListGroup.Item>
+                <ListGroup.Item>
+                <h6>  {review.content}</h6>
+                </ListGroup.Item>
+                </div>
               ))}
               
-            </ListGroup>
+              </ListGroup>
           </Col>
-        </Row> */}
+        </Row>
         </div>
   )}
         

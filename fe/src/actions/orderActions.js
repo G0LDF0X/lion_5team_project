@@ -14,7 +14,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
             type: ORDER_CREATE_REQUEST
         })
 
-        const res = await fetch(`/api/orders`, {
+        const res = await fetch(`/orders/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,10 +49,14 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         dispatch({
             type: ORDER_DETAILS_REQUEST
         })
-
-        const res = await fetch(`/api/orders/${id}`, {
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        
+        const res = await fetch(`/order/detail/${id}`, {
             headers: {
-                Authorization: `Bearer ${getState().userLogin.userInfo.token}`
+                
+                // Authorization: `Bearer ${userInfo.token}`
             }
         })
 
