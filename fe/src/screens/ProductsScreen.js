@@ -59,6 +59,7 @@ function ProductsScreen() {
             type={'checkbox'}
             id={category.id}
             label={category.name}
+            key = {category.id}
             value={category.id}
             onChange={(e) => { 
               if (e.target.checked) {
@@ -85,7 +86,7 @@ function ProductsScreen() {
             ) : (
               <Row>
                 {products.map((product) => (
-                  <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                  <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
                     <Product product={product} />
                   </Col>
                 ))}
