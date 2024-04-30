@@ -8,12 +8,12 @@ function Board({ board }) {
     return (
         <div>
             <Card className="my-3 p-3 rounded">
-                <Link to={`/items/detail/${board.id}`}> 
+                <Link to={`/board/detail/${board.id}`}> 
                     <Card.Img src={board.image_url} variant="top" />
                 </Link>
 
                 <Card.Body>
-                    <Link to={`/board/${board.id}`}> 
+                    <Link to={`/board/detail/${board.id}`}> 
                         <Card.Title as="div">
                             <strong>{board.title}</strong>
                         </Card.Title>
