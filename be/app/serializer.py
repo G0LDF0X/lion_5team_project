@@ -1,8 +1,14 @@
 from rest_framework import serializers
 from app.models import *
-
-from django.contrib.auth.models import User
-
+from django.contrib.auth.models import User as auth_user
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.validators import UniqueValidator
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import serializers, status
 # import requests
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -82,22 +88,6 @@ class UserAnswerSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.username
 
-    
-from django.contrib.auth.models import User as auth_user
-from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import status
-from rest_framework.response import Response
-from .models import User
-from rest_framework.views import APIView
-from .models import User
-from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
-
-
 # class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 #     @classmethod
 #     def get_token(cls, user):
@@ -153,12 +143,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
         return user
     
-
-
-
-
-
-
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
     id = serializers.SerializerMethodField(read_only=True)
@@ -203,10 +187,6 @@ class User_Serializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-    
-    
-from django.contrib.auth import get_user_model
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     @classmethod
     def get_token(cls, user):
@@ -224,7 +204,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
                 data[field.name] = getattr(self.user, field.name)
 
         return data
-
 
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
@@ -285,3 +264,14 @@ class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['name','nickname','description','image_url']
+
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipping_Address
+        fields = '__all__'
