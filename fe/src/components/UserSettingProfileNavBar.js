@@ -60,7 +60,7 @@ export default function UserSettingProfileNavbar() {
           <Tab label="좋아요" {...a11yProps(6)} />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0} centered>
+      <CustomTabPanel value={value} index={0} >
         <UserProfileMain />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

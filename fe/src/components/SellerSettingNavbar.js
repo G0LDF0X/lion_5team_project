@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
 import UserSettingSettingNavbar from './UserSettingSettingNavbar';
 import SellerSettingMain from './SellerSettingMain';
+import SellerSettingProfit from './SellerSettingProfit';
+import SellerSettingItemManage from './SellerSettingItemManage';
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -64,10 +66,10 @@ export default function SellerSettingNavBar() {
         <SellerSettingMain />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <SellerSettingItemManage />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <SellerSettingProfit />
       </CustomTabPanel>
     </Box>
   );

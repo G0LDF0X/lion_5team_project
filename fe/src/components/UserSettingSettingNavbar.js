@@ -58,7 +58,7 @@ export default function UserSettingSettingNavbar() {
           <Tab label="추천코드" {...a11yProps(5)} />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0} centered>
+      <CustomTabPanel value={value} index={0} >
         <UserSettingSetting />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>

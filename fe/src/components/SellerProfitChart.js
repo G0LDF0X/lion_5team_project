@@ -4,11 +4,11 @@ import { Row, Col} from 'react-bootstrap';
 import { PieChart, LineChart } from '@mui/x-charts';
 // import { Col } from 'react-bootstrap';
 
-export default function SellerSettingChart() {
+export default function SellerProfitChart() {
   return (
     <Row>
         <Col md={6}>
-            <h6>월간 수익금</h6>    
+            <h6>날짜별 수익계산</h6>    
         <LineChart
   xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
   series={[
@@ -18,22 +18,6 @@ export default function SellerSettingChart() {
   ]}
   width={500}
   height={300}
-/>
-</Col>
-<Col md={6}>
-    <h6>판매 통계</h6>
-    <PieChart
-  series={[
-    {
-      data: [
-        { id: 0, value: 10, label: 'series A' },
-        { id: 1, value: 15, label: 'series B' },
-        { id: 2, value: 20, label: 'series C' },
-      ],
-    },
-  ]}
-  width={400}
-  height={200}
 />
 </Col>
     </Row>

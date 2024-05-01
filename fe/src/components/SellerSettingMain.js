@@ -1,12 +1,12 @@
 import React from 'react'
-import SellerSettingChart from './SellerSettingChart'
+import SellerSettingMainChart from './SellerSettingMainChart'
 import { Col, Row } from 'react-bootstrap'
 
 function SellerSettingMain() {
   return (
     <Row>
     <div>
-      <SellerSettingChart />
+      <SellerSettingMainChart />
       
     </div>
 

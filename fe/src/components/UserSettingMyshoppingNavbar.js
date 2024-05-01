@@ -59,7 +59,7 @@ export default function UserSettingMyshoppingNavbar() {
           
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0} centered>
+      <CustomTabPanel value={value} index={0} >
         Item One
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
