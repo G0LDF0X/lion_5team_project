@@ -8,7 +8,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import { logout } from "../actions/userActions";
 
 import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 
 function Header() {
   const location = useLocation();
@@ -30,9 +29,6 @@ function Header() {
           <Nav.Link href="/items">
             <i class="fa-solid fa-dog"></i>Products
           </Nav.Link>
-          <Nav.Link href="/creators">
-            <i class="fa-solid fa-dog"></i>Creators
-          </Nav.Link>
         </Nav>
 
         <div className="d-flex justify-content-center flex-grow-1 ml-5"></div>
@@ -51,6 +47,9 @@ function Header() {
                 <LinkContainer to="/cart">
                   <NavDropdown.Item>Cart</NavDropdown.Item>
                 </LinkContainer>
+                <NavDropdown.Item onClick={logoutHandler}>
+                  Logout
+                </NavDropdown.Item>
               </NavDropdown>
             </Col>
           ) : (
@@ -75,27 +74,6 @@ function Header() {
               </LinkContainer>
             </NavDropdown>
           )}
-          {/* {userInfo && userInfo.is_staff && (
-            <Card className="ms-auto me-5 bg-info">
-              <NavDropdown title="Seller" id="adminmenu">
-                <LinkContainer to="/seller/index">
-                  <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/seller/manage">
-                  <NavDropdown.Item>Manage Products</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/seller/revenue">
-                  <NavDropdown.Item>Revenue</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/seller/qna">
-                  <NavDropdown.Item>Q&A</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/seller/settings">
-                  <NavDropdown.Item>Settings</NavDropdown.Item>
-                </LinkContainer>
-              </NavDropdown>
-            </Card>
-          )} */}
           <Card className="ms-auto me-5 bg-info">
             <Nav className="ms-auto me-5">
               <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
@@ -112,7 +90,6 @@ function Header() {
               <NavDropdown.Divider />
             </Nav>
           </Card>
-          
         </Navbar.Collapse>
       </Container>
     </Navbar>
