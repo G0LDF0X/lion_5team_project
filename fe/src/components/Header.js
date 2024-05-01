@@ -36,7 +36,7 @@ function Header() {
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <SearchBox />
-          <Card className="ms-auto me-5 bg-info">
+          {/* <Card className="ms-auto me-5 bg-info">
               <NavDropdown title="Seller" id="adminmenu">
                 <LinkContainer to="/seller/index">
                   <NavDropdown.Item>Dashboard</NavDropdown.Item>
@@ -54,7 +54,7 @@ function Header() {
                   <NavDropdown.Item>Settings</NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
-            </Card>
+            </Card> */}
           {/* <Nav.Link href="#action2"><i class="fa-solid fa-dog"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
             <Nav.Link href="#action2"><i class="fa-solid fa-cat"></i></Nav.Link>
@@ -65,21 +65,27 @@ function Header() {
                 <LinkContainer to="/users/profile">
                   <NavDropdown.Item>Profile</NavDropdown.Item>
                 </LinkContainer>
-                <LinkContainer to="/users/myshopping/myqna">
+                {/* <LinkContainer to="/users/myshopping/myqna">
                   <NavDropdown.Item>My Q&A</NavDropdown.Item>
-                </LinkContainer>
+                </LinkContainer> */}
                 <LinkContainer to="/cart">
                   <NavDropdown.Item>Cart</NavDropdown.Item>
                 </LinkContainer>
                 <LinkContainer to="/users/settings">
                   <NavDropdown.Item>Settings</NavDropdown.Item>
                 </LinkContainer>
-                <LinkContainer to="/users/bookmark">
+                {/* <LinkContainer to="/users/bookmark">
                   <NavDropdown.Item>Bookmark</NavDropdown.Item>
                 </LinkContainer>
                 <NavDropdown.Item onClick={logoutHandler}>
                   Logout
                 </NavDropdown.Item>
+              { userInfo.is_staff? (
+                  <LinkContainer to="/seller/index">
+                    <NavDropdown.Item>Seller</NavDropdown.Item>
+                  </LinkContainer>
+              
+              ) : null} */}
               </NavDropdown>
             </Card>
             
@@ -105,7 +111,7 @@ function Header() {
                   </LinkContainer>
                 </NavDropdown>
               )}
-          {userInfo && userInfo.is_staff && (
+          {/* {userInfo && userInfo.is_staff && (
             <Card className="ms-auto me-5 bg-info">
               <NavDropdown title="Seller" id="adminmenu">
                 <LinkContainer to="/seller/index">
@@ -125,7 +131,7 @@ function Header() {
                 </LinkContainer>
               </NavDropdown>
             </Card>
-          )}
+          )} */}
           <Card className="ms-auto me-5 bg-info">
             <Nav className="ms-auto me-5">
               <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
