@@ -17,7 +17,7 @@ function ProductListScreen() {
     const navigate = useNavigate();
     const redirect = location.search ? location.search.split("=")[1] : "/";
     const productList = useSelector((state) => state.productList);
-    const { loading, error, products, pages } = productList;
+    const { loading, error, products, pages, success } = productList;
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
     const productDelete = useSelector((state) => state.productDelete);
@@ -26,6 +26,9 @@ function ProductListScreen() {
     const { loading:loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
     const productUpdate = useSelector((state) => state.productUpdate);
     const { success: successUpdate } = productUpdate;
+    const [sellerProducts, setSellerProducts] = useState([]);
+
+
     // const page = params.get('page') || 1;
     // let keyword = params.get('query') || '';
     const createProductHandler = () => {
@@ -42,7 +45,13 @@ function ProductListScreen() {
           navigate(`/items/update/${createdProduct.id}`);
         }else{
           dispatch(listProducts());
-        }
+          if(products){
+            if(success){
+              if(products.seller_id === userInfo.id){
+              setSellerProducts(products);
+            }
+          }
+        }}
         
       }
       , [dispatch, navigate, userInfo, successDelete, successCreate, successUpdate]);

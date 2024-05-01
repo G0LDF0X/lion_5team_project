@@ -10,14 +10,14 @@ import Loading from "../components/Loading";
 import { listProducts, deleteProduct, createProduct} from "../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants"; 
 
-function SellerSettingItemManage() {
+function ProductListScreen() {
     const dispatch = useDispatch();
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const navigate = useNavigate();
     const redirect = location.search ? location.search.split("=")[1] : "/";
     const productList = useSelector((state) => state.productList);
-    const { loading, error, products, pages } = productList;
+    const { loading, error, products, pages, success } = productList;
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
     const productDelete = useSelector((state) => state.productDelete);
@@ -26,40 +26,50 @@ function SellerSettingItemManage() {
     const { loading:loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
     const productUpdate = useSelector((state) => state.productUpdate);
     const { success: successUpdate } = productUpdate;
-    const page = params.get('page') || 1;
-    let keyword = params.get('query') || '';
-    useEffect(() => {
-      dispatch({ type: PRODUCT_CREATE_RESET });
-        if(!userInfo.is_staff) {
-            navigate("/login");
-        }
-        if(successCreate){
-            navigate(`/admin/product/${createdProduct._id}/edit`);
-        }else{
-          dispatch(listProducts(keyword, page));
-        }
+    const [sellerProducts, setSellerProducts] = useState([]);
 
-    }
-    , [dispatch, navigate, userInfo, successDelete, successCreate, successUpdate, createdProduct, keyword, page]);
-    const deleteHandler = (id) => {   
+
+    // const page = params.get('page') || 1;
+    // let keyword = params.get('query') || '';
+    const createProductHandler = () => {
+      dispatch(createProduct());
+      // dispatch(createProduct(product));
+  }
+  
+    useEffect(() => {
+      // if(!userInfo.isAdmin) {
+        //     navigate("/login");
+        // }
+        dispatch({ type: PRODUCT_CREATE_RESET });
+        if(successCreate){
+          navigate(`/items/update/${createdProduct.id}`);
+        }else{
+          dispatch(listProducts());
+          if(products){
+            if(success){
+              if(products.seller_id === userInfo.id){
+              setSellerProducts(products);
+            }
+          }
+        }}
+        
+      }
+      , [dispatch, navigate, userInfo, successDelete, successCreate, successUpdate]);
+      const deleteHandler = (id) => {   
         if(window.confirm("Are you sure?")){
           dispatch(deleteProduct(id));
-        // dispatch(deleteProduct(id));
+          // dispatch(deleteProduct(id));
         }else{
           redirect("/admin/productlist"); 
         }
-    }
-    const createProductHandler = () => {
-      dispatch(createProduct());
-        // dispatch(createProduct(product));
-    }
+      }
   return (
     <div><Row className="align-items-center">
     <Col>
       <h1>Products</h1>
     </Col>
     <Col className="text-right">
-        <Button className='my-3' onClick={createProductHandler}>
+        <Button variant="light" className="btn-md" onClick={createProductHandler}>
       {/* <Link to="/admin/product/create" className="btn btn-primary my-3"> */}
         <i className="fas fa-plus"></i> Create Product
       {/* </Link> */}
@@ -82,20 +92,25 @@ function SellerSettingItemManage() {
             <th>NAME</th>
             <th>PRICE</th>
             <th>CATEGORY</th>
-            <th>BRAND</th>
+            {/* <th>BRAND</th> */}
             <th></th>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product._id}>
-              <td>{product._id}</td>
+            <tr key={product.id}>
+              <td>{product.id}</td>
               <td>{product.name}</td>
-              <td>${product.price}</td>
-              <td>{product.category}</td>
-              <td>{product.brand}</td>
+              <td>{product.price}₩</td>
+              {product.category_id === 1 ? (
+                <td>산책용품</td> ) :
+                product.category_id === 2 ? (
+                  <td>간식</td>
+                ) : null }
+              {/* <td>{product.category}</td> */}
+              {/* <td>{product.brand}</td> */}
               <td>
-                <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                <LinkContainer to={`/items/update/${product.id}`}>
                   <Button variant="light" className="btn-sm">
                     <i className="fas fa-edit"></i>
                   </Button>
@@ -103,7 +118,7 @@ function SellerSettingItemManage() {
                 <Button
                   variant="danger"
                   className="btn-sm"
-                  onClick={() => deleteHandler(product._id)}
+                  onClick={() => deleteHandler(product.id)}
                 >
                   <i className="fas fa-trash"></i>
                 </Button>
@@ -119,4 +134,4 @@ function SellerSettingItemManage() {
   )
 }
 
-export default SellerSettingItemManage
+export default ProductListScreen
