@@ -1,6 +1,6 @@
-
 import React, { useEffect, useState } from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Container } from "react-bootstrap";
+import { Typography } from '@material-ui/core';
 import Product from "../components/Product";
 import Review from "../components/Review";
 import { Link, useLocation } from "react-router-dom";
@@ -9,7 +9,6 @@ import {listReviews} from "../actions/reviewActions";
 import { listProducts } from "../actions/productActions";
 import { listBoards } from "../actions/boardActions";
 import { listQNA } from "../actions/qnaActions";
-// import { listCreators } from "../actions/creatorActions";
 
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -20,13 +19,10 @@ import ProductReviews from "../components/ProductReviews";
 import QA from "../components/QA";
 import Creators from "../components/Creators";
 import Board from "../components/Board";
-// import Paginate from "../components/Paginate";
-// import ProductCarousel from "../components/ProductCarousel";
+
 function HomeScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  // const reviewList = useSelector((state) => state.reviewList);
-  // const { loading:reviewLoading, error:reviewError, reviews } = reviewList;
   
   const productList = useSelector(state => state.productList);
   const { loading: productLoading, error: productError, products, pages } = productList;
@@ -37,124 +33,42 @@ function HomeScreen() {
   const qnaList = useSelector(state => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
 
-  // const creatorList = useSelector(state => state.creatorList);
-  // const { loading: creatorLoading, error: creatorError, creators } = creatorList;
-  // const params = new URLSearchParams(location.search);
-  // const query = params.get('query') || '';
-  // const page = params.get('page') || 1;
   useEffect(() => {
-  //   console.log("query:",query);
-  //   console.log("page:",page);
-  //   dispatch(listProducts(query, page));
-  // }
-  dispatch(listProducts());
-  dispatch(listReviews());
-  dispatch(listBoards());
-  dispatch(listQNA());
-  // dispatch(listCreators());
-  }
-  , [dispatch, location]);
-  // console.log(qnas)
+    dispatch(listProducts());
+    dispatch(listReviews());
+    dispatch(listBoards());
+    dispatch(listQNA());
+  }, [dispatch, location]);
+
   return (
-    <div>
-      {/* {!query && <ProductCarousel />} */}
-      {/* <HomeHeader /> */}
-      {/* <Row>
-        <Link to="/items">
-         <Col md={20}>
-          <Card style={{height:'300px', borderRadius:'0'}}>
-            <h1>Products</h1>
-            
-          </Card>
-          
-          </Col>
-        </Link>
-        <Link to="/reviews">
-        <Col md={20}>
-          <Card style={{height:'300px', borderRadius:'0'}}>
-            <h1>Reviews</h1>
-          </Card>
-        </Col>
-        </Link>
-        <Link to="/creators">
-        <Col md={20}>
-          <Card style={{height:'300px', borderRadius:'0'}}>
-            <h1>Creators</h1>
-          </Card>
-        </Col>
-        </Link>
-        <Link to="/board">
-        <Col md={20}>
-          <Card style={{height:'300px', borderRadius:'0'}}>
-            <h1>Boards</h1>
-          </Card>
-        </Col>
-        </Link>
-        <Link to="/qna">
-        <Col md={20}>
-          <Card style={{height:'300px', borderRadius:'0'}}>
-            <h1>Q&A</h1>
-          </Card>
-        </Col> 
-        </Link>
-      </Row> */}
-       <Row>
-     
+    <Container>
+      <Row className="my-4">
         <Col md={9}>
-          <Link to="/items">
-          <h1>Products</h1>
-          </Link>
+          <Typography variant="h4" component={Link} to="/items" className="text-decoration-none">
+            Products
+          </Typography>
           {productLoading ? (
-              <Loading />
-            ) : productError ? (
-              <Message variant={'danger'}>{productError}</Message>
-            ) : (
-              <Row>
-                {products.slice(0,3).map((product) => (
-                  <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
+            <Loading />
+          ) : productError ? (
+            <Message variant={'danger'}>{productError}</Message>
+          ) : (
+            <Row>
+              {products.slice(0,3).map((product) => (
+                <Col key={product.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                  <Card className="h-100 shadow-sm bg-white rounded">
                     <Product product={product} />
-                  </Col>
-                ))}
-              </Row>
-            )}
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          )}
         </Col>
-        {/* <Col md={9}>
-          <h1>Reviews</h1>
-          {reviewLoading ? (
-            <Loading />
-          ) : reviewError ? (
-            <Message variant={"danger"}>{reviewError}</Message>
-          ) : (
-            <Row>
-              {reviews.map((review) => (
-                <Col key={review._id} sm={12} md={6} lg={4} xl={3}>
-                  <ProductReviews reviews={review} />
-                </Col>
-              ))}
-            </Row>
-          )}
-        
-        </Col>   */}
-        {/* <Col md={9}>
-          <h1>Creators</h1>
-          {creatorLoading ? (
-            <Loading />
-          ) : creatorError ? (
-            <Message variant={"danger"}>{creatorError}</Message>
-          ) : (
-            <Row>
-              {creators.map((creator) => (
-                <Col key={creator._id} sm={12} md={6} lg={4} xl={3}>
-                  <Creators creator={creator} />
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Col> */}
+      </Row>
+      <Row className="my-4">
         <Col md={9}>
-          <Link to="/board">
-          <h1>Boards</h1>
-          </Link>
+          <Typography variant="h4" component={Link} to="/board" className="text-decoration-none">
+            Boards
+          </Typography>
           {boardLoading ? (
             <Loading />
           ) : boardError ? (
@@ -162,17 +76,21 @@ function HomeScreen() {
           ) : (
             <Row>
               {boards.map((board) => (
-                <Col key={board.id} sm={12} md={6} lg={4} xl={3}>
-                  <Board board={board} />
+                <Col key={board.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                  <Card className="h-100 shadow-sm bg-white rounded">
+                    <Board board={board} />
+                  </Card>
                 </Col>
               ))}
             </Row>
           )}
         </Col>
+      </Row>
+      <Row className="my-4">
         <Col md={9}> 
-          <Link to="/qna"> 
-          <h1>Q&A</h1>
-          </Link>
+          <Typography variant="h4" component={Link} to="/qna" className="text-decoration-none">
+            Q&A
+          </Typography>
           {qnaLoading ? (
             <Loading />
           ) : qnaError ? (
@@ -180,8 +98,10 @@ function HomeScreen() {
           ) : (
             <Row>
               {qnas.map((qna) => (
-                <Col key={qna.id} sm={12} md={6} lg={4} xl={3}>
-                  <QA qna={qna} />
+                <Col key={qna.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                  <Card className="h-100 shadow-sm bg-white rounded">
+                    <QA qna={qna} />
+                  </Card>
                 </Col>
               ))}
             </Row>
@@ -190,7 +110,7 @@ function HomeScreen() {
       </Row> 
       <div className="pagination-container">
       </div>
-    </div>
+    </Container>
   );
 }
 
