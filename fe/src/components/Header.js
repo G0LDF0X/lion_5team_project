@@ -31,12 +31,14 @@ function Header() {
           </Nav.Link>
         </Nav>
 
-        <div className="d-flex justify-content-center flex-grow-1 ml-5"></div>
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <SearchBox />
+
+        </div>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <SearchBox />
           {userInfo ? (
-            <Col className="ms-auto me-3 ">
+            <Col className="ms-auto me-5 ">
               <NavDropdown
                 title={<Avatar alt="" src="/cat.jpg" />}
                 id="username"

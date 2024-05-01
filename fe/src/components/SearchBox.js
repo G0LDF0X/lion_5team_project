@@ -27,6 +27,7 @@ function SearchBox() {
               name="query"
               placeholder="Search"
               className="ml-5"
+              style={{ width: "500px" }}
               onChange={(e) => setKeyword(e.target.value)}
               
             />

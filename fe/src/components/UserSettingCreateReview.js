@@ -1,13 +1,26 @@
 import React from 'react'
 import SearchBox from './SearchBox'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col,Form, Button } from 'react-bootstrap'
+
 
 function UserSettingCreateReview() {
   return (
     <Row>
         <Col>
-            <h4>내가 사용하는 상품 리뷰쓰기</h4>
-            <SearchBox />
+            
+    <div>       
+           <Form className="d-flex">
+    <Form.Control
+      type="search"
+      placeholder="Search"
+      className="ml-5"
+      aria-label="Search"
+    />
+    <Button variant="outline-success">Search</Button>
+  </Form>
+    </div>
+ 
+
 
             {/* {products.map((product) => (
                 <Product key={product._id} product={product} />
