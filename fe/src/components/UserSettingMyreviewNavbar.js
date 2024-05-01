@@ -4,8 +4,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import UserSettingSetting from './UserSettingSetting';
-import UserProfileMain from './UserProfileMain';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,7 +38,7 @@ function a11yProps(index) {
   };
 }
 
-export default function UserSettingProfileNavbar() {
+export default function UserSettingMyreviewNavbar() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -51,36 +49,18 @@ export default function UserSettingProfileNavbar() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-          <Tab label="모두보기" {...a11yProps(0)} />
-          <Tab label="사진" {...a11yProps(1)} />
-          <Tab label="집들이" {...a11yProps(2)} />
-          <Tab label="팔로잉" {...a11yProps(3)} />
-          <Tab label="질문과 답변" {...a11yProps(4)} />
-          <Tab label="북마크" {...a11yProps(5)} />
-          <Tab label="좋아요" {...a11yProps(6)} />
+          <Tab label="리뷰 쓰기" {...a11yProps(0)} />
+          <Tab label="내가 작성한 리뷰" {...a11yProps(1)} />
+         
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} centered>
-        <UserProfileMain />
+        <UserSettingSetting />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Item Two
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            Item Four
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-            Item Five
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
-            Item Six
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={6}>
-            Item Seven
-        </CustomTabPanel>
+    
     </Box>
   );
 }

@@ -71,9 +71,9 @@ function Header() {
                 <LinkContainer to="/cart">
                   <NavDropdown.Item>Cart</NavDropdown.Item>
                 </LinkContainer>
-                <LinkContainer to="/users/settings">
+                {/* <LinkContainer to="/users/settings">
                   <NavDropdown.Item>Settings</NavDropdown.Item>
-                </LinkContainer>
+                </LinkContainer> */}
                 {/* <LinkContainer to="/users/bookmark">
                   <NavDropdown.Item>Bookmark</NavDropdown.Item>
                 </LinkContainer>

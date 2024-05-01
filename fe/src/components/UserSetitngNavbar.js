@@ -9,6 +9,7 @@ import UserSettingSettingNavbar from './UserSettingSettingNavbar';
 import SellerSettingNavBar from './SellerSettingNavbar';
 import UserSettingProfileNavbar from './UserSettingProfileNavBar';
 import UserSettingMyshoppingNavbar from './UserSettingMyshoppingNavbar';
+import UserSettingMyreviewNavbar from './UserSettingMyreviewNavbar';
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -70,7 +71,7 @@ export default function UserSettingNavBar() {
         <UserSettingMyshoppingNavbar />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        <UserSettingMyreviewNavbar />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         <UserSettingSettingNavbar />
