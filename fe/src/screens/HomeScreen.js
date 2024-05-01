@@ -53,7 +53,7 @@ function HomeScreen() {
             <Message variant={'danger'}>{productError}</Message>
           ) : (
             <Row>
-              {products.slice(0,3).map((product) => (
+              {products.slice(0,4).map((product) => (
                 <Col key={product.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
                   <Card className="h-100 shadow-sm bg-white rounded">
                     <Product product={product} />

@@ -12,7 +12,7 @@ function Board({ board }) {
 
     return (
         <div>
-            <Card className="my-3 p-3 rounded">
+            
                 <Link to={`/board/detail/${board.id}`}> 
                     {/* <Card.Img src={board.image_url} variant="top" /> */}
                     <Card.Img src={decodeURIComponent(board.image_url)} variant="top" />
@@ -36,7 +36,7 @@ function Board({ board }) {
                         </div>
                     </Card.Text>
                 </Card.Body>
-            </Card>
+            {/* </Card> */}
         </div>
     );
 }
