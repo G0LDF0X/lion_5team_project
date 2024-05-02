@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import *
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer
 from datetime import datetime
-from rest_framework import viewsets
 
 @api_view(['GET'])
 def get_items(request):
@@ -50,16 +48,6 @@ def create_item(request):
 
     return Response(serializer.data)
 
-
-@api_view(['DELETE'])
-def delete_item(request, pk):
-    try:
-        item = Item.objects.get(pk=pk)
-        item.delete()
-        return Response("Item deleted")
-    except Item.DoesNotExist:
-        return Response("Item does not exist")
-
 @api_view(['PUT'])
 def update_item(request, pk):
     data = request.data
@@ -74,6 +62,15 @@ def update_item(request, pk):
     serializer = ItemSerializer(item, many=False)
     
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def delete_item(request, pk):
+    try:
+        item = Item.objects.get(pk=pk)
+        item.delete()
+        return Response("Item deleted")
+    except Item.DoesNotExist:
+        return Response("Item does not exist")
 
 @api_view(['POST'])
 def create_review(request, item_id):

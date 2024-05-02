@@ -51,14 +51,11 @@ def update_user_qna(request, pk):
     qna_board = User_QnA.objects.get(id=pk)
     qna_board.title = request.data['title']
     qna_board.content = request.data['content'] 
-    # qna_board.image_url = request.data['image_url'] 
     qna_board.save()    
 
-    # ??? ??? ???? ??? ?????.
     serializer = UserQnASerializer(qna_board, data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    # ??? ???? ???? ?????.
     serializer.save()
 
     return Response(serializer.data)
@@ -78,7 +75,6 @@ def create_user_answer(request):
     content = request.data.get('content')
     current_time = datetime.now()
 
-    
     try:
         user_qna = User_QnA.objects.get(pk=user_qna_id)
     except User_QnA.DoesNotExist:
