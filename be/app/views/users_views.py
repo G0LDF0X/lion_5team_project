@@ -18,11 +18,6 @@ class RegisterView(generics.CreateAPIView):
     def perform_create(self, serializer):
         auth_user_instance = serializer.save()
 
-        User.objects.create(
-            user_id=auth_user_instance,
-            name=auth_user_instance.username,
-            email=auth_user_instance.email,
-        )
 
 @api_view(['GET'])
 def getRoutes(request):
