@@ -82,6 +82,7 @@ def update_Auth_Profile(request):
     return Response(serializer.data)
 
 
+#여기하다 끝남.
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_User_Profile(request):
