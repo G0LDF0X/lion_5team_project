@@ -82,6 +82,9 @@ class OrderItem(models.Model):
     price_multi_qty = models.IntegerField()
     image = models.ImageField(blank=True)
 
+    def __str__(self):
+        return self.name
+
 class Refund(models.Model):
     order_item_id = models.ForeignKey(OrderItem, on_delete = models.DO_NOTHING)
     user_id = models.ForeignKey(User, on_delete = models.DO_NOTHING)

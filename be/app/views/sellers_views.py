@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Seller, OrderItem, User, Item, User_Answer
-from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer
+from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
+from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer, RefundSerializer
 
 @api_view(['GET'])
 def index(request):
@@ -47,10 +47,6 @@ def SellerRevenueView(request):
             total_revenue += order_item.price_multi_qty
     return Response({'total_revenue': total_revenue})
 
-
-
-
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def SellerSettingsView(request):
@@ -84,3 +80,20 @@ def seller_qna_view(request):
 
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def seller_refund_view(request):
+    user = User.objects.get(name=request.user)
+    print(request.user)
+    print(f'User: {user}')
+    seller = Seller.objects.get(user_id=user)
+    print(f'Seller: {seller}')
+    order_items = OrderItem.objects.filter(item_id__seller_id=seller)
+    print(f'Order items: {order_items}')
+    order_item_ids = [item.id for item in order_items]
+    print(order_item_ids)
+    refund_items = Refund.objects.filter(order_item_id__in=order_item_ids)
+    print(f'Refund items: {refund_items}')
+    serializer = RefundSerializer(refund_items, many=True)
+    return Response(serializer.data)
