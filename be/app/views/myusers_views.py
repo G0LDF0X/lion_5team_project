@@ -85,12 +85,12 @@ def update_User_Profile(request):
     data = request.data
     print(request.user)
     try:
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
     except User.DoesNotExist:
         return Response({'detail': 'User not found'}, status=404)
 
     update_fields = []
-    for field in ['name', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
+    for field in ['username', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
         if field in data and hasattr(user, field):
             setattr(user, field, data[field])
             update_fields.append(field)

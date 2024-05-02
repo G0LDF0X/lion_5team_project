@@ -101,7 +101,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         # 여기 수정함 : auth_user -> User
-        model = User
+        model = auth_user
         fields = '__all__'
 
     def get_token(self, obj):
