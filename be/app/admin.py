@@ -20,4 +20,5 @@ admin.site.register(Reply)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Bookmark)
+admin.site.register(Follow)
 # Register your models here.

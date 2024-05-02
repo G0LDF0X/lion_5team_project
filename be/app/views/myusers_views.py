@@ -178,14 +178,13 @@ def get_userprofile(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-#마이페이지에 팔로우 가져오기
 def getFollower(request, pk):
-    user = User.objects.get(pk=pk)
-    followers = user.followers.all()
-    serializer = UserSerializer(followers, many=True)
+    follows = Follow.objects.filter(followed_id=pk)
+    serializer = FollowerSerializer(follows, many=True)
     return Response(serializer.data)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getFollowing(request, pk):
-    user = User.objects.get(pk=pk)
-    following = user.following.all()
-    serializer = UserSerializer(following, many=True)
+    follows = Follow.objects.filter(follower_id=pk)
+    serializer = FollowingSerializer(follows, many=True)
     return Response(serializer.data)

@@ -286,10 +286,15 @@ class Board_Serializer(serializers.ModelSerializer):
         fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
 
 class FollowerSerializer(serializers.ModelSerializer):
+    #follower = serializers.StringRelatedField()
+
     class Meta:
         model = Follow
-        fields = ['follower_id']
+        fields = '__all__'
+
 class FollowingSerializer(serializers.ModelSerializer):
+    #followed = serializers.StringRelatedField()
+
     class Meta:
         model = Follow
-        fields = ['followed_id']
+        fields = '__all__'
