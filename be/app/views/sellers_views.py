@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
-from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer, RefundSerializer
+from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, RefundSerializer, ItemAnswerSerializer
 
 @api_view(['GET'])
 def index(request):
@@ -24,7 +24,7 @@ class SellerItemManageView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
         seller = Seller.objects.get(user_id_id=user.id)
         items = Item.objects.filter(seller_id=seller)
         serializer = ItemSerializer(items, many=True)
@@ -34,7 +34,7 @@ class SellerItemManageView(APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def SellerRevenueView(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
     items = Item.objects.filter(seller_id=seller)
     total_revenue = 0
@@ -49,7 +49,7 @@ def SellerRevenueView(request):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def SellerSettingsView(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
     if request.method == 'GET':
         return Response({
@@ -72,10 +72,10 @@ def SellerSettingsView(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def seller_qna_view(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
 
     seller_answer_list = User_Answer.objects.filter(user_id_id=user.id)
-    serializer = SellerAnswerSerializer(seller_answer_list, many=True)
+    serializer = ItemAnswerSerializer(seller_answer_list, many=True)
 
     return Response(serializer.data)
 
@@ -83,7 +83,7 @@ def seller_qna_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def seller_refund_view(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     print(request.user)
     print(f'User: {user}')
 

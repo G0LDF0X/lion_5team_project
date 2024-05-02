@@ -19,7 +19,7 @@ def order_item_detail(request, pk):
 
 @api_view(['POST'])
 def add_to_cart(request, pk):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item_id = pk
     item = Item.objects.get(id=item_id)
     qty = request.data["qty"]
@@ -34,7 +34,7 @@ def add_to_cart(request, pk):
 
 @api_view(['GET'])
 def cart_detail(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     cart_items = Cart.objects.filter(user_id=user)
     serializer = CartSerializer(cart_items, many=True)
 
@@ -43,7 +43,7 @@ def cart_detail(request):
 
 @api_view(['POST'])
 def create_order(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     cart_items = Cart.objects.filter(user_id=user)
 
     if not cart_items:
@@ -87,7 +87,7 @@ def create_order(request):
 def refund_item(request, order_id, order_item_id):
     order_item = OrderItem.objects.get(id=order_item_id)
     order = Order.objects.get(id=order_id)
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
 
     # 환불할 수 있는 양이 주문한 양보다 큰지 확인
     refund_amount = request.data.get('refund_amount')
