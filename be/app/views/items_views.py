@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import *
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer
 from datetime import datetime
 
