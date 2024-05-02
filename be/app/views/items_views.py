@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer
 from datetime import datetime
@@ -26,27 +27,79 @@ def item_details(request, pk):
     serializer = ItemSerializer(item)
     return Response(serializer.data)
 
+# @api_view(['POST'])
+# def create_item(request):
+#     user = request.user
+#     seller = Seller.objects.get(user_id_id=user.id)
+#     tag = Tag.objects.get(id=id)
+#     category = Category.objects.get(id=id)
+#     item = Item.objects.create(
+#         seller_id = seller,
+#         category_id = category, 
+#         tag_id = tag,
+#         name = "",
+#         price = 0,
+#         description = "",
+#         image_url = "",
+#         rate = 0,
+#         created_at = datetime.now()
+        
+#         )
+#     serializer = ItemSerializer(item, many=False)
+
+#     return Response(serializer.data)
+
+
 @api_view(['POST'])
 def create_item(request):
+    # 요청한 사용자 가져오기
     user = request.user
-    seller = Seller.objects.get(id=2)
-    tag = Tag.objects.get(id=1)
-    category = Category.objects.get(id=1)
-    item = Item.objects.create(
-        seller_id = seller,
-        category_id = category, 
-        tag_id = tag,
-        name = "",
-        price = 0,
-        description = "",
-        image_url = "",
-        rate = 0,
-        created_at = datetime.now()
-        
-        )
-    serializer = ItemSerializer(item, many=False)
 
-    return Response(serializer.data)
+    try:
+        # 판매자 가져오기
+        seller = Seller.objects.get(username = user.username)
+    except Seller.DoesNotExist:
+        return Response({"error": "판매자 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    # 요청 데이터에서 필요한 정보 추출
+    name = request.data.get('name')
+    price = request.data.get('price')
+    description = request.data.get('description')
+    image_url = request.data.get('image_url')
+    category_id = request.data.get('category_id')
+    tag_id = request.data.get('tag_id')
+
+    try:
+        # 카테고리 가져오기
+        category = Category.objects.get(id=category_id)
+    except Category.DoesNotExist:
+        return Response({"error": "카테고리 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        # 태그 가져오기
+        tag = Tag.objects.get(id=tag_id)
+    except Tag.DoesNotExist:
+        return Response({"error": "태그 정보를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+    # 상품 생성
+    item = Item.objects.create(
+        seller=seller,
+        category=category, 
+        tag=tag,
+        name=name,
+        price=price,
+        description=description,
+        image_url=image_url,
+        rate=0,
+        created_at=datetime.now()
+    )
+
+    # 생성된 상품 정보를 시리얼라이즈
+    serializer = ItemSerializer(item)
+
+       # 생성된 상품 정보를 응답으로 반환
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['PUT'])
 def update_item(request, pk):
