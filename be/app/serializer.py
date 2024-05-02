@@ -264,6 +264,11 @@ class UserprofileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['name','nickname','description','image_url']
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = '__all__'
+        
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
@@ -278,4 +283,3 @@ class Board_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
-

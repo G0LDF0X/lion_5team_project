@@ -13,6 +13,9 @@ import {
 import {
   reviewListReducer,
   reviewDetailsReducer,
+  reviewCreateReducer,
+  reviewDeleteReducer,
+  reviewUpdateReducer,
 } from "./reducers/reviewReducers";
 import {
   cartListReducer,
@@ -53,6 +56,12 @@ import {
   boardDeleteReducer,
 } from "./reducers/boardReducers";
 
+import {
+  bookMarkListReducer,
+  bookMarkAddReducer,
+  bookMarkRemoveReducer,
+} from "./reducers/bookmarkReducer";
+
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
@@ -83,6 +92,9 @@ const reducer = combineReducers({
 
   reviewList: reviewListReducer,
   reviewDetail: reviewDetailsReducer,
+  reviewCreate: reviewCreateReducer,
+  reviewDelete: reviewDeleteReducer,
+  reviewUpdate: reviewUpdateReducer,
 
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
@@ -95,6 +107,10 @@ const reducer = combineReducers({
   boardCreate: boardCreateReducer,
   boardUpdate: boardUpdateReducer,
   boardDelete: boardDeleteReducer,
+
+  bookMarkList: bookMarkListReducer,
+  bookMarkAdd: bookMarkAddReducer,
+  bookMarkRemove: bookMarkRemoveReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -108,10 +124,10 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 const initialState = {
-  cart: {
-    cartItems: cartItemsFromStorage,
-    shippingAddress: shippingAddressFromStorage,
-  },
+  // cart: {
+  //   cartItems: cartItemsFromStorage,
+  //   shippingAddress: shippingAddressFromStorage,
+  // },
   userLogin: { userInfo: userInfoFromStorage },
 };
 
