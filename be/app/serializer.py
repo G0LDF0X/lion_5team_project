@@ -22,6 +22,11 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields =  '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
         
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,11 +37,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['item_id', 'user_id', 'title', 'content', 'rate', 'image_url']
 
 class ItemAnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -215,11 +215,6 @@ class MyUserQnASerializer(serializers.ModelSerializer):
 class SellerAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Answer
-        fields = '__all__'
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
         fields = '__all__'
 
 class UserprofileSerializer(serializers.ModelSerializer):
