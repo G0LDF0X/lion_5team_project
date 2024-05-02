@@ -9,7 +9,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
-# import requests
+from app.models import Seller, OrderItem
 
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,17 +23,15 @@ class BoardSerializer(serializers.ModelSerializer):
         model = Board
         fields =  '__all__'
         
-from app.models import Seller, OrderItem
-
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seller
-        fields = '__all__'  # replace with your fields
+        fields = '__all__' 
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = '__all__'  # replace with your fields
+        fields = '__all__'
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,12 +56,6 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
-
-    # def get_reviews(self, obj):
-    #     return obj.review_set.all()
-    
-    # def get_qna(self, obj):
-    #     return obj.qna_set.all()
     
 class UserQnASerializer(serializers.ModelSerializer):
     class Meta:
@@ -116,36 +108,39 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        serializer = UserSerializerWithToken(self.user).data
-        for k, v in serializer.items():
-            data[k] = v
-
-        return data
-
 class User_Serializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
         
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        # Frontend에서 더 필요한 정보가 있다면 여기에 추가적으로 작성하면 됩니다. token["is_superuser"] = user.is_superuser 이런식으로요.
-        token['username'] = user.username
-        token['email'] = user.email
-        return token
-    
     def validate(self, attrs):
         data = super().validate(attrs)
 
-        for field in get_user_model()._meta.fields:
-            if field.name not in ['password', 'user_permissions', 'groups']:
-                data[field.name] = getattr(self.user, field.name)
+        # Get the user instance for the authenticated user
+        auth_user = self.user
+
+        # Get the associated User instance
+        user = User.objects.get(user_id=auth_user)
+
+        # Add user information to the response
+        data.update({
+            'username': user.username,
+            'email': user.email,
+            'nickname': user.nickname,
+            'address': user.address,
+            'phone': user.phone,
+            'is_seller': user.is_seller,
+            'image_url': user.image_url,
+            'description': user.description,
+            'date_joined': user.date_joined,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'is_active': user.is_active,
+            'is_staff': user.is_staff,
+            'is_superuser': user.is_superuser,
+            'last_login': user.last_login,
+        })
 
         return data
 
