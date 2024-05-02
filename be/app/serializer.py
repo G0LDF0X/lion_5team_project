@@ -92,7 +92,6 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
     id = serializers.SerializerMethodField(read_only=True)
     isadmin = serializers.SerializerMethodField(read_only=True)
-    
 
     class Meta:
         model = auth_user
@@ -109,7 +108,8 @@ class UserSerializerWithToken(UserSerializer):
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = auth_user
+        # 여기 수정함 : auth_user -> User
+        model = User
         fields = '__all__'
 
     def get_token(self, obj):
@@ -159,7 +159,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'password', 'nickname', 'address', 'phone')
+        fields = ('username', 'email', 'password', 'nickname', 'address', 'phone')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -172,17 +172,26 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     def create(self, validated_data):
         auth_user_model = get_user_model()
         auth_user = auth_user_model.objects.create_user(
-            username=validated_data['name'],
+            username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
         )
         user = User.objects.create(
             user_id=auth_user,
-            name=validated_data['name'],
-            email=validated_data['email'],
+            username=auth_user.username,
+            email=auth_user.email,
             nickname=validated_data['nickname'],
             address=validated_data['address'],
             phone=validated_data['phone'],
+            is_seller=False,
+            date_joined=auth_user.date_joined,
+            first_name=auth_user.first_name,
+            last_name=auth_user.last_name,
+            is_active=auth_user.is_active,
+            is_staff=auth_user.is_staff,
+            is_superuser=auth_user.is_superuser,
+            last_login=auth_user.last_login,
+            password=auth_user.password,
         )
         return user
 

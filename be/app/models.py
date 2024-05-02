@@ -4,7 +4,15 @@ from django.contrib.auth.models import User as auth_user
 
 class User(models.Model):
     user_id = models.ForeignKey(auth_user, on_delete=models.CASCADE)
-    name = models.CharField('name', max_length=100)
+    username = models.CharField('name', max_length=100)
+    password = models.CharField('password', max_length=100)
+    last_login = models.DateTimeField('last_login', auto_now=True)
+    is_superuser = models.BooleanField(default=False)
+    first_name = models.CharField('first_name', max_length=100, blank=True)
+    last_name = models.CharField('last_name', max_length=100, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField('date_joined', auto_now_add=True)
     phone = models.CharField('phone', max_length=20)
     address = models.TextField('address', blank=True) 
     nickname = models.CharField('nickname', max_length=50)
@@ -156,7 +164,7 @@ class Board(models.Model):
     # 외래키
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    product_url = models.CharField(max_length=200)
+    product_url = models.TextField(blank=True)
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
     image_url = models.ImageField()
