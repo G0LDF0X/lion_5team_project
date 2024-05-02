@@ -98,7 +98,7 @@ function HomeScreen() {
             <Message variant={"danger"}>{boardError}</Message>
           ) : (
             <Row>
-              {boards.map((board) => (
+              {boards.slice(0, 4).map((board) => (
                 <Col
                   key={board.id}
                   sm={12}
