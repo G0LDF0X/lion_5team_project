@@ -99,7 +99,8 @@ function CartScreen() {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Subtotal ({subtotalQuantity}) items</h2>
-              ${subtotalPrice}
+              shipping: 5000
+              {subtotalPrice}
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
