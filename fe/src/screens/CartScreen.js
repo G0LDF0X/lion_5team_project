@@ -18,7 +18,8 @@ import {
   Card,
 } from "react-bootstrap";
 import Message from "../components/Message";
-import { addToCart, removeFromCart } from "../actions/cartActions";
+import { addToCart, removeFromCart, listCartItems } from "../actions/cartActions";
+
 // import { removeFromCart } from '../actions/cartActions'
 // import { cartConstants } from '../constants/cartConstants'
 // import { cartReducer } from '../reducers/cartReducers'
@@ -45,7 +46,7 @@ function CartScreen() {
   // const cart = useSelector(state => state.cart)
   // const { cartItems } = cart
   useEffect(() => {
-    dispatch(cartList());
+    dispatch(listCartItems());
     if (cartItems) {
       cartItems.map((item) => {
         const productList = products.find((p) => p.id === item.item_id);
@@ -70,13 +71,13 @@ function CartScreen() {
       />
       <Col md={8}>
         <h1>Shopping Cart</h1>
-        {cartItems.length === 0 ? (
+        {cartItems && cartItems.length === 0 ? (
           <Message variant="info">
             Your cart is empty <Link to="/">Go Back</Link>
           </Message>
         ) : (
           <ListGroup variant="flush">
-            {cartItems.map((item) => (
+            {cartItems &&cartItems.map((item) => (
               
                 
               <ListGroup.Item key={item.id}>
@@ -134,13 +135,13 @@ function CartScreen() {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>
-                Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
+                {/* Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)}) */}
                 items
               </h2>
               $
-              {cartItems
+              {/* {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
-                .toFixed(2)}
+                .toFixed(2)} */}
             </ListGroup.Item>
           </ListGroup>
 
@@ -148,7 +149,7 @@ function CartScreen() {
             <Button
               type="button"
               className="btn-block"
-              disabled={cartItems.length === 0}
+              // disabled={cartItems.length === 0}
               onClick={checkOutHandler}
             >
               Proceed To Checkout
