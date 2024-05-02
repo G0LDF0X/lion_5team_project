@@ -22,9 +22,10 @@ function ProductsScreen() {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const productList = useSelector(state => state.productList);
   const { loading, error, products, pages } = productList;
+
   const params = new URLSearchParams(location.search);
-  // console.log(products)
-  const query = params.get('q');
+  const query = params.get('query') || '';
+  console.log(query);
   const page = params.get('page') || 1;
   const category = params.get('category');
   const tag = params.get('tag');

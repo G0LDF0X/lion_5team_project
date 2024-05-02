@@ -2,12 +2,17 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
+
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
 function Board({ board }) {
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     // const {userinfo} = JSON.parse(localStorage.getItem("userInfo"));
 
     return (
         <div>
-            <Card className="my-3 p-3 rounded">
+            
                 <Link to={`/board/detail/${board.id}`}> 
                     {/* <Card.Img src={board.image_url} variant="top" /> */}
                     <Card.Img src={decodeURIComponent(board.image_url)} variant="top" />
@@ -22,7 +27,7 @@ function Board({ board }) {
 
                     <Card.Text as="div">
                         <div className="my-3">
-                            {board.like} <i class="fa-solid fa-heart"></i>
+                            {board.like} <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
                             {/* <Rating
                                 value={board.like}
                                 text={"likes"}
@@ -31,7 +36,7 @@ function Board({ board }) {
                         </div>
                     </Card.Text>
                 </Card.Body>
-            </Card>
+            {/* </Card> */}
         </div>
     );
 }
