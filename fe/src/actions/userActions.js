@@ -67,7 +67,7 @@ export const logout = () => (dispatch) => {
 }
 
 
-export const register = (name, email, password, confirmPassword) => async (dispatch) => {
+export const register = (name, email, password, nickname, adress, phone) => async (dispatch) => {
     try {
         dispatch({
             type: USER_REGISTER_REQUEST,
@@ -85,7 +85,7 @@ export const register = (name, email, password, confirmPassword) => async (dispa
                 method: "POST",
                 headers: config.headers,
 
-                body: JSON.stringify({ 'username':name, 'email':email, 'password':password }),
+                body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'Nickname':nickname, 'adress':adress, 'phone':phone }),
 
 //                 body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'password2':confirmPassword }),
 // >>>>>>> 3a8bdc2dee71f9e87e70abc6a59a0adeafa739a2

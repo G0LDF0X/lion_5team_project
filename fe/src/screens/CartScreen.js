@@ -38,12 +38,19 @@ function CartScreen() {
   // console.log(qty)
   const cartList = useSelector((state) => state.cartList);
   const { cartItems } = cartList;
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
+  const [cartProducts, setCartProducts] = useState([]);
   // console.log('cartItem',cartItems)
   // const cart = useSelector(state => state.cart)
   // const { cartItems } = cart
   useEffect(() => {
-    if (productId && qty) {
-      dispatch(addToCart(productId, qty));
+    dispatch(cartList());
+    if (cartItems) {
+      cartItems.map((item) => {
+        const productList = products.find((p) => p.id === item.item_id);
+        return setCartProducts((prevProducts) => [...prevProducts, productList]);
+      });
     }
   }, [dispatch, productId, qty]);
 
@@ -70,7 +77,9 @@ function CartScreen() {
         ) : (
           <ListGroup variant="flush">
             {cartItems.map((item) => (
-              <ListGroup.Item key={item.product}>
+              
+                
+              <ListGroup.Item key={item.id}>
                 <Form.Check // prettier-ignore
                   type={"checkbox"}
                   id={item.id}

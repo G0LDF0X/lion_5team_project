@@ -13,11 +13,7 @@ import {
 export const listCartItems = () => async (dispatch, getState) => {
   try {
     dispatch({ type: CART_ITEM_LIST_REQUEST });
-    const res = await fetch(`/cart/`, {
-      headers: {
-        // Authorization: `Bearer ${getState().userLogin.userInfo.token}`,
-      },
-    });
+    const res = await fetch(`/order/cart/`);
     const data = await res.json();
     dispatch({ type: CART_ITEM_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -34,18 +30,19 @@ export const listCartItems = () => async (dispatch, getState) => {
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   try {
     dispatch({ type: CART_ADD_ITEM_REQUEST });
-    const res = await fetch(`/items/detail/${id}`);
+    const config = {  
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${getState().userLogin.userInfo.token}`,
+      },
+      body: JSON.stringify({ qty }),
+    };
+    const res = await fetch(`/order/cart/${id}/`, config);
     const data = await res.json();
     dispatch({
       type: CART_ADD_ITEM_SUCCESS,
-      payload: {
-        product: data._id,
-        name: data.name,
-        image: data.image,
-        price: data.price,
-        countInStock: data.countInStock,
-        qty,
-      },
+      payload: {data},
     });
     localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
   } catch (error) {

@@ -14,6 +14,9 @@ function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -76,6 +79,33 @@ function RegisterScreen() {
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId="Nickname">
+          <Form.Label>Nickname</Form.Label>
+          <Form.Control
+            type="nickname"
+            placeholder="Enter nickname"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId="Address">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="address"
+            placeholder="Enter address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group controlId="Phone">
+          <Form.Label>Phone</Form.Label>
+          <Form.Control
+            type="phone"
+            placeholder="Enter phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           ></Form.Control>
         </Form.Group>
         <Button type="submit" variant="primary">

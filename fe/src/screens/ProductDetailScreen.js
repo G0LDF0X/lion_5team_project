@@ -16,6 +16,7 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { createReview } from "../actions/reviewActions";
 import { addToBookMark, removeFromBookMark } from "../actions/bookmarkActions";
+import { addToCart } from "../actions/cartActions";
 // import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 function Productcreen() {
@@ -53,7 +54,7 @@ function Productcreen() {
     // console.log(product.reviews)
   }, [dispatch, id, successProductReview]);
   const addToCartHandler = () => {
-    navigate(`/cart/${id}`, { state: { qty } });
+    dispatch(addToCart(id, qty));
   };
   const createReviewHandler = () => {
     dispatch(createReview(id));
