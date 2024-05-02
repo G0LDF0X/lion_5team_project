@@ -131,24 +131,27 @@ def my_bookmarks(request):
 
 @api_view(['PUT'])
 def add_bookmark(request, pk):
+    print(request.user)
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=pk)
+    item = Item.objects.get(id=pk)
     bookmark = Bookmark.objects.create(
-          user_id=user,
+          user_id_id=user.id,
           item_id=item,
           created_at=datetime.datetime.now()
           )
-    serializer = BookmarkSerializer(bookmark)
-    return Response(serializer.data)   
+    # serializer = BookmarkSerializer(bookmark)
+    return Response("Bookmark added", status=201)   
 
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
+    print(request.user)
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=pk)
-    bookmark = Bookmark.objects.get(user_id=user, item_id=item)
-    bookmark.delete()
-    return Response('Bookmark deleted')
+    item = Item.objects.get(id=pk)
+    bookmarks = Bookmark.objects.filter(user_id_id=user.id, item_id=item)
+    for bookmark in bookmarks:  
+        bookmark.delete()
+    return Response("Bookmark deleted", status=201)
 
 
 @api_view(['GET'])

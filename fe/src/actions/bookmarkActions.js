@@ -47,7 +47,7 @@ export const addToBookMark = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.access}`,
       },
     });
-    const data = await data.json();
+    const data = await res.json();
     if (res.ok) {
       dispatch({
         type: BookMark_ADD_ITEM_SUCCESS,
@@ -72,18 +72,22 @@ export const removeFromBookMark = (id) => async (dispatch, getState) => {
     dispatch({
       type: BookMark_REMOVE_ITEM_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
-    const { res } = await fetch(`/users/bookmark/delete/${id}/`, config);
-    const data = await data.json();
+    const  res  = await fetch(`/users/bookmark/delete/${id}/`, config);
+    
     if (res.ok) {
       dispatch({
         type: BookMark_REMOVE_ITEM_SUCCESS,
-        payload: data
+
       });
     } else {
       throw new Error(res.message);
