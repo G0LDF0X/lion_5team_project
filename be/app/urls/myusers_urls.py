@@ -7,7 +7,6 @@ urlpatterns = [
     path('myshopping/',  my_shopping, name='my_shopping'),
     path('profile/', get_mypage_profile, name='mypage_profile'),
     path('update_profile/', update_User_Profile, name='user_update_profile'),
-    # path('change_password/', change_password, name='user_change_password'),
     path('myshopping/myqna/', getMyUserQnA),
     path('myreview/', getMyReview, name='my_review'),
     path('<int:pk>/', get_userprofile, name='user_profile'),

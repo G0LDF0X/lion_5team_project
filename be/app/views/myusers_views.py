@@ -1,15 +1,14 @@
-from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmark
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ObjectDoesNotExist
 from app.serializer import *
 from django.contrib.auth.models import User as auth_user
 import datetime
-
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -25,7 +24,6 @@ def get_Seller_Apply(request):
         user = User.objects.get(name=request.user)
         serializer.save(user_id=user)
 
-        # User의 is_seller를 True로 변경
         user = request.user
         user.is_seller = True
         user.save()
@@ -35,27 +33,16 @@ def get_Seller_Apply(request):
         return Response(serializer.errors, status=400)
     
 
-
-
 @api_view(['GET'])
 def my_shopping(request):
     user = User.objects.get(name=request.user)
     orders = Order.objects.filter(user_id=user)
     orders_ids = orders.values_list('id', flat=True)
     order_items = OrderItem.objects.filter(order_id__in=orders_ids)
+
     serializer = OrderItemSerializer(order_items, many=True)
-    
-    # 시리얼라이즈된 주문 정보를 응답으로 반환합니다.
     return Response(serializer.data)
 
-
-# def get_mypage_profile(request):
-#     user = request.user
-#     serializer = UserSerializer(user)
-#     return JsonResponse(serializer.data)
-
-
-from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -69,12 +56,8 @@ def get_mypage_profile(request):
         seller_data = None
     return JsonResponse({'user': user_data, 'seller': seller_data})
 
-#username, email, password, 수정가능 (auth_user 테이블서 바뀜)
 
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
-from django.contrib.auth.hashers import make_password
-
-@api_view(['PUT'])  # POST -> PUT       
+@api_view(['PUT'])       
 @permission_classes([IsAuthenticated])
 def update_User_Profile(request):
     user = request.user
@@ -91,6 +74,7 @@ def update_User_Profile(request):
         user.password = make_password(data['password'])
     user.save()
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -112,15 +96,12 @@ def getMyReview(request):
 
 @api_view(['GET'])
 def my_bookmarks(request):
-    # 현재 사용자의 북마크를 가져옵니다.
     user= User.objects.get(name=request.user)
     bookmarks = Bookmark.objects.filter(user_id=user)
 
-    # 북마크 정보를 시리얼라이즈합니다.
     serializer = BookmarkSerializer(bookmarks, many=True)
-
-    # 시리얼라이즈된 북마크 정보를 응답으로 반환합니다.
     return Response(serializer.data)
+
 
 @api_view(['PUT'])
 def add_bookmark(request, pk):
@@ -134,6 +115,7 @@ def add_bookmark(request, pk):
           )
     serializer = BookmarkSerializer(bookmark)
     return Response(serializer.data)   
+
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
@@ -153,16 +135,12 @@ def get_userprofile(request, pk):
     except User.DoesNotExist:
         return Response("User does not exist")
 
-
-    # 해당 사용자가 게시판에 작성한 글을 가져오기
     board_posts = Board.objects.filter(user_id=user)
     board_serializer = Board_Serializer(board_posts, many=True)
 
-    # 해당 사용자가 Q&A에 작성한 글을 가져오기
     qna_posts = User_QnA.objects.filter(user_id=user)
     qna_serializer = MyUserQnASerializer(qna_posts, many=True)
 
-    # 작성한 리뷰
     review = Review.objects.filter(user_id=user)
     review_serializer = ReviewSerializer(review, many=True)
 
