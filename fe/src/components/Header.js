@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Nav, Navbar, NavDropdown, Container, Col } from "react-bootstrap";
 import SearchBox from "./SearchBox";
@@ -53,45 +53,7 @@ function Header() {
         </div>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          {userInfo ? (
-            <Col className="ms-auto me-5 ">
-              <NavDropdown
-                title={<Avatar alt="" src="/cat.jpg" />}
-                id="username"
-              >
-                <LinkContainer to="/users/profile">
-                  <NavDropdown.Item>Profile</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/cart">
-                  <NavDropdown.Item>Cart</NavDropdown.Item>
-                </LinkContainer>
-                <NavDropdown.Item onClick={logoutHandler}>
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
-            </Col>
-          ) : (
-            <Card className="ms-auto me-5 bg-info">
-              <LinkContainer to="/login">
-                <Nav.Link>
-                  <i className="fas fa-user"></i>Login
-                </Nav.Link>
-              </LinkContainer>
-            </Card>
-          )}
-          {userInfo && userInfo.is_staff && (
-            <NavDropdown title="Admin" id="adminmenu">
-              <LinkContainer to="/admin/userlist">
-                <NavDropdown.Item>Users</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/admin/productlist">
-                <NavDropdown.Item>Products</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/admin/orderlist">
-                <NavDropdown.Item>Orders</NavDropdown.Item>
-              </LinkContainer>
-            </NavDropdown>
-          )}
+             {userInfo ? (
            <div>
               <IconButton
                 size="large"
@@ -118,10 +80,56 @@ function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to="/users/profile">Profile</Link>
+                  </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to="/cart">Cart</Link>
+                  </MenuItem>
+                <MenuItem onClick={logoutHandler}>
+                 
+                    Logout
+                  </MenuItem>
               </Menu>
             </div>
+            ) : (
+            <Card className="ms-auto me-5 bg-info">
+              <LinkContainer to="/login">
+                <Nav.Link>
+                  <i className="fas fa-user"></i>Login
+                </Nav.Link>
+              </LinkContainer>
+            </Card>
+            // <Col className="ms-auto me-5 ">
+            //   <NavDropdown
+            //     title={<Avatar alt="" src="/cat.jpg" />}
+            //     id="username"
+            //   >
+            //     <LinkContainer to="/users/profile">
+            //       <NavDropdown.Item>Profile</NavDropdown.Item>
+            //     </LinkContainer>
+            //     <LinkContainer to="/cart">
+            //       <NavDropdown.Item>Cart</NavDropdown.Item>
+            //     </LinkContainer>
+            //     <NavDropdown.Item onClick={logoutHandler}>
+            //       Logout
+            //     </NavDropdown.Item>
+            //   </NavDropdown>
+            // </Col>
+          )}
+          {userInfo && userInfo.is_staff && (
+            <NavDropdown title="Admin" id="adminmenu">
+              <LinkContainer to="/admin/userlist">
+                <NavDropdown.Item>Users</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to="/admin/productlist">
+                <NavDropdown.Item>Products</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to="/admin/orderlist">
+                <NavDropdown.Item>Orders</NavDropdown.Item>
+              </LinkContainer>
+            </NavDropdown>
+          )}
           <Card className="ms-auto me-5 bg-info">
             <Nav className="ms-auto me-5">
               <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
