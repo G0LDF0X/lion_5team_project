@@ -81,7 +81,7 @@ def get_reviews(request):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
 
     try:
         item = Item.objects.get(pk=item_id)
@@ -106,7 +106,7 @@ def update_review(request, pk):
         return Response({"error": "Review not found"})
     
     item_id = review.item_id.id
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
 
     # 리뷰 작성자와 수정자의 id가 다르거나 관리자가 아닐 경우 수정 불가능
@@ -131,7 +131,7 @@ def delete_review(request, pk):
         return Response({"error": "Review not found"})
     
     # 리뷰 작성자와 수정자의 id가 다르거나 관리자가 아닐 경우 삭제 불가능
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
     if user.id != review.user_id.id:
         if user_auth.is_superuser == False:
@@ -149,7 +149,7 @@ def get_category(request):
 
 @api_view(['POST'])
 def create_qna(request,item_id):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=item_id)
   
     title = request.data.get('title')
@@ -177,7 +177,7 @@ def update_qna(request,pk):
     except Item_QnA.DoesNotExist:
         return Response({"error": "QnA not found"})
     
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != qna.user_id.id:
@@ -202,7 +202,7 @@ def delete_qna (request, pk):
     except Item_QnA.DoesNotExist:
         return Response({"error": "Item Q&A not found"}, status=404)
     
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != item_qna.user_id.id:
