@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Container, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-function SearchBox() {
+function QNASearchBox() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
   const location = useLocation();
@@ -12,9 +12,9 @@ function SearchBox() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      navigate(`/items/?query=${keyword}&?page=1`);
+      // navigate(`/items/?query=${keyword}&?page=1`);
     } else {
-      navigate(location.pathname);
+      // navigate(location.pathname);
     }
   };
   return (
@@ -43,4 +43,4 @@ function SearchBox() {
   );
 }
 
-export default SearchBox;
+export default QNASearchBox;

@@ -283,3 +283,26 @@ class Board_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
+
+class FollowerSerializer(serializers.ModelSerializer):
+    #follower = serializers.StringRelatedField()
+
+    class Meta:
+        model = Follow
+        fields = '__all__'
+
+class FollowingSerializer(serializers.ModelSerializer):
+    #followed = serializers.StringRelatedField()
+
+    class Meta:
+        model = Follow
+        fields = '__all__'
+class RefundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Refund
+        fields =['reason', 'refund_amount', 'order_item_id', 'user_id'] 
+
+class RefundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Refund
+        fields =['reason', 'refund_amount', 'order_item_id', 'user_id'] 
