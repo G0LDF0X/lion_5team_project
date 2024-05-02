@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
-from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, SellerAnswerSerializer, RefundSerializer
+from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, RefundSerializer, ItemAnswerSerializer
 
 @api_view(['GET'])
 def index(request):
@@ -75,7 +75,7 @@ def seller_qna_view(request):
     user = User.objects.get(name=request.user)
 
     seller_answer_list = User_Answer.objects.filter(user_id_id=user.id)
-    serializer = SellerAnswerSerializer(seller_answer_list, many=True)
+    serializer = ItemAnswerSerializer(seller_answer_list, many=True)
 
     return Response(serializer.data)
 
