@@ -5,6 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listQNA } from '../actions/qnaActions'
 import { createQNA } from '../actions/qnaActions'
 import { QNA_CREATE_RESET } from '../constants/qnaConstants'
+import QNASearchBox from '../components/QNASearchBox'
+import { ListItemIcon } from '@mui/material'
+import List from '@mui/material/List';
+
+import ListForm from '../components/ListForm'
 
 function QAScreen() {
   const dispatch = useDispatch()
@@ -45,24 +50,12 @@ useEffect(() => {
             <i className="fas fa-plus"></i>create
           </Button>
           </Col>
+          <QNASearchBox />
+          <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
             {qnas.map((qna) => (
-              <Col key={qna.id} sm={12} md={6} lg={4} xl={3}>
-                <Card className='my-3 p-3 rounded'>
-                  <Link to={`/qna/detail/${qna.id}`}>
-                    <Card.Title as='div'>
-                      <strong>{qna.title}</strong>
-                    </Card.Title>
-                  </Link>
-                  <Card.Body>
-                    <Card.Text as='div'>
-                      <div className='my-3'>
-                        {qna.content}
-                      </div>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+              <ListForm key={qna.id} qna={qna} /> 
             ))}
+            </List>
           </Row>
         ) : (
       <Row>

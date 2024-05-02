@@ -21,4 +21,5 @@ admin.site.register(Refund)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Bookmark)
+admin.site.register(Follow)
 # Register your models here.

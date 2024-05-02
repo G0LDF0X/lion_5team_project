@@ -1,8 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import OrderItem, User, Cart
-from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer
+from app.models import OrderItem, User, Cart, Refund, Order
+from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
 from datetime import datetime, timedelta
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from rest_framework import status
 
 @api_view(['GET'])
 def order_item_detail(request, pk):
@@ -61,3 +64,32 @@ def create_order(request):
         return Response(order_serializer.data, status=201)
     else:
         return Response(order_serializer.errors, status=400)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def refund_item(request, order_id, order_item_id):
+    order_item = OrderItem.objects.get(id=order_item_id)
+    order = Order.objects.get(id=order_id)
+    user = User.objects.get(name=request.user)
+
+    # 환불할 수 있는 양이 주문한 양보다 큰지 확인
+    refund_amount = request.data.get('refund_amount')
+    if int(refund_amount) is None or int(refund_amount) >= order_item.qty:
+        return Response({"error": "환불할 수 있는 양이 주문한 양보다 큽니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    refund_data = {
+        "user_id": user.id,
+        "order_item_id": order_item_id,
+        "reason": request.data.get('reason'), 
+        "refund_amount": request.data.get('refund_amount') 
+    }
+
+    refund_serializer = RefundSerializer(data=refund_data)
+
+    if refund_serializer.is_valid():
+        refund_serializer.save()
+        return Response(refund_serializer.data, status=201)
+    else:
+        return Response(refund_serializer.errors, status=400)
