@@ -31,14 +31,14 @@ def item_details(request, pk):
 
 @api_view(['POST'])
 def create_item(request):
-    user = request.user
-    seller = Seller.objects.get(user_id_id=user.id)
-    tag = Tag.objects.get(id=id)
-    category = Category.objects.get(id=id)
+    user = User.objects.get(username=request.user)
+    seller = Seller.objects.get(user_id=user)
+    tag_id= Tag.objects.get(id=request.data["tag"])
+    category = Category.objects.get(id=request.data["category"])
     item = Item.objects.create(
         seller_id = seller,
         category_id = category, 
-        tag_id = tag,
+        tag_id = tag_id,
         name = "",
         price = 0,
         description = "",
