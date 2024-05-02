@@ -235,13 +235,7 @@ class RefundSerializer(serializers.ModelSerializer):
         model = Refund
         fields = '__all__'
 
-class FollowerSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Follow
-        fields = '__all__'
-
-class FollowingSerializer(serializers.ModelSerializer):
+class FollowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Follow

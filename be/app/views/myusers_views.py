@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
-from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
 
 
 
@@ -183,13 +183,13 @@ def get_userprofile(request, pk):
 @permission_classes([IsAuthenticated])
 def getFollower(request, pk):
     follows = Follow.objects.filter(followed_id=pk)
-    serializer = FollowerSerializer(follows, many=True)
+    serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getFollowing(request, pk):
     follows = Follow.objects.filter(follower_id=pk)
-    serializer = FollowingSerializer(follows, many=True)
+    serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
 
