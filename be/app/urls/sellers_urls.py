@@ -7,5 +7,5 @@ urlpatterns = [
     path('revenue/', SellerRevenueView, name='seller-revenue'),
     path('settings/', SellerSettingsView, name='seller-settings'),
     path('myqna/', seller_qna_view, name='seller-qna'),
-
+    path('refund/', seller_refund_view, name='seller-qna'),
 ]
