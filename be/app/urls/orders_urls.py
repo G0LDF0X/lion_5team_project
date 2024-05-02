@@ -5,4 +5,5 @@ urlpatterns = [
     path('detail/<int:pk>/', order_item_detail, name='order_detail'),
     path('cart/', cart_detail, name='cart_detail'),
     path('payment/', create_order, name='create_order'),
+    path('refund/<int:order_id>/<int:order_item_id>/', refund_item, name='refund_item'),
 ]

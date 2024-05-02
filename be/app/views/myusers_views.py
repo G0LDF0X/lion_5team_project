@@ -161,14 +161,13 @@ def get_userprofile(request, pk):
     # 해당 사용자가 Q&A에 작성한 글을 가져오기
     qna_posts = User_QnA.objects.filter(user_id=user)
     qna_serializer = MyUserQnASerializer(qna_posts, many=True)
-    # 모든 정보를 하나의 데이터로 합치기
 
     # 작성한 리뷰
     review = Review.objects.filter(user_id=user)
     review_serializer = ReviewSerializer(review, many=True)
 
     data = {
-        'user': serializer.data,
+        'User': serializer.data,
         'Board_posts': board_serializer.data,
         'QnA_posts': qna_serializer.data,
         'Review': review_serializer.data
