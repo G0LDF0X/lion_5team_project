@@ -47,3 +47,4 @@ def getUser(request, pk):
     user = request.user(id=pk)
     serializer = RegisterSerializer(user, many=False)
     return Response(serializer.data)
+

@@ -174,3 +174,16 @@ def get_userprofile(request, pk):
     }
 
     return Response(data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFollower(request, pk):
+    follows = Follow.objects.filter(followed_id=pk)
+    serializer = FollowerSerializer(follows, many=True)
+    return Response(serializer.data)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFollowing(request, pk):
+    follows = Follow.objects.filter(follower_id=pk)
+    serializer = FollowingSerializer(follows, many=True)
+    return Response(serializer.data)

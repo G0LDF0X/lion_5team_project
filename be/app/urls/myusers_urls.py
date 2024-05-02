@@ -1,5 +1,6 @@
 from django.urls import path
 from app.views.myusers_views import *
+from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, update_User_Profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, getFollower,getFollowing
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -14,4 +15,8 @@ urlpatterns = [
     path('bookmark/', my_bookmarks, name='my_bookmarks'),
     path('bookmark/add/<int:pk>/', add_bookmark, name='add_bookmark'),
     path('bookmark/delete/<int:pk>/', delete_bookmark, name='delete_bookmark'),
-]   
+
+    #마이페이지에서 팔로우 가져오는 링크
+    path('follower/<int:pk>/',getFollower , name='user_follower'),
+    path('following/<int:pk>/',getFollowing , name='user_following'),
+]
