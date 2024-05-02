@@ -72,6 +72,13 @@ def delete_item(request, pk):
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
+@api_view(['GET'])
+def get_reviews(request):
+    reviews = Review.objects.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+
 @api_view(['POST'])
 def create_review(request, item_id):
     user = User.objects.get(name=request.user)
