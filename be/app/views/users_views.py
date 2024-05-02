@@ -1,30 +1,21 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import JsonResponse
 from app.serializer import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from django.contrib.auth.models import User as auth_user
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from app.models import User, Item_QnA
-
-
-
-# Create your views here.
+from rest_framework.permissions import AllowAny
+from app.models import User
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-# @api_view(['post'])
 class RegisterView(generics.CreateAPIView):
     queryset = auth_user.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
 
     def perform_create(self, serializer):
-        # if auth_user.objects.filter(email=serializer.validated_data['email']).exists():
-        #     raise serializers.ValidationError({"email": "A user with this email already exists."})
         auth_user_instance = serializer.save()
 
 
