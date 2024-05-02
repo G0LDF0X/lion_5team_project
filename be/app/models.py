@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User as auth_user
 
-# Create your models here.
+
 class User(models.Model):
     user_id = models.ForeignKey(auth_user, on_delete=models.CASCADE)
     name = models.CharField('name', max_length=100)
@@ -69,10 +69,10 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=100)
     shipping_price = models.IntegerField()
     total_price = models.IntegerField()
-    paid_at = models.DateTimeField()
+    paid_at = models.DateTimeField(auto_now_add=True)
     is_delivered = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
-    delivered_at = models.DateTimeField()
+    delivered_at = models.DateTimeField(auto_now_add=True)
 
 class OrderItem(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
@@ -81,6 +81,9 @@ class OrderItem(models.Model):
     qty = models.IntegerField()
     price_multi_qty = models.IntegerField()
     image = models.ImageField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Refund(models.Model):
     order_item_id = models.ForeignKey(OrderItem, on_delete = models.DO_NOTHING)

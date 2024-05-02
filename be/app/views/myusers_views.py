@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmark
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -57,13 +57,13 @@ def get_mypage_profile(request):
     return JsonResponse({'user': user_data, 'seller': seller_data})
 
 
-@api_view(['PUT'])       
+#username, email, password 수정가능 (auth_user 테이블서 바뀜)
+@api_view(['PUT'])    
 @permission_classes([IsAuthenticated])
-def update_User_Profile(request):
+def update_Auth_Profile(request):
     user = request.user
     serializer = UserSerializerWithToken(user, many=False)
     data = request.data
-    print(data)
     
     if hasattr(user, 'username'):
         user.username = data.get('username', user.username)
@@ -73,6 +73,31 @@ def update_User_Profile(request):
     if data.get('password'):
         user.password = make_password(data['password'])
     user.save()
+    return Response(serializer.data)
+
+
+
+# model 중 User 테이블의 정보 수정
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_User_Profile(request):
+    data = request.data
+    print(request.user)
+    try:
+        user = User.objects.get(name=request.user)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found'}, status=404)
+
+    update_fields = []
+    for field in ['name', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
+        if field in data and hasattr(user, field):
+            setattr(user, field, data[field])
+            update_fields.append(field)
+
+    if update_fields:
+        user.save(update_fields=update_fields)
+
+    serializer = User_Serializer(user, many=False)
     return Response(serializer.data)
 
 
@@ -152,3 +177,19 @@ def get_userprofile(request, pk):
     }
 
     return Response(data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFollower(request, pk):
+    follows = Follow.objects.filter(followed_id=pk)
+    serializer = FollowerSerializer(follows, many=True)
+    return Response(serializer.data)
+  
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getFollowing(request, pk):
+    follows = Follow.objects.filter(follower_id=pk)
+    serializer = FollowingSerializer(follows, many=True)
+    return Response(serializer.data)
+

@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import OrderItem, User, Cart, Refund, Order
+from app.models import OrderItem, User, Cart, Refund, Order, Item
 from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
 from datetime import datetime, timedelta
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +16,21 @@ def order_item_detail(request, pk):
     except OrderItem.DoesNotExist:
         raise Response("Order item does not exist")
 
+@api_view(['POST'])
+def add_to_cart(request, pk):
+    user = User.objects.get(name=request.user)
+    item_id = pk
+    item = Item.objects.get(id=item_id)
+    qty = request.data["qty"]
+    cart_data = {"user_id": user.id, "item_id": item_id, "qty": qty, "name": item.name, "price": item.price, "image": item.image_url}
+    cart_serializer = CartSerializer(data=cart_data)
+
+    if cart_serializer.is_valid():
+        cart_serializer.save()
+        return Response(cart_serializer.data, status=201)
+    else:
+        return Response(cart_serializer.errors, status=400)
+
 @api_view(['GET'])
 def cart_detail(request):
     user = User.objects.get(name=request.user)
@@ -28,23 +43,25 @@ def cart_detail(request):
 @api_view(['POST'])
 def create_order(request):
     user = User.objects.get(name=request.user)
+    cart_items = Cart.objects.filter(user_id=user)
+
+    if not cart_items:
+        return Response({"detail":"Cart is empty"}, status=400)
     now = datetime.now()
     delivery_date = now + timedelta(days=3)
     order_data = {"user_id": user.id, "payment_method": request.data["payment_method"], "shipping_price": 5000, "total_price": 0, "paid_at": now, "is_delivered": False, "delivered_at": delivery_date}
     order_serializer = OrderSerializer(data=order_data)
 
     if order_serializer.is_valid():
-
+        order = order_serializer.save()
         shipping_address_data = {"order_id": order.id, "address": request.data["address"], "city": request.data["city"], "postal_code": request.data["postal_code"], "country": request.data["country"], "shipping_price": 5000}
         shipping_address_serializer = ShippingAddressSerializer(data=shipping_address_data)
         if shipping_address_serializer.is_valid():
-            order = order_serializer.save()
             shipping_address_serializer.save()
         else:
             return Response(shipping_address_serializer.errors, status=400)
 
         total_price = 0
-        cart_items = Cart.objects.filter(user_id=user)
         for cart_item in cart_items:
             image = cart_item.image if cart_item.image else "path/to/default/image.jpg"
             price_multi_qty = cart_item.item_id.price * cart_item.qty
