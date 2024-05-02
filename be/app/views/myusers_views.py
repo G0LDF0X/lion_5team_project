@@ -113,7 +113,7 @@ def getMyUserQnA(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getMyReview(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     reviews = Review.objects.filter(user_id=user)
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
@@ -121,7 +121,7 @@ def getMyReview(request):
 
 @api_view(['GET'])
 def my_bookmarks(request):
-    user= User.objects.get(name=request.user)
+    user= User.objects.get(username=request.user)
     bookmarks = Bookmark.objects.filter(user_id=user)
 
     serializer = BookmarkSerializer(bookmarks, many=True)
@@ -131,7 +131,7 @@ def my_bookmarks(request):
 @api_view(['PUT'])
 def add_bookmark(request, pk):
     print(request.user)
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.create(
           user_id=user.id,
@@ -144,7 +144,7 @@ def add_bookmark(request, pk):
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
-    user = auth_user.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.get(user_id=user, item_id=item)
     bookmark.delete()
