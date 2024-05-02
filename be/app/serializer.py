@@ -280,3 +280,11 @@ class Board_Serializer(serializers.ModelSerializer):
         model = Board
         fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
 
+class FollowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ['follower_id']
+class FollowingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ['followed_id']

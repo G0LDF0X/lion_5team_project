@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, update_User_Profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile
+from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, update_User_Profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, getFollower,getFollowing
 
 urlpatterns = [
     path('apply/', get_Seller_Apply, name='seller_apply_index'),
@@ -10,4 +10,7 @@ urlpatterns = [
     path('myshopping/myqna/', getMyUserQnA),
     path('myreview/', getMyReview, name='my_review'),
     path('<int:pk>/', get_userprofile, name='user_profile'),
+    #마이페이지에서 팔로우 가져오는 링크
+    path('follower/<int:pk>/',getFollower , name='user_follower'),
+    path('following/<int:pk>/',getFollowing , name='user_following'),
 ]
