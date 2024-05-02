@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Container } from "react-bootstrap";
-import { Typography } from '@material-ui/core';
+import { Typography } from "@material-ui/core";
 import Product from "../components/Product";
 import Review from "../components/Review";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {listReviews} from "../actions/reviewActions";
+import { listReviews } from "../actions/reviewActions";
 import { listProducts } from "../actions/productActions";
 import { listBoards } from "../actions/boardActions";
 import { listQNA } from "../actions/qnaActions";
+import BoardForm from "../components/BoardForm";
 
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -23,14 +24,19 @@ import Board from "../components/Board";
 function HomeScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  
-  const productList = useSelector(state => state.productList);
-  const { loading: productLoading, error: productError, products, pages } = productList;
 
-  const boardList = useSelector(state => state.boardList);
+  const productList = useSelector((state) => state.productList);
+  const {
+    loading: productLoading,
+    error: productError,
+    products,
+    pages,
+  } = productList;
+
+  const boardList = useSelector((state) => state.boardList);
   const { loading: boardLoading, error: boardError, boards } = boardList;
 
-  const qnaList = useSelector(state => state.qnaList);
+  const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
 
   useEffect(() => {
@@ -44,17 +50,29 @@ function HomeScreen() {
     <Container>
       <Row className="my-4">
         <Col md={9}>
-          <Typography variant="h4" component={Link} to="/items" className="text-decoration-none">
+          <Typography
+            variant="h4"
+            component={Link}
+            to="/items"
+            className="text-decoration-none"
+          >
             Products
           </Typography>
           {productLoading ? (
             <Loading />
           ) : productError ? (
-            <Message variant={'danger'}>{productError}</Message>
+            <Message variant={"danger"}>{productError}</Message>
           ) : (
             <Row>
-              {products.slice(0,4).map((product) => (
-                <Col key={product.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+              {products.slice(0, 4).map((product) => (
+                <Col
+                  key={product.id}
+                  sm={12}
+                  md={6}
+                  lg={4}
+                  xl={3}
+                  className="mb-4"
+                >
                   <Card className="h-100 shadow-sm bg-white rounded">
                     <Product product={product} />
                   </Card>
@@ -66,7 +84,12 @@ function HomeScreen() {
       </Row>
       <Row className="my-4">
         <Col md={9}>
-          <Typography variant="h4" component={Link} to="/board" className="text-decoration-none">
+          <Typography
+            variant="h4"
+            component={Link}
+            to="/board"
+            className="text-decoration-none"
+          >
             Boards
           </Typography>
           {boardLoading ? (
@@ -76,9 +99,16 @@ function HomeScreen() {
           ) : (
             <Row>
               {boards.map((board) => (
-                <Col key={board.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                <Col
+                  key={board.id}
+                  sm={12}
+                  md={6}
+                  lg={4}
+                  xl={3}
+                  className="mb-4"
+                >
                   <Card className="h-100 shadow-sm bg-white rounded">
-                    <Board board={board} />
+                    <BoardForm board={board} />
                   </Card>
                 </Col>
               ))}
@@ -87,8 +117,13 @@ function HomeScreen() {
         </Col>
       </Row>
       <Row className="my-4">
-        <Col md={9}> 
-          <Typography variant="h4" component={Link} to="/qna" className="text-decoration-none">
+        <Col md={9}>
+          <Typography
+            variant="h4"
+            component={Link}
+            to="/qna"
+            className="text-decoration-none"
+          >
             Q&A
           </Typography>
           {qnaLoading ? (
@@ -107,9 +142,8 @@ function HomeScreen() {
             </Row>
           )}
         </Col>
-      </Row> 
-      <div className="pagination-container">
-      </div>
+      </Row>
+      <div className="pagination-container"></div>
     </Container>
   );
 }

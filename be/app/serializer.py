@@ -298,3 +298,12 @@ class FollowingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = '__all__'
+class RefundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Refund
+        fields =['reason', 'refund_amount', 'order_item_id', 'user_id'] 
+
+class RefundSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Refund
+        fields =['reason', 'refund_amount', 'order_item_id', 'user_id'] 

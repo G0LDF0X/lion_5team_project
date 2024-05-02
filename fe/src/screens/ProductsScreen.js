@@ -1,14 +1,11 @@
 import React, { useEffect, useState} from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form, Card } from "react-bootstrap";
 import Product from "../components/Product";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import ProductFilter from "../components/ProductFilter";
-import ProductHeader from "../components/ProductHeader";
-import Form from 'react-bootstrap/Form';
 // import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
 // import ProductCarousel from "../components/ProductCarousel";
@@ -47,54 +44,44 @@ function ProductsScreen() {
   return (
     <div>
         {/* <ProductHeader /> */}
-       <Row>
-          <Col md={3}>
-          <Row>
-    <Col xs={12} md={16}>
-
-            <h3>Category</h3>
+        <Row className="ml-3">
+  <Col md={3}>
+    <h3>Category</h3>
     <Form className='filter-form'>
-        <div key={`default-checkbox`} className="mb-3">
-         {categories.map((category) => (
-            <Form.Check // prettier-ignore
-            type={'checkbox'}
-            id={category.id}
-            label={category.name}
-            key = {category.id}
-            value={category.id}
-            onChange={(e) => { 
-              if (e.target.checked) {
+      {categories.map((category) => (
+        <Form.Check 
+          type={'checkbox'}
+          id={category.id}
+          label={category.name}
+          key = {category.id}
+          value={category.id}
+          onChange={(e) => { 
+            if (e.target.checked) {
               setSelectedCategory(prev => [...prev, e.target.value]);
             } else {
               setSelectedCategory(prev => prev.filter(cat => cat !== e.target.value));
             }
-            }}
-            />
-        ))}
-
-        </div>
+          }}
+        />
+      ))}
     </Form>
-      </Col> 
- 
-  </Row>
+  </Col>
+  <Col md={9}>
+    {loading ? (
+      <Loading />
+    ) : error ? (
+      <Message variant={'danger'}>{error}</Message>
+    ) : (
+      <Row>
+        {products.map((product) => (
+          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+            <Product product={product} />
           </Col>
-          <Col md={9}>
-            {/* <h1>Latest Products</h1> */}
-            {loading ? (
-              <Loading />
-            ) : error ? (
-              <Message variant={'danger'}>{error}</Message>
-            ) : (
-              <Row>
-                {products.map((product) => (
-                  <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
-                    <Product product={product} />
-                  </Col>
-                ))}
-              </Row>
-            )}
-          </Col>
-        </Row>
+        ))}
+      </Row>
+    )}
+  </Col>
+</Row>
         <div className="pagination-container">
         {/* <Paginate pages={pages} page={page} keyword={query} /> */}
       </div>
