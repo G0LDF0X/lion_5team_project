@@ -88,17 +88,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.username
 
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
 
-#         # Add custom claims
-#         token['username'] = user.username
-#         token['id'] = user.id
-#         token['email'] = user.email
-
-#         return token
     
 class RegisterSerializer(serializers.ModelSerializer):
     nickname = serializers.CharField(max_length=20)
@@ -147,7 +137,7 @@ class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
     id = serializers.SerializerMethodField(read_only=True)
     isadmin = serializers.SerializerMethodField(read_only=True)
-    # isseller = serializers.SerializerMethodField(read_only=True)
+    
 
     class Meta:
         model = auth_user
@@ -207,7 +197,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
-    # password2 = serializers.CharField(write_only=True, required=True)
+    
 
     class Meta:
         model = User
@@ -217,10 +207,6 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
-        # if attrs['password'] != attrs['password2']:
-        #     raise serializers.ValidationError(
-        #         {"password": "Password fields didn't match."})
-
         return attrs
 
     def create(self, validated_data):
@@ -290,14 +276,12 @@ class RefundSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FollowerSerializer(serializers.ModelSerializer):
-    #follower = serializers.StringRelatedField()
 
     class Meta:
         model = Follow
         fields = '__all__'
 
 class FollowingSerializer(serializers.ModelSerializer):
-    #followed = serializers.StringRelatedField()
 
     class Meta:
         model = Follow
