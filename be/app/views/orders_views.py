@@ -28,23 +28,25 @@ def cart_detail(request):
 @api_view(['POST'])
 def create_order(request):
     user = User.objects.get(name=request.user)
+    cart_items = Cart.objects.filter(user_id=user)
+
+    if not cart_items:
+        return Response({"detail":"Cart is empty"}, status=400)
     now = datetime.now()
     delivery_date = now + timedelta(days=3)
     order_data = {"user_id": user.id, "payment_method": request.data["payment_method"], "shipping_price": 5000, "total_price": 0, "paid_at": now, "is_delivered": False, "delivered_at": delivery_date}
     order_serializer = OrderSerializer(data=order_data)
 
     if order_serializer.is_valid():
-
+        order = order_serializer.save()
         shipping_address_data = {"order_id": order.id, "address": request.data["address"], "city": request.data["city"], "postal_code": request.data["postal_code"], "country": request.data["country"], "shipping_price": 5000}
         shipping_address_serializer = ShippingAddressSerializer(data=shipping_address_data)
         if shipping_address_serializer.is_valid():
-            order = order_serializer.save()
             shipping_address_serializer.save()
         else:
             return Response(shipping_address_serializer.errors, status=400)
 
         total_price = 0
-        cart_items = Cart.objects.filter(user_id=user)
         for cart_item in cart_items:
             image = cart_item.image if cart_item.image else "path/to/default/image.jpg"
             price_multi_qty = cart_item.item_id.price * cart_item.qty
