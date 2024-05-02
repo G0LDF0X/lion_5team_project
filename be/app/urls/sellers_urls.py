@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.sellers_views import *
+from app.views.sellers_views import index, SellerItemManageView, SellerRevenueView, SellerSettingsView, seller_qna_view, seller_refund_view
 
 urlpatterns = [
     path('', index, name='index'),  # Seller 전체보기

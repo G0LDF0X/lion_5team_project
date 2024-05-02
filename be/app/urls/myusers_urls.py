@@ -1,8 +1,5 @@
 from django.urls import path
-
-from app.views.myusers_views import *
-from app.views.myusers_views import get_Seller_Apply, get_mypage_profile, update_User_Profile, getMyUserQnA, my_shopping, getMyReview, get_userprofile, getFollower,getFollowing
-
+from app.views.myusers_views import MyTokenObtainPairView, get_Seller_Apply, my_shopping, get_mypage_profile, update_User_Profile, update_Auth_Profile, getMyUserQnA, getMyReview, get_userprofile, my_bookmarks, add_bookmark, delete_bookmark, getFollower, getFollowing
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
