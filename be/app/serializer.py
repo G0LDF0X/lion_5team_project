@@ -262,7 +262,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name','nickname','description','image_url']
+        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url']
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:

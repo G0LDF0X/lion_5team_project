@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmark
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -69,9 +69,8 @@ def get_mypage_profile(request):
         seller_data = None
     return JsonResponse({'user': user_data, 'seller': seller_data})
 
+
 #username, email, password, 수정가능 (auth_user 테이블서 바뀜)
-
-
 from django.contrib.auth.hashers import make_password
 
 @api_view(['PUT'])  # POST -> PUT       
@@ -80,7 +79,7 @@ def update_Auth_Profile(request):
     user = request.user
     serializer = UserSerializerWithToken(user, many=False)
     data = request.data
-
+    
     if hasattr(user, 'username'):
         user.username = data.get('username', user.username)
     if hasattr(user, 'email'):
@@ -92,20 +91,28 @@ def update_Auth_Profile(request):
     return Response(serializer.data)
 
 
-#여기하다 끝남.
+#model 중 User 테이블의 정보 수정
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_User_Profile(request):
-    user = User.objects.filter(username=request.user.username)
-    if not request.data:  # request data가 empty인지 확인
-        serializer = UserprofileSerializer(user)
-        return Response(serializer.data)
-    serializer = UserprofileSerializer(user, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=400)
+    data = request.data
+    print(request.user)
+    try:
+        user = User.objects.get(name=request.user)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found'}, status=404)
+
+    update_fields = []
+    for field in ['name', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
+        if field in data and hasattr(user, field):
+            setattr(user, field, data[field])
+            update_fields.append(field)
+
+    if update_fields:
+        user.save(update_fields=update_fields)
+
+    serializer = User_Serializer(user, many=False)
+    return Response(serializer.data)
 
 
 
