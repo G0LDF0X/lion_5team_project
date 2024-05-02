@@ -131,11 +131,10 @@ def my_bookmarks(request):
 
 @api_view(['PUT'])
 def add_bookmark(request, pk):
-    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.create(
-          user_id=user.id,
+          user_id=user,
           item_id=item,
           created_at=datetime.datetime.now()
           )

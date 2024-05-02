@@ -22,7 +22,7 @@ class User(models.Model):
     is_seller = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 class Seller(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
