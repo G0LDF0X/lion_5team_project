@@ -1,11 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Board, User
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+from app.models import Board, User
 from app.serializer import BoardSerializer
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import F
 
 @api_view(['GET'])
