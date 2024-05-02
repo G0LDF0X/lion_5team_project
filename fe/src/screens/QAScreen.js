@@ -25,6 +25,10 @@ function QAScreen() {
   // console.log(qnas)
   const createHandler = () => { 
     dispatch(createQNA())
+    if(successCreate) {
+      dispatch({ type: QNA_CREATE_RESET })
+      navigate(`/qna/update/{createdQNA.id}`)
+    }
     // console.log(userInfo)
   }
 
@@ -35,7 +39,7 @@ useEffect(() => {
     navigate(`/qna/update/${createdQNA.id}`)
   }
 }
-, [dispatch, successCreate, navigate, createdQNA]);
+, [dispatch, successCreate, navigate, createdQNA, userInfo]);
 
   return (<div>
         <h1>Q&A</h1>
