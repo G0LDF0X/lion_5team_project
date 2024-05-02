@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
-from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
+from app.serializer import SellerSerializer, UserSerializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
 
 
 
@@ -49,7 +49,7 @@ def my_shopping(request):
 @permission_classes([IsAuthenticated]) 
 def get_mypage_profile(request):
     user = User.objects.get(name=request.user)
-    user_data = User_Serializer(user).data
+    user_data = UserSerializer(user).data
     try:
         seller = Seller.objects.get(user_id=user)
         seller_data = SellerSerializer(seller).data
@@ -98,7 +98,7 @@ def update_User_Profile(request):
     if update_fields:
         user.save(update_fields=update_fields)
 
-    serializer = User_Serializer(user, many=False)
+    serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
 
 
