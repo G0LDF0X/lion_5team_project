@@ -27,11 +27,6 @@ class RegisterView(generics.CreateAPIView):
         #     raise serializers.ValidationError({"email": "A user with this email already exists."})
         auth_user_instance = serializer.save()
 
-        User.objects.create(
-            user_id=auth_user_instance,
-            name=auth_user_instance.username,
-            email=auth_user_instance.email,
-        )
 
 @api_view(['GET'])
 def getRoutes(request):

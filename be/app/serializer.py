@@ -87,51 +87,6 @@ class UserAnswerSerializer(serializers.ModelSerializer):
     
     def get_user(self, obj):
         return obj.user.username
-
-
-    
-class RegisterSerializer(serializers.ModelSerializer):
-    nickname = serializers.CharField(max_length=20)
-    
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
-    name = serializers.CharField(
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
-    id = serializers.IntegerField(read_only=True)
-
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
-    
-    phone = serializers.CharField(max_length=11)
-
-    address = serializers.CharField(max_length=100)
-
-    description = serializers.CharField(max_length=100, required=False)
-
-    image = serializers.ImageField()
-
-
-    class Meta:
-        model = User
-        fields = ('name', 'nickname','id', 'password', 'password2', 'email', 'phone', 'address', 'description', 'image')
-
-    # 비밀번호 확인
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "비밀번호가 일치하지 않습니다."})
-        return attrs
-    
-    def create(self, validated_data):
-        user = User.objects.create(
-                name=validated_data['name'],
-                email=validated_data['email']
-                )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
     
 class UserSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField(read_only=True)
@@ -197,20 +152,38 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
-    
+    nickname = serializers.CharField(required=True)
+    address = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
+    # password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password')
-        model = auth_user
-        fields = ('username', 'email', 'password')
+        fields = ('name', 'email', 'password', 'nickname', 'address', 'phone')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
+        # if attrs['password'] != attrs['password2']:
+        #     raise serializers.ValidationError(
+        #         {"password": "Password fields didn't match."})
+
         return attrs
 
     def create(self, validated_data):
-        user = auth_user.objects.create_user(**validated_data)
+        auth_user_model = get_user_model()
+        auth_user = auth_user_model.objects.create_user(
+            username=validated_data['name'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+        )
+        user = User.objects.create(
+            user_id=auth_user,
+            name=validated_data['name'],
+            email=validated_data['email'],
+            nickname=validated_data['nickname'],
+            address=validated_data['address'],
+            phone=validated_data['phone'],
+        )
         return user
 
 class SellerSerializer(serializers.ModelSerializer):
