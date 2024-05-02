@@ -13,7 +13,15 @@ import {
 export const listCartItems = () => async (dispatch, getState) => {
   try {
     dispatch({ type: CART_ITEM_LIST_REQUEST });
-    const res = await fetch(`/order/cart/`);
+    const {
+      userLogin: { userInfo }
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    };
+    const res = await fetch(`/order/cart/`, config);
     const data = await res.json();
     dispatch({ type: CART_ITEM_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -30,11 +38,14 @@ export const listCartItems = () => async (dispatch, getState) => {
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   try {
     dispatch({ type: CART_ADD_ITEM_REQUEST });
+    const {
+      userLogin: { userInfo }
+    } = getState();
     const config = {  
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${getState().userLogin.userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
       body: JSON.stringify({ qty }),
     };

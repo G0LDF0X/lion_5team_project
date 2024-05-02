@@ -19,6 +19,7 @@ def order_item_detail(request, pk):
 
 @api_view(['POST'])
 def add_to_cart(request, pk):
+    print(request.user)
     user = User.objects.get(username=request.user)
     item_id = pk
     item = Item.objects.get(id=item_id)
