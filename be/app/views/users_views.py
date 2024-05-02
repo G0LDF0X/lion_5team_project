@@ -1,11 +1,10 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.serializer import *
+from app.serializer import RegisterSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from django.contrib.auth.models import User as auth_user
 from rest_framework.permissions import AllowAny
-from app.models import User
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
