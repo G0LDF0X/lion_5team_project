@@ -7,8 +7,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow
-from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, MyUserQnASerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
+
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -104,16 +105,16 @@ def update_User_Profile(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getMyUserQnA(request):
-    user = User.objects.get(name=request.user)
-    my_user_qna_list = User_QnA.objects.filter(user_id=user)
-    serializer = MyUserQnASerializer(my_user_qna_list, many=True)
+    user = User.objects.get(username=request.user)
+    my_user_qna_list = Item_QnA.objects.filter(user_id=user)
+    serializer = ItemQnASerializer(my_user_qna_list, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getMyReview(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     reviews = Review.objects.filter(user_id=user)
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
@@ -121,7 +122,7 @@ def getMyReview(request):
 
 @api_view(['GET'])
 def my_bookmarks(request):
-    user= User.objects.get(name=request.user)
+    user= User.objects.get(username=request.user)
     bookmarks = Bookmark.objects.filter(user_id=user)
 
     serializer = BookmarkSerializer(bookmarks, many=True)
@@ -131,7 +132,7 @@ def my_bookmarks(request):
 @api_view(['PUT'])
 def add_bookmark(request, pk):
     print(request.user)
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.create(
           user_id=user.id,
@@ -144,7 +145,7 @@ def add_bookmark(request, pk):
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
-    user = auth_user.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(pk=pk)
     bookmark = Bookmark.objects.get(user_id=user, item_id=item)
     bookmark.delete()
@@ -164,7 +165,7 @@ def get_userprofile(request, pk):
     board_serializer = BoardSerializer(board_posts, many=True)
 
     qna_posts = User_QnA.objects.filter(user_id=user)
-    qna_serializer = MyUserQnASerializer(qna_posts, many=True)
+    qna_serializer = UserQnASerializer(qna_posts, many=True)
 
     review = Review.objects.filter(user_id=user)
     review_serializer = ReviewSerializer(review, many=True)
