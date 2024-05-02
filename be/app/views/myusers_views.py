@@ -7,8 +7,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
+<<<<<<< HEAD
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, Board_Serializer, UserQnASerializer, ItemQnASerializer
+=======
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, MyUserQnASerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer
+>>>>>>> a580eef6902f33b386077553f7ebe68779383751
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -161,7 +166,7 @@ def get_userprofile(request, pk):
         return Response("User does not exist")
 
     board_posts = Board.objects.filter(user_id=user)
-    board_serializer = Board_Serializer(board_posts, many=True)
+    board_serializer = BoardSerializer(board_posts, many=True)
 
     qna_posts = User_QnA.objects.filter(user_id=user)
     qna_serializer = UserQnASerializer(qna_posts, many=True)
