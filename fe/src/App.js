@@ -34,6 +34,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import ProductScreen from './screens/ProductScreen';
 import SampleEditorScreen from './screens/SampleEditorScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
+import ReviewEditScreen from './screens/ReviewEditScreen';
 function App() {
   return (
     <Router>
@@ -47,6 +48,8 @@ function App() {
             <Route path='/items/detail/:id' element={<ProductDetailScreen/>} />
             <Route path='/cart' element={<CartScreen/>} />
             <Route path='/items/update/:id' element={<ProductUpdateScreen/>} />
+            <Route path='/items/review/:id' element={<ReviewEditScreen/>} />
+
 
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />

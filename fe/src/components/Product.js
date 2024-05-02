@@ -4,7 +4,8 @@ import Rating from "./Rating";
 import { Link } from "react-router-dom";
 function Product({ product }) {
     return (
-        <Card className="my-3 p-3 rounded">
+        <div>
+        {/* // <Card className="my-3 p-3 rounded"> */}
             <Link to={`/items/detail/${product.id}`}> 
                 {/* <Card.Img src={product.image_url} variant="top" /> */}
                 <Card.Img src={decodeURIComponent(product.image_url)} variant="top" />
@@ -31,7 +32,8 @@ function Product({ product }) {
                 </Card.Text>
                 <Card.Text as="h3">{product.price}₩</Card.Text>
             </Card.Body>
-        </Card>
+        {/* </Card> */}
+    </div>
     );
 }
 

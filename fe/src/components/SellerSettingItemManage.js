@@ -69,7 +69,7 @@ function ProductListScreen() {
       <h1>Products</h1>
     </Col>
     <Col className="text-right">
-        <Button variant="light" className="btn-sm" onClick={createProductHandler}>
+        <Button variant="light" className="btn-md" onClick={createProductHandler}>
       {/* <Link to="/admin/product/create" className="btn btn-primary my-3"> */}
         <i className="fas fa-plus"></i> Create Product
       {/* </Link> */}

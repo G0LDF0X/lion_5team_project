@@ -1,6 +1,6 @@
 from django.contrib import admin
-
 from .models import *
+
 
 admin.site.register(Item)
 
@@ -19,4 +19,5 @@ admin.site.register(Item_Answer)
 admin.site.register(Reply)
 admin.site.register(Order)
 admin.site.register(OrderItem)
+admin.site.register(Bookmark)
 # Register your models here.

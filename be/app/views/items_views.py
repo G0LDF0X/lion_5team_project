@@ -8,13 +8,17 @@ from rest_framework import viewsets
 
 @api_view(['GET'])
 def get_items(request):
+    query = request.GET.get('query')
+    print ("query=", query) 
+    if query == None:
+        query = ''
     categories = request.query_params.getlist('category')
     categories = [c for c in categories if c]
     if categories:
-        items = Item.objects.filter(category_id_id__in=categories)
+        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query)
         print(categories)
     else:
-        items = Item.objects.all()
+        items = Item.objects.filter(name__icontains=query)
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 

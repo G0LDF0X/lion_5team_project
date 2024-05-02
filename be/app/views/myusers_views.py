@@ -1,10 +1,20 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Board
+from app.models import Seller, User , User_QnA, Order,OrderItem, Review, Bookmark
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from app.serializer import *
+from django.contrib.auth.models import User as auth_user
+import datetime
+
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
@@ -101,9 +111,48 @@ def getMyReview(request):
 
 
 @api_view(['GET'])
+def my_bookmarks(request):
+    # 현재 사용자의 북마크를 가져옵니다.
+    user= User.objects.get(name=request.user)
+    bookmarks = Bookmark.objects.filter(user_id=user)
+
+    # 북마크 정보를 시리얼라이즈합니다.
+    serializer = BookmarkSerializer(bookmarks, many=True)
+
+    # 시리얼라이즈된 북마크 정보를 응답으로 반환합니다.
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def add_bookmark(request, pk):
+    print(request.user)
+    user = User.objects.get(username=request.user.username)
+    item = Item.objects.get(pk=pk)
+    bookmark = Bookmark.objects.create(
+          user_id=user.id,
+          item_id=item,
+          created_at=datetime.datetime.now()
+          )
+    serializer = BookmarkSerializer(bookmark)
+    return Response(serializer.data)   
+
+@api_view(['DELETE'])
+def delete_bookmark(request, pk):
+    user = auth_user.objects.get(name=request.user)
+    item = Item.objects.get(pk=pk)
+    bookmark = Bookmark.objects.get(user_id=user, item_id=item)
+    bookmark.delete()
+    return Response('Bookmark deleted')
+
+
+@api_view(['GET'])
 def get_userprofile(request, pk):
-    user = User.objects.get(pk=pk)
-    serializer = UserprofileSerializer(user)
+    try: 
+        user = User.objects.get(pk=pk)
+        serializer = UserprofileSerializer(user)
+    
+    except User.DoesNotExist:
+        return Response("User does not exist")
+
 
     # 해당 사용자가 게시판에 작성한 글을 가져오기
     board_posts = Board.objects.filter(user_id=user)

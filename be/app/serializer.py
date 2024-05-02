@@ -265,6 +265,11 @@ class UserprofileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['name','nickname','description','image_url']
 
+class BookmarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = '__all__'
+        
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
