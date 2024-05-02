@@ -203,4 +203,4 @@ def delete_qna (request, pk):
             return Response({"error": "You are not allowed to delete this item Q&A"})
     
     item_qna.delete()
-    return Response("delete Success")
+    return Response("delete Success") 
