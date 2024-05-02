@@ -1,14 +1,14 @@
+import datetime
 from django.http import JsonResponse
+from django.contrib.auth.models import User as auth_user
 from rest_framework.decorators import api_view, permission_classes
-from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-from app.serializer import *
-from django.contrib.auth.models import User as auth_user
-import datetime
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, MyUserQnASerializer, ReviewSerializer, BookmarkSerializer, FollowerSerializer, FollowingSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, Board_Serializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

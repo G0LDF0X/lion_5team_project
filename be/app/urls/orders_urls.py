@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.orders_views import *
+from app.views.orders_views import order_item_detail, cart_detail, add_to_cart, create_order, refund_item
 
 urlpatterns = [
     path('detail/<int:pk>/', order_item_detail, name='order_detail'),
