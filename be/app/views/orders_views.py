@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import OrderItem, User, Cart, Refund, Order
+from app.models import OrderItem, User, Cart, Refund, Order, Item
 from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
 from datetime import datetime, timedelta
 from rest_framework.permissions import IsAuthenticated
@@ -15,6 +15,21 @@ def order_item_detail(request, pk):
         return Response(serializer.data)
     except OrderItem.DoesNotExist:
         raise Response("Order item does not exist")
+
+@api_view(['POST'])
+def add_to_cart(request, pk):
+    user = User.objects.get(name=request.user)
+    item_id = pk
+    item = Item.objects.get(id=item_id)
+    qty = request.data["qty"]
+    cart_data = {"user_id": user.id, "item_id": item_id, "qty": qty, "name": item.name, "price": item.price, "image": item.image_url}
+    cart_serializer = CartSerializer(data=cart_data)
+
+    if cart_serializer.is_valid():
+        cart_serializer.save()
+        return Response(cart_serializer.data, status=201)
+    else:
+        return Response(cart_serializer.errors, status=400)
 
 @api_view(['GET'])
 def cart_detail(request):
