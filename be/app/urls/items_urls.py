@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.items_views import *
+from app.views.items_views import get_items, get_category, item_details, create_item, delete_item, update_item, create_review, update_review, delete_review, create_qna, update_qna, delete_qna
 
 urlpatterns = [
     path('', get_items, name="item_index"),
