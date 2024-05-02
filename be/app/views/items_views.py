@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import *
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer
 from datetime import datetime
 from rest_framework import viewsets
 
@@ -141,3 +141,69 @@ def get_category(request):
     category = Category.objects.all()
     serializer = CategorySerializer(category, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def create_qna(request,item_id):
+    user = User.objects.get(name=request.user)
+    item = Item.objects.get(pk=item_id)
+  
+    title = request.data.get('title')
+    content = request.data.get('content')
+    image_url = request.data.get('image_url')
+
+    current_time = datetime.now()
+    qna_board = Item_QnA.objects.create(
+        user_id=user,
+        item_id=item,
+        title=title,
+        content=content,
+        image_url=image_url,
+        created_at=current_time
+    )
+
+    serializer = ItemQnASerializer(qna_board, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['PUT'])
+def update_qna(request,pk):
+    try:
+        qna = Item_QnA.objects.get(pk=pk)
+    except Item_QnA.DoesNotExist:
+        return Response({"error": "QnA not found"})
+    
+    user = User.objects.get(name=request.user)
+    user_auth = auth_user.objects.get(username=request.user)
+
+    if user.id != qna.user_id.id:
+        if user_auth.is_superuser == False:
+            return Response({"error": "You are not allowed to edit this QnA"})
+    
+    data = request.data.copy()
+    data['item_id'] = qna.item_id.id
+    data['user_id'] = user.id
+    
+    serializer = ItemQnASerializer(qna, data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['DELETE'])
+def delete_qna (request, pk):
+    try:
+        item_qna = Item_QnA.objects.get(pk=pk)
+    except Item_QnA.DoesNotExist:
+        return Response({"error": "Item Q&A not found"}, status=404)
+    
+    user = User.objects.get(name=request.user)
+    user_auth = auth_user.objects.get(username=request.user)
+
+    if user.id != item_qna.user_id.id:
+        if  user_auth.is_superuser == False:
+            return Response({"error": "You are not allowed to delete this item Q&A"})
+    
+    item_qna.delete()
+    return Response("delete Success")
