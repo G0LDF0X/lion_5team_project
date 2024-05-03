@@ -113,7 +113,7 @@ function Productcreen() {
                 <ListGroup.Item>
                   <Rating
                     value={avgRate}
-                    text={`${avgRate}`}
+                    text={`${avgRate.toFixed(2)}`}
                     color={"#f8e825"}
                   />
                 </ListGroup.Item>
