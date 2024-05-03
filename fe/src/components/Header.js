@@ -37,15 +37,35 @@ function Header() {
   return (
     <Navbar>
       <Container fluid>
+        <div style={{ display: 'flex', alignItems: 'center'}}>
         <Navbar.Brand href="/">PetPals</Navbar.Brand>
         <Nav>
           <Nav.Link href="/">
-            <i class="fa-solid fa-paw"></i>Home
+            <div style={{ display: 'flex', alignItems:'center' }}>
+            <i class="fa-solid fa-paw" style={{ marginRight: '3px' }}></i>
+            <span>Home</span>
+            </div>
           </Nav.Link>
           <Nav.Link href="/items">
-            <i class="fa-solid fa-dog"></i>Products
+          <div style={{ display: 'flex', alignItems:'center' }}>
+            <i class="fa-solid fa-dog" style={{ marginRight: '3px' }}></i>
+            <span>Products</span>
+            </div>
+          </Nav.Link>
+          <Nav.Link href="/board">
+          <div style={{ display: 'flex', alignItems:'center' }}>
+          <i class="fa-regular fa-clipboard" style={{ marginRight: '3px' }}></i>
+            <span>Board</span>
+            </div>
+          </Nav.Link>
+          <Nav.Link href="/qna">
+          <div style={{ display: 'flex', alignItems:'center' }}>
+          <i class="fa-solid fa-comments" style={{ marginRight: '3px' }}></i>
+            <span>Q&A</span>
+            </div>
           </Nav.Link>
         </Nav>
+        </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <SearchBox />
