@@ -45,9 +45,6 @@ function Header() {
           <Nav.Link href="/items">
             <i class="fa-solid fa-dog"></i>Products
           </Nav.Link>
-          <Nav.Link href="/board">
-            <i class="fa-solid fa-dog"></i>Boards123
-          </Nav.Link>
         </Nav>
 
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
