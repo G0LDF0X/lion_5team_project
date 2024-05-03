@@ -15,6 +15,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { grey } from '@material-ui/core/colors';
+import { Link } from 'react-router-dom';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -26,47 +27,47 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+const likeHandler = () => {
+  console.log('likeHandler');
+}
 
 export default function BoardForm({board}) {
-
-
-  return (<div>
+  return (
+    <div style={{ height: "500px" }}>
       <CardHeader
-        avatar={
+        avatar={<Link to={`/board/detail/${board.id}`}>
           <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
             R
           </Avatar>
+        </Link>
         }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title={board.title}
+        title={<Link to={`/board/detail/${board.id}`}>{board.title}</Link>}
         subheader={board.createdAt}
       />
       <CardMedia
         component="img"
         height="194"
         image={board.image_url}
-        alt="Paella dish"
+        // alt="Paella dish"
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          
-          {board.content}
-        </Typography>
-      </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        <IconButton aria-label="add to favorites" onClick={likeHandler}>
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
-       
       </CardActions>
-     
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {board.content}
+        </Typography>
+      </CardContent>
     </div>
   );
 }
