@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.myusers_views import MyTokenObtainPairView, get_Seller_Apply, my_shopping, get_mypage_profile, update_User_Profile, update_Auth_Profile, getMyItemQnA, getMyReview, get_userprofile, my_bookmarks, add_bookmark, delete_bookmark, getFollower, getFollowing, getMyUserQnA
+from app.views.myusers_views import MyTokenObtainPairView, get_Seller_Apply, my_shopping, get_mypage_profile, update_User_Profile, update_Auth_Profile, getMyUserQnA, getMyReview, get_userprofile, my_bookmarks, add_bookmark, delete_bookmark, getFollower, getFollowing, get_MyBoard, getMyUserQnA
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -17,6 +17,6 @@ urlpatterns = [
     path('bookmark/delete/<int:pk>/', delete_bookmark, name='delete_bookmark'),
     path('follower/<int:pk>/',getFollower , name='user_follower'),
     path('following/<int:pk>/',getFollowing , name='user_following'),
+    path('profile/myboard/', get_MyBoard, name='get_myboard'),
     path('profile/myuserqna/', getMyUserQnA, name='my_user_qna'),
-
 ]
