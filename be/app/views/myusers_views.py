@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
-from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
 
 
 
@@ -210,4 +210,12 @@ def getMyUserQnA(request):
     user = User.objects.get(username=request.user)
     my_user_qna_list = User_QnA.objects.filter(user_id=user)
     serializer = UserQnASerializer(my_user_qna_list, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyUserAnswer(request):
+    user = User.objects.get(username=request.user)
+    my_user_answer_list = User_Answer.objects.filter(user_id=user)
+    serializer = UserAnswerSerializer(my_user_answer_list, many=True)
     return Response(serializer.data)
