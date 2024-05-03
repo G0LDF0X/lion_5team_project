@@ -53,7 +53,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
     const data = await res.json();
     dispatch({
       type: CART_ADD_ITEM_SUCCESS,
-      payload: {data},
+      payload: data,
     });
     localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
   } catch (error) {

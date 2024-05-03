@@ -16,12 +16,18 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { createReview } from "../actions/reviewActions";
 import { addToBookMark, removeFromBookMark } from "../actions/bookmarkActions";
-import { addToCart } from "../actions/cartActions";
+import { addToCart, listCartItems } from "../actions/cartActions";
+import { Snackbar } from "@mui/material";
 // import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
   const [isClicked, setIsClicked] = useState(false);
+  const [state, setState] = useState({open: false});
+  const handleClose = () => {
+    setState({  open: false });
+  };
+  const { open } = state;
   // const [rate, setRate] = useState(0)
 
   // const [rating, setRating] = useState(0)
@@ -35,6 +41,8 @@ function Productcreen() {
   const { userInfo } = userLogin;
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview } = reviewCreate;;
+  const cartAdd = useSelector((state) => state.cartAdd);
+  const { success: successCartAdd } = cartAdd;
   let totalRate =
     product && product.reviews
       ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
@@ -45,16 +53,28 @@ function Productcreen() {
   useEffect(() => {
     if (successProductReview) {
       navigate(`/item/review/${id}`);
+    
       //   dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
       //   setRating(0);
       //   setComment('');
     }
+    if(successCartAdd){
+      return  <Snackbar
+      anchorOrigin={['top', 'center']}
+      open={open}
+      onClose={handleClose}
+      message="I love snacks"
+      key={['top', 'center']}
+  />
+    }
+    dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
     console.log(product);
     // console.log(product.reviews)
   }, [dispatch, id, successProductReview]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
+
   };
   const createReviewHandler = () => {
     dispatch(createReview(id));
@@ -132,7 +152,7 @@ function Productcreen() {
                           value={qty}
                           onChange={(e) => setQty(e.target.value)}
                         >
-                          {[...Array(product.countInStock).keys()].map((x) => (
+                          {[...Array(30).keys()].map((x) => (
                             <option value={x + 1} key={x + 1}>
                               {x + 1}
                             </option>
