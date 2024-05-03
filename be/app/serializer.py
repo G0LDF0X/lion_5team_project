@@ -216,6 +216,8 @@ class BookmarkSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class CartSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='item_id.name')
+    price = serializers.ReadOnlyField(source='item_id.price')
     class Meta:
         model = Cart
         fields = '__all__'
