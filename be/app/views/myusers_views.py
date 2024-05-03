@@ -196,3 +196,12 @@ def getFollowing(request, pk):
     serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
 
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_MyBoard(request):
+    user = User.objects.get(username=request.user)
+    boards = Board.objects.filter(user_id=user)
+    serializer = BoardSerializer(boards, many=True)
+    return Response(serializer.data)
