@@ -6,8 +6,30 @@ import { listBoards } from "../actions/boardActions";
 import { LinkContainer } from "react-router-bootstrap";
 import { createBoard } from "../actions/boardActions";
 import { BOARD_CREATE_RESET } from "../constants/boardConstants";
+import BoardForm from "../components/BoardForm";
+import { Grid } from "@material-ui/core";
+import { Box } from "@mui/material";
+import { CardHeader } from "@mui/material";
+import { Avatar } from "@mui/material";
+import { grey } from "@material-ui/core/colors";
+import { CardMedia } from "@mui/material";
+import { CardActions } from "@mui/material";
+import { IconButton } from "@mui/material";
+import CardrdHeader from "@mui/material/CardHeader";
+
+// import { MoreVertIcon } from "@mui/icons-material";
+// import { FavoriteIcon } from "@mui/icons-material";
+// import { ShareIcon } from "@mui/icons-material";
+
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Typography } from "@mui/material";
+import { CardContent } from "@mui/material";
+
 
 function BoardScreen() {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const boardList = useSelector((state) => state.boardList);
@@ -22,6 +44,9 @@ function BoardScreen() {
   console.log(boards);
   const createHandler = () => { 
     dispatch(createBoard());
+  }
+  const likeHandler = () => {
+    console.log('likeHandler');
   }
   useEffect(() => {
     dispatch(listBoards());
@@ -38,55 +63,58 @@ function BoardScreen() {
         <h2>Loading...</h2>
       ) : error ? (
         <h3>{error}</h3>
-      ) : userInfo ? (
-        <Row>
-          <Col className="text-right">
-          <Button variant="light" className="my-3" onclicke={createBoard}>
-            <i className="fas fa-plus"></i>create
-          </Button>
-          </Col>
+      ) : userInfo && boards? (
+        <Grid container spacing={3}>
+         {/* <Carousel> */}
           {boards.map((board) => (
-            <Col key={board.id} sm={12} md={6} lg={4} xl={3}>
-              <Card className="my-3 p-3 rounded">
-                <Link to={`/board/detail/${board.id}`}>
-                  {/* <Card.Img src={board.image} variant="top" /> */}
-                </Link>
-                <Card.Body>
-                  <Link to={`/board/detail/${board.id}`}>
-                    <Card.Title as="div">
-                      <strong>{board.title}</strong>
-                      <strong>{board.name}</strong>
-                      <strong>{board.content}</strong>
-                    </Card.Title>
-                  </Link>
-                </Card.Body>
+            <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
+            {/* <Carousel.Item key={board.id}> */}
+              <Box display="flex" justifyContent="center">
+              <Card variant="outlined">
+              <Box height={600} width={400}>
+              <CardHeader
+        avatar={<Link to={`/board/detail/${board.id}`}>
+          <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
+            R
+          </Avatar>
+        </Link>
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={<Link to={`/board/detail/${board.id}`}>{board.title}</Link>}
+        subheader={board.createdAt}
+        width="10"
+      />
+      <CardMedia
+        component="img"
+        image={board.image_url}
+        // alt="Paella dish"
+      />
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" onClick={likeHandler}>
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+      </CardActions>
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {board.content}
+        </Typography>
+      </CardContent>
+              </Box>
               </Card>
-            </Col>
+              </Box>
+            {/* </Carousel.Item> */}
+             </Grid>
           ))}
-        </Row>
-      ) : (
-        <Row>
-          {boards.map((board) => (
-            <Col key={board.id} sm={12} md={6} lg={4} xl={3}>
-              <Card className="my-3 p-3 rounded">
-                <Link to={`/board/detail/${board.id}`}>
-                  <Card.Img src={board.image_url} variant="top" />
-                </Link>
-                <Card.Body>
-                  <Link to={`/board/${board.id}`}>
-                    <Card.Title as="div">
-                      <strong>{board.title}</strong>
-                    </Card.Title>
-                  </Link>
-                  <Card.Text as="div">
-                    <div className="my-3">{board.like}</div>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )}
+        {/* </Carousel> */}
+        </Grid>
+      ) : null}
       <div>
         {/* {boards && boards.map((board) => (
           <div key={board.id}>
