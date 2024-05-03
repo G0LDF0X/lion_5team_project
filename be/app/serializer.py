@@ -226,9 +226,10 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Board_Serializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='user_id.name')
     class Meta:
         model = Board
-        fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
+        fields = ['title','content', 'image_url', 'created_at', 'show', 'like', 'name']
 
 class RefundSerializer(serializers.ModelSerializer):
     class Meta:
@@ -239,4 +240,9 @@ class FollowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Follow
+        fields = '__all__'
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
         fields = '__all__'

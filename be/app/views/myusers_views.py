@@ -104,7 +104,7 @@ def update_User_Profile(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getMyUserQnA(request):
+def getMyItemQnA(request):
     user = User.objects.get(username=request.user)
     my_user_qna_list = Item_QnA.objects.filter(user_id=user)
     serializer = ItemQnASerializer(my_user_qna_list, many=True)
@@ -196,12 +196,18 @@ def getFollowing(request, pk):
     serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
 
-
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_MyBoard(request):
     user = User.objects.get(username=request.user)
     boards = Board.objects.filter(user_id=user)
     serializer = BoardSerializer(boards, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyUserQnA(request):
+    user = User.objects.get(username=request.user)
+    my_user_qna_list = User_QnA.objects.filter(user_id=user)
+    serializer = UserQnASerializer(my_user_qna_list, many=True)
     return Response(serializer.data)

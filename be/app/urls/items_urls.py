@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.items_views import get_items, get_category, item_details, create_item, delete_item, update_item, create_review, update_review, delete_review, create_qna, update_qna, delete_qna, get_reviews
+from app.views.items_views import get_items, get_category, item_details, create_item, delete_item, update_item, create_review, update_review, delete_review, create_qna, update_qna, delete_qna, get_reviews, get_tag
 
 urlpatterns = [
     path('', get_items, name="item_index"),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('qna/create/<int:item_id>/', create_qna, name="create_qna"),
     path('qna/update/<int:pk>/', update_qna, name="update_qna"),
     path('qna/delete/<int:pk>/', delete_qna, name="delete_qna"),
+    path('tags/', get_tag, name='get_tags')
 ]

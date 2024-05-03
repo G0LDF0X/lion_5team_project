@@ -61,7 +61,7 @@ export default function UserSettingNavBar() {
           <Tab label="나의 쇼핑" {...a11yProps(1)} />
           <Tab label="나의 리뷰" {...a11yProps(2)} />
             <Tab label="설정" {...a11yProps(3)} />
-          {userInfo &&userInfo.is_staff && <Tab label="판매자 관리" {...a11yProps(4)} />}
+          {userInfo  && <Tab label="판매자 관리" {...a11yProps(4)} />}
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
