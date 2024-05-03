@@ -9,6 +9,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import Loading from "../components/Loading";
 import { listProducts, deleteProduct, createProduct} from "../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants"; 
+import ItemListSkeleton from "./ItemListSkeleton";
 
 function ProductListScreen() {
     const dispatch = useDispatch();
@@ -81,7 +82,7 @@ function ProductListScreen() {
     {loadingCreate && <Loading /> }
     {errorCreate && <Message variant="danger">{errorCreate}</Message>}
     {loading ? (
-      <Loading />
+      <ItemListSkeleton />
     ) : error ? (
       <Message variant="danger">{error}</Message>
     ) : (<div>

@@ -15,23 +15,18 @@ import { listProductDetails } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { createReview } from "../actions/reviewActions";
-import { addToBookMark, removeFromBookMark } from "../actions/bookmarkActions";
+import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
 import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
-// import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
-  const [isClicked, setIsClicked] = useState(false);
+  const [marked, setMarked] = useState(false);
   const [state, setState] = useState({open: false});
   const handleClose = () => {
     setState({  open: false });
   };
   const { open } = state;
-  // const [rate, setRate] = useState(0)
-
-  // const [rating, setRating] = useState(0)
-  // const [comment, setComment] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -41,8 +36,14 @@ function Productcreen() {
   const { userInfo } = userLogin;
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview } = reviewCreate;;
+  const bookMarkList = useSelector((state) => state.bookMarkList);
+  const { bookMarkItems } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
-  const { success: successCartAdd } = cartAdd;
+  const { success: successCartAdd , fail : failCartAdd} = cartAdd;
+  const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
+  const { success: successBookmarkAdd } = bookMarkAdd;
+  const bookMarkRemove = useSelector((state) => state.bookMarkRemove);
+  const { success: successBookmarkRemove } = bookMarkRemove;
   let totalRate =
     product && product.reviews
       ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
@@ -53,25 +54,29 @@ function Productcreen() {
   useEffect(() => {
     if (successProductReview) {
       navigate(`/item/review/${id}`);
-    
-      //   dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
-      //   setRating(0);
-      //   setComment('');
     }
     if(successCartAdd){
-      return  <Snackbar
-      anchorOrigin={['top', 'center']}
-      open={open}
-      onClose={handleClose}
-      message="I love snacks"
-      key={['top', 'center']}
-  />
+      setState({open: true});
+     
+    }
+    if(successBookmarkAdd){
+      dispatch(listBookMark());
+      setMarked(true);
+    }
+    if(successBookmarkRemove){
+      dispatch(listBookMark());
+      setMarked(false);
+    }
+    if( bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
+      setMarked(true);
+    }
+    else{
+      setMarked(false);
     }
     dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
-    console.log(product);
-    // console.log(product.reviews)
-  }, [dispatch, id, successProductReview]);
+    dispatch(listBookMark());
+  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove ]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
@@ -80,18 +85,24 @@ function Productcreen() {
     dispatch(createReview(id));
   };
   const BookmarkHandler = () => {
-    if (isClicked === true){
+    if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
-      setIsClicked(false);
+
     }
-    else{
-    dispatch(addToBookMark(id));
-    setIsClicked(false);
+    else {
+      dispatch(addToBookMark(id));
     }
   }
 
   return (
     <div>
+      <Snackbar
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  open={open}
+  onClose={handleClose}
+  message="장바구니에 추가되었습니다."
+  key={'top-center'}
+/>
       <Link to="/" className="btn btn-light my-2">
         Go Back
       </Link>
@@ -189,7 +200,7 @@ function Productcreen() {
                         >
                           <i
                             className={
-                              isClicked
+                              marked
                                 ? "fa-solid fa-bookmark"
                                 : "fa-regular fa-bookmark"
                             }
