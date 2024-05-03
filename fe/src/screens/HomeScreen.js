@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Container } from "react-bootstrap";
 import { Typography } from "@material-ui/core";
 import Product from "../components/Product";
-import Review from "../components/Review";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listReviews } from "../actions/reviewActions";
@@ -13,13 +12,7 @@ import BoardForm from "../components/BoardForm";
 
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import Filter from "../components/Filter";
-import HomeHeader from "../components/HomeHeader";
-import ProductCarousel from "../components/ProductCarousel";
-import ProductReviews from "../components/ProductReviews";
 import QA from "../components/QA";
-import Creators from "../components/Creators";
-import Board from "../components/Board";
 
 function HomeScreen() {
   const location = useLocation();
@@ -98,7 +91,7 @@ function HomeScreen() {
             <Message variant={"danger"}>{boardError}</Message>
           ) : (
             <Row>
-              {boards.map((board) => (
+              {boards.slice(0, 4).map((board) => (
                 <Col
                   key={board.id}
                   sm={12}

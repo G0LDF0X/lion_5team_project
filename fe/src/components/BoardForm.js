@@ -14,6 +14,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { grey } from '@material-ui/core/colors';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -32,7 +33,7 @@ export default function BoardForm({board}) {
   return (<div>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
             R
           </Avatar>
         }
