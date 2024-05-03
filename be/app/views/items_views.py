@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 
 
@@ -215,3 +215,9 @@ def delete_qna (request, pk):
     
     item_qna.delete()
     return Response("delete Success") 
+
+@api_view(['GET'])
+def get_tag(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data)
