@@ -23,8 +23,14 @@ def add_to_cart(request, pk):
     user = User.objects.get(username=request.user)
     item_id = pk
     item = Item.objects.get(id=item_id)
-    qty = request.data["qty"]
-    cart_data = {"user_id": user.id, "item_id": item_id, "qty": qty, "name": item.name, "price": item.price, "image": item.image_url}
+    qty = int(request.data["qty"])
+    exist_item = Cart.objects.filter(user_id=user, item_id=item_id)
+    if exist_item:
+        cart_data = {"user_id": user.id, "item_id": item_id, "qty": exist_item[0].qty + qty, "name": item.name, "price": item.price, "image": item.image_url}   
+        exist_item.delete()
+
+    else:
+        cart_data = {"user_id": user.id, "item_id": item_id, "qty": qty, "name": item.name, "price": item.price, "image": item.image_url}
     cart_serializer = CartSerializer(data=cart_data)
 
     if cart_serializer.is_valid():

@@ -55,7 +55,7 @@ export const addToCart = (id, qty) => async (dispatch, getState) => {
       type: CART_ADD_ITEM_SUCCESS,
       payload: data,
     });
-    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+    dispatch(listCartItems());
   } catch (error) {
     dispatch({
       type: CART_ADD_ITEM_FAIL,
