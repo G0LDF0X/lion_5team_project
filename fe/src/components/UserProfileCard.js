@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState } from 'react'
 import { Card, Row, Col, Image } from 'react-bootstrap'
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -11,12 +11,44 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 function UserProfileCard() {
     const [value, setValue] = React.useState(0);
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      const fetchProfile = async () => {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if (userInfo) {
+          const { username, password } = userInfo;
+          // console.log("Username:", username);
+          // console.log("Password:", password);
+          
+          try {
+            const response = await fetch('/app/token/', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({username, password}) 
+            });
+            const data = await response.json();
+            // console.log("data:", data);
+            const token = data.access;  // Replace 'access' with the actual property name of the token in the response
+            // console.log("Token:", token);
+            // Use the token to fetch the user profile
+            const profileResponse = await fetch('/users/profile/', {headers: {'Authorization': `Bearer ${token}`}});
+            const profileData = await profileResponse.json();
+            setUser(profileData);
+            console.log(profileData);
+          } catch (error) {
+            console.error("Error fetching profile:", error);
+          }
+        }
+      };
+    
+      fetchProfile();
+    }, []);  // Add any dependencies here
     return (
       <Card className="ms-auto">
         <Row className="justify-content-center">
           <Col xs={6} md={4} className="d-flex flex-column justify-content-center align-items-center">
             <Image src="https://placehold.co/400" roundedCircle width="40%" />
-            <h4 className='text-center'>닉네임</h4>
+            <h4 className='text-center'>{user && user.user ? user.user.nickname : 'Loading...'}</h4>
             <h6>팔로워  0  |  팔로잉  0</h6>
           </Col>
         </Row>

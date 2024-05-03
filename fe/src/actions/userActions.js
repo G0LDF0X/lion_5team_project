@@ -31,20 +31,23 @@ export const login = (id, password) => async (dispatch) => {
     });
 
     const data = await response.json();
-
+    const userData = {
+      ...data,
+      password,
+    };
     if (response.ok) {
       dispatch({
         type: USER_LOGIN_SUCCESS,
-        payload: data,
+        payload: userData,
       });
     } else {
       dispatch({
         type: USER_LOGIN_FAIL,
-        payload: data && data.message ? data.message : "Login failed",
+        payload: userData && userData.message ? userData.message : "Login failed",
       });
     }
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("userInfo", JSON.stringify(userData));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

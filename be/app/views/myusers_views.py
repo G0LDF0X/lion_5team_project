@@ -22,7 +22,7 @@ def get_Seller_Apply(request):
     serializer = SellerSerializer(data=request.data)
 
     if serializer.is_valid():
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
         serializer.save(user_id=user)
 
         user = request.user
@@ -36,7 +36,7 @@ def get_Seller_Apply(request):
 
 @api_view(['GET'])
 def my_shopping(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     orders = Order.objects.filter(user_id=user)
     orders_ids = orders.values_list('id', flat=True)
     order_items = OrderItem.objects.filter(order_id__in=orders_ids)
@@ -45,10 +45,10 @@ def my_shopping(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_mypage_profile(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_data = User_Serializer(user).data
     try:
         seller = Seller.objects.get(user_id=user)
