@@ -56,14 +56,13 @@ function Productcreen() {
   let avgRate =
     product && product.reviews ? totalRate / product.reviews.length : 0;
 
-  useEffect(() => {
+    useEffect(() => {
+    dispatch({type:REVIEW_CREATE_RESET});
     if (successProductReview) {
       navigate(`/items/review/${createdReview.id}`);
-      dispatch({type:REVIEW_CREATE_RESET});
     }
     if(successCartAdd){
       setState({open: true});
-     
     }
     if(successBookmarkAdd){
       dispatch(listBookMark());
@@ -89,6 +88,7 @@ function Productcreen() {
   };
   const createReviewHandler = () => {
     dispatch(createReview(id));
+
   };
   const BookmarkHandler = () => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {

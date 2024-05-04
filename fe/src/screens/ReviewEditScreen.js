@@ -49,7 +49,7 @@ function ReviewEditScreen() {
           // data.append("name", file.name);
           data.append("file", file);
           setUploading(true);
-          fetch(`items/review/uploadImage/${id}`, {
+          fetch(`/items/review/uploadImage/${id}/`, {
             method: "POST",
             body: data,
           })

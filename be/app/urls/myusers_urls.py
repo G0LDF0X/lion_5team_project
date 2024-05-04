@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.myusers_views import MyTokenObtainPairView, get_Seller_Apply, my_shopping, get_mypage_profile, update_User_Profile, update_Auth_Profile, getMyUserQnA, getMyReview, get_userprofile, my_bookmarks, add_bookmark, delete_bookmark, getFollower, getFollowing, get_MyBoard, getMyItemQnA,getMyUserAnswer
+from app.views.myusers_views import MyTokenObtainPairView, get_Seller_Apply, my_shopping, get_mypage_profile, update_User_Profile, update_Auth_Profile, getMyUserQnA, getMyReview, get_userprofile, my_bookmarks, add_bookmark, delete_bookmark, getFollower, getFollowing, get_MyBoard, getMyItemQnA,getMyUserAnswer, getUserById
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('myshopping/myqna/', getMyItemQnA, name = 'my_item_qna'),
     path('myreview/', getMyReview, name='my_review'),
     path('<int:pk>/', get_userprofile, name='user_profile'),
+    path('detail/<int:pk>/', getUserById, name='user_detail'),
     path('bookmark/', my_bookmarks, name='my_bookmarks'),
     path('bookmark/add/<int:pk>/', add_bookmark, name='add_bookmark'),
     path('bookmark/delete/<int:pk>/', delete_bookmark, name='delete_bookmark'),
