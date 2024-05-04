@@ -8,6 +8,11 @@ import FormContainer from "../components/FormContainer";
 import { listProductDetails, updateProduct } from "../actions/productActions";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import DoneIcon from '@mui/icons-material/Done';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 function ProductUpdateScreen() {
   const productId = useParams().id;
   const [name, setName] = useState("");
@@ -31,23 +36,26 @@ function ProductUpdateScreen() {
   } = productUpdate;
 
   useEffect(() => {
+    // dispatch(listProductDetails(productId));
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate("/seller/manage");
     } else {
-      if (!product.name  ) {
+      if ( product.id !== Number(productId)) {
         dispatch(listProductDetails(productId));
       } else {
         setName(product.name);
         setPrice(product.price);
-        setImage(product.image);
+        setImage(product.image_url);
         // setBrand(product.brand);
-        setCategory(product.category);
+        setCategory(product.category_id);
         // setCountInStock(product.countInStock);
         setDescription(product.description);
-      }
-    }
-  }, [product, productId, dispatch, navigate, successUpdate]);
+          if(product.tag_id&&product.tag_id !== ""){
+        setChipData([`${product.tag_id}`]);
+          }
+    }}
+  }, [product, productId, dispatch, navigate, successUpdate, ]);
 
   const submitHandler = (e) => {
     
@@ -61,6 +69,7 @@ function ProductUpdateScreen() {
         category,
         countInStock,
         description,
+
       })
     dispatch(
       updateProduct({
@@ -72,6 +81,7 @@ function ProductUpdateScreen() {
         category,
         // countInStock,
         description,
+        tag: chipData.map(Number),
       })
     );
   };
@@ -82,7 +92,7 @@ function ProductUpdateScreen() {
     const formData = new FormData();
     formData.append("image", file);
     formData.append("product_id", productId);
-    console.log(formData);
+    // console.log(formData);
     setUploading(true);
     try {
       const config = {
@@ -90,7 +100,7 @@ function ProductUpdateScreen() {
        
         body: formData,
       };
-      const res = await fetch("/api/products/upload/", config);
+      const res = await fetch(`/items/uploadImage/${productId}/`, config);
       const data = await res.json();
       setImage(data);
       setUploading(false);
@@ -102,6 +112,19 @@ function ProductUpdateScreen() {
   // console.log(formdata)
     console.log("uploadFileHandler");
   }
+  const [chipData, setChipData] = useState([ ]);
+  const handleClick = (chipValue) => {
+    if ( chipData.includes(chipValue)) {
+      setChipData((chipData) => chipData.filter((chip) => chip !== chipValue));
+    }else{
+    setChipData((chipData) => [...chipData, chipValue]);
+    console.log(chipData);}
+  }
+  
+  const handleDelete = (chipToDelete) => () => {
+    // setChipData((chipData) => chipData.filter((chip) => chip !== chipToDelete));
+    console.log(chipData);
+  };
 
   return (
     <div>
@@ -136,23 +159,6 @@ function ProductUpdateScreen() {
                 onChange={(e) => setPrice(e.target.value) }
               ></Form.Control>
             </Form.Group>
-            {/* <Form.Group controlId="image">
-              <Form.Label>Image</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Image URL"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-              ></Form.Control>
-              <Form.Control
-                id="image-file"
-                type="file"
-                label="Choose File"
-                custom
-                onChange={uploadFileHandler}
-              ></Form.Control>
-              {uploading && <Loading />} */}
-            {/* </Form.Group> */}
             <Form.Group controlId="formFile" className="mb-3">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -162,24 +168,6 @@ function ProductUpdateScreen() {
               />
               {uploading && <Loading />}
             </Form.Group>
-            {/* <Form.Group controlId="brand">
-              <Form.Label>Brand</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter Brand"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              ></Form.Control>
-            </Form.Group> */}
-            {/* <Form.Group controlId="countInStock">
-              <Form.Label>Count In Stock</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter Count In Stock"
-                value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
-              ></Form.Control> */}
-            {/* </Form.Group> */}
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
               <Form.Select
@@ -200,6 +188,34 @@ function ProductUpdateScreen() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="Tag">
+              <Form.Label>Tag</Form.Label>
+              <Stack direction="row" spacing={1}>
+              <Chip
+  label="목줄"
+  onClick={() => handleClick("1")}
+  onDelete={handleDelete("1")}
+  value="1"
+  
+  deleteIcon={chipData&&chipData.includes("1") ?  <DeleteIcon />:<DoneIcon /> }
+/>
+<Chip
+  label="스텔라앤츄이스"
+  onClick={() => handleClick("2")}
+  onDelete={handleDelete("2")}
+  value="2"
+  deleteIcon={chipData&&chipData.includes("2") ?  <DeleteIcon />:<DoneIcon /> }
+/>
+<Chip
+  label="캐츠랑"
+  onClick={() => handleClick("3")}
+  onDelete={handleDelete("3")}
+  value="3"
+  deleteIcon={chipData&&chipData.includes("3") ?  <DeleteIcon />:<DoneIcon /> }
+/>
+      
+      </Stack>
             </Form.Group>
             <Button type="submit" variant="">
               Update

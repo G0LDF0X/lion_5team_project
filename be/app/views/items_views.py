@@ -33,8 +33,8 @@ def item_details(request, pk):
 def create_item(request):
     user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
-    tag_id= Tag.objects.get(id=request.data["tag"])
-    category = Category.objects.get(id=request.data["category"])
+    tag_id= Tag.objects.get(id=1)
+    category = Category.objects.get(id=1)
     item = Item.objects.create(
         seller_id = seller,
         category_id = category, 
@@ -62,10 +62,18 @@ def update_item(request, pk):
     item.price = data['price']
     item.category_id = category
     item.description = data['description']
+    item.tag_id = Tag.objects.get(id=data['tag'])
     item.save()
     serializer = ItemSerializer(item, many=False)
     
     return Response(serializer.data)
+
+@api_view(['POST'])
+def upload_image(request, pk):
+    item = Item.objects.get(id=pk)
+    item.image_url = request.FILES.get('file')
+    item.save()
+    return Response('Image was uploaded')
 
 @api_view(['DELETE'])
 def delete_item(request, pk):

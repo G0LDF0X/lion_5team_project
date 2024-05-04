@@ -7,7 +7,7 @@ import Message from "../components/Message";
 // import Paginate from "../components/Paginate";
 import { LinkContainer } from "react-router-bootstrap";
 import Loading from "../components/Loading";
-import { listProducts, deleteProduct, createProduct} from "../actions/productActions";
+import { listProducts, deleteProduct, createProduct, listProductDetails} from "../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants"; 
 import ItemListSkeleton from "./ItemListSkeleton";
 
@@ -64,6 +64,11 @@ function ProductListScreen() {
           redirect("/admin/productlist"); 
         }
       }
+      const updateHandler = (id) => {
+        // navigate(`/items/update/${id}`);
+        // dispatch(listProductDetails(id));
+        console.log("updateHandler");
+      }
   return (
     <div><Row className="align-items-center">
     <Col>
@@ -112,7 +117,7 @@ function ProductListScreen() {
               {/* <td>{product.brand}</td> */}
               <td>
                 <LinkContainer to={`/items/update/${product.id}`}>
-                  <Button variant="light" className="btn-sm">
+                  <Button variant="light" className="btn-sm" onClick = {updateHandler(product.id)}>
                     <i className="fas fa-edit"></i>
                   </Button>
                 </LinkContainer>
