@@ -164,7 +164,7 @@ export const deleteReview = (id) => async (dispatch, getState) => {
             userLogin: { userInfo },
         } = getState();
 
-        const response = await fetch(`/api/reviews/${id}/delete`, {
+        const response = await fetch(`/items/review/delete/${id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${userInfo.access}`,

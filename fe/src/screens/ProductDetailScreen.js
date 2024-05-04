@@ -19,7 +19,7 @@ import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/book
 import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
-
+import { deleteReview } from "../actions/reviewActions";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -46,6 +46,8 @@ function Productcreen() {
   const { success: successBookmarkAdd } = bookMarkAdd;
   const bookMarkRemove = useSelector((state) => state.bookMarkRemove);
   const { success: successBookmarkRemove } = bookMarkRemove;
+  const reviewDelete = useSelector((state) => state.reviewDelete);
+  const { success: successReviewDelete } = reviewDelete;
   let totalRate =
     product && product.reviews
       ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
@@ -78,7 +80,7 @@ function Productcreen() {
     dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove ]);
+  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
@@ -95,7 +97,23 @@ function Productcreen() {
       dispatch(addToBookMark(id));
     }
   }
-
+  const editReviewHandler = (review) => {
+    if(userInfo&&userInfo.id===review.user_id){
+      navigate(`/items/review/${review.id}`);
+    } else {
+      alert("You can only edit your own reviews.");
+;  }
+  }
+  const deleteReviewHandler = (review) => {
+    if(userInfo&&userInfo.id===review.user_id){
+      window.confirm("Are you sure you want to delete this review?");
+      if(window.confirm){
+       dispatch(deleteReview(review.id));
+      }
+    } else {
+      alert("You can only delete your own reviews.");
+  }
+  }
   return (
     <div>
       <Snackbar
@@ -230,12 +248,21 @@ function Productcreen() {
         <Card key={review.id}>
           <CardContent>
             <Typography variant="h5">{review.title}</Typography>
+            <Typography variant="subtitle1">Written by: {review.writer}</Typography>
             <Box my={2}>
               <Rating value={review.rate} text={review.rate} color={"#f8e825"} />
             </Box>
             <Typography variant="body1">{review.comment}</Typography>
             {review.image && <img src={review.image} alt={review.title} />}
             <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <Box mt={2}>
+          <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
+            Edit
+          </Button>
+          <Button variant="contained" color="secondary" onClick={() => deleteReviewHandler(review)}>
+            Delete
+          </Button>
+        </Box>
           </CardContent>
         </Card>
       ))
