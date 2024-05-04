@@ -105,6 +105,13 @@ def create_order(request):
     else:
         return Response(order_serializer.errors, status=400)
     
+@api_view(['GET'])
+def my_order_list(request):
+    user = User.objects.get(username=request.user)
+    orders = Order.objects.filter(user_id=user)
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
+    
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
