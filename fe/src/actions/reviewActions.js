@@ -49,7 +49,7 @@ export const listReviewDetails = (id) => async (dispatch) => {
     try {
         dispatch({ type: REVIEW_DETAILS_REQUEST });
 
-        const response = await fetch(`/api/reviews/${id}`);
+        const response = await fetch(`/items/review/detail/${id}`);
         const data = await response.json();
 
         dispatch({
@@ -120,7 +120,7 @@ export const updateReview = (review) => async (dispatch, getState) => {
             userLogin: { userInfo },
         } = getState();
 
-        const response = await fetch(`/api/reviews/${review.id}/edit`, {
+        const response = await fetch(`/items/review/update/${review.id}/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

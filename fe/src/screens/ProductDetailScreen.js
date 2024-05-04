@@ -5,7 +5,7 @@ import {
   Image,
   ListGroup,
   Button,
-  Card,
+  // Card,
   Form,
 } from "react-bootstrap";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -18,6 +18,8 @@ import { createReview } from "../actions/reviewActions";
 import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
 import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
+import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
+
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -35,7 +37,7 @@ function Productcreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview } = reviewCreate;;
+  const { success: successProductReview, createdReview } = reviewCreate;;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
@@ -53,7 +55,7 @@ function Productcreen() {
 
   useEffect(() => {
     if (successProductReview) {
-      navigate(`/item/review/${id}`);
+      navigate(`/items/review/${createdReview.id}`);
     }
     if(successCartAdd){
       setState({open: true});
@@ -215,45 +217,33 @@ function Productcreen() {
             </Col>
           </Row>
 
-          <Row className="d-flex justify-content-between align-items-center">
-            <Col md={9}>
-              <h2>Reviews</h2>
-              <Col className="text-end">
-                <Button
-                  className="btn-block"
-                  onClick={createReviewHandler}
-                  key="1"
-                >
-                  Create a Review
-                </Button>
-              </Col>
-              {/* {product.reviews.length === 0 && <Message>No Reviews</Message>} */}
-              {product.reviews ? (
-                <ListGroup variant="flush">
-                  {product.reviews.map((review) => (
-                    <div>
-                      <ListGroup.Item key={review.id}>
-                        <strong>{review.title}</strong>
-                        <div className="my-3">
-                          <Rating
-                            value={review.rate}
-                            text={review.rate}
-                            color={"#f8e825"}
-                          />
-                        </div>
-                        <p>{review.comment}</p>
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <h6> {review.content}</h6>
-                      </ListGroup.Item>
-                    </div>
-                  ))}
-                </ListGroup>
-              ) : (
-                <Message>No Reviews</Message>
-              )}
-            </Col>
-          </Row>
+          <Grid container spacing={3}>
+  <Grid item xs={9}>
+    <Typography variant="h4">Reviews</Typography>
+    <Box display="flex" justifyContent="flex-end">
+      <Button variant="contained" color="primary" onClick={createReviewHandler}>
+        Create a Review
+      </Button>
+    </Box>
+    {product.reviews ? (
+      product.reviews.map((review) => (
+        <Card key={review.id}>
+          <CardContent>
+            <Typography variant="h5">{review.title}</Typography>
+            <Box my={2}>
+              <Rating value={review.rate} text={review.rate} color={"#f8e825"} />
+            </Box>
+            <Typography variant="body1">{review.comment}</Typography>
+            {review.image && <img src={review.image} alt={review.title} />}
+            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+          </CardContent>
+        </Card>
+      ))
+    ) : (
+      <Typography variant="body1">No Reviews</Typography>
+    )}
+  </Grid>
+</Grid>
         </div>
       )}
     </div>
