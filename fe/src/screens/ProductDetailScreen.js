@@ -20,6 +20,7 @@ import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
+import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -58,6 +59,7 @@ function Productcreen() {
   useEffect(() => {
     if (successProductReview) {
       navigate(`/items/review/${createdReview.id}`);
+      dispatch({type:REVIEW_CREATE_RESET});
     }
     if(successCartAdd){
       setState({open: true});

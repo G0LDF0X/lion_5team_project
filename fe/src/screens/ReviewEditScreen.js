@@ -12,6 +12,7 @@ import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { REVIEW_UPDATE_RESET } from "../constants/reviewConstants";
 
 function ReviewEditScreen() {
   const [editorData, setEditorData] = useState("");
@@ -75,6 +76,7 @@ function ReviewEditScreen() {
     dispatch(listReviewDetails(id) );
     if (successUpdate) {
       navigate(`/items/detail/${updatedReview.item_id}`);}
+      dispatch({type:REVIEW_UPDATE_RESET})
     
   }, [dispatch, id, successUpdate ]);
 

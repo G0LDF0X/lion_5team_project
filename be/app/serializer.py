@@ -141,6 +141,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
             'is_staff': user.is_staff,
             'is_superuser': user.is_superuser,
             'last_login': user.last_login,
+            'id': user.id,
         })
 
         return data
@@ -209,7 +210,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url']
+        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', ]
 
 class BookmarkSerializer(serializers.ModelSerializer):
     class Meta:
