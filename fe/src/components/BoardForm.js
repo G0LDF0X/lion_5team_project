@@ -39,7 +39,7 @@ export default function BoardForm({board}) {
       <CardMedia
         component="img"
         height="220"
-        width="10"
+        // width="10"
         image={board.image_url}
         // alt="Paella dish"
       />
