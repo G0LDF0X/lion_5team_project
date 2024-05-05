@@ -18,7 +18,7 @@ function UserProfileBookmark() {
 //   const [categories, setCategories] = useState([]);
 //   const [selectedCategory, setSelectedCategory] = useState([]);
   const bookMarkList = useSelector(state => state.bookMarkList);
-    const { loading, error, bookmarkItems } = bookMarkList;
+    const { loading, error, bookMarkItems } = bookMarkList;
   
 
   const params = new URLSearchParams(location.search);
@@ -29,6 +29,7 @@ function UserProfileBookmark() {
 //   const tag = params.get('tag');
   
   useEffect(() => {
+    // if (book)
 
   }
   , []);
@@ -64,9 +65,9 @@ function UserProfileBookmark() {
       <Message variant={'danger'}>{error}</Message>
     ) : (
       <Row>
-        {bookmarkItems&&bookmarkItems.map((product) => (
+        {bookMarkItems&&bookMarkItems.map((product) => (
           <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
-            <Product product={product} />
+            <Product product={product} id={product.item_id} />
           </Col>
         ))}
       </Row>

@@ -6,6 +6,8 @@ import { login } from "../actions/userActions";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
 import FormContainer from "../components/FormContainer";
+import { listBookMark } from "../actions/bookmarkActions";
+import { listCartItems } from "../actions/cartActions";
 
 function LoginScreen() {
   // const [id, setid] = useState("");
@@ -20,6 +22,8 @@ function LoginScreen() {
   useEffect(() => {
     if (userInfo) {
       navigate(redirect);
+      dispatch(listBookMark());
+      dispatch(listCartItems());
     }
   }, [navigate, userInfo, redirect]);
   const submitHandler = (e) => {

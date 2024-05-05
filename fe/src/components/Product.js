@@ -4,11 +4,11 @@ import Rating from "./Rating";
 import { Link } from "react-router-dom";
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-function Product({ product }) {
+function Product({ product, id }) {
     return (
         <div style={{height: "500px"}}>
         {/* // <Card className="my-3 p-3 rounded"> */}
-            <Link to={`/items/detail/${product.id}`}> 
+            <Link to={`/items/detail/${id}`}> 
                 {/* <Card.Img src={product.image_url} variant="top" /> */}
                 <CardMedia
         component="img"
@@ -19,7 +19,7 @@ function Product({ product }) {
       />            </Link>
 
 <Card.Body>
-  <Link to={`/items/detail/${product.id}`}> 
+  <Link to={`/items/detail/${id}`}> 
     <Card.Title as="div">
     <Typography variant="body1" noWrap style={{ width: '200px' }} title={product.name}>
 

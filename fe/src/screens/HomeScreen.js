@@ -52,7 +52,7 @@ function HomeScreen({ location }) {
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
               <Card variant="outlined" style={{width:"250px"}}>
                 <Box height={400} style={{width:"250px"}}>
-                  <Product product={product} />
+                  <Product product={product} id={product.id} />
                 </Box>
               </Card>
             </Grid>

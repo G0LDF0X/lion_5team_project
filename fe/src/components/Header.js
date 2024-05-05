@@ -25,6 +25,9 @@ function Header() {
   const logoutHandler = () => {
     dispatch(logout());
     navigate("/");
+    dispatch({ type: "BOOKMARK_LIST_RESET" });
+    dispatch({ type: "CART_LIST_RESET" });
+
   };
 
   const handleMenu = (event) => {

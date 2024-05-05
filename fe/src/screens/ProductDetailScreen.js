@@ -40,7 +40,7 @@ function Productcreen() {
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview, createdReview } = reviewCreate;;
   const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems } = bookMarkList;
+  const { bookMarkItems, success } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
   const { success: successCartAdd , fail : failCartAdd} = cartAdd;
   const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
@@ -57,9 +57,10 @@ function Productcreen() {
     product && product.reviews ? totalRate / product.reviews.length : 0;
 
     useEffect(() => {
-    dispatch({type:REVIEW_CREATE_RESET});
-    if (successProductReview) {
-      navigate(`/items/review/${createdReview.id}`);
+      
+      if (successProductReview) {
+        navigate(`/items/review/${createdReview.id}`);
+        dispatch({type:REVIEW_CREATE_RESET});
     }
     if(successCartAdd){
       setState({open: true});
@@ -72,15 +73,16 @@ function Productcreen() {
       dispatch(listBookMark());
       setMarked(false);
     }
-    if( bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
+    if( success || bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
       setMarked(true);
     }
     else{
       setMarked(false);
     }
-    dispatch(listCartItems()); 
+    // dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
-    dispatch(listBookMark());
+    if(!bookMarkItems){
+    dispatch(listBookMark());}
   }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
@@ -223,8 +225,8 @@ function Productcreen() {
                           <i
                             className={
                               marked
-                                ? "fa-solid fa-bookmark"
-                                : "fa-regular fa-bookmark"
+                                ? "fa-regular fa-bookmark"
+                                : "fa-solid fa-bookmark"
                             }
                           ></i>
                         </Button>

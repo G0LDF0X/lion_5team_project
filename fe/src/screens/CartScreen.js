@@ -16,10 +16,10 @@ function CartScreen() {
   // const removeFromCart
 
   useEffect(() => {
-   
-   dispatch(listCartItems());
+   if(!cartItems || cartItems.length === 0){
+   dispatch(listCartItems());}
 
-  }, [dispatch, successCartRemove]);
+  }, [dispatch, successCartRemove, navigate]);
 
   // Calculate cart products with prices and quantities
  
@@ -92,8 +92,8 @@ function CartScreen() {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Subtotal ({subtotalQuantity}) items</h2>
-              shipping: 5000
-              {subtotalPrice}
+             <h6> shipping: 5000 ₩</h6>
+              <h4>{subtotalPrice} ₩</h4>
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
