@@ -62,16 +62,16 @@ def update_item(request, pk):
     item.price = data['price']
     item.category_id = category
     item.description = data['description']
-    item.tag_id = Tag.objects.get(id=data['tag'])
+    item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
     serializer = ItemSerializer(item, many=False)
     
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def upload_image(request, pk):
     item = Item.objects.get(id=pk)
-    item.image_url = request.FILES.get('file')
+    item.image_url = request.FILES.get('image')
     item.save()
     return Response('Image was uploaded')
 

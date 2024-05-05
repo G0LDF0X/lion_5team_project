@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf import settings
+from django.conf.urls.static import static
 # from app.views.users_views import LoginView, LogoutView, UserView, RegisterView
 # from django.contrib.auth import views as auth_views
 
@@ -31,3 +32,5 @@ urlpatterns = [
     path('seller/', include('app.urls.sellers_urls')),
     path('order/', include('app.urls.orders_urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -90,13 +90,15 @@ function ProductUpdateScreen() {
     // e.preventDefault();
     const file = e.target.files[0];
     const formData = new FormData();
+    
     formData.append("image", file);
+    console.log(file);
     formData.append("product_id", productId);
     // console.log(formData);
     setUploading(true);
     try {
       const config = {
-        method: "POST",
+        method: "PUT",
        
         body: formData,
       };
