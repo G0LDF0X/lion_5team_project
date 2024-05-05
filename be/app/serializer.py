@@ -54,6 +54,7 @@ class ItemSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     item_qna_set = ItemQnASerializer(many=True, read_only=True)
     image_url = serializers.ImageField(use_url=True)
+    category = serializers.ReadOnlyField(source='category_id.name')
     class Meta:
         model = Item
         fields = '__all__'

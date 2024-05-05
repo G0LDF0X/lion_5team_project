@@ -106,13 +106,13 @@ function ProductListScreen() {
           {products.map((product) => (
             <tr key={product.id}>
               <td>{product.id}</td>
-              <td>{product.name}</td>
+              <td><Link to = {`/items/detail/${product.id}`}>{product.name}</Link></td>
               <td>{product.price}₩</td>
-              {product.category_id === 1 ? (
-                <td>산책용품</td> ) :
-                product.category_id === 2 ? (
-                  <td>간식</td>
-                ) : null }
+              
+                <td>{product.category}</td> 
+              
+                
+                
               {/* <td>{product.category}</td> */}
               {/* <td>{product.brand}</td> */}
               <td>

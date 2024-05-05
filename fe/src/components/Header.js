@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Nav, Navbar, NavDropdown, Container, Col } from "react-bootstrap";
 import SearchBox from "./SearchBox";
@@ -15,7 +15,7 @@ import Menu from '@mui/material/Menu';
 import Avatar from "@mui/material/Avatar";
 
 function Header() {
-
+  const navigate = useNavigate();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const location = useLocation();
@@ -24,6 +24,7 @@ function Header() {
   const { userInfo } = userLogin;
   const logoutHandler = () => {
     dispatch(logout());
+    navigate("/");
   };
 
   const handleMenu = (event) => {

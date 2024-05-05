@@ -2,7 +2,9 @@ import React, {useEffect} from 'react'
 import UserSettingNavBar from '../components/UserSetitngNavbar'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { logout } from '../actions/userActions'
+import { getUserDetails, logout } from '../actions/userActions'
+import { listBookMark } from '../actions/bookmarkActions'
+import { listProducts } from '../actions/productActions'
 function UserProfileScreen() {
 const dispatch = useDispatch()
 const navigate = useNavigate()
@@ -12,11 +14,16 @@ const {userInfo} = userLogin
 const redirect = location.state ? location.state.from : '/' 
 
 useEffect(() => {
-if (!userInfo) {
+if (!userInfo || !userInfo.username) {
 navigate('/login')
+}else{
+dispatch(listBookMark())
+dispatch(getUserDetails(userInfo.id))
+dispatch(listProducts())
+
 }
 }
-, [userInfo, navigate])
+, [userInfo, navigate, dispatch, redirect, location.state])
   return (
     <div>
       <UserSettingNavBar />
