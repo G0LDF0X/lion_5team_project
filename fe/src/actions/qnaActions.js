@@ -5,6 +5,7 @@ import {
   QNA_DETAILS_REQUEST,
   QNA_DETAILS_SUCCESS,
   QNA_DETAILS_FAIL,
+  QNA_DETAILS_RESET,
   QNA_CREATE_REQUEST,
   QNA_CREATE_SUCCESS,
   QNA_CREATE_FAIL,
@@ -16,6 +17,7 @@ import {
   QNA_DELETE_REQUEST,
   QNA_DELETE_SUCCESS,
   QNA_DELETE_FAIL,
+
 
 } from "../constants/qnaConstants";
 
@@ -61,6 +63,7 @@ export const listQNADetails = (id) => async (dispatch) => {
           : error.message,
     });
   }
+
 };
 
 export const createQNA = (user) => async (dispatch, getState) => {

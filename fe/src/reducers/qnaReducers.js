@@ -6,6 +6,7 @@ import {
     QNA_DETAILS_REQUEST,
     QNA_DETAILS_SUCCESS,
     QNA_DETAILS_FAIL,
+    QNA_DETAILS_RESET,
 
     QNA_CREATE_REQUEST,
     QNA_CREATE_SUCCESS,
@@ -48,6 +49,8 @@ export const qnaDetailsReducer = (state = { qna: {} }, action) => {
             return { loading: false, qna: action.payload.question , answers: action.payload.answers};
         case QNA_DETAILS_FAIL:
             return { loading: false, error: action.payload };
+        case QNA_DETAILS_RESET:
+            return { qna: {} };
         default:
             return state;
     }

@@ -8,6 +8,7 @@ import { listQNA, updateQNA, listQNADetails } from "../actions/qnaActions";
 import { Form } from "react-bootstrap";
 import {updqteQNA} from "../actions/qnaActions";
 import { useParams } from 'react-router-dom'
+import { QNA_DETAILS_RESET, QNA_UPDATE_RESET } from "../constants/qnaConstants";
 
 
 function QAUpdateScreen() {
@@ -82,6 +83,8 @@ function QAUpdateScreen() {
   function submithandler() {
     
     dispatch(updateQNA({ id: qna.id, content: editorData, title: title, product_url: "product_url"}));
+    dispatch({ type: QNA_UPDATE_RESET });
+    dispatch({ type: QNA_DETAILS_RESET });
   }
   useEffect(() => { 
     if (!qna || qna.id === undefined) {

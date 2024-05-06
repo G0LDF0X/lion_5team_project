@@ -28,6 +28,7 @@ function QAScreen() {
     if(successCreate) {
       dispatch({ type: QNA_CREATE_RESET })
       navigate(`/qna/update/{createdQNA.id}`)
+      
     }
     // console.log(userInfo)
   }
