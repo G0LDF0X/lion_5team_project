@@ -31,7 +31,7 @@ class Seller(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user_id.name
+        return self.user_id.username
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
