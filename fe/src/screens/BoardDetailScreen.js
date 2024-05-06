@@ -66,26 +66,25 @@ function BoardDetailScreen() {
          : error ? 
           <Message variant={"danger"}>{error}</Message>
          : (
-         <div><Row>
-          <Link to = {board.product_url}>
-          <Col md={12}>
-            <ListGroup variant="flush">
+          <div>
+          <Row>
+            <Col md={12}>
               <Card className='my-3 p-3 rounded'>
-
-              <ListGroup.Item>
-                <h3>{board.title}</h3>
-              </ListGroup.Item>
-              <Card className="my-3 p-3">
-                <h3>{board.content}</h3>
-                </Card>
+                  <Card.Header as='h5'>{board.title}</Card.Header>
+                <Link to={board.product_url}>
+                </Link>
+                <Card.Body>
+                <Image src={board.image_url} alt={board.title} fluid />
+                  <Card.Text>
+                    {board.content}
+                  </Card.Text>
+                  <Button variant="link" href={board.product_url} target="_blank">
+                  
+                </Button>
+                </Card.Body>
               </Card>
-             
-            </ListGroup>
-          </Col>
-          </Link>
-        </Row>
-        
-        
+            </Col>
+          </Row>
         </div>
   )}
         
