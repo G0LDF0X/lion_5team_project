@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
+import { ListGroup } from 'react-bootstrap';
 
 const Bookmark = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -21,8 +22,18 @@ const Bookmark = () => {
       return response.json();
     })
     .then(data => {
-        // console.log("DATA:", data);
-        setBookmarks(data);
+      const promises = data.map(bookmark => 
+        fetch(`/items/detail/${bookmark.item_id}`).then(response => response.json())
+      );
+  
+      Promise.all(promises).then(itemData => {
+        const bookmarksWithItemData = data.map((bookmark, index) => ({
+          ...bookmark,
+          item: itemData[index]
+        }));
+        console.log("RESULT:", bookmarksWithItemData);
+        setBookmarks(bookmarksWithItemData);
+      });
     })
     .catch(error => console.error('Error:', error));
   }, []);
@@ -36,13 +47,12 @@ const Bookmark = () => {
         <Card style={{ width: '18rem' , margin: '10px' }} key={index}>
         <Card.Body>
           <Card.Title>{bookmark.name}</Card.Title>
-          <Card.Text>
-            {bookmark.price}원
-          </Card.Text>
+          <Card.Subtitle className='mb-2 text-muted'>{bookmark.price}원</Card.Subtitle>
+          <Card.Text>{bookmark.item.category}</Card.Text>
           <Link to={`/items/detail/${bookmark.item_id}`}>
           <Button variant="primary">바로가기</Button>
           </Link>
-        </Card.Body>
+        </Card.Body>   
       </Card>
       ))}
       </div>
