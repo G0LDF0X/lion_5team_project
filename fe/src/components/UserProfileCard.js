@@ -1,6 +1,8 @@
 import React, {useEffect, useState } from 'react'
 import { Card, Row, Col, Image } from 'react-bootstrap'
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -11,10 +13,24 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 import Loading from './Loading';
+
+import { getUserDetails } from '../actions/userActions';
 function UserProfileCard() {
+    const dispatch = useDispatch();
+    const Navigate = useNavigate();
     const [value, setValue] = useState(0);
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
+    // const userDetails = useSelector((state) => state.userDetails);
+    // const { user } = userDetails;
+    // useEffect(() => {
+    //   if (!userInfo) {
+    //     Navigate("/login");
+    //   }
+    //   if (!user) {
+    //     dispatch(getUserDetails());
+    //   }
+    // }, [userInfo]);
     return (
       <Card className="ms-auto">
         <Row className="justify-content-center">
@@ -23,7 +39,7 @@ function UserProfileCard() {
             {userInfo&& userInfo.nickname !== "" ? 
             <h4 className='text-center'>{userInfo.nickname}</h4>
           : <h4 className='text-center'>{userInfo.username}</h4>}
-            <h6>팔로워  0  |  팔로잉  0</h6>
+            <h6>팔로워  {userInfo.follower  } |  팔로잉  {userInfo.following}</h6>
           </Col>
         </Row>
         <Card.Body className='text-center'>

@@ -133,13 +133,13 @@ export const register = (name, email, password, nickname, adress, phone) => asyn
 }
 
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_DETAILS_REQUEST });
         const {
           userLogin: { userInfo },
       } = getState();
-        const response = await fetch(`/users/detail/${id}/`, {
+        const response = await fetch(`/users/profile/`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${userInfo.access}`,
