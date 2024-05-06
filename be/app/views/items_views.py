@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
-
+import json
 
 
 @api_view(['GET'])
@@ -33,8 +33,8 @@ def item_details(request, pk):
 def create_item(request):
     user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
-    tag_id= Tag.objects.get(id=request.data["tag"])
-    category = Category.objects.get(id=request.data["category"])
+    tag_id= Tag.objects.get(id=1)
+    category = Category.objects.get(id=1)
     item = Item.objects.create(
         seller_id = seller,
         category_id = category, 
@@ -62,10 +62,18 @@ def update_item(request, pk):
     item.price = data['price']
     item.category_id = category
     item.description = data['description']
+    item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
     serializer = ItemSerializer(item, many=False)
     
     return Response(serializer.data)
+
+@api_view(['PUT'])
+def upload_image(request, pk):
+    item = Item.objects.get(id=pk)
+    item.image_url = request.FILES.get('image')
+    item.save()
+    return Response('Image was uploaded')
 
 @api_view(['DELETE'])
 def delete_item(request, pk):
@@ -82,50 +90,56 @@ def get_reviews(request):
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_review(request, pk):
+    reviews = Review.objects.filter(id=pk)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 def create_review(request, item_id):
     user = User.objects.get(username=request.user)
-
-    try:
-        item = Item.objects.get(pk=item_id)
-    except Item.DoesNotExist:
-        return Response({"error": "Item not found"})
-    
-    data = request.data.copy()
-    data['item_id'] = item.id
-    data['user_id'] = user.id
-
-    serializer = ReviewSerializer(data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    item = Item.objects.get(id=item_id)
+    review = Review.objects.create( 
+        user_id=user,
+        item_id=item,
+        rate=5,
+        content="",
+        image_url="",
+    )
+    serializer = ReviewSerializer(review, many=False)
+    return Response(serializer.data)
 
 @api_view(['PUT'])
 def update_review(request, pk):
-    try:
-        review = Review.objects.get(pk=pk)
-    except Review.DoesNotExist:
-        return Response({"error": "Review not found"})
+    # try:
+    review = Review.objects.get(id=pk)
+    # except Review.DoesNotExist:
+        # return Response({"error": "Review not found"})
     
-    item_id = review.item_id.id
+    # item_id = review.item_id.id
     user = User.objects.get(username=request.user)
-    user_auth = auth_user.objects.get(username=request.user)
+    # user_auth = auth_user.objects.get(username=request.user)
 
     # 리뷰 작성자와 수정자의 id가 다르거나 관리자가 아닐 경우 수정 불가능
     if user.id != review.user_id.id:
-        if user_auth.is_superuser == False:
-            return Response({"error": "You are not allowed to edit this review"})
-    data = request.data.copy()
-    data['item_id'] = item_id
-    data['user_id'] = user.id
-    
-    serializer = ReviewSerializer(review, data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
+        return Response({"error": "You are not allowed to edit this review"})
+    data = request.data
+    review.title = data['title']
+    review.content = data['content']
+    review.rate = data['rate']
+
+    review.save()
+    serializer = ReviewSerializer(review, many=False)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def uploadImage(request, pk):
+    review = Review.objects.get(id=pk)
+    review.image_url = request.FILES.get('file')
+    review.save()
+    return Response('Image was uploaded')
 
 @api_view(['DELETE'])
 def delete_review(request, pk):

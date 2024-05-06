@@ -21,12 +21,13 @@ import {
   cartListReducer,
   cartAddReducer,
   cartRemoveReducer,
+  cartQtyUpdateReducer,
 } from "./reducers/cartReducers";
 import {
   userLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
-  //   userUpdateProfileReducer,
+  userUpdateProfileReducer,
   //   userListReducer,
   //   userDeleteReducer,
   //   userUpdateReducer,
@@ -36,7 +37,8 @@ import {
   orderDetailsReducer,
   //   orderPayReducer,
   //   orderListMyReducer,
-  //   orderListReducer,
+    // orderListReducer,
+    myOrderListReducer,
   //   orderDeliverReducer,
 } from "./reducers/orderReducers";
 
@@ -74,11 +76,12 @@ const reducer = combineReducers({
   cartList: cartListReducer,
   cartAdd: cartAddReducer,
   cartRemove: cartRemoveReducer,
+  cartQtyUpdate: cartQtyUpdateReducer,
 
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
-  //   userUpdateProfile: userUpdateProfileReducer,
+  userUpdateProfile: userUpdateProfileReducer,
   //   userList: userListReducer,
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
@@ -87,7 +90,7 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
   //   orderListMY: orderListMyReducer,
-  //   orderList: orderListReducer,
+    myOrderList: myOrderListReducer,
   //   orderDeliver: orderDeliverReducer,
 
   reviewList: reviewListReducer,

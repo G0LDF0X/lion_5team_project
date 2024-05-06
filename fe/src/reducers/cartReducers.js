@@ -8,6 +8,9 @@ import {
   CART_REMOVE_ITEM_REQUEST,
   CART_REMOVE_ITEM_SUCCESS,
   CART_REMOVE_ITEM_FAIL,
+  CART_QTY_UPDATE_REQUEST,
+  CART_QTY_UPDATE_FAIL,
+  CART_QTY_UPDATE_SUCCESS,
 
 } from "../constants/cartConstants";
 
@@ -29,9 +32,9 @@ export const cartAddReducer = (state = { cartItems: [] }, action) => {
     case CART_ADD_ITEM_REQUEST:
       return { loading: true, cartItems: [] };
     case CART_ADD_ITEM_SUCCESS:
-      return { loading: false, cartItems: action.payload };
+      return { loading: false, cartItems: action.payload, success: true};
     case CART_ADD_ITEM_FAIL:
-      return { loading: false, error: action.payload };
+      return { loading: false, error: action.payload, success: false, fail: true};
     default:
       return state;
   }
@@ -44,9 +47,22 @@ export const cartRemoveReducer = (state = { cartItems: [] }, action) => {
     case CART_REMOVE_ITEM_SUCCESS:
       return {
         loading: false,
-        cartItems: state.cartItems.filter((x) => x.product !== action.payload),
+        cartItems: state.cartItems.filter((x) => x.id !== action.payload),
       };
     case CART_REMOVE_ITEM_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
+
+export const cartQtyUpdateReducer = (state = { cartItems: [] }, action) => {
+  switch (action.type) {
+    case CART_QTY_UPDATE_REQUEST:
+      return { loading: true, cartItems: [] };
+    case CART_QTY_UPDATE_SUCCESS:
+      return { loading: false, cartItems: action.payload };
+    case CART_QTY_UPDATE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

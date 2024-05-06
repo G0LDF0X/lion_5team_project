@@ -22,7 +22,7 @@ def get_Seller_Apply(request):
     serializer = SellerSerializer(data=request.data)
 
     if serializer.is_valid():
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
         serializer.save(user_id=user)
 
         user = request.user
@@ -36,7 +36,7 @@ def get_Seller_Apply(request):
 
 @api_view(['GET'])
 def my_shopping(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     orders = Order.objects.filter(user_id=user)
     orders_ids = orders.values_list('id', flat=True)
     order_items = OrderItem.objects.filter(order_id__in=orders_ids)
@@ -45,10 +45,10 @@ def my_shopping(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_mypage_profile(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     user_data = User_Serializer(user).data
     try:
         seller = Seller.objects.get(user_id=user)
@@ -88,18 +88,12 @@ def update_User_Profile(request):
         user = User.objects.get(username=request.user)
     except User.DoesNotExist:
         return Response({'detail': 'User not found'}, status=404)
-
-    update_fields = []
-    for field in ['username', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
-        if field in data and hasattr(user, field):
-            setattr(user, field, data[field])
-            update_fields.append(field)
-
-    if update_fields:
-        user.save(update_fields=update_fields)
-
+    user.nickname = data['nickname']
+    user.email = data['email']
+    user.save()
     serializer = User_Serializer(user, many=False)
     return Response(serializer.data)
+
 
 
 @api_view(['GET'])
@@ -152,6 +146,13 @@ def delete_bookmark(request, pk):
     for bookmark in bookmarks:  
         bookmark.delete()
     return Response("Bookmark deleted", status=201)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserById(request, pk):
+    user = User.objects.get(id=pk)
+    serializer = User_Serializer(user, many=False)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])

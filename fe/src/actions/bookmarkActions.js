@@ -10,12 +10,24 @@ import {
   BookMark_REMOVE_ITEM_FAIL,
 } from "../constants/bookmarkConstants";
 
-export const listBookMark = () => async (dispatch) => {
+export const listBookMark = () => async (dispatch, getState) => {
   dispatch({
     type: BookMark_ITEM_LIST_REQUEST,
   });
+
   try {
-    const { data } = await fetch("/users/bookmark");
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    
+    const res = await fetch("/users/bookmark", 
+    {
+      headers: {
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    }
+    );
+    const data = await res.json();
     dispatch({
       type: BookMark_ITEM_LIST_SUCCESS,
       payload: data,

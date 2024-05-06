@@ -8,6 +8,7 @@ import { listBoards } from '../actions/boardActions';
 import { listQNA } from '../actions/qnaActions';
 import {Carousel} from 'react-bootstrap';
 
+
 import Product from '../components/Product';
 import BoardForm from '../components/BoardForm';
 import QA from '../components/QA';
@@ -43,6 +44,23 @@ function HomeScreen({ location }) {
     dispatch(listBoards());
     dispatch(listQNA());
   }, [dispatch, location]);
+  function createCarouselItem(products) {
+    return (
+      <Carousel.Item>
+        <Grid container spacing={3}>
+          {products.map((product) => (
+            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+              <Card variant="outlined" style={{width:"250px"}}>
+                <Box height={400} style={{width:"250px"}}>
+                  <Product product={product} id={product.id} />
+                </Box>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Carousel.Item>
+    );
+  }
 
   return (
     <Container className={classes.root}>
@@ -53,18 +71,11 @@ function HomeScreen({ location }) {
       ) : productError ? (
         <Message variant={"danger"}>{productError}</Message>
       ) : (
-        <Grid container spacing={3}>
-          {products.slice(0, 4).map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <Card variant="outlined">
-              <Box height={300}>
-
-              <Product product={product} />
-              </Box>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <Carousel>
+        {createCarouselItem(products.slice(0, 4))}
+        {createCarouselItem(products.slice(5, 9))}
+        {createCarouselItem(products.slice(10, 15))}
+        </Carousel>
       )}
       <Typography variant="h5" className={classes.title}>Boards</Typography>
       {boardLoading ? (
@@ -72,10 +83,8 @@ function HomeScreen({ location }) {
       ) : boardError ? (
         <Message variant={"danger"}>{boardError}</Message>
       ) : (
-        // <Grid container spacing={3}>
         <Carousel>
           {boards.map((board) => (
-            // <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
             <Carousel.Item key={board.id}>
               <Box display="flex" justifyContent="center">
               <Card variant="outlined">
@@ -86,10 +95,8 @@ function HomeScreen({ location }) {
               </Card>
               </Box>
             </Carousel.Item>
-            // </Grid>
           ))}
         </Carousel>
-        // </Grid>
       )}
       <Typography variant="h5" className={classes.title}>Q&A</Typography>
       {qnaLoading ? (

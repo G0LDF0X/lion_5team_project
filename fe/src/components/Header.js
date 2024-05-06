@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Nav, Navbar, NavDropdown, Container, Col } from "react-bootstrap";
 import SearchBox from "./SearchBox";
@@ -15,7 +15,7 @@ import Menu from '@mui/material/Menu';
 import Avatar from "@mui/material/Avatar";
 
 function Header() {
-
+  const navigate = useNavigate();
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const location = useLocation();
@@ -24,6 +24,10 @@ function Header() {
   const { userInfo } = userLogin;
   const logoutHandler = () => {
     dispatch(logout());
+    navigate("/");
+    dispatch({ type: "BOOKMARK_LIST_RESET" });
+    dispatch({ type: "CART_LIST_RESET" });
+
   };
 
   const handleMenu = (event) => {
@@ -37,15 +41,35 @@ function Header() {
   return (
     <Navbar>
       <Container fluid>
+        <div style={{ display: 'flex', alignItems: 'center'}}>
         <Navbar.Brand href="/">PetPals</Navbar.Brand>
         <Nav>
           <Nav.Link href="/">
-            <i class="fa-solid fa-paw"></i>Home
+            <div style={{ display: 'flex', alignItems:'center' }}>
+            <i class="fa-solid fa-paw" style={{ marginRight: '3px' }}></i>
+            <span>Home</span>
+            </div>
           </Nav.Link>
           <Nav.Link href="/items">
-            <i class="fa-solid fa-dog"></i>Products
+          <div style={{ display: 'flex', alignItems:'center' }}>
+            <i class="fa-solid fa-dog" style={{ marginRight: '3px' }}></i>
+            <span>Products</span>
+            </div>
+          </Nav.Link>
+          <Nav.Link href="/board">
+          <div style={{ display: 'flex', alignItems:'center' }}>
+          <i class="fa-regular fa-clipboard" style={{ marginRight: '3px' }}></i>
+            <span>Board</span>
+            </div>
+          </Nav.Link>
+          <Nav.Link href="/qna">
+          <div style={{ display: 'flex', alignItems:'center' }}>
+          <i class="fa-solid fa-comments" style={{ marginRight: '3px' }}></i>
+            <span>Q&A</span>
+            </div>
           </Nav.Link>
         </Nav>
+        </div>
 
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <SearchBox />

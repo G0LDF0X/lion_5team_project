@@ -47,6 +47,23 @@ def cart_detail(request):
 
     return Response(serializer.data)
 
+@api_view(['DELETE'])
+def remove_from_cart(request, pk):
+    user = User.objects.get(username=request.user)
+    item = Item.objects.get(id=pk)  
+    cart_item = Cart.objects.get(user_id=user, item_id=item)
+    cart_item.delete()
+    return Response("Item removed from cart")
+
+@api_view(['PUT'])
+def set_cart_qty(request, pk):
+    user = User.objects.get(username=request.user)
+    item = Item.objects.get(id=pk)
+    cart_item = Cart.objects.get(user_id=user, item_id=item)
+    cart_item.qty = request.data["qty"]
+    cart_item.save()
+    return Response("Quantity updated")
+
 
 @api_view(['POST'])
 def create_order(request):
@@ -87,6 +104,13 @@ def create_order(request):
         return Response(order_serializer.data, status=201)
     else:
         return Response(order_serializer.errors, status=400)
+    
+@api_view(['GET'])
+def my_order_list(request):
+    user = User.objects.get(username=request.user)
+    orders = Order.objects.filter(user_id=user)
+    serializer = OrderSerializer(orders, many=True)
+    return Response(serializer.data)
     
 
 @api_view(['POST'])

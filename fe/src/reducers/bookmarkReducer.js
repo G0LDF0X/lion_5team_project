@@ -17,7 +17,7 @@ export const bookMarkListReducer = (state = { bookMarkItems: [] }, action) => {
         case BookMark_ITEM_LIST_REQUEST:
             return { loading: true, bookMarkItems: [] };
         case BookMark_ITEM_LIST_SUCCESS:
-            return { loading: false, bookMarkItems: action.payload };
+            return { loading: false, bookMarkItems: action.payload, success: true};
         case BookMark_ITEM_LIST_FAIL:
             return { loading: false, error: action.payload };
         default:

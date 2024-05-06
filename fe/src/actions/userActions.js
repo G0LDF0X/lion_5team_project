@@ -10,6 +10,11 @@ import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
+
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
 } from "../constants/userConstants";
 
 export const login = (id, password) => async (dispatch) => {
@@ -31,20 +36,23 @@ export const login = (id, password) => async (dispatch) => {
     });
 
     const data = await response.json();
-
+    const userData = {
+      ...data,
+      password,
+    };
     if (response.ok) {
       dispatch({
         type: USER_LOGIN_SUCCESS,
-        payload: data,
+        payload: userData,
       });
     } else {
       dispatch({
         type: USER_LOGIN_FAIL,
-        payload: data && data.message ? data.message : "Login failed",
+        payload: userData && userData.message ? userData.message : "Login failed",
       });
     }
 
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("userInfo", JSON.stringify(userData));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -131,10 +139,10 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         const {
           userLogin: { userInfo },
       } = getState();
-        const response = await fetch(`/user/${id}/`, {
+        const response = await fetch(`/users/detail/${id}/`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${getState().userLogin.userInfo.access}`,
+                Authorization: `Bearer ${userInfo.acces}`,
             },
         });
 
@@ -147,6 +155,56 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: USER_DETAILS_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: USER_UPDATE_PROFILE_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const response = await fetch(`/users/update_profile/`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userInfo.access}`,
+            },
+            body: JSON.stringify(user),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            dispatch({
+                type: USER_UPDATE_PROFILE_SUCCESS,
+                payload: data,
+            });
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: data,
+            });
+
+            localStorage.setItem("userInfo", JSON.stringify(data));
+        } else {
+            dispatch({
+                type: USER_UPDATE_PROFILE_FAIL,
+                payload:
+                    data && data.message ? data.message : "Update failed",
+            });
+        }
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_PROFILE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

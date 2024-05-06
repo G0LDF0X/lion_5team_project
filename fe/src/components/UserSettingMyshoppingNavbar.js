@@ -5,6 +5,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UserSettingSetting from './UserSettingSetting';
+import UserProfileShoppingOrderlist from './UserProfileShoppingOrderlist';
+import UserProfileBookmark from './UserProfileBookmark';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,10 +62,10 @@ export default function UserSettingMyshoppingNavbar() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
-        Item One
+        <UserProfileShoppingOrderlist />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <UserProfileBookmark />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three

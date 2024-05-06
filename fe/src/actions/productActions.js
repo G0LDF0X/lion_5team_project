@@ -71,7 +71,7 @@ export const createProduct = () => async (dispatch, getState) => {
     const res = await fetch(`/items/create/`, {
       method: "POST",
       headers: {
-        // Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.access}`,
       },
     });
     const data = await res.json();
