@@ -142,7 +142,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         const response = await fetch(`/users/detail/${id}/`, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${userInfo.acces}`,
+                Authorization: `Bearer ${userInfo.access}`,
             },
         });
 

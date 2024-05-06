@@ -209,9 +209,10 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserprofileSerializer(serializers.ModelSerializer):
+    follower = serializers.ReadOnlyField(source='follower.count')
     class Meta:
         model = User
-        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', ]
+        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', 'follower' ]
 
 class BookmarkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
