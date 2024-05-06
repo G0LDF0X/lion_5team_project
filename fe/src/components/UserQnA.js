@@ -97,8 +97,9 @@ const UserQnA = () => {
                     <div className="fw-bold">{userAnswer.title}</div>
                   </Link>
                   {userAnswer.content.length > 100 
-                ? `${userAnswer.content.substring(0, 100)}...` 
-                : userAnswer.content}<br/>
+                  
+                ? <div dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <div dangerouslySetInnerHTML={{ __html: userAnswer.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userAnswer.created_at.split('T')[0]}</small>
                 </div>
               </ListGroup.Item>
