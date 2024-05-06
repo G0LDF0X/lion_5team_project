@@ -18,6 +18,9 @@ function CartScreen() {
   useEffect(() => {
    if(!cartItems || cartItems.length === 0){
    dispatch(listCartItems());}
+   if (successCartRemove) {
+    dispatch(listCartItems());    
+  }
 
   }, [dispatch, successCartRemove, navigate]);
 
@@ -50,7 +53,7 @@ function CartScreen() {
               <ListGroup.Item key={item.id}>
                 <Row>
                   <Col md={2}>
-                    <Image src={item.image_url || '/placeholder.jpg'}  fluid rounded />
+                    <Image src={item.image || '/placeholder.jpg'}  fluid rounded />
                   </Col>
                   <Col md={3}>
                     <Link to={`/items/detail/${item.id}`}>{item.name}</Link>
