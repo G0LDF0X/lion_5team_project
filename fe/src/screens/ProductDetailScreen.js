@@ -21,12 +21,9 @@ import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
-<<<<<<< HEAD
 import QA from "../components/QA";
-
-=======
 import { makeStyles } from '@material-ui/core/styles';
->>>>>>> main
+
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
