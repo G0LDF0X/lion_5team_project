@@ -32,10 +32,13 @@ function CartScreen() {
     navigate("/shipping");
   };
 
-  if (cartItems)
-    {const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
-  const subtotalPrice = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);}
-
+  let subtotalQuantity = 0;
+  let subtotalPrice = 0;
+  
+  if (Array.isArray(cartItems)) {
+    subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
+    subtotalPrice = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);
+  }
   return (
     <Row>
       <Col md={8}>

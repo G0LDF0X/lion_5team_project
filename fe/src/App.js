@@ -22,6 +22,7 @@ import SellerQAScreen from './screens/SellerQAScreen';
 import SellerSettingScreen from './screens/SellerSettingScreen';
 import BoardScreen from './screens/BoardScreen';
 import BoardDetailScreen from './screens/BoardDetailScreen';
+import BoardCreateScreen from './screens/BoardCreateScreen';
 import QAUpdateScreen from './screens/QAUpdateScreen';
 import ProductUpdateScreen from './screens/ProductUpdateScreen';
 import BoardUpdateScreen from './screens/BoardUpdateScreen';
@@ -75,6 +76,7 @@ function App() {
 
             <Route path='/board' element={<BoardScreen/>} />
             <Route path='/board/detail/:id' element={<BoardDetailScreen/>} />
+            <Route path='/board/create/' element={<BoardCreateScreen/>} />
             {/* <Route path='/board/post' element={<BoardPostScreen/>} /> */}
             <Route path='/board/update/:id' element={<BoardUpdateScreen/>} />
 
