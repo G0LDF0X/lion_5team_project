@@ -301,18 +301,23 @@ function Productcreen() {
 
     </Box>
     
-    {product.item_qna ? (
-      product.item_qna
-      .filter(item_qna => item_qna.product_id_id=== product.id)
-      .map((item_qna) => (
-        <QA key={item_qna.id}>
+    {product.item_qna_set ? (
+
+      product.item_qna_set.map((item_qna) => (
+        // <QA qna = {item_qna}>
+
           <CardContent>
-            <Typography variant="h5">{item_qna.title}</Typography>
+            {console.log(item_qna)}
+            <Typography variant="h5">{item_qna.item_answer_set.title}</Typography>
             {/* <Typography variant="subtitle1">Written by: {qna.writer}</Typography> */}
             
             <Typography variant="body1">{item_qna.content}</Typography>
-            {item_qna.image && <img src={item_qna.image} alt={item_qna.title} />}
-            <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            {item_qna.image && <img src={item_qna.image_url} alt={item_qna.content} />}
+            {item_qna.item_answer_set? (<div>
+              {item_qna.item_answer_set.map((answer) => (
+                <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+              ))}</div>):(null)
+              } 
             {/* <Box mt={2}> */}
 
           {/* Qna 편집, 삭제 */}
@@ -325,7 +330,7 @@ function Productcreen() {
 
         {/* </Box> */}
           </CardContent>
-        </QA>
+        // </QA>
       ))
     ) : (
       <Typography variant="body1">Q&A가 없습니다.</Typography>
