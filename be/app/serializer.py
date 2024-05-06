@@ -83,21 +83,10 @@ class UserAnswerSerializer(serializers.ModelSerializer):
         return obj.user.username
     
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.SerializerMethodField(read_only=True)
-    id = serializers.SerializerMethodField(read_only=True)
-    isadmin = serializers.SerializerMethodField(read_only=True)
-
     class Meta:
-        model = auth_user
+        model = User
         fields = '__all__'
-    
-    def get_username(self, obj):
-        return obj.username
-    def get_id(self, obj):
-        return obj.id
-    def get_isadmin(self, obj):
-        return obj.is_staff
-    
+
 class UserSerializerWithToken(UserSerializer):
     token = serializers.SerializerMethodField(read_only=True)
 
@@ -110,10 +99,6 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
 
-class User_Serializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
         
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     def validate(self, attrs):
@@ -224,7 +209,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
     price = serializers.ReadOnlyField(source='item_id.price')
-    image_url = serializers.ReadOnlyField(source='item_id.image_url')
+    # image_url = serializers.ReadOnlyField(source='item_id.image_url')
     
     class Meta:
         model = Cart

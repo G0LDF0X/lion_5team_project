@@ -21,8 +21,12 @@ import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
+<<<<<<< HEAD
 import QA from "../components/QA";
 
+=======
+import { makeStyles } from '@material-ui/core/styles';
+>>>>>>> main
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -75,7 +79,7 @@ function Productcreen() {
       dispatch(listBookMark());
       setMarked(false);
     }
-    if( success || bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
+    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
       setMarked(true);
     }
     else{
@@ -120,10 +124,17 @@ function Productcreen() {
       alert("You can only delete your own reviews.");
   }
   }
+  const useStyles = makeStyles({
+    root: {
+      fontSize: '5rem',  // increase font size
+    },
+  });
   return (
     <div>
       <Snackbar
   anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  autoHideDuration={3000}
+  className={useStyles.root}
   open={open}
   onClose={handleClose}
   message="장바구니에 추가되었습니다."
@@ -140,7 +151,7 @@ function Productcreen() {
         <div>
           <Row>
             <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid />
+              <Image src={product.image_url} alt={product.name} fluid />
             </Col>
             <Col md={3}>
               <ListGroup variant="flush">
