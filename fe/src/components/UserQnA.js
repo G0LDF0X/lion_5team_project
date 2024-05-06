@@ -72,8 +72,9 @@ const UserQnA = () => {
                     <div className="fw-bold">{userQnA.title}</div>
                   </Link>
                   {userQnA.content.length > 100 
-                ? `${userQnA.content.substring(0, 100)}...` 
-                : userQnA.content}<br/>
+                  
+                ? <div dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <div dangerouslySetInnerHTML={{ __html: userQnA.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userQnA.created_at.split('T')[0]}</small>
                 </div>
                 <Badge bg="primary" pill>
