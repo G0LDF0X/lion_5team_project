@@ -218,6 +218,7 @@ class BookmarkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
     price = serializers.ReadOnlyField(source='item_id.price')
     description = serializers.ReadOnlyField(source='item_id.description')   
+    category = serializers.ReadOnlyField(source='item_id.category_id.name')
 
     class Meta:
         model = Bookmark
