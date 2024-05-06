@@ -21,6 +21,12 @@ import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
+<<<<<<< HEAD
+import QA from "../components/QA";
+
+=======
+import { makeStyles } from '@material-ui/core/styles';
+>>>>>>> main
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -73,7 +79,7 @@ function Productcreen() {
       dispatch(listBookMark());
       setMarked(false);
     }
-    if( success || bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
+    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
       setMarked(true);
     }
     else{
@@ -118,10 +124,17 @@ function Productcreen() {
       alert("You can only delete your own reviews.");
   }
   }
+  const useStyles = makeStyles({
+    root: {
+      fontSize: '5rem',  // increase font size
+    },
+  });
   return (
     <div>
       <Snackbar
   anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  autoHideDuration={3000}
+  className={useStyles.root}
   open={open}
   onClose={handleClose}
   message="장바구니에 추가되었습니다."
@@ -235,6 +248,7 @@ function Productcreen() {
                     )}
                   </ListGroup.Item>
                 </ListGroup>
+  
               </Card>
             </Col>
           </Row>
@@ -277,7 +291,51 @@ function Productcreen() {
 </Grid>
         </div>
       )}
-    </div>
+
+      <Grid container spacing={3}>
+    <Grid item xs={9}>
+    <Typography variant="h4">Q&A</Typography>
+    <Box display="flex" justifyContent="flex-end">
+
+      {/* QnA 작성 */}
+      {/* <Button variant="contained" color="primary" onClick={createQNAHandler}>
+        Create a Q&A
+      </Button> */}
+
+    </Box>
+    
+    {product.item_qna ? (
+      product.item_qna
+      .filter(item_qna => item_qna.product_id_id=== product.id)
+      .map((item_qna) => (
+        <QA key={item_qna.id}>
+          <CardContent>
+            <Typography variant="h5">{item_qna.title}</Typography>
+            {/* <Typography variant="subtitle1">Written by: {qna.writer}</Typography> */}
+            
+            <Typography variant="body1">{item_qna.content}</Typography>
+            {item_qna.image && <img src={item_qna.image} alt={item_qna.title} />}
+            <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            {/* <Box mt={2}> */}
+
+          {/* Qna 편집, 삭제 */}
+          {/* <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
+            Edit
+          </Button>
+          <Button variant="contained" color="secondary" onClick={() => deleteReviewHandler(review)}>
+            Delete
+          </Button> */}
+
+        {/* </Box> */}
+          </CardContent>
+        </QA>
+      ))
+    ) : (
+      <Typography variant="body1">Q&A가 없습니다.</Typography>
+    )}
+  </Grid>
+</Grid>
+      </div>
   );
 }
 
