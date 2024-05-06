@@ -35,9 +35,8 @@ function CartScreen() {
     navigate("/shipping");
   };
 
-  if (cartItems)
-    {const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
-  const subtotalPrice = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);}
+    const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
+  const subtotalPrice = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2);
 
   return (
     <Row>
@@ -94,11 +93,11 @@ function CartScreen() {
       <Col md={4}>
         <Card>
           <ListGroup variant="flush">
-                    {/* {cartItems? (<ListGroup.Item>
+                    {cartItems? (<ListGroup.Item>
       <h2>Subtotal ({subtotalQuantity}) items</h2>
              <h6> shipping: 5000 ₩</h6>
               <h4>{subtotalPrice} ₩</h4>
-            </ListGroup.Item>) :null} */}
+            </ListGroup.Item>) :null}
             <ListGroup.Item>
               <Button
                 type="button"
