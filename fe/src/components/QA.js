@@ -1,24 +1,24 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-function QA({ qna }) {
-    // if (!qa) return <div>QA not found</div>;
+function QA( qna ) {
+    // if (!qna) return <div>QA not found</div>;
     return (
             <div>
          {/* <Card className="my-3 p-3 rounded"> */}
-            <Link to={`/items/detail/${qna.id}`}> 
+            {<Link to={`/items/detail/${qna.id}`}> 
                 {/* <Card.Img src={qa.image_url} variant="top" /> */}
-            </Link>
+            </Link> }
 
             <Card.Body>
                 <Link to={`/qna/detail/${qna.id}`}> 
                     <Card.Title as="div">
-                        <strong>{qna.title}</strong>
+                        {/* <strong>{qna.item_answer_set.title}</strong> */}
                         
                     </Card.Title>
                     <Card.Text as="div">
                         <div className="my-3">
-                            {qna.content}
+                            {/* {qna.item_answer_set.content} */}
                         </div>
                     </Card.Text>
                 </Link>

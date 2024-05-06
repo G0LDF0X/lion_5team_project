@@ -42,7 +42,7 @@ function QADetailSceen() {
                 <h3>{qna.title}</h3>
               </ListGroup.Item>
               <Card className="my-3 p-3">
-                <h3>{qna.content}</h3>
+              <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                 </Card>
               </Card>
               <Card className='my-3 p-3 rounded'>

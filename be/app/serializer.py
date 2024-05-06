@@ -124,7 +124,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
 
         # Get the associated User instance
         user = User.objects.get(user_id=auth_user)
-
+        follower = Follow.objects.filter(follower_id_id=user.id)
+        following = Follow.objects.filter(followed_id_id=user.id)
         # Add user information to the response
         data.update({
             'username': user.username,
@@ -143,6 +144,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
             'is_superuser': user.is_superuser,
             'last_login': user.last_login,
             'id': user.id,
+            'follower': follower.count(),
+            'following': following.count(),
         })
 
         return data
@@ -216,6 +219,8 @@ class UserprofileSerializer(serializers.ModelSerializer):
 class BookmarkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
     price = serializers.ReadOnlyField(source='item_id.price')
+    category = serializers.ReadOnlyField(source='item_id.category_id.name')
+    description = serializers.ReadOnlyField(source='item_id.description')
 
     class Meta:
         model = Bookmark

@@ -4,6 +4,8 @@ import Rating from "./Rating";
 import { Link } from "react-router-dom";
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+
+
 function Product({ product, id }) {
     return (
         <div style={{height: "500px"}}>
