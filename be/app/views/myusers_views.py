@@ -88,10 +88,17 @@ def update_User_Profile(request):
         user = User.objects.get(username=request.user)
     except User.DoesNotExist:
         return Response({'detail': 'User not found'}, status=404)
-    user.nickname = data['nickname']
-    user.email = data['email']
-    user.save()
-    serializer = User_Serializer(user, many=False)
+
+    update_fields = []
+    for field in ['name', 'phone', 'address', 'nickname', 'email', 'image_url', 'description']:
+        if field in data and hasattr(user, field):
+            setattr(user, field, data[field])
+            update_fields.append(field)
+
+    if update_fields:
+        user.save(update_fields=update_fields)
+
+    serializer = UserSerializer(user, many=False)
     return Response(serializer.data)
 
 
