@@ -4,16 +4,18 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { listQNA, updateQNA } from "../actions/qnaActions";
+import { listQNA, updateQNA, listQNADetails } from "../actions/qnaActions";
 import { Form } from "react-bootstrap";
 import {updqteQNA} from "../actions/qnaActions";
+import { useParams } from 'react-router-dom'
+
 
 function QAUpdateScreen() {
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
   const [title, setTitle] = useState("");
   const [uploading, setUploading] = useState(false);  
-
+  const QnaId = useParams().id;
   const dispatch = useDispatch();
     const qnaDetails = useSelector((state) => state.qnaDetails);
     const { qna } = qnaDetails;
@@ -34,8 +36,8 @@ function QAUpdateScreen() {
           // data.append("name", file.name);
           data.append("file", file);
           setUploading(true);
-          fetch(`/qna/uploadImage/${qna.id}`, {
-            method: "POST",
+          fetch(`/qna/uploadImage/${qna.id}/`, {
+            method: "PUT",
             body: data,
           })
             .then((response) => response.json())
@@ -77,22 +79,16 @@ function QAUpdateScreen() {
       return new CustomUploadAdapter(loader);
     };
   }
-  //   function handleEditorChange(data) {
-  //     console.log(data);
-  //   }
   function submithandler() {
     
     dispatch(updateQNA({ id: qna.id, content: editorData, title: title, product_url: "product_url"}));
-
-    // const res = fetch("/api/updateBoardd/", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ content: editorData }),
-    // });
-    // console.log("fetch " + editorData);
   }
+  useEffect(() => { 
+    if (!qna || qna.id === undefined) {
+    dispatch(listQNADetails(QnaId)); 
+    }}
+  , [dispatch]);
+    
   return (
     <>
                 <Form.Group controlId="title">
@@ -105,7 +101,7 @@ function QAUpdateScreen() {
               ></Form.Control>
             </Form.Group>
       <CKEditor
-        data={"<p>Hello from CKEditor 5!</p>"}
+        data={qna &&qna.content ? qna.content : ""}
         editor={ClassicEditor}
         config={{
           extraPlugins: [uploadPlugin],

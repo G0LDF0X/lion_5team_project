@@ -101,7 +101,7 @@ export const updateQNA = (qna) => async (dispatch, getState) => {
   try {
     dispatch({ type: QNA_UPDATE_REQUEST });
 
-    const response = await fetch(`/qna/update/${qna.id}`, {
+    const response = await fetch(`/qna/update/${qna.id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

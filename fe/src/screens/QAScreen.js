@@ -70,11 +70,9 @@ useEffect(() => {
                 <Card.Title as='div'>
                   <strong>{qna.title}</strong>
                 </Card.Title>
-                <Card.Text as='div'>
-                  <div className='my-3'>
-                    {qna.content}
-                  </div>
-                </Card.Text>
+                
+                {/* <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} /> */}
+                
               </Card.Body>
             </Card>
           </Col>

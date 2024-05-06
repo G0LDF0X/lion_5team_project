@@ -24,7 +24,7 @@ export default function ListForm({qna}) {
               >
               </Typography>
 
-            {<Link to={`/qna/detail/${qna.id}`}>{qna.content}</Link>}
+            {<Link to={`/qna/detail/${qna.id}`}><div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} /></Link>}
 
             </React.Fragment>
           }
