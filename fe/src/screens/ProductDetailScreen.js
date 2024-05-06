@@ -5,7 +5,7 @@ import {
   Image,
   ListGroup,
   Button,
-  Card,
+  // Card,
   Form,
 } from "react-bootstrap";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -15,17 +15,21 @@ import { listProductDetails } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { createReview } from "../actions/reviewActions";
-import { addToBookMark, removeFromBookMark } from "../actions/bookmarkActions";
-import { addToCart } from "../actions/cartActions";
-// import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
+import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
+import { addToCart, listCartItems } from "../actions/cartActions";
+import { Snackbar } from "@mui/material";
+import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
+import { deleteReview } from "../actions/reviewActions";
+import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
-  const [isClicked, setIsClicked] = useState(false);
-  // const [rate, setRate] = useState(0)
-
-  // const [rating, setRating] = useState(0)
-  // const [comment, setComment] = useState('')
+  const [marked, setMarked] = useState(false);
+  const [state, setState] = useState({open: false});
+  const handleClose = () => {
+    setState({  open: false });
+  };
+  const { open } = state;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -34,7 +38,17 @@ function Productcreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview } = reviewCreate;;
+  const { success: successProductReview, createdReview } = reviewCreate;;
+  const bookMarkList = useSelector((state) => state.bookMarkList);
+  const { bookMarkItems, success } = bookMarkList;
+  const cartAdd = useSelector((state) => state.cartAdd);
+  const { success: successCartAdd , fail : failCartAdd} = cartAdd;
+  const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
+  const { success: successBookmarkAdd } = bookMarkAdd;
+  const bookMarkRemove = useSelector((state) => state.bookMarkRemove);
+  const { success: successBookmarkRemove } = bookMarkRemove;
+  const reviewDelete = useSelector((state) => state.reviewDelete);
+  const { success: successReviewDelete } = reviewDelete;
   let totalRate =
     product && product.reviews
       ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
@@ -42,36 +56,77 @@ function Productcreen() {
   let avgRate =
     product && product.reviews ? totalRate / product.reviews.length : 0;
 
-  useEffect(() => {
-    if (successProductReview) {
-      navigate(`/item/review/${id}`);
-      //   dispatch({type: PRODUCT_CREATE_REVIEW_RESET})
-      //   setRating(0);
-      //   setComment('');
+    useEffect(() => {
+      
+      if (successProductReview) {
+        navigate(`/items/review/${createdReview.id}`);
+        dispatch({type:REVIEW_CREATE_RESET});
     }
+    if(successCartAdd){
+      setState({open: true});
+    }
+    if(successBookmarkAdd){
+      dispatch(listBookMark());
+      setMarked(true);
+    }
+    if(successBookmarkRemove){
+      dispatch(listBookMark());
+      setMarked(false);
+    }
+    if( success || bookMarkItems &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
+      setMarked(true);
+    }
+    else{
+      setMarked(false);
+    }
+    // dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
-    console.log(product);
-    // console.log(product.reviews)
-  }, [dispatch, id, successProductReview]);
+    if(!bookMarkItems){
+    dispatch(listBookMark());}
+  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
+
   };
   const createReviewHandler = () => {
     dispatch(createReview(id));
+
   };
   const BookmarkHandler = () => {
-    if (isClicked === true){
+    if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
-      setIsClicked(false);
+
     }
-    else{
-    dispatch(addToBookMark(id));
-    setIsClicked(false);
+    else {
+      dispatch(addToBookMark(id));
     }
   }
-
+  const editReviewHandler = (review) => {
+    if(userInfo&&userInfo.id===review.user_id){
+      navigate(`/items/review/${review.id}`);
+    } else {
+      alert("You can only edit your own reviews.");
+;  }
+  }
+  const deleteReviewHandler = (review) => {
+    if(userInfo&&userInfo.id===review.user_id){
+      window.confirm("Are you sure you want to delete this review?");
+      if(window.confirm){
+       dispatch(deleteReview(review.id));
+      }
+    } else {
+      alert("You can only delete your own reviews.");
+  }
+  }
   return (
     <div>
+      <Snackbar
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  open={open}
+  onClose={handleClose}
+  message="장바구니에 추가되었습니다."
+  key={'top-center'}
+/>
       <Link to="/" className="btn btn-light my-2">
         Go Back
       </Link>
@@ -83,7 +138,7 @@ function Productcreen() {
         <div>
           <Row>
             <Col md={6}>
-              <Image src={product.image} alt={product.name} fluid />
+              <Image src={product.image_url} alt={product.name} fluid />
             </Col>
             <Col md={3}>
               <ListGroup variant="flush">
@@ -93,7 +148,7 @@ function Productcreen() {
                 <ListGroup.Item>
                   <Rating
                     value={avgRate}
-                    text={`${avgRate}`}
+                    text={`${avgRate.toFixed(2)}`}
                     color={"#f8e825"}
                   />
                 </ListGroup.Item>
@@ -132,7 +187,7 @@ function Productcreen() {
                           value={qty}
                           onChange={(e) => setQty(e.target.value)}
                         >
-                          {[...Array(product.countInStock).keys()].map((x) => (
+                          {[...Array(30).keys()].map((x) => (
                             <option value={x + 1} key={x + 1}>
                               {x + 1}
                             </option>
@@ -169,9 +224,9 @@ function Productcreen() {
                         >
                           <i
                             className={
-                              isClicked
-                                ? "fa-solid fa-bookmark"
-                                : "fa-regular fa-bookmark"
+                              marked
+                                ? "fa-regular fa-bookmark"
+                                : "fa-solid fa-bookmark"
                             }
                           ></i>
                         </Button>
@@ -184,45 +239,42 @@ function Productcreen() {
             </Col>
           </Row>
 
-          <Row className="d-flex justify-content-between align-items-center">
-            <Col md={9}>
-              <h2>Reviews</h2>
-              <Col className="text-end">
-                <Button
-                  className="btn-block"
-                  onClick={createReviewHandler}
-                  key="1"
-                >
-                  Create a Review
-                </Button>
-              </Col>
-              {/* {product.reviews.length === 0 && <Message>No Reviews</Message>} */}
-              {product.reviews ? (
-                <ListGroup variant="flush">
-                  {product.reviews.map((review) => (
-                    <div>
-                      <ListGroup.Item key={review.id}>
-                        <strong>{review.title}</strong>
-                        <div className="my-3">
-                          <Rating
-                            value={review.rate}
-                            text={review.rate}
-                            color={"#f8e825"}
-                          />
-                        </div>
-                        <p>{review.comment}</p>
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        <h6> {review.content}</h6>
-                      </ListGroup.Item>
-                    </div>
-                  ))}
-                </ListGroup>
-              ) : (
-                <Message>No Reviews</Message>
-              )}
-            </Col>
-          </Row>
+          <Grid container spacing={3}>
+  <Grid item xs={9}>
+    <Typography variant="h4">Reviews</Typography>
+    <Box display="flex" justifyContent="flex-end">
+      <Button variant="contained" color="primary" onClick={createReviewHandler}>
+        Create a Review
+      </Button>
+    </Box>
+    {product.reviews ? (
+      product.reviews.map((review) => (
+        <Card key={review.id}>
+          <CardContent>
+            <Typography variant="h5">{review.title}</Typography>
+            <Typography variant="subtitle1">Written by: {review.writer}</Typography>
+            <Box my={2}>
+              <Rating value={review.rate} text={review.rate} color={"#f8e825"} />
+            </Box>
+            <Typography variant="body1">{review.comment}</Typography>
+            {review.image && <img src={review.image} alt={review.title} />}
+            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <Box mt={2}>
+          <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
+            Edit
+          </Button>
+          <Button variant="contained" color="secondary" onClick={() => deleteReviewHandler(review)}>
+            Delete
+          </Button>
+        </Box>
+          </CardContent>
+        </Card>
+      ))
+    ) : (
+      <Typography variant="body1">No Reviews</Typography>
+    )}
+  </Grid>
+</Grid>
         </div>
       )}
     </div>

@@ -35,6 +35,8 @@ import ProductScreen from './screens/ProductScreen';
 import SampleEditorScreen from './screens/SampleEditorScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import ReviewEditScreen from './screens/ReviewEditScreen';
+import OrderCreateScreen from './screens/OrderCreateScreen';
+import ShippingScreen from './screens/ShippingScreen';
 function App() {
   return (
     <Router>
@@ -50,9 +52,10 @@ function App() {
             <Route path='/items/update/:id' element={<ProductUpdateScreen/>} />
             <Route path='/items/review/:id' element={<ReviewEditScreen/>} />
 
-
+            <Route path='/shipping' element={<ShippingScreen/>} />  
             <Route path='/order/:id' element={<PaymentScreen/>} />
-            <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />
+            <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />            
+            <Route path='/orders/create' element={<OrderCreateScreen/>} />
 
             <Route path='/login' element = {<LoginScreen/>} />
             <Route path='/register' element = {<RegisterScreen/>} />

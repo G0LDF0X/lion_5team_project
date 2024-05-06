@@ -11,36 +11,28 @@ import Message from "../components/Message";
 // import ProductCarousel from "../components/ProductCarousel";
 
 
-function ProductsScreen() {
+function UserProfileBookmark() {
 
   const location = useLocation();
-  const dispatch = useDispatch();
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState([]);
-  const productList = useSelector(state => state.productList);
-  const { loading, error, products, pages } = productList;
+//   const dispatch = useDispatch();
+//   const [categories, setCategories] = useState([]);
+//   const [selectedCategory, setSelectedCategory] = useState([]);
+  const bookMarkList = useSelector(state => state.bookMarkList);
+    const { loading, error, bookMarkItems } = bookMarkList;
+  
 
   const params = new URLSearchParams(location.search);
   const query = params.get('query') || '';
   console.log(query);
-  const page = params.get('page') || 1;
-  const category = params.get('category');
-  const tag = params.get('tag');
-  const getCategories = async () => {
-    const response = await fetch('/items/category');
-    const data = await response.json();
-    return data;
-    
-  }
+//   const page = params.get('page') || 1;
+//   const category = params.get('category');
+//   const tag = params.get('tag');
+  
   useEffect(() => {
+    // if (book)
 
-    getCategories().then((data) => {
-      setCategories(data);
-      
-    });
-    dispatch(listProducts(query, page, selectedCategory));
   }
-  , [dispatch, query, category, tag, page, selectedCategory]);
+  , []);
   return (
     <div>
         {/* <ProductHeader /> */}
@@ -48,7 +40,7 @@ function ProductsScreen() {
   <Col md={3}>
     <h3>Category</h3>
     <Form className='filter-form'>
-      {categories.map((category) => (
+      {/* {categories.map((category) => (
         <Form.Check 
           type={'checkbox'}
           id={category.id}
@@ -63,7 +55,7 @@ function ProductsScreen() {
             }
           }}
         />
-      ))}
+      ))} */}
     </Form>
   </Col>
   <Col md={9}>
@@ -73,9 +65,9 @@ function ProductsScreen() {
       <Message variant={'danger'}>{error}</Message>
     ) : (
       <Row>
-        {products.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-            <Product product={product} id={product.id} />
+        {bookMarkItems&&bookMarkItems.map((product) => (
+          <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
+            <Product product={product} id={product.item_id} />
           </Col>
         ))}
       </Row>
@@ -89,4 +81,4 @@ function ProductsScreen() {
   )
 }
 
-export default ProductsScreen
+export default UserProfileBookmark

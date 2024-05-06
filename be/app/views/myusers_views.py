@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA
-from app.serializer import SellerSerializer, UserSerializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
 
 
 
@@ -22,7 +22,7 @@ def get_Seller_Apply(request):
     serializer = SellerSerializer(data=request.data)
 
     if serializer.is_valid():
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
         serializer.save(user_id=user)
 
         user = request.user
@@ -36,7 +36,7 @@ def get_Seller_Apply(request):
 
 @api_view(['GET'])
 def my_shopping(request):
-    user = User.objects.get(name=request.user)
+    user = User.objects.get(username=request.user)
     orders = Order.objects.filter(user_id=user)
     orders_ids = orders.values_list('id', flat=True)
     order_items = OrderItem.objects.filter(order_id__in=orders_ids)
@@ -45,11 +45,11 @@ def my_shopping(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_mypage_profile(request):
-    user = User.objects.get(name=request.user)
-    user_data = UserSerializer(user).data
+    user = User.objects.get(username=request.user)
+    user_data = User_Serializer(user).data
     try:
         seller = Seller.objects.get(user_id=user)
         seller_data = SellerSerializer(seller).data
@@ -85,7 +85,7 @@ def update_User_Profile(request):
     data = request.data
     print(request.user)
     try:
-        user = User.objects.get(name=request.user)
+        user = User.objects.get(username=request.user)
     except User.DoesNotExist:
         return Response({'detail': 'User not found'}, status=404)
 
@@ -102,9 +102,10 @@ def update_User_Profile(request):
     return Response(serializer.data)
 
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getMyUserQnA(request):
+def getMyItemQnA(request):
     user = User.objects.get(username=request.user)
     my_user_qna_list = Item_QnA.objects.filter(user_id=user)
     serializer = ItemQnASerializer(my_user_qna_list, many=True)
@@ -133,23 +134,32 @@ def my_bookmarks(request):
 def add_bookmark(request, pk):
     print(request.user)
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=pk)
+    item = Item.objects.get(id=pk)
     bookmark = Bookmark.objects.create(
-          user_id=user.id,
+          user_id_id=user.id,
           item_id=item,
           created_at=datetime.datetime.now()
           )
-    serializer = BookmarkSerializer(bookmark)
-    return Response(serializer.data)   
+    # serializer = BookmarkSerializer(bookmark)
+    return Response("Bookmark added", status=201)   
 
 
 @api_view(['DELETE'])
 def delete_bookmark(request, pk):
+    print(request.user)
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=pk)
-    bookmark = Bookmark.objects.get(user_id=user, item_id=item)
-    bookmark.delete()
-    return Response('Bookmark deleted')
+    item = Item.objects.get(id=pk)
+    bookmarks = Bookmark.objects.filter(user_id_id=user.id, item_id=item)
+    for bookmark in bookmarks:  
+        bookmark.delete()
+    return Response("Bookmark deleted", status=201)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getUserById(request, pk):
+    user = User.objects.get(id=pk)
+    serializer = User_Serializer(user, many=False)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
@@ -194,3 +204,26 @@ def getFollowing(request, pk):
     serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_MyBoard(request):
+    user = User.objects.get(username=request.user)
+    boards = Board.objects.filter(user_id=user)
+    serializer = BoardSerializer(boards, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyUserQnA(request):
+    user = User.objects.get(username=request.user)
+    my_user_qna_list = User_QnA.objects.filter(user_id=user)
+    serializer = UserQnASerializer(my_user_qna_list, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyUserAnswer(request):
+    user = User.objects.get(username=request.user)
+    my_user_answer_list = User_Answer.objects.filter(user_id=user)
+    serializer = UserAnswerSerializer(my_user_answer_list, many=True)
+    return Response(serializer.data)

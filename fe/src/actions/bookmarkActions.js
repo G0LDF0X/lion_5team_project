@@ -10,12 +10,24 @@ import {
   BookMark_REMOVE_ITEM_FAIL,
 } from "../constants/bookmarkConstants";
 
-export const listBookMark = () => async (dispatch) => {
+export const listBookMark = () => async (dispatch, getState) => {
   dispatch({
     type: BookMark_ITEM_LIST_REQUEST,
   });
+
   try {
-    const { data } = await fetch("/users/bookmark");
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    
+    const res = await fetch("/users/bookmark", 
+    {
+      headers: {
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    }
+    );
+    const data = await res.json();
     dispatch({
       type: BookMark_ITEM_LIST_SUCCESS,
       payload: data,
@@ -47,7 +59,7 @@ export const addToBookMark = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.access}`,
       },
     });
-    const data = await data.json();
+    const data = await res.json();
     if (res.ok) {
       dispatch({
         type: BookMark_ADD_ITEM_SUCCESS,
@@ -72,18 +84,22 @@ export const removeFromBookMark = (id) => async (dispatch, getState) => {
     dispatch({
       type: BookMark_REMOVE_ITEM_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
       },
     };
-    const { res } = await fetch(`/users/bookmark/delete/${id}/`, config);
-    const data = await data.json();
+    const  res  = await fetch(`/users/bookmark/delete/${id}/`, config);
+    
     if (res.ok) {
       dispatch({
         type: BookMark_REMOVE_ITEM_SUCCESS,
-        payload: data
+
       });
     } else {
       throw new Error(res.message);

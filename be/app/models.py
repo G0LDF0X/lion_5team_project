@@ -22,7 +22,7 @@ class User(models.Model):
     is_seller = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 class Seller(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -31,7 +31,7 @@ class Seller(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user_id.name
+        return self.user_id.username
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -55,7 +55,7 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     price = models.IntegerField()
     description = models.TextField(blank=True)
-    image_url = models.ImageField(blank=True)
+    image_url = models.ImageField(blank=True, max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     rate = models.FloatField()
 
@@ -69,7 +69,7 @@ class Review(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
     rate = models.FloatField()
-    image_url = models.ImageField(blank=True)
+    image_url = models.ImageField(blank=True, max_length=1000)
 
 class Order(models.Model):
     user_id =models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -88,7 +88,7 @@ class OrderItem(models.Model):
     name = models.CharField(max_length =200)
     qty = models.IntegerField()
     price_multi_qty = models.IntegerField()
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, max_length=1000)
 
     def __str__(self):
         return self.name
@@ -106,7 +106,7 @@ class User_QnA(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=False, blank=True)
     title = models.CharField('title', max_length=100)
     content = models.TextField('content', blank=True) 
-    image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True)
+    image_url = models.ImageField('image_url', upload_to='user_qna_images', null=True, blank=True, max_length=1000)
     created_at = models.DateTimeField('created_at', auto_now_add=True)
 
     def __str__(self):
@@ -144,7 +144,7 @@ class Item_QnA(models.Model):
 
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
-    image_url = models.ImageField(blank=True)
+    image_url = models.ImageField(blank=True, max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -167,7 +167,7 @@ class Board(models.Model):
     product_url = models.TextField(blank=True)
     title = models.CharField(max_length=100)
     content = models.TextField(blank=True)
-    image_url = models.ImageField()
+    image_url = models.ImageField(max_length=1000)
     show = models.IntegerField(default=0)
     like = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -198,7 +198,7 @@ class Cart(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
     qty = models.IntegerField()
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, max_length=1000)
 
     def __str__(self):
         return self.item_id.name

@@ -24,6 +24,7 @@ class BoardSerializer(serializers.ModelSerializer):
         fields =  '__all__'
 
 class ReviewSerializer(serializers.ModelSerializer):
+    writer = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = Review
         fields = '__all__'
@@ -53,6 +54,7 @@ class ItemSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     item_qna_set = ItemQnASerializer(many=True, read_only=True)
     image_url = serializers.ImageField(use_url=True)
+    category = serializers.ReadOnlyField(source='category_id.name')
     class Meta:
         model = Item
         fields = '__all__'
@@ -90,7 +92,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         # 여기 수정함 : auth_user -> User
-        model = User
+        model = auth_user
         fields = '__all__'
 
     def get_token(self, obj):
@@ -125,6 +127,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
             'is_staff': user.is_staff,
             'is_superuser': user.is_superuser,
             'last_login': user.last_login,
+            'id': user.id,
         })
 
         return data
@@ -193,14 +196,21 @@ class CategorySerializer(serializers.ModelSerializer):
 class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url']
+        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', ]
 
 class BookmarkSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='item_id.name')
+    price = serializers.ReadOnlyField(source='item_id.price')
+
     class Meta:
         model = Bookmark
         fields = '__all__'
         
 class CartSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='item_id.name')
+    price = serializers.ReadOnlyField(source='item_id.price')
+    # image_url = serializers.ReadOnlyField(source='item_id.image_url')
+    
     class Meta:
         model = Cart
         fields = '__all__'
@@ -211,9 +221,10 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Board_Serializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='user_id.name')
     class Meta:
         model = Board
-        fields = ['title','content', 'image_url', 'created_at', 'show', 'like']
+        fields = ['title','content', 'image_url', 'created_at', 'show', 'like', 'name']
 
 class RefundSerializer(serializers.ModelSerializer):
     class Meta:
@@ -224,4 +235,9 @@ class FollowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Follow
+        fields = '__all__'
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
         fields = '__all__'

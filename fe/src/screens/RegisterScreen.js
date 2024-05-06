@@ -29,7 +29,7 @@ function RegisterScreen() {
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      dispatch(register(name, email, password));
+      dispatch(register(name, email, password , nickname, address, phone));
       // DISPATCH REGISTER
     }
   };

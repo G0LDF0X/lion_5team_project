@@ -7,8 +7,9 @@ import Message from "../components/Message";
 // import Paginate from "../components/Paginate";
 import { LinkContainer } from "react-router-bootstrap";
 import Loading from "../components/Loading";
-import { listProducts, deleteProduct, createProduct} from "../actions/productActions";
+import { listProducts, deleteProduct, createProduct, listProductDetails} from "../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants"; 
+import ItemListSkeleton from "./ItemListSkeleton";
 
 function ProductListScreen() {
     const dispatch = useDispatch();
@@ -63,6 +64,11 @@ function ProductListScreen() {
           redirect("/admin/productlist"); 
         }
       }
+      const updateHandler = (id) => {
+        // navigate(`/items/update/${id}`);
+        // dispatch(listProductDetails(id));
+        console.log("updateHandler");
+      }
   return (
     <div><Row className="align-items-center">
     <Col>
@@ -81,7 +87,7 @@ function ProductListScreen() {
     {loadingCreate && <Loading /> }
     {errorCreate && <Message variant="danger">{errorCreate}</Message>}
     {loading ? (
-      <Loading />
+      <ItemListSkeleton />
     ) : error ? (
       <Message variant="danger">{error}</Message>
     ) : (<div>
@@ -100,18 +106,18 @@ function ProductListScreen() {
           {products.map((product) => (
             <tr key={product.id}>
               <td>{product.id}</td>
-              <td>{product.name}</td>
+              <td><Link to = {`/items/detail/${product.id}`}>{product.name}</Link></td>
               <td>{product.price}₩</td>
-              {product.category_id === 1 ? (
-                <td>산책용품</td> ) :
-                product.category_id === 2 ? (
-                  <td>간식</td>
-                ) : null }
+              
+                <td>{product.category}</td> 
+              
+                
+                
               {/* <td>{product.category}</td> */}
               {/* <td>{product.brand}</td> */}
               <td>
                 <LinkContainer to={`/items/update/${product.id}`}>
-                  <Button variant="light" className="btn-sm">
+                  <Button variant="light" className="btn-sm" onClick = {updateHandler(product.id)}>
                     <i className="fas fa-edit"></i>
                   </Button>
                 </LinkContainer>

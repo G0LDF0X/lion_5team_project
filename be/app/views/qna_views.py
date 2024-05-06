@@ -39,7 +39,6 @@ def create_user_qna(request):
 
 @api_view(['POST'])
 def uploadImage(request, pk):
-    data = request.data
     qna = User_QnA.objects.get(id=pk)
     qna.image_url = request.FILES.get('file')
     qna.save()
@@ -53,11 +52,7 @@ def update_user_qna(request, pk):
     qna_board.content = request.data['content'] 
     qna_board.save()    
 
-    serializer = UserQnASerializer(qna_board, data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    serializer.save()
-
+    serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
 
 
