@@ -39,10 +39,10 @@ def create_Board(request):
     current_time = datetime.now()
     board = Board.objects.create(
         user_id=user,
-        title='',
-        content='',
-        image_url='',
-        product_url='',
+        title=request.data.get('title', ''),
+        content=request.data.get('content', ''),
+        image_url=request.data.get('image_url', ''),
+        product_url=request.data.get('product_url', ''),
         show=0,
         like=0,
     )

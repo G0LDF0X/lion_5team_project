@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 
 function SampleEditorScreen({props}) {
     const [editorData, setEditorData] = useState('');
+    const [title, setTitle] = useState('');
+    const [productUrl, setProductUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [token, setToken] = useState(null);
 
     // Use useSelector to get the userInfo from the Redux store
@@ -18,8 +21,6 @@ function SampleEditorScreen({props}) {
         }
     }, [userInfo]);
 
-    
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const res = await fetch('/board/create/', {
@@ -28,14 +29,21 @@ function SampleEditorScreen({props}) {
               'Content-Type': 'application/json', // This line is crucial
               'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({ content: editorData }),
+            body: JSON.stringify({ 
+                title: title,
+                content: editorData,
+                image_url: imageUrl,
+                product_url: productUrl,
+            }),
         });
         
         const data = await res.text();
         console.log(data);
-        console.log(editorData)
     }
     return (<>
+        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요." /><br></br>
+        <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="Image URL" /><br></br>
+        <input type="text" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} placeholder="Product URL" />
         <CKEditor
             editor={ ClassicEditor }
             data={editorData}

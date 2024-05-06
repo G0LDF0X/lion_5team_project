@@ -29,10 +29,9 @@ def create_user_qna(request):
     current_time = datetime.now()
     qna_board = User_QnA.objects.create(
         user_id=user,
-        title='',
-        content='',
-        image_url='',
-        created_at=current_time
+        title=request.data.get('title', ''),
+        content=request.data.get('content', ''),
+        image_url=request.data.get('image_url', ''),
     )
     serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
