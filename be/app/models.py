@@ -71,6 +71,9 @@ class Review(models.Model):
     rate = models.FloatField()
     image_url = models.ImageField(blank=True, max_length=1000)
 
+    def __str__(self):
+        return self.title
+
 class Order(models.Model):
     user_id =models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
