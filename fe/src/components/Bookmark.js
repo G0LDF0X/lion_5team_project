@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
+import Badge from 'react-bootstrap/Badge';
 
 const Bookmark = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -31,7 +32,6 @@ const Bookmark = () => {
           ...bookmark,
           item: itemData[index]
         }));
-        console.log("RESULT:", bookmarksWithItemData);
         setBookmarks(bookmarksWithItemData);
       });
     })
@@ -40,15 +40,20 @@ const Bookmark = () => {
 
   return (
     <div>
-      <h1>나의 북마크</h1>
-      {console.log(bookmarks)}
+      <h2>나의 북마크</h2>
       <div className='d-flex flex-row flex-wrap'>
       {bookmarks.map((bookmark, index) => (
         <Card style={{ width: '18rem' , margin: '10px' }} key={index}>
         <Card.Body>
           <Card.Title>{bookmark.name}</Card.Title>
           <Card.Subtitle className='mb-2 text-muted'>{bookmark.price}원</Card.Subtitle>
-          <Card.Text>{bookmark.item.category}</Card.Text>
+          <Badge bg="info">{bookmark.item.category}</Badge>
+          <Card.Text>
+            <br />
+            {bookmark.item.description.length > 30 
+                ? `${bookmark.item.description.substring(0, 30)}...` 
+                : bookmark.item.description}
+            </Card.Text>
           <Link to={`/items/detail/${bookmark.item_id}`}>
           <Button variant="primary">바로가기</Button>
           </Link>
