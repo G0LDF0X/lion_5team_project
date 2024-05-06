@@ -62,7 +62,7 @@ const UserQnA = () => {
         <div className="col">
           <h2>나의 질문</h2>
           {userQnAs.map((userQnA, index) => (
-            <ListGroup as="ol" numbered key={index} className='mb-3'>
+            <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"
                 className="d-flex justify-content-between align-items-start"
@@ -87,7 +87,7 @@ const UserQnA = () => {
         <div className="col">
           <h2>나의 답변</h2>
           {userAnswers.map((userAnswer, index) => (
-            <ListGroup as="ol" numbered key={index} className='mb-3'>
+            <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"
                 className="d-flex justify-content-between align-items-start"
