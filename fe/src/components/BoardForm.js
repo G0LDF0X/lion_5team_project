@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -12,12 +12,26 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { grey } from '@material-ui/core/colors';
 import { Link } from 'react-router-dom';
+import Checkbox from '@mui/material/Checkbox';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+import { styled } from '@mui/material';
 
-const likeHandler = () => {
-  console.log('likeHandler');
-}
+const StyledCheckbox = styled(Checkbox)({
+  '&.Mui-checked': {
+    color: '#ff6d75',
+  },
+});
+
+// const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
 
 export default function BoardForm({board}) {
+  const [isLiked, setIsLiked] = useState(false);
+  
+  const likeHandler = () => {
+    setIsLiked(!isLiked);
+  }
   return (
     <div style={{ height: "500px" }}>
       <CardHeader
@@ -45,7 +59,13 @@ export default function BoardForm({board}) {
       />
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites" onClick={likeHandler}>
-          <FavoriteIcon />
+          {/* <FavoriteIcon /> */}
+          {/* <StyledCheckbox  icon={<FavoriteBorder />} checkedIcon={<Favorite />} /> */}
+          <StyledCheckbox  
+          icon={<FavoriteBorder />} 
+          checkedIcon={<Favorite />} 
+          checked={isLiked} 
+        />
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />
