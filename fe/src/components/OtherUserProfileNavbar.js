@@ -8,6 +8,7 @@ import OtherUserProfileMain from './OtherUserProfileMain';
 import OtherUserQnA from './OtherUserQnA';
 import OtherBookmark from './OtherBookmark';
 import OtherMyBoard from './OtherMyBoard';
+import OtherFollowingList from './OtherFollow';
 import { useParams } from 'react-router-dom';
 
 function CustomTabPanel(props) {
@@ -74,7 +75,7 @@ export default function UserSettingProfileNavbar() {
         Item Three
       </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            Item Four
+            <OtherFollowingList userId={id} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
             <OtherUserQnA userId={id}/>
