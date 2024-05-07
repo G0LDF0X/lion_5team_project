@@ -12,11 +12,7 @@ const OtherUserQnA = ({ userId }) => {
   const [userQnAs, setuserQnAs] =  useState([]);
   const [userAnswers, setUserAnswers] =  useState([]);
   useEffect(() => {
-    fetch('profile/myuserqna/', {
-      headers: {
-        'Authorization': `Bearer ${userInfo.access}`
-      }
-    })
+    fetch(`myqna/`)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -39,11 +35,7 @@ const OtherUserQnA = ({ userId }) => {
     .catch(error => console.error('Error:', error));
   }, []);
    useEffect(() => {
-    fetch('profile/myuseranswer/', {
-      headers: {
-        'Authorization': `Bearer ${userInfo.access}`
-      }
-    })
+    fetch(`myanswer/`)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -61,6 +53,7 @@ const OtherUserQnA = ({ userId }) => {
       <div className="row">
         <div className="col">
           <h2>나의 질문</h2>
+          {console.log("USERQNAS :", userQnAs)}
           {userQnAs.map((userQnA, index) => (
             <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
