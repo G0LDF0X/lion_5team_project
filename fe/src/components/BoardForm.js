@@ -73,8 +73,10 @@ export default function BoardForm({board}) {
       </CardActions>
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          
-          <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+        {board.content.length > 100 
+                  
+                  ? <div dangerouslySetInnerHTML={{ __html: `${board.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                  : <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />}
         </Typography>
       </CardContent>
     </div>

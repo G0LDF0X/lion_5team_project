@@ -72,7 +72,8 @@ def set_cart_qty(request, pk):
 @api_view(['POST'])
 def create_order(request):
     user = User.objects.get(username=request.user)
-    cart_items = Cart.objects.filter(user_id=user)
+    cart_items = Cart.objects.filter(user_id=user.id)
+    print(cart_items)
 
     if not cart_items:
         return Response({"detail":"Cart is empty"}, status=400)
@@ -83,18 +84,21 @@ def create_order(request):
 
     if order_serializer.is_valid():
         order = order_serializer.save()
-        shipping_address_data = {"order_id": order.id, "address": request.data["address"], "city": request.data["city"], "postal_code": request.data["postal_code"], "country": request.data["country"], "shipping_price": 5000}
+        shipping_address_data = {"order_id": order.id, "address": request.data["address"], "shipping_price": 5000, "city":"city",  "country": "country", "postal_code": "postal_code"}
         shipping_address_serializer = ShippingAddressSerializer(data=shipping_address_data)
         if shipping_address_serializer.is_valid():
             shipping_address_serializer.save()
         else:
-            return Response(shipping_address_serializer.errors, status=400)
+            return Response(shipping_address_serializer.errors, status=00)
 
         total_price = 0
         for cart_item in cart_items:
+            print(cart_item)
             image = cart_item.image if cart_item.image else "path/to/default/image.jpg"
             price_multi_qty = cart_item.item_id.price * cart_item.qty
-            order_item_data = {"order_id": order.id, "item_id": cart_item.item_id.id, "qty": cart_item.qty, "name": cart_item.item_id.name, "price_multi_qty": price_multi_qty, "image": image}
+            item_name = Item.objects.get(id=cart_item.item_id_id).name
+            print(item_name)
+            order_item_data = {"order_id": order.id, "item_id": cart_item.item_id.id, "qty": cart_item.qty, "name": item_name, "price_multi_qty": price_multi_qty, "image": image}
             order_item_serializer = OrderItemSerializer(data=order_item_data)
             if order_item_serializer.is_valid():
                 order_item_serializer.save()
@@ -107,7 +111,7 @@ def create_order(request):
 
         return Response(order_serializer.data, status=201)
     else:
-        return Response(order_serializer.errors, status=400)
+        return Response(order_serializer.errors, status=402)
     
 @api_view(['GET'])
 def my_order_list(request):

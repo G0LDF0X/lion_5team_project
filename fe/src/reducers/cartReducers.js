@@ -11,11 +11,12 @@ import {
   CART_QTY_UPDATE_REQUEST,
   CART_QTY_UPDATE_FAIL,
   CART_QTY_UPDATE_SUCCESS,
+  CART_SAVE_SHIPPING_ADDRESS,
 
 } from "../constants/cartConstants";
 
 
-export const cartListReducer = (state = { cartItems: [] }, action) => {
+export const cartListReducer = (state = { cartItems: [], shippingAddress:{} }, action) => {
   switch (action.type) {
     case CART_ITEM_LIST_REQUEST:
       return { loading: true, cartItems: [] };
@@ -23,6 +24,10 @@ export const cartListReducer = (state = { cartItems: [] }, action) => {
       return { loading: false, cartItems: action.payload };
     case CART_ITEM_LIST_FAIL:
       return { loading: false, error: action.payload };
+      case CART_SAVE_SHIPPING_ADDRESS:
+        return {...state, 
+          shippingAddress: action.payload,
+        };
     default:
       return state;
   }

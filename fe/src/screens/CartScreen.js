@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, ListGroup, Image, Form, Button, Card } from "react-bootstrap";
 import Message from "../components/Message";
-import { addToCart, removeFromCart, listCartItems, updateQty } from "../actions/cartActions";
+import { addToCart, removeFromCart, listCartItems, updateQty, saveShippingAddress } from "../actions/cartActions";
 
 function CartScreen() {
   const location = useLocation();
@@ -12,7 +12,10 @@ function CartScreen() {
 
   const cartItems = useSelector((state) => state.cartList.cartItems);
   const cartRemove = useSelector((state) => state.cartRemove);
+
   const { success: successCartRemove } = cartRemove;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   // const removeFromCart
 
   useEffect(() => {
@@ -32,6 +35,7 @@ function CartScreen() {
   };
 
   const checkOutHandler = () => {
+    // dispatch(saveShippingAddress(userInfo.adress))
     navigate("/shipping");
   };
 
@@ -116,3 +120,4 @@ function CartScreen() {
 }
 
 export default CartScreen;
+

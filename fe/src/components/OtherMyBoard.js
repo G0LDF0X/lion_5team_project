@@ -19,7 +19,7 @@ const OtherMyBoard = ({ userId }) => {
     const { userInfo } = userLogin;
     const [MyBoards, setMyBoards] = React.useState([]);
     React.useEffect(() => {
-        fetch('board/')
+        fetch(`/users/${userId}/board/`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

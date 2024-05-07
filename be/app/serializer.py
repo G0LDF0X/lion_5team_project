@@ -12,6 +12,8 @@ from rest_framework import serializers, status
 from app.models import Seller, OrderItem
 
 class ReplySerializer(serializers.ModelSerializer):
+    nickname = serializers.ReadOnlyField(source='user_id.nickname')
+    username = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = Reply
         fields = '__all__'
@@ -254,7 +256,10 @@ class RefundSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FollowSerializer(serializers.ModelSerializer):
-
+    follower_username = serializers.ReadOnlyField(source='follower_id.username')
+    followed_username = serializers.ReadOnlyField(source='followed_id.username')
+    follower_nickname = serializers.ReadOnlyField(source='follower_id.nickname')
+    followed_nickname = serializers.ReadOnlyField(source='followed_id.nickname')
     class Meta:
         model = Follow
         fields = '__all__'
