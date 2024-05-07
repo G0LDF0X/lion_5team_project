@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from 'react-icons/fa';
+import ReplyForm from "../components/BoardDetailScreen";
 
 
 function BoardDetailScreen() {
@@ -16,6 +17,7 @@ function BoardDetailScreen() {
   const navigate = useNavigate();
   const [reply, setReply] = useState('');
   const [replied_id, setReplied_id] = useState(0); 
+  const [isUploader, setIsUploader] = useState(false);
 
   const { id } = useParams(); // URL에서 id를 가져옵니다.
   const boardDetails = useSelector((state) => state.boardDetails);
@@ -30,7 +32,7 @@ function BoardDetailScreen() {
     if(id ===board.user_id) {
       setIsUploader(true);
     }
-    dispatch(listBoardDetails(id));
+    dispatch(getBoardDetails(id));
 
   }, [dispatch, id]);
 
@@ -40,10 +42,18 @@ function BoardDetailScreen() {
       dispatch(createReply(id, reply, replied_id)); // 댓글을 생성합니다.
       setReply(''); // 입력 필드를 초기화합니다.
       setReplied_id(0); // 입력 필드를 초기화합니다.
+      dispatch(getBoardDetails(id));
     } else {
       alert('Please enter a comment.');
     }
   };
+
+  const deleteHandler = (id) => {
+    if (window.confirm('Are you sure?')) {
+      // 게시글을 삭제합니다.
+      navigate('/board');
+    }
+  }
 
   return (
     <div>
@@ -101,12 +111,12 @@ function BoardDetailScreen() {
           <Row>
             <Col md={6}>
               <h2>Comments</h2>
-              {comments.length === 0 && <Message>No Comments</Message>}
+              { replies.length === 0 && <Message>No Comments</Message>}
               <ListGroup variant='flush'>
-                {comments.map((comment, index) => (
+                {replies.map((reply, index) => (
                   <ListGroup.Item key={index}>
-                    <strong>{comment.user}</strong>
-                    <p>{comment.text}</p>
+                    <strong>{reply.user_id}</strong>
+                    <p>{reply.content}</p>
                   </ListGroup.Item>
                 ))}
               </ListGroup>
@@ -116,8 +126,8 @@ function BoardDetailScreen() {
                   <Form.Control
                     as='textarea'
                     row='3'
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
+                    value={reply}
+                    onChange={(e) => setReply(e.target.value)}
                   ></Form.Control>
                 </Form.Group>
                 <Button type='submit' variant='primary'>

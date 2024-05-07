@@ -97,7 +97,8 @@ export const getBoardDetails = (id) => async (dispatch) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
+
         },
         body: JSON.stringify({ content, repliedId }),
       });

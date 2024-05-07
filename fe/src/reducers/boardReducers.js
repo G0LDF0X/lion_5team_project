@@ -43,7 +43,7 @@ export const replyCreateReducer = (state = {}, action) => {
       case BOARD_CREATE_REPLY_REQUEST:
         return { loading: true };
       case BOARD_CREATE_REPLY_SUCCESS:
-        return { loading: false, success: true, reply: action.payload.reply };
+        return { loading: false, success: true, data: action.payload };
       case BOARD_CREATE_REPLY_FAIL:
         return { loading: false, error: action.payload };
       default:
