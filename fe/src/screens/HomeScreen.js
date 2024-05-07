@@ -86,7 +86,7 @@ function HomeScreen({ location }) {
         <Message variant={"danger"}>{boardError}</Message>
       ) : (
         <Carousel>
-          {boards.slice(0,4).map((board) => (
+          {boards.map((board) => (
             <Carousel.Item key={board.id}>
               <Box display="flex" justifyContent="center">
               <Card variant="outlined">
