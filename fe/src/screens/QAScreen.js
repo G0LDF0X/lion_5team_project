@@ -7,6 +7,7 @@ import { QNA_CREATE_RESET } from '../constants/qnaConstants'
 import { Card, Col, Row } from 'react-bootstrap'
 import { ListItemIcon } from '@mui/material'
 import List from '@mui/material/List';
+import { Link } from 'react-router-dom';
 
 import ListForm from '../components/ListForm'
 
@@ -51,7 +52,8 @@ function QAScreen() {
                   </Col>
                   <Col xs={10}>
                     <Card.Title as='div'>
-                      <strong>{qna.title}</strong>
+                      <Link to={`/qna/detail/${qna.id}`}>
+                      <strong>{qna.title}</strong></Link>
                     </Card.Title>
                     <Card.Text>
                     <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
