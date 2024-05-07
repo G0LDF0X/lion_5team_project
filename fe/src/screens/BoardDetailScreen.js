@@ -26,7 +26,7 @@ function BoardDetailScreen() {
   console.log(userInfo);
 
   console.log(board);
-  console.log(data.board);
+  
   useEffect(() => {
     if(id ===board.user_id) {
       setIsUploader(true);
@@ -89,7 +89,7 @@ function BoardDetailScreen() {
                 <Card.Body>
                   {board.board.image_url && <Image src={board.board.image_url}  fluid />}
                   <Card.Text>
-                    {board.board.content}
+                    {board.content}
                   </Card.Text>
                   <Button variant="link" href={board.board.product_url} target="_blank">
                     Visit Product

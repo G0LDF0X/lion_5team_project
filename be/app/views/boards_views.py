@@ -24,11 +24,11 @@ def get_Board(request, pk):
     board_serializer = BoardSerializer(board)
     reply_serializer = ReplySerializer(replies, many=True)
     
-    data = {
+    return Response({
         'board': board_serializer.data,
-        'reply': reply_serializer.data
-    }
-    return Response(data)
+        'replies': reply_serializer.data
+    
+    })
 
 
 
