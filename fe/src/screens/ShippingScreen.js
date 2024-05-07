@@ -44,7 +44,7 @@ function ShippingScreen() {
     if (!cartItems.length) {
       dispatch(listCartItems());
     }
-  }, [dispatch, products.length, cartItems.length, navigate, shippingAdress]);
+  }, [dispatch, navigate, shippingAdress]);
 
   // Calculate cart products with prices and quantities
   const cartProducts = cartItems
@@ -69,6 +69,7 @@ function ShippingScreen() {
   const subtotalPrice = cartProducts
     .reduce((acc, item) => acc + item.qty * item.price, 0)
     .toFixed(2);
+  const realPrice = Number(subtotalPrice) + 5000;
   return (
     <div>
       <Row>
@@ -250,7 +251,7 @@ function ShippingScreen() {
                 <Row>
                   <h4>
                     총 결제금액:
-                    {subtotalPrice} ₩
+                    {realPrice} ₩
                   </h4>
                 </Row>
               </ListGroup.Item>
@@ -264,9 +265,9 @@ function ShippingScreen() {
                   type="button"
                   className="btn-block"
                   //  disabled={cart.cartItems === 0}
-                  //  onClick={placeOrderHandler}
+                   onClick={submitHandler}
                 >
-                  {subtotalPrice} 결제하기
+                  {realPrice}₩ 결제하기
                 </Button>
               </ListGroup.Item>
             </ListGroup>
