@@ -12,6 +12,8 @@ from rest_framework import serializers, status
 from app.models import Seller, OrderItem
 
 class ReplySerializer(serializers.ModelSerializer):
+    nickname = serializers.ReadOnlyField(source='user_id.nickname')
+    username = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = Reply
         fields = '__all__'
