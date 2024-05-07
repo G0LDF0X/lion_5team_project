@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from 'react-icons/fa';
+import { createBoardComment } from '../actions/boardActions';
 
 function BoardDetailScreen() {
   const dispatch = useDispatch();
@@ -42,16 +43,16 @@ function BoardDetailScreen() {
   
   const submitHandler = (e) => {
     e.preventDefault();
-    setComments([...comments, { user: userInfo.username, text: comment }]);
+    dispatch(createBoardComment(board.board.id, comment));
     setComment('');
-  }
+  };
   // const board = board.find((p) => p._id === id)s
   return (
     <div>
 
 { isUploader || userInfo.isadmin ? ( 
                 <>
-                    <LinkContainer to={`board/update/${board.id}`}>
+                    <LinkContainer to={`board/update/${board.board.id}`}>
                         <Button variant="light" className="btn-sm">
                             <i className="fas fa-edit"></i>
                         </Button>
@@ -60,7 +61,7 @@ function BoardDetailScreen() {
                     <Button
                         variant="danger"
                         className="btn-sm"
-                        onClick={() => deleteHandler(board.id)}
+                        onClick={() => deleteHandler(board.board.id)}
                     >
                         <i className="fas fa-trash"></i>
                     </Button>
@@ -99,34 +100,34 @@ function BoardDetailScreen() {
     </Row>
     {/* 댓글 */}
     <Row>
-      <Col md={6}>
-        <h2>Comments</h2>
-        {comments.length === 0 && <Message>No Comments</Message>}
-        <ListGroup variant='flush'>
-          {comments.map((comment, index) => (
-            <ListGroup.Item key={index}>
-              <strong>{comment.user}</strong>
-              <p>{comment.text}</p>
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
-        <Form onSubmit={submitHandler}>
-          <Form.Group controlId='comment'>
-            <Form.Label>Comment</Form.Label>
-            <Form.Control
-              as='textarea'
-              row='3'
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-          <Button type='submit' variant='primary'>
-            Submit
-          </Button>
-        </Form>
-      </Col>
-    </Row>
-  </div>
+  <Col md={6}>
+    <h2>Comments</h2>
+    {board.replies.length === 0 && <Message>No Comments</Message>}
+    <ListGroup variant='flush'>
+      {board.replies.map((reply, index) => (
+        <ListGroup.Item key={index}>
+          <strong>{reply.user}</strong>
+          <p>{reply.content}</p>
+        </ListGroup.Item>
+      ))}
+    </ListGroup>
+    <Form onSubmit={submitHandler}>
+      <Form.Group controlId='comment'>
+        <Form.Label>Comment</Form.Label>
+        <Form.Control
+          as='textarea'
+          row='3'
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+        ></Form.Control>
+      </Form.Group>
+      <Button type='submit' variant='primary'>
+        Submit
+      </Button>
+    </Form>
+  </Col>
+</Row>
+</div>
 ) : null}
 </div>
 );
