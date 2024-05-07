@@ -42,7 +42,8 @@ function Header() {
     <Navbar>
       <Container fluid>
         <div style={{ display: 'flex', alignItems: 'center'}}>
-        <Navbar.Brand href="/">PetPals</Navbar.Brand>
+        {/* <Navbar.Brand href="/">PetPals</Navbar.Brand> */}
+        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>PetPals</Navbar.Brand>
         <Nav>
           <Nav.Link href="/">
             <div style={{ display: 'flex', alignItems:'center' }}>
