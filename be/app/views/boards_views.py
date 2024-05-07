@@ -52,7 +52,7 @@ def board_detail_or_create_reply(request, pk):
         if not request.user.is_authenticated:
             return Response({'detail': 'Authentication credentials were not provided.'}, status=403)
         
-        user = get_object_or_404(User, id=request.user.id)
+        user = User.objects.get(username=request.user)
         board = Board.objects.get(id=pk)
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
