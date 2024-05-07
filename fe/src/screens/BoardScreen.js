@@ -21,15 +21,14 @@ import CardrdHeader from "@mui/material/CardHeader";
 // import { FavoriteIcon } from "@mui/icons-material";
 // import { ShareIcon } from "@mui/icons-material";
 
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Typography } from "@mui/material";
 import { CardContent } from "@mui/material";
-import { FaUser } from 'react-icons/fa';
+import { FaUser } from "react-icons/fa";
 
 function BoardScreen() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const boardList = useSelector((state) => state.boardList);
@@ -40,21 +39,26 @@ function BoardScreen() {
   console.log(userInfo);
 
   const boardCreate = useSelector((state) => state.boardCreate);
-  const { loading:loadingCreate, error: errorCreate, success: successCreate, board: createdBoard} = boardCreate;
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    board: createdBoard,
+  } = boardCreate;
   console.log(boards);
-  const createHandler = () => { 
+  const createHandler = () => {
     dispatch(createBoard());
-  }
+  };
   const likeHandler = () => {
-    console.log('likeHandler');
-  }
+    console.log("likeHandler");
+  };
   useEffect(() => {
     dispatch(listBoards());
     if (successCreate) {
       dispatch({ type: BOARD_CREATE_RESET });
       navigate(`/board/update/${createdBoard.id}`);
     }
-  }, [dispatch , successCreate, navigate, createdBoard]);
+  }, [dispatch, successCreate, navigate, createdBoard]);
 
   return (
     <div>
@@ -63,57 +67,94 @@ function BoardScreen() {
         <h2>Loading...</h2>
       ) : error ? (
         <h3>{error}</h3>
-      ) : boards? (
+      ) : userInfo && boards ? (
         <Grid container spacing={3}>
           {boards.map((board) => (
             <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
-              <Card variant="outlined"style={{ width: 301, overflow: 'hidden' }}>
-              <Box display="flex" justifyContent="center"width={300} style={{overflow:'hidden'}}>
-              <Box height={600} width={300} style={{overflow:'hidden'}}>
-              <CardHeader
-        avatar={<Link to={`/board/detail/${board.id}`}>
-          <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
-            R
-          </Avatar>
-        </Link>
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={<Link to={`/board/detail/${board.id}`}>{board.title}</Link>}
-        subheader={board.createdAt}
-        width="10"
-      />
-      <CardMedia
-        component="img"
-        image={board.image_url}
-        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-
-      />
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={likeHandler}>
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
-      <CardContent>
-        <span><FaUser /> by {board.username}</span>
-        <Typography variant="body2" color="text.secondary">
-        <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-          
-        </Typography>
-      </CardContent>
-              </Box>
-              </Box>
+              <Card
+                variant="outlined"
+                style={{ width: 301, overflow: "hidden" }}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  width={300}
+                  style={{ overflow: "hidden" }}
+                >
+                  <Box height={600} width={300} style={{ overflow: "hidden" }}>
+                    <CardHeader
+                      avatar={
+                        <Link to={`/board/detail/${board.id}`}>
+                          <Avatar
+                            sx={{ bgcolor: grey[500] }}
+                            aria-label="recipe"
+                          >
+                            R
+                          </Avatar>
+                        </Link>
+                      }
+                      action={
+                        <IconButton aria-label="settings">
+                          <MoreVertIcon />
+                        </IconButton>
+                      }
+                      title={
+                        <Link to={`/board/detail/${board.id}`}>
+                          {board.title}
+                        </Link>
+                      }
+                      subheader={board.createdAt}
+                      width="10"
+                    />
+                    <CardMedia
+                      component="img"
+                      image={board.image_url}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    />
+                    <CardActions disableSpacing>
+                      <IconButton
+                        aria-label="add to favorites"
+                        onClick={likeHandler}
+                      >
+                        <FavoriteIcon />
+                      </IconButton>
+                      <IconButton aria-label="share">
+                        <ShareIcon />
+                      </IconButton>
+                    </CardActions>
+                    <CardContent>
+                      <span>
+                        <FaUser /> by {board.username}
+                      </span>
+                      <Typography variant="body2" color="text.secondary">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: board.content }}
+                          style={{ color: "black", backgroundColor: "white" }}
+                        />
+                      </Typography>
+                    </CardContent>
+                  </Box>
+                </Box>
               </Card>
-             </Grid>
+            </Grid>
           ))}
         </Grid>
-      ) : null}
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "10vh",
+          }}
+        >
+          <h3>로그인이 필요합니다</h3>
+        </div>
+      )}
       <div>
         {/* {boards && boards.map((board) => (
           <div key={board.id}>
