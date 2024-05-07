@@ -63,53 +63,10 @@ function ShippingScreen() {
             <Col md={6}>
               <h1>주문 /결제</h1>
             </Col>
-            {/* <FormContainer>
-        <Form onSubmit={submitHandler}>
-            <Form.Group controlId="address">
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-                type="text"
-                placeholder="Enter address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-            ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="city">
-            <Form.Label>City</Form.Label>
-            <Form.Control
-                type="text"
-                placeholder="Enter city"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-            ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="postalCode">
-            <Form.Label>Postal Code</Form.Label>
-            <Form.Control
-                type="text"
-                placeholder="Enter postal code"
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
-            ></Form.Control>
-            </Form.Group>
-            <Form.Group controlId="country">
-            <Form.Label>Country</Form.Label>
-            <Form.Control
-                type="text"
-                placeholder="Enter country"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-            ></Form.Control>
-            </Form.Group>
-            <Button  variant="primary">
-            Continue
-            </Button>
-        </Form>
-    </FormContainer> */}
             <ListGroup.Item>
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <h2>배송지</h2>
-                <h6>변경</h6>
+                <Link to="/shippingAdress"><h6>변경</h6></Link>
               </div>
               <Row>
                 <Col>Address:</Col>
@@ -119,6 +76,30 @@ function ShippingScreen() {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <strong>Method:</strong>
+              <Form onSubmit={submitHandler}>
+            <Form.Group>
+                {/* <Form.Label as="legend">Select Method</Form.Label> */}
+                <Col>
+                    <Form.Check
+                        type="radio"
+                        label="PayPal or Credit Card"
+                        id="PayPal"
+                        name="paymentMethod"
+                        value="PayPal"
+                        checked
+                        // onChange={(e) => setPaymentMethod(e.target.value)}
+                    ></Form.Check>
+                    <Form.Check
+                        type="radio"
+                        label="Toss"
+                        id="Toss"
+                        name="paymentMethod"
+                        value="Toss"
+                        // onChange={(e) => setPaymentMethod(e.target.value)}
+                    ></Form.Check>
+                </Col>
+            </Form.Group>
+        </Form>
               {/* {cart.paymentMethod} */}
             </ListGroup.Item>
             <ListGroup.Item>
@@ -162,7 +143,7 @@ function ShippingScreen() {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                          {item.qty} x {item.price}₩ = {item.qty * item.price}₩
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -180,30 +161,30 @@ function ShippingScreen() {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>총 상품금액</Col>
+                  <Col>총 상품금액:   ₩</Col>
                   {/* <Col>${cart.itemsPrice}</Col> */}
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>배송비</Col>
+                  <Col>배송비:   5000₩</Col>
                   {/* <Col>${cart.shippingPrice}</Col> */}
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>쿠폰 사용</Col>
+                  <Col>쿠폰 사용:      ₩</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>포인트 사용</Col>
+                  <Col>포인트 사용:     ₩</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <h4>총 결제금액: 
-                  {subtotalPrice    }</h4>
+                  {subtotalPrice    } ₩</h4>
                 </Row>
               </ListGroup.Item>
               {/* {error && <Message variant="danger">{error}</Message>} */}

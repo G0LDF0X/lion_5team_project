@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -9,9 +9,9 @@ import Badge from 'react-bootstrap/Badge';
 const UserQnA = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const [userQnAs, setuserQnAs] = React.useState([]);
-  const [userAnswers, setUserAnswers] = React.useState([]);
-  React.useEffect(() => {
+  const [userQnAs, setuserQnAs] =  useState([]);
+  const [userAnswers, setUserAnswers] =  useState([]);
+  useEffect(() => {
     fetch('profile/myuserqna/', {
       headers: {
         'Authorization': `Bearer ${userInfo.access}`
@@ -38,7 +38,7 @@ const UserQnA = () => {
     })
     .catch(error => console.error('Error:', error));
   }, []);
-  React.useEffect(() => {
+   useEffect(() => {
     fetch('profile/myuseranswer/', {
       headers: {
         'Authorization': `Bearer ${userInfo.access}`
@@ -62,7 +62,7 @@ const UserQnA = () => {
         <div className="col">
           <h2>나의 질문</h2>
           {userQnAs.map((userQnA, index) => (
-            <ListGroup as="ol" numbered key={index} className='mb-3'>
+            <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"
                 className="d-flex justify-content-between align-items-start"
@@ -72,8 +72,9 @@ const UserQnA = () => {
                     <div className="fw-bold">{userQnA.title}</div>
                   </Link>
                   {userQnA.content.length > 100 
-                ? `${userQnA.content.substring(0, 100)}...` 
-                : userQnA.content}<br/>
+                  
+                ? <div dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <div dangerouslySetInnerHTML={{ __html: userQnA.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userQnA.created_at.split('T')[0]}</small>
                 </div>
                 <Badge bg="primary" pill>
@@ -86,7 +87,7 @@ const UserQnA = () => {
         <div className="col">
           <h2>나의 답변</h2>
           {userAnswers.map((userAnswer, index) => (
-            <ListGroup as="ol" numbered key={index} className='mb-3'>
+            <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"
                 className="d-flex justify-content-between align-items-start"
@@ -96,8 +97,9 @@ const UserQnA = () => {
                     <div className="fw-bold">{userAnswer.title}</div>
                   </Link>
                   {userAnswer.content.length > 100 
-                ? `${userAnswer.content.substring(0, 100)}...` 
-                : userAnswer.content}<br/>
+                  
+                ? <div dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <div dangerouslySetInnerHTML={{ __html: userAnswer.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userAnswer.created_at.split('T')[0]}</small>
                 </div>
               </ListGroup.Item>

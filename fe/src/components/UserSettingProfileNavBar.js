@@ -8,6 +8,7 @@ import UserSettingSetting from './UserSettingSetting';
 import UserProfileMain from './UserProfileMain';
 import Bookmark from './Bookmark';
 import UserQnA from './UserQnA';
+import MyBoard from './MyBoard';
 import FollowingList from './FollowingList';
 
 function CustomTabPanel(props) {
@@ -67,7 +68,7 @@ export default function UserSettingProfileNavbar() {
         <UserProfileMain />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <MyBoard />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
