@@ -14,24 +14,6 @@ def get_Boards(request):
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
 
-
-
-# @api_view(['GET'])   
-# def get_Board(request, pk):
-#     board = get_object_or_404(Board, id=pk)
-#     replies = Reply.objects.filter(board_id=board)
-
-#     board_serializer = BoardSerializer(board)
-#     reply_serializer = ReplySerializer(replies, many=True)
-    
-#     return Response(
-#         {
-#             'board': board_serializer.data,
-#             'replies': reply_serializer.data
-#         }
-#     )
-
-
 @api_view(['GET', 'POST'])   
 def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':

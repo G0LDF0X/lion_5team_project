@@ -26,7 +26,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Typography } from "@mui/material";
 import { CardContent } from "@mui/material";
-
+import { FaUser } from 'react-icons/fa';
 
 function BoardScreen() {
 
@@ -104,6 +104,7 @@ function BoardScreen() {
         </IconButton>
       </CardActions>
       <CardContent>
+        <span><FaUser /> by {board.username}</span>
         <Typography variant="body2" color="text.secondary">
         <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
           

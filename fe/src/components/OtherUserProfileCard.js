@@ -27,8 +27,8 @@ function OtherUserProfileCard({ userId }) {
         const fetchData = async () => {
           try {
             const userResponse = await fetch(`/users/${userId}`);
-            const followingResponse = await fetch(`/users/follower/${userId}/`);
-            const followerResponse = await fetch(`/users/following/${userId}/`);
+            const followingResponse = await fetch(`/users/following/${userId}/`);
+            const followerResponse = await fetch(`/users/follower/${userId}/`);
             if (!userResponse.ok) {
                 throw new Error(`HTTP error! status: ${userResponse.status}`);
             }

@@ -6,6 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import OtherUserProfileMain from './OtherUserProfileMain';
 import OtherUserQnA from './OtherUserQnA';
+import OtherBookmark from './OtherBookmark';
+import OtherMyBoard from './OtherMyBoard';
+import OtherFollowingList from './OtherFollow';
 import { useParams } from 'react-router-dom';
 
 function CustomTabPanel(props) {
@@ -66,19 +69,19 @@ export default function UserSettingProfileNavbar() {
       <OtherUserProfileMain userId={id}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <OtherMyBoard userId={id} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
       </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            Item Four
+            <OtherFollowingList userId={id} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
             <OtherUserQnA userId={id}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
-            ItemSix
+            <OtherBookmark userId={id}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={6}>
             Item Seven
