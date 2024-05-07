@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import OtherUserProfileCard from './OtherUserProfileCard';
 import { Card, Row, Col } from 'react-bootstrap'
-import axios from 'axios';
 
 function OtherUserProfileMain({ userId }) {
     return (
