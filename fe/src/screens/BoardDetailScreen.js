@@ -26,6 +26,7 @@ function BoardDetailScreen() {
   console.log(userInfo);
 
   console.log(board);
+  
   useEffect(() => {
     if(id ===board.user_id) {
       setIsUploader(true);
@@ -75,22 +76,22 @@ function BoardDetailScreen() {
           <Message variant={"danger"}>{error}</Message>
          : (
           <div>
-          <Row>
+            <Row>
             <Col md={12}>
               <Card className='my-3 p-3 rounded'>
-            <Card.Header as='h5'>{board.title}  
-            <br></br><Link to={`/users/${board.user_id}`}>
-                <span><FaUser /> by {board.username}</span>
+            <Card.Header as='h5'>{board.board.title}  
+            <br></br><Link to={`/users/${board.board.user_id}`}>
+                <span><FaUser /> by {board.board.username}</span>
               </Link>
                   </Card.Header>
-                <Link to={board.product_url}>
+                <Link to={board.board.product_url}>
                 </Link>
                 <Card.Body>
-                  {board.image_url && <Image src={board.image_url}  fluid />}
+                  {board.board.image_url && <Image src={board.board.image_url}  fluid />}
                   <Card.Text>
                     {board.content}
                   </Card.Text>
-                  <Button variant="link" href={board.product_url} target="_blank">
+                  <Button variant="link" href={board.board.product_url} target="_blank">
                     Visit Product
                   </Button>
                 </Card.Body>
