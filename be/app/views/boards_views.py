@@ -88,3 +88,18 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_Reply(request, board_pk):
+    user = User.objects.get(username=request.user)
+    board = Board.objects.get(pk=board_pk)
+    reply = Reply.objects.create(
+        user_id=user,
+        board_id=board,
+        content=request.data.get('content', ''),
+        replied_id=request.data.get('replied_id', ''),
+    )
+    serializer = ReplySerializer(reply, many=False)
+    return Response(serializer.data)
