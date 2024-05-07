@@ -16,6 +16,9 @@ import {
     BOARD_DELETE_REQUEST,
     BOARD_DELETE_FAIL,
     BOARD_DELETE_SUCCESS,
+    BOARD_CREATE_REPLY_REQUEST,
+    BOARD_CREATE_REPLY_SUCCESS,
+    BOARD_CREATE_REPLY_FAIL,
 } from '../constants/boardConstants';
 
 
@@ -35,12 +38,26 @@ export const boardListReducer = (state = { boards: [] }, action) => {
     }
 }
 
+export const replyCreateReducer = (state = {}, action) => {
+    switch (action.type) {
+      case BOARD_CREATE_REPLY_REQUEST:
+        return { loading: true };
+      case BOARD_CREATE_REPLY_SUCCESS:
+        return { loading: false, success: true, reply: action.payload.reply };
+      case BOARD_CREATE_REPLY_FAIL:
+        return { loading: false, error: action.payload };
+      default:
+        return state;
+    }
+  };
+
+
 export const boardDetailsReducer = (state = { board: {}, replies: [] }, action) => {
     switch (action.type) {
         case BOARD_DETAILS_REQUEST:
             return { loading: true, ...state };
         case BOARD_DETAILS_SUCCESS:
-            return { loading: false, board: action.payload, replies: action.payload.replies};
+            return { loading: false, board: action.payload.board, replies: action.payload.replies};
         case BOARD_DETAILS_FAIL:
             return { loading: false, error: action.payload };
         default:
@@ -91,3 +108,4 @@ export const boardDeleteReducer = (state = {}, action) => {
             return state;
     }
 }
+
