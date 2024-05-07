@@ -23,6 +23,8 @@ import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
+import { createQNA } from "../actions/qnaActions";
+// import { QNA_CREATE_RESET } from "../constants/qnaConstants";
 
 
 function Productcreen() {
@@ -52,6 +54,8 @@ function Productcreen() {
   const { success: successBookmarkRemove } = bookMarkRemove;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
+
+  
   let totalRate =
     product && product.reviews
       ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
@@ -59,8 +63,9 @@ function Productcreen() {
   let avgRate =
     product && product.reviews ? totalRate / product.reviews.length : 0;
 
+
     useEffect(() => {
-      
+
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
         dispatch({type:REVIEW_CREATE_RESET});
@@ -82,11 +87,16 @@ function Productcreen() {
     else{
       setMarked(false);
     }
-    // dispatch(listCartItems()); 
+    // if (successProductQNA) {
+    //   navigate(`/items/qna/${createdQNA.id}`);
+    //   dispatch({type:QNA_CREATE_RESET});
+    // }
+    dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
     if(!bookMarkItems){
     dispatch(listBookMark());}
   }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
+  
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
@@ -126,6 +136,12 @@ function Productcreen() {
       fontSize: '5rem',  // increase font size
     },
   });
+  const createQNAHandler = () => {
+    dispatch(createQNA(id));
+    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
+  };
+
+ 
   return (
     <div>
       <Snackbar
@@ -288,23 +304,25 @@ function Productcreen() {
 </Grid>
         </div>
       )}
-
-      <Grid container spacing={3}>
+<Box>
+<Grid container spacing={3}>
     <Grid item xs={9}>
     <Typography variant="h4">Q&A</Typography>
-    <Box display="flex" justifyContent="flex-end">
 
+     <Box display="flex" justifyContent="flex-end">
       {/* QnA 작성 */}
-      {/* <Button variant="contained" color="primary" onClick={createQNAHandler}>
+     <Button variant="contained" color="primary" onClick={createQNAHandler}>
         Create a Q&A
-      </Button> */}
+      </Button>
+    </Box> 
 
-    </Box>
-    
+     <Card>
+      <CardContent>
     {product.item_qna_set ? (
 
       product.item_qna_set.map((item_qna) => (
-        // <QA qna = {item_qna}>
+        <QA qna = {item_qna}>
+  
 
           <CardContent>
             {console.log(item_qna)}
@@ -318,26 +336,36 @@ function Productcreen() {
                 <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
               ))}</div>):(null)
               } 
+
             {/* <Box mt={2}> */}
 
+
           {/* Qna 편집, 삭제 */}
-          {/* <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
+          {/* <Button variant="contained" color="primary" onClick={() => editQNAHandler(item_qna)}>
             Edit
           </Button>
-          <Button variant="contained" color="secondary" onClick={() => deleteReviewHandler(review)}>
+          <Button variant="contained" color="secondary" onClick={() => deleteQNAHandler(item_qna)}>
             Delete
           </Button> */}
 
-        {/* </Box> */}
+   
           </CardContent>
-        // </QA>
+
+        </QA>
+
       ))
     ) : (
+
       <Typography variant="body1">Q&A가 없습니다.</Typography>
+
     )}
+    </CardContent>
+    </Card>
   </Grid>
-</Grid>
+  </Grid>
+  </Box>
       </div>
+
   );
 }
 

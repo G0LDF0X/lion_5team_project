@@ -10,6 +10,7 @@ import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from 'react-icons/fa';
 
+
 function BoardDetailScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
