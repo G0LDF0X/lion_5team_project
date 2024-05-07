@@ -11,6 +11,7 @@ const FollowingList = () => {
   console.log(userInfo);
   React.useEffect(() => {
     fetch(`/users/following/${userInfo.id}/`, {
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${userInfo.access}`
       }
@@ -41,22 +42,24 @@ const FollowingList = () => {
     <div>
       {console.log(following)}
       <h1>나의 팔로잉</h1>
-    {/* /*
+    {
       <div className='d-flex flex-row flex-wrap'>
 
-      
       {following.map((follow, index) => (
+          console.log(follow),
         <Card style={{ width: '18rem' , margin: '10px' }} key={index}>
         <Card.Body>
-          <Card.Title>{follow.user.username}</Card.Title>
-          <Card.Text>{follow.user.description}</Card.Text>
-          <Link to={`/users/detail/${follow.followed_id.id}`}>
+          {console.log(follow.user)};
+        <Card.Title>{follow.followed_username}</Card.Title>
+        <Card.Text>{follow.followed_username}</Card.Text>
+        
+        <Link to={`/users/${follow.followed_id}`}>
           <Button variant="primary">바로가기</Button>
-          </Link>
+        </Link>
         </Card.Body>   
       </Card>
       ))}
-      </div> */}
+      </div> }
     </div>
   );
 };
