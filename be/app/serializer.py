@@ -256,6 +256,8 @@ class RefundSerializer(serializers.ModelSerializer):
 class FollowSerializer(serializers.ModelSerializer):
     follower_username = serializers.ReadOnlyField(source='follower_id.username')
     followed_username = serializers.ReadOnlyField(source='followed_id.username')
+    follower_nickname = serializers.ReadOnlyField(source='follower_id.nickname')
+    followed_nickname = serializers.ReadOnlyField(source='followed_id.nickname')
     class Meta:
         model = Follow
         fields = '__all__'

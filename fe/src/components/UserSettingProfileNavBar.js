@@ -9,7 +9,7 @@ import UserProfileMain from './UserProfileMain';
 import Bookmark from './Bookmark';
 import UserQnA from './UserQnA';
 import MyBoard from './MyBoard';
-import FollowingList from './FollowingList';
+import Follow from './Follow';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -74,7 +74,7 @@ export default function UserSettingProfileNavbar() {
         Item Three
       </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            <FollowingList />
+            <Follow />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
             <UserQnA />

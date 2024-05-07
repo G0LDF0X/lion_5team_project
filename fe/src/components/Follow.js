@@ -32,7 +32,7 @@ const FollowingList = () => {
           ...follow,
           user: userData[index]
         }));
-        console.log("RESULT:", followingWithUserData);
+        
         setFollowing(followingWithUserData);
       });
     })
@@ -40,19 +40,16 @@ const FollowingList = () => {
   }, []);
   return (
     <div>
-      {console.log(following)}
-      <h1>나의 팔로잉</h1>
+      
+      <h2>나의 팔로잉</h2>
     {
       <div className='d-flex flex-row flex-wrap'>
 
       {following.map((follow, index) => (
-          console.log(follow),
         <Card style={{ width: '18rem' , margin: '10px' }} key={index}>
         <Card.Body>
-          {console.log(follow.user)};
-        <Card.Title>{follow.followed_username}</Card.Title>
-        <Card.Text>{follow.followed_username}</Card.Text>
-        
+        <Card.Title>{follow.followed_username}</Card.Title>      
+        <Card.Text>{follow.created_at.split('T')[0]}</Card.Text>
         <Link to={`/users/${follow.followed_id}`}>
           <Button variant="primary">바로가기</Button>
         </Link>
