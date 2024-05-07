@@ -32,11 +32,11 @@ def get_Boards(request):
 #     )
 
 
-@api_view(['GET', 'POST', 'DELETE'])   
+@api_view(['GET', 'POST'])   
 def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':
         board = get_object_or_404(Board, id=pk)
-        replies = Reply.objects.select_related('user_id').filter(board_id=board).all()
+        replies = Reply.objects.filter(board_id=board)
 
         board_serializer = BoardSerializer(board)
         reply_serializer = ReplySerializer(replies, many=True)
@@ -56,20 +56,10 @@ def board_detail_or_create_reply(request, pk):
         board = Board.objects.get(id=pk)
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
-        # 댓글을 생성합니다.
-        Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
-        
-        # 댓글 생성 후, 전체 댓글 목록을 다시 가져와서 반환합니다.
-        replies = Reply.objects.select_related('user_id').filter(board_id=board).all()
-        reply_serializer = ReplySerializer(replies, many=True)
-        
-        return Response(reply_serializer.data)
+        reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
+        serializer = ReplySerializer(reply, many=True)
+        return Response(serializer.data)
     
-    elif request.method == 'DELETE':
-        board = get_object_or_404(Board, id=pk)
-        board.delete()
-        return Response('Board Deleted')
-
 
 @api_view(['GET'])      #게시물 필터링.
 def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
