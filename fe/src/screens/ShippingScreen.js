@@ -22,8 +22,11 @@ function ShippingScreen() {
 
   const location = useLocation();
   const [payment, setPayment] = useState("paypal");
+  const [isUserAddressSelected, setIsUserAddressSelected] = useState(true);
+
   // const [shippingAdresss, setShippingAdresss] = useState(userInfo.address);
   const [address, setAddress] = useState(userInfo.address);
+  const [otherAddress, setOtherAddress] = useState(false);
   const [city, setCity] = useState(userInfo.city);
   const cartList = useSelector((state) => state.cartList);
   const { cartItems, shippingAdress } = cartList;
@@ -31,10 +34,10 @@ function ShippingScreen() {
   const products = useSelector((state) => state.productList.products);
 
   useEffect(() => {
-    console.log(address);
-    if (shippingAdress && shippingAdress.length !== 0) {
-      setAddress(shippingAdress.address);
-    }
+    // console.log(address);
+    // if (shippingAdress && shippingAdress.length !== 0) {
+      // setAddress(shippingAdress.address);
+    // }
     if (!products.length) {
       dispatch(listProducts());
     }
@@ -87,21 +90,36 @@ function ShippingScreen() {
                   <Col>
                     <Form.Check
                       type="radio"
-                      label="PayPal or Credit Card"
-                      id="PayPal"
-                      name="paymentMethod"
-                      value="PayPal"
-                      checked
-                      // onChange={(e) => setPaymentMethod(e.target.value)}
+                      label={userInfo.address}
+                      id="User"
+                      name="shipping adress"
+                      value={userInfo.address}
+                      checked={isUserAddressSelected}
+                      onChange={(e) => {
+                        setAddress(userInfo.address);
+                        setOtherAddress(false);
+                        setIsUserAddressSelected(true);
+
+                        console.log(otherAddress)
+                      }}
                     ></Form.Check>
                     <Form.Check
                       type="radio"
-                      label="Toss"
-                      id="Toss"
-                      name="paymentMethod"
-                      value="Toss"
-                      // onChange={(e) => setPaymentMethod(e.target.value)}
+                      label="새로운 배송지"
+                      id="other"
+                      name="shipping adress"
+                      // value="Toss"
+                      onChange={(e) => {setOtherAddress(true);     setIsUserAddressSelected(false);
+                      }}
                     ></Form.Check>
+                    {otherAddress ? (
+                     <Form.Control
+                     type="text"
+                     value={address}
+                     onChange={(e) => {setAddress(e.target.value); console.log(otherAddress)}}
+                   /> ): null
+                  }
+
                   </Col>
                 </Form.Group>
               </Form>
