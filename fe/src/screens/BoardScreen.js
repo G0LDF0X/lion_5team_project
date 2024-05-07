@@ -106,6 +106,7 @@ function BoardScreen() {
                       subheader={board.createdAt}
                       width="10"
                     />
+                    <Link to={`/board/detail/${board.id}`}>
                     <CardMedia
                       component="img"
                       image={board.image_url}
@@ -114,7 +115,7 @@ function BoardScreen() {
                         justifyContent: "center",
                         alignItems: "center",
                       }}
-                    />
+                    /></Link>
                     <CardActions disableSpacing>
                       <IconButton
                         aria-label="add to favorites"
