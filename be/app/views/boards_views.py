@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from app.models import Board, User
-from app.serializer import BoardSerializer
+from app.models import Board, User, Reply
+from app.serializer import BoardSerializer, ReplySerializer
 from django.db.models import F
 from datetime import datetime
 
@@ -19,8 +19,16 @@ def get_Boards(request):
 @api_view(['GET'])   
 def get_Board(request, pk):
     board = get_object_or_404(Board, id=pk)
-    serializer = BoardSerializer(board)
-    return Response(serializer.data)
+    replies = Reply.objects.filter(board_id=board)
+
+    board_serializer = BoardSerializer(board)
+    reply_serializer = ReplySerializer(replies, many=True)
+    return Response(
+        {
+            'board': board_serializer.data,
+            'replies': reply_serializer.data
+        }
+    )
 
 
 
