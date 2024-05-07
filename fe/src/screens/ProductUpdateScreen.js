@@ -39,7 +39,7 @@ function ProductUpdateScreen() {
     // dispatch(listProductDetails(productId));
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
-      navigate("/seller/manage");
+      navigate("/users/profile");
     } else {
       if ( product.id !== Number(productId)) {
         dispatch(listProductDetails(productId));
