@@ -24,7 +24,7 @@ import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
-import { QNA_CREATE_RESET } from "../constants/qnaConstants";
+// import { QNA_CREATE_RESET } from "../constants/qnaConstants";
 
 
 function Productcreen() {
@@ -322,7 +322,8 @@ function Productcreen() {
 
       product.item_qna_set.map((item_qna) => (
         <QA qna = {item_qna}>
-    
+  
+
           <CardContent>
             {console.log(item_qna)}
             <Typography variant="h5">{item_qna.item_answer_set.title}</Typography>
@@ -335,8 +336,9 @@ function Productcreen() {
                 <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
               ))}</div>):(null)
               } 
-              
-            <Box mt={2}>
+
+            {/* <Box mt={2}> */}
+
 
           {/* Qna 편집, 삭제 */}
           {/* <Button variant="contained" color="primary" onClick={() => editQNAHandler(item_qna)}>
@@ -346,10 +348,11 @@ function Productcreen() {
             Delete
           </Button> */}
 
-        </Box>
+   
           </CardContent>
-  
-         </QA>
+
+        </QA>
+
       ))
     ) : (
 

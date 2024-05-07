@@ -2,8 +2,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from app.models import Board, User
-from app.serializer import BoardSerializer
+from app.models import Board, User, Reply
+from app.serializer import BoardSerializer, ReplySerializer
 from django.db.models import F
 from datetime import datetime
 
@@ -14,15 +14,29 @@ def get_Boards(request):
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
 
+@api_view(['GET', 'POST'])   
+def board_detail_or_create_reply(request, pk):
+    if request.method == 'GET':
+        board = get_object_or_404(Board, id=pk)
+        replies = Reply.objects.filter(board_id=board)
 
-
-@api_view(['GET'])   
-def get_Board(request, pk):
-    board = get_object_or_404(Board, id=pk)
-    serializer = BoardSerializer(board)
-    return Response(serializer.data)
-
-
+        board_serializer = BoardSerializer(board)
+        reply_serializer = ReplySerializer(replies, many=True)
+        
+        return Response(
+            {
+                'board': board_serializer.data,
+                'replies': reply_serializer.data
+            }
+        )
+    elif request.method == 'POST':
+        user = User.objects.get(username=request.user)
+        board = Board.objects.get(id=pk)
+        content = request.data.get('content', '')
+        replied_id = request.data.get('replied_id', None)
+        reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
+        serializer = ReplySerializer(reply, many=False)
+        return Response(serializer.data)
 
 @api_view(['GET'])      #게시물 필터링.
 def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
@@ -80,3 +94,19 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
+
+
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def create_Reply(request, pk):
+#     user = User.objects.get(username=request.user)
+#     board = Board.objects.get(id=pk)
+#     replied_id = request.data.get('replied_id', None)  # 요청에서 replied_id 값을 가져옴
+#     reply = Reply.objects.create(
+#         user_id=user,
+#         board_id=board,
+#         content=request.data.get('content', ''),
+#         replied_id=replied_id  # 댓글이 답변하는 댓글의 ID를 저장
+#     )
+#     serializer = ReplySerializer(reply, many=False)
+#     return Response(serializer.data)

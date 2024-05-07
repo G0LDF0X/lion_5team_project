@@ -98,7 +98,7 @@ def update_User_Profile(request):
     if update_fields:
         user.save(update_fields=update_fields)
 
-    serializer = UserSerializer(user, many=False)
+    serializer = User_Serializer(user, many=False)
     return Response(serializer.data)
 
 
@@ -191,14 +191,12 @@ def get_userprofile(request, pk):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getFollower(request, pk):
     follows = Follow.objects.filter(followed_id=pk)
     serializer = FollowSerializer(follows, many=True)
     return Response(serializer.data)
   
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getFollowing(request, pk):
     follows = Follow.objects.filter(follower_id=pk)
     serializer = FollowSerializer(follows, many=True)
@@ -226,4 +224,39 @@ def getMyUserAnswer(request):
     user = User.objects.get(username=request.user)
     my_user_answer_list = User_Answer.objects.filter(user_id=user)
     serializer = UserAnswerSerializer(my_user_answer_list, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_other_boomark(request, pk):
+    user = User.objects.get(id=pk)
+    bookmarks = Bookmark.objects.filter(user_id=user)
+    serializer = BookmarkSerializer(bookmarks, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_other_review(request, pk):
+    user = User.objects.get(id=pk)
+    reviews = Review.objects.filter(user_id=user)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_other_board(request, pk):
+    user = User.objects.get(id=pk)
+    boards = Board.objects.filter(user_id=user)
+    serializer = BoardSerializer(boards, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_other_qna(request, pk):
+    user = User.objects.get(id=pk)
+    qnas = User_QnA.objects.filter(user_id=user)
+    serializer = UserQnASerializer(qnas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_other_answer(request, pk):
+    user = User.objects.get(id=pk)
+    answers = User_Answer.objects.filter(user_id=user)
+    serializer = UserAnswerSerializer(answers, many=True)
     return Response(serializer.data)

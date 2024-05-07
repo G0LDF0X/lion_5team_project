@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UserSettingCreateReview from './UserSettingCreateReview';
+import MyReview from './MyReview';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,7 +60,7 @@ export default function UserSettingMyreviewNavbar() {
         <UserSettingCreateReview />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <MyReview />
       </CustomTabPanel>
     
     </Box>

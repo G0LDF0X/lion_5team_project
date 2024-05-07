@@ -35,12 +35,12 @@ export const boardListReducer = (state = { boards: [] }, action) => {
     }
 }
 
-export const boardDetailsReducer = (state = { board: {} }, action) => {
+export const boardDetailsReducer = (state = { board: {}, replies: [] }, action) => {
     switch (action.type) {
         case BOARD_DETAILS_REQUEST:
             return { loading: true, ...state };
         case BOARD_DETAILS_SUCCESS:
-            return { loading: false, board: action.payload };
+            return { loading: false, board: action.payload, replies: action.payload.replies};
         case BOARD_DETAILS_FAIL:
             return { loading: false, error: action.payload };
         default:

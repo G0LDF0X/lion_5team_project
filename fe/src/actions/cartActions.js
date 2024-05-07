@@ -11,6 +11,7 @@ import {
   CART_QTY_UPDATE_REQUEST,
   CART_QTY_UPDATE_FAIL, 
   CART_QTY_UPDATE_SUCCESS,
+  CART_SAVE_SHIPPING_ADDRESS
 } from "../constants/cartConstants";
 
 export const listCartItems = () => async (dispatch, getState) => {
@@ -129,4 +130,11 @@ export const updateQty = (id, qty) => async (dispatch, getState) => {
           : error.message,
     });
   }
+}
+
+export const saveShippingAddress = (data) => (dispatch) => {
+  dispatch({
+    type: CART_SAVE_SHIPPING_ADDRESS,
+    payload: data,
+  });
 }

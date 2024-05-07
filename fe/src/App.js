@@ -38,6 +38,8 @@ import ProductDetailScreen from './screens/ProductDetailScreen';
 import ReviewEditScreen from './screens/ReviewEditScreen';
 import OrderCreateScreen from './screens/OrderCreateScreen';
 import ShippingScreen from './screens/ShippingScreen';
+import ShippingAdressScreen from './screens/ShippngAdressScreen';
+import OtherUserProfileNavbar from './components/OtherUserProfileNavbar';
 function App() {
   return (
     <Router>
@@ -57,6 +59,7 @@ function App() {
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />            
             <Route path='/orders/create' element={<OrderCreateScreen/>} />
+            <Route path ='/shippingAdress' element={<ShippingAdressScreen/>} />
 
             <Route path='/login' element = {<LoginScreen/>} />
             <Route path='/register' element = {<RegisterScreen/>} />
@@ -66,6 +69,7 @@ function App() {
             <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
             <Route path='/users/myreview' element={<MyReviewScreen/>} />
             <Route path='/users/settings' element={<UserSettingScreen/>} />
+            <Route path='/users/:id' element={<OtherUserProfileNavbar/>} />
 
             <Route path='/seller/register' element={<SellerRegisterScreen/>} />
             <Route path='/seller/index' element={<SellerMainScreen/>} />

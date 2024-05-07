@@ -26,7 +26,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Typography } from "@mui/material";
 import { CardContent } from "@mui/material";
-
+import { FaUser } from 'react-icons/fa';
 
 function BoardScreen() {
 
@@ -69,9 +69,9 @@ function BoardScreen() {
           {boards.map((board) => (
             <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
             {/* <Carousel.Item key={board.id}> */}
-              <Box display="flex" justifyContent="center">
-              <Card variant="outlined">
-              <Box height={600} width={400}>
+              <Card variant="outlined"style={{ width: 300, overflow: 'auto' }}>
+              <Box display="flex" justifyContent="center"width={300}>
+              <Box height={600} width={300}>
               <CardHeader
         avatar={<Link to={`/board/detail/${board.id}`}>
           <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
@@ -91,6 +91,8 @@ function BoardScreen() {
       <CardMedia
         component="img"
         image={board.image_url}
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+
         // alt="Paella dish"
       />
       <CardActions disableSpacing>
@@ -102,13 +104,15 @@ function BoardScreen() {
         </IconButton>
       </CardActions>
       <CardContent>
+        <span><FaUser /> by {board.username}</span>
         <Typography variant="body2" color="text.secondary">
-          {board.content}
+        <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+          
         </Typography>
       </CardContent>
               </Box>
-              </Card>
               </Box>
+              </Card>
             {/* </Carousel.Item> */}
              </Grid>
           ))}

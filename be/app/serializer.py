@@ -18,6 +18,7 @@ class ReplySerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)
+    username = serializers.ReadOnlyField(source='user_id.username')
 
     class Meta:
         model = Board
@@ -214,7 +215,8 @@ class CategorySerializer(serializers.ModelSerializer):
 class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', ]
+        fields = '__all__'
+
 
 class BookmarkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
@@ -252,7 +254,10 @@ class RefundSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FollowSerializer(serializers.ModelSerializer):
-
+    follower_username = serializers.ReadOnlyField(source='follower_id.username')
+    followed_username = serializers.ReadOnlyField(source='followed_id.username')
+    follower_nickname = serializers.ReadOnlyField(source='follower_id.nickname')
+    followed_nickname = serializers.ReadOnlyField(source='followed_id.nickname')
     class Meta:
         model = Follow
         fields = '__all__'

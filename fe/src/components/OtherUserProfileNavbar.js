@@ -4,12 +4,12 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import UserSettingSetting from './UserSettingSetting';
-import UserProfileMain from './UserProfileMain';
-import Bookmark from './Bookmark';
-import UserQnA from './UserQnA';
-import MyBoard from './MyBoard';
-import Follow from './Follow';
+import OtherUserProfileMain from './OtherUserProfileMain';
+import OtherUserQnA from './OtherUserQnA';
+import OtherBookmark from './OtherBookmark';
+import OtherMyBoard from './OtherMyBoard';
+import OtherFollowingList from './OtherFollow';
+import { useParams } from 'react-router-dom';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,6 +45,7 @@ function a11yProps(index) {
 }
 
 export default function UserSettingProfileNavbar() {
+  const { id } = useParams();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -64,19 +65,19 @@ export default function UserSettingProfileNavbar() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
-        <UserProfileMain />
+      <OtherUserProfileMain userId={id}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MyBoard />
+        <OtherMyBoard userId={id} />
       </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-            <Follow />
+            <OtherFollowingList userId={id} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            <UserQnA />
+            <OtherUserQnA userId={id}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-            <Bookmark />
+            <OtherBookmark userId={id}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
             Item Seven

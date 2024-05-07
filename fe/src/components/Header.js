@@ -42,7 +42,8 @@ function Header() {
     <Navbar>
       <Container fluid>
         <div style={{ display: 'flex', alignItems: 'center'}}>
-        <Navbar.Brand href="/">PetPals</Navbar.Brand>
+        {/* <Navbar.Brand href="/">PetPals</Navbar.Brand> */}
+        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>PetPals</Navbar.Brand>
         <Nav>
           <Nav.Link href="/">
             <div style={{ display: 'flex', alignItems:'center' }}>
@@ -75,6 +76,15 @@ function Header() {
           <SearchBox />
 
         </div>
+        <IconButton
+          size="large"
+          aria-label="show cart items"
+          color="inherit"
+        >
+          <Link to="/cart">
+            <i class="fa-solid fa-cart-shopping fa-xs"></i>
+          </Link>
+        </IconButton>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
              {userInfo ? (
@@ -93,7 +103,7 @@ function Header() {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
+                  vertical: 'bottom',
                   horizontal: 'right',
                 }}
                 keepMounted
@@ -107,20 +117,19 @@ function Header() {
                 <MenuItem onClick={handleClose}>
                   <Link to="/users/profile">Profile</Link>
                   </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <Link to="/cart">Cart</Link>
-                  </MenuItem>
                 <MenuItem onClick={logoutHandler}>
-                 
                     Logout
                   </MenuItem>
               </Menu>
             </div>
             ) : (
-            <Card className="ms-auto me-5 bg-info">
+            <Card className="ms-auto me-3 bg-info">
               <LinkContainer to="/login">
                 <Nav.Link>
-                  <i className="fas fa-user"></i>Login
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '8px 15px' }}>
+                  <i className="fas fa-user"></i>
+                  <span>Login</span>
+                  </div>
                 </Nav.Link>
               </LinkContainer>
             </Card>
@@ -154,22 +163,19 @@ function Header() {
               </LinkContainer>
             </NavDropdown>
           )}
-          <Card className="ms-auto me-5 bg-info">
-            <Nav className="ms-auto me-5">
-              <NavDropdown title="글쓰기" id="navbarScrollingDropdown">
-                <NavDropdown.Item href="/board/create/">
-                  <i class="fa-regular fa-image"></i>PET 사진/영상올리기
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/editor">
-                  집들이 글쓰기
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/qna/create/">
-                  Q&A 글쓰기
-                </NavDropdown.Item>
-              </NavDropdown>
-              <NavDropdown.Divider />
-            </Nav>
-          </Card>
+          <Card className="ms-auto me-2 bg-info">
+          <Nav className="ms-auto me-2">
+            <NavDropdown title="글쓰기" id="navbarScrollingDropdown" drop='left'>
+              <NavDropdown.Item href="/board/create/">
+                <i class="fa-regular fa-image"></i>PET 사진/영상올리기
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/qna/create/">
+                Q&A 글쓰기
+              </NavDropdown.Item>
+            </NavDropdown>
+            <NavDropdown.Divider />
+          </Nav>
+        </Card>
         </Navbar.Collapse>
       </Container>
     </Navbar>
