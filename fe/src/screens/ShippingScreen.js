@@ -85,7 +85,7 @@ function ShippingScreen() {
               </div>
               <Row>
                 <Col>Address:</Col>
-                <Form onSubmit={submitHandler}>
+                <Form >
                 <Form.Group>
                   
                   <Col>
@@ -143,7 +143,7 @@ function ShippingScreen() {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <strong>Method:</strong>
-              <Form onSubmit={submitHandler}>
+              <Form >
                 <Form.Group>
                   {/* <Form.Label as="legend">Select Method</Form.Label> */}
                   <Col>

@@ -34,14 +34,14 @@ function UserProfileShoppingOrderlist() {
               </tr>
             </thead>
               <tbody>
-                {orders.map((order) => (
-                  <tr key={order._id}>
-                    <td>{order._id}</td>
-                    <td>{order.createdAt.substring(0, 10)}</td>
-                    <td>{order.totalPrice}</td>
+                {orders&&orders.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
+                    <td>{order.created_at.substring(0, 10)}</td>
+                    <td>{order.total_price}</td>
                     <td>
-                      {order.isPaid ? (
-                        order.paidAt.substring(0, 10)
+                      {order.paid_at ? (
+                        order.paid_at.substring(0, 10)
                       ) : (
                         <i
                           className="fas fa-times"
@@ -50,8 +50,8 @@ function UserProfileShoppingOrderlist() {
                       )}
                     </td>
                     <td>
-                      {order.isDelivered ? (
-                        order.deliveredAt.substring(0, 10)
+                      {order.delivered_at? (
+                        order.delivered_at.substring(0, 10)
                       ) : (
                         <i
                           className="fas fa-times"
@@ -60,7 +60,7 @@ function UserProfileShoppingOrderlist() {
                       )}
                     </td>
                     <td>
-                      <LinkContainer to={`/order/${order._id}`}>
+                      <LinkContainer to={`/order/${order.id}`}>
                         <Button variant="light" className="btn-sm">
                           Details
                         </Button>

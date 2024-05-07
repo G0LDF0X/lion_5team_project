@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { getUserDetails, logout } from '../actions/userActions'
 import { listBookMark } from '../actions/bookmarkActions'
 import { listProducts } from '../actions/productActions'
+import { getMyOrders } from '../actions/orderActions'
 function UserProfileScreen() {
 const dispatch = useDispatch()
 const navigate = useNavigate()
@@ -20,6 +21,7 @@ navigate('/login')
 dispatch(listBookMark())
 dispatch(getUserDetails(userInfo.id))
 dispatch(listProducts())
+dispatch(getMyOrders())
 
 }
 }

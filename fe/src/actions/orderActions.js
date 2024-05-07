@@ -98,9 +98,9 @@ export const getMyOrders = () => async (dispatch, getState) => {
             userLogin: { userInfo },
         } = getState();
 
-        const res = await fetch(`/orders/myorderlist/`, {
+        const res = await fetch(`/order/myorderlist/`, {
             headers: {
-                Authorization: `Bearer ${userInfo.token}`
+                Authorization: `Bearer ${userInfo.access}`
             }
         })
 
