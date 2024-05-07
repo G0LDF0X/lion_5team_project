@@ -48,13 +48,18 @@ def board_detail_or_create_reply(request, pk):
             }
         )
     elif request.method == 'POST':
-        user = User.objects.get(username=request.user)
+        # POST 요청에 대해 사용자가 로그인했는지 확인합니다.
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication credentials were not provided.'}, status=403)
+        
+        user = get_object_or_404(User, user_id=request.user)
         board = Board.objects.get(id=pk)
         content = request.data.get('content', '')
-        replied_id = request.data.get('replied_id', None)
+        replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
         serializer = ReplySerializer(reply, many=False)
         return Response(serializer.data)
+    
 
 @api_view(['GET'])      #게시물 필터링.
 def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
