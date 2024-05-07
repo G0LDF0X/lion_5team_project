@@ -24,6 +24,7 @@ function BoardDetailScreen() {
   const { loading, error, board, replies } = boardDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  const [replyCreated, setReplyCreated] = useState(false);
   
   console.log(userInfo);
 
@@ -34,7 +35,11 @@ function BoardDetailScreen() {
     }
     dispatch(getBoardDetails(id));
 
-  }, [dispatch, id]);
+    if (replyCreated) {
+      setReplyCreated(false);
+    }
+
+  }, [dispatch, id, replyCreated]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -42,6 +47,7 @@ function BoardDetailScreen() {
       dispatch(createReply(id, reply, replied_id)); // 댓글을 생성합니다.
       setReply(''); // 입력 필드를 초기화합니다.
       setReplied_id(0); // 입력 필드를 초기화합니다.
+      setReplyCreated(true);
       dispatch(getBoardDetails(id));
     } else {
       alert('Please enter a comment.');
@@ -115,7 +121,7 @@ function BoardDetailScreen() {
               <ListGroup variant='flush'>
                 {replies.map((reply, index) => (
                   <ListGroup.Item key={index}>
-                    <strong>{reply.username}</strong>
+                    <strong>{reply.user_id}</strong>
                     <p>{reply.content}</p>
                   </ListGroup.Item>
                 ))}
