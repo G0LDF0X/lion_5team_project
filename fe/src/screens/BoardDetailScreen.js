@@ -14,6 +14,8 @@ function BoardDetailScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isUploader, setIsUploader] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState('');
   
   const { id } = useParams();
   const boardDetails = useSelector((state) => state.boardDetails);
@@ -35,6 +37,12 @@ function BoardDetailScreen() {
     if (window.confirm("Are you sure?")) {
       // DELETE BOARD
     }
+  }
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setComments([...comments, { user: userInfo.username, text: comment }]);
+    setComment('');
   }
   // const board = board.find((p) => p._id === id)s
   return (
@@ -74,15 +82,44 @@ function BoardDetailScreen() {
                 <Link to={board.product_url}>
                 </Link>
                 <Card.Body>
-                <Image src={board.image_url} alt={board.title} fluid />
+                  {board.image_url && <Image src={board.image_url}  fluid />}
                   <Card.Text>
                     {board.content}
                   </Card.Text>
                   <Button variant="link" href={board.product_url} target="_blank">
-                  
-                </Button>
+                    Visit Product
+                  </Button>
                 </Card.Body>
               </Card>
+            </Col>
+          </Row>
+          {/* 댓글 */}
+          <Row>
+            <Col md={6}>
+              <h2>Comments</h2>
+              {comments.length === 0 && <Message>No Comments</Message>}
+              <ListGroup variant='flush'>
+                {comments.map((comment, index) => (
+                  <ListGroup.Item key={index}>
+                    <strong>{comment.user}</strong>
+                    <p>{comment.text}</p>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Form onSubmit={submitHandler}>
+                <Form.Group controlId='comment'>
+                  <Form.Label>Comment</Form.Label>
+                  <Form.Control
+                    as='textarea'
+                    row='3'
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  ></Form.Control>
+                </Form.Group>
+                <Button type='submit' variant='primary'>
+                  Submit
+                </Button>
+              </Form>
             </Col>
           </Row>
         </div>
