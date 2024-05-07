@@ -13,7 +13,7 @@ export default function ListForm({qna}) {
 <>    
       <ListItem alignItems="flex-start">
         <ListItemText
-          primary={<Link to={`/qna/deatil/${qna.id}`}>{qna.title}</Link>}
+          primary={<Link to={`/qna/detail/${qna.id}`}>{qna.title}</Link>}
           secondary={
             <React.Fragment>
               <Typography

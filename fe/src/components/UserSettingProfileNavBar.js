@@ -9,6 +9,7 @@ import UserProfileMain from './UserProfileMain';
 import Bookmark from './Bookmark';
 import UserQnA from './UserQnA';
 import MyBoard from './MyBoard';
+import Follow from './Follow';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,11 +57,10 @@ export default function UserSettingProfileNavbar() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
           <Tab label="모두보기" {...a11yProps(0)} />
           <Tab label="사진" {...a11yProps(1)} />
-          <Tab label="집들이" {...a11yProps(2)} />
-          <Tab label="팔로잉" {...a11yProps(3)} />
-          <Tab label="질문과 답변" {...a11yProps(4)} />
-          <Tab label="북마크" {...a11yProps(5)} />
-          <Tab label="좋아요" {...a11yProps(6)} />
+          <Tab label="팔로잉" {...a11yProps(2)} />
+          <Tab label="질문과 답변" {...a11yProps(3)} />
+          <Tab label="북마크" {...a11yProps(4)} />
+          <Tab label="좋아요" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
@@ -69,19 +69,16 @@ export default function UserSettingProfileNavbar() {
       <CustomTabPanel value={value} index={1}>
         <MyBoard />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            Item Four
+        <CustomTabPanel value={value} index={2}>
+            <Follow />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
+        <CustomTabPanel value={value} index={3}>
             <UserQnA />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
+        <CustomTabPanel value={value} index={4}>
             <Bookmark />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={6}>
+        <CustomTabPanel value={value} index={5}>
             Item Seven
         </CustomTabPanel>
     </Box>

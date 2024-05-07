@@ -21,28 +21,44 @@ function SampleEditorScreen({props}) {
         }
     }, [userInfo]);
 
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        setImageUrl(file);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('content', editorData);
+        formData.append('image_url', imageUrl);
+        formData.append('product_url', productUrl);
+    
         const res = await fetch('/board/create/', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json', // This line is crucial
               'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({ 
-                title: title,
-                content: editorData,
-                image_url: imageUrl,
-                product_url: productUrl,
-            }),
+            body: formData,
         });
+        
         
         const data = await res.text();
         console.log(data);
+
+        // If the request was successful, show an alert and redirect to /board/
+        if (res.ok) {
+            alert('글이 성공적으로 작성되었습니다.');
+            window.location.href = '/board/';
+        } else {
+            alert('글 작성에 실패하였습니다. 다시 시도해주세요.');
+        }
     }
+
     return (<>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요." /><br></br>
-        <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="Image URL" /><br></br>
+        <input type="file" onChange={handleImageUpload} /><br></br>
         <input type="text" value={productUrl} onChange={(e) => setProductUrl(e.target.value)} placeholder="Product URL" />
         <CKEditor
             editor={ ClassicEditor }
