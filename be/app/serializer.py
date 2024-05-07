@@ -12,9 +12,10 @@ from rest_framework import serializers, status
 from app.models import Seller, OrderItem
 
 class ReplySerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = Reply
-        fields = '__all__'
+        fields = ['id', 'content', 'created_at', 'username', 'replied_id']
 
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)

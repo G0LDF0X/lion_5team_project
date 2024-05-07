@@ -109,6 +109,8 @@ export const getBoardDetails = (id) => async (dispatch) => {
         type: BOARD_CREATE_REPLY_SUCCESS,
         payload: data,
       });
+      
+      dispatch(getBoardDetails(boardId));
     } catch (error) {
       dispatch({
         type: BOARD_CREATE_REPLY_FAIL,

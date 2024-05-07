@@ -115,7 +115,7 @@ function BoardDetailScreen() {
               <ListGroup variant='flush'>
                 {replies.map((reply, index) => (
                   <ListGroup.Item key={index}>
-                    <strong>{reply.user_id}</strong>
+                    <strong>{reply.username}</strong>
                     <p>{reply.content}</p>
                   </ListGroup.Item>
                 ))}
