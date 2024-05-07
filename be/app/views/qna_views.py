@@ -4,6 +4,7 @@ from app.models import User_QnA, User_Answer, User
 from rest_framework.permissions import IsAuthenticated
 from app.serializer import UserQnASerializer, UserAnswerSerializer
 from datetime import datetime
+from django.core.files.images import ImageFile
 
 @api_view(['GET'])
 def qna_board(request):
@@ -22,16 +23,21 @@ def qna_detail(request, pk):
         'answers': answer_serializer.data
     })
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_user_qna(request):
     user = User.objects.get(username=request.user)
-    current_time = datetime.now()
+
+    image_file = request.FILES.get('image_url', None)
+    if image_file:
+        image_file = ImageFile(image_file)
+
     qna_board = User_QnA.objects.create(
         user_id=user,
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
-        image_url=request.data.get('image_url', ''),
+        image_url=image_file,
     )
     serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
