@@ -214,7 +214,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class UserprofileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'phone', 'address', 'nickname', 'email', 'description', 'image_url', ]
+        fields = '__all__'
 
 class BookmarkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
