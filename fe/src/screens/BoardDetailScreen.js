@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
 import { LinkContainer } from "react-router-bootstrap";
-
+import { FaUser } from 'react-icons/fa';
 
 function BoardDetailScreen() {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ function BoardDetailScreen() {
   const { loading, error, board } = boardDetails;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  
   console.log(userInfo);
 
   console.log(board);
@@ -38,7 +38,7 @@ function BoardDetailScreen() {
       // DELETE BOARD
     }
   }
-
+  
   const submitHandler = (e) => {
     e.preventDefault();
     setComments([...comments, { user: userInfo.username, text: comment }]);
@@ -78,7 +78,11 @@ function BoardDetailScreen() {
           <Row>
             <Col md={12}>
               <Card className='my-3 p-3 rounded'>
-                  <Card.Header as='h5'>{board.title}</Card.Header>
+            <Card.Header as='h5'>{board.title}  
+            <br></br><Link to={`/users/${board.user_id}`}>
+                <span><FaUser /> by {board.username}</span>
+              </Link>
+                  </Card.Header>
                 <Link to={board.product_url}>
                 </Link>
                 <Card.Body>
