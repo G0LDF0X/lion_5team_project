@@ -39,7 +39,16 @@ function SampleEditorScreen({props}) {
         
         const data = await res.text();
         console.log(data);
+
+        // If the request was successful, show an alert and redirect to /board/
+        if (res.ok) {
+            alert('글이 성공적으로 작성되었습니다.');
+            window.location.href = '/board/';
+        } else {
+            alert('글 작성에 실패하였습니다. 다시 시도해주세요.');
+        }
     }
+
     return (<>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요." /><br></br>
         <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="Image URL" /><br></br>

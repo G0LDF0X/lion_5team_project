@@ -33,7 +33,7 @@ function BoardDetailScreen() {
     }
     dispatch(listBoardDetails(id));
 
-  }, [dispatch, id, board]);
+  }, [dispatch, id]);
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
       // DELETE BOARD
