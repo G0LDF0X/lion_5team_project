@@ -41,46 +41,48 @@ useEffect(() => {
   }
 }
 , [dispatch, successCreate, navigate, createdQNA, userInfo]);
-
+  console.log(qnas);
   return (<div>
         <h1>Q&A</h1>
-        {loading ? (
-          <h2>Loading...</h2>
-        ) : error ? (
-          <h3>{error}</h3>
-        ) : userInfo? (
+        <Row>
+  {qnas.map((qna) => (
+    <Col key={qna.id} sm={12} md={6} lg={4} xl={12}>
+      <Card className='my-3 p-3 rounded'>
+        <Card.Body>
           <Row>
-             <Col className="text-right">
-          <Button variant="light" className="my-3" onClick={createHandler}>
-            <i className="fas fa-plus"></i>create
-          </Button>
-          </Col>
-          <QNASearchBox />
-          <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {qnas.map((qna) => (
-              <ListForm key={qna.id} qna={qna} /> 
-            ))}
-            </List>
+            <Col xs={2}>
+              <Card.Img src={qna.image}></Card.Img>
+              <Card.Text>텍스트 확인</Card.Text>
+            </Col>
+            <Col xs={10}>
+              <Card.Title as='div'>
+                <strong>{qna.title}</strong>
+              </Card.Title>
+              <Card.Text>
+                {qna.content}
+              </Card.Text>
+            </Col>
           </Row>
-        ) : (
-      <Row>
-        {qnas.map((qna) => (
-          <Col key={qna.id} sm={12} md={6} lg={4} xl={3}>
-            <Card className='my-3 p-3 rounded'>
-              <Card.Body>
-                <Card.Title as='div'>
-                  <strong>{qna.title}</strong>
-                </Card.Title>
-                
-                {/* <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} /> */}
-                
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    )}
-  </div>
+        </Card.Body>
+      </Card>
+    </Col>
+  ))}
+</Row>
+{userInfo ? (
+  <Row>
+    <Col className="text-right">
+      <Button variant="light" className="my-3" onClick={createHandler}>
+        <i className="fas fa-plus"></i>create
+      </Button>
+    </Col>
+    <QNASearchBox />
+    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      {qnas.map((qna) => (
+        <ListForm key={qna.id} qna={qna} /> 
+      ))}
+    </List>
+  </Row>
+) : null}</div>
     
     
   )
