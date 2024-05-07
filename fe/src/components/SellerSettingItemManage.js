@@ -21,6 +21,8 @@ function ProductListScreen() {
     const { loading, error, products, pages, success } = productList;
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
+    const userDetails = useSelector((state) => state.userDetails);
+    const { user} = userDetails;
     const productDelete = useSelector((state) => state.productDelete);
     const { loading: loadingDelete, error: errorDelete ,success: successDelete } = productDelete;
     const productCreate = useSelector((state) => state.productCreate);
@@ -28,7 +30,7 @@ function ProductListScreen() {
     const productUpdate = useSelector((state) => state.productUpdate);
     const { success: successUpdate } = productUpdate;
     const [sellerProducts, setSellerProducts] = useState([]);
-
+    
 
     // const page = params.get('page') || 1;
     // let keyword = params.get('query') || '';
@@ -38,6 +40,16 @@ function ProductListScreen() {
   }
   
     useEffect(() => {
+      // if (products && seller &&userInfo.is_seller){
+      //   console.log(seller.id)
+      //   products.map((product) => {
+      //     if(product.seller_id === seller.id){
+      //       setSellerProducts(product);
+      //     }
+      //   }
+      //   )}
+
+      
       // if(!userInfo.isAdmin) {
         //     navigate("/login");
         // }
@@ -102,6 +114,7 @@ function ProductListScreen() {
             <th></th>
           </tr>
         </thead>
+        { userInfo.is_staff? (
         <tbody>
           {products.map((product) => (
             <tr key={product.id}>
@@ -131,7 +144,40 @@ function ProductListScreen() {
               </td>
             </tr>
           ))}
-        </tbody>
+        </tbody>) : userInfo.is_seller? ( 
+          <tbody>
+          {products.map((product) => ( 
+            user.seller&&product.seller_id === user.seller.id ? (
+            <tr key={product.id}>
+              <td>{product.id}</td>
+              <td><Link to = {`/items/detail/${product.id}`}>{product.name}</Link></td>
+              <td>{product.price}₩</td>
+              
+                <td>{product.category}</td> 
+              
+                
+                
+              {/* <td>{product.category}</td> */}
+              {/* <td>{product.brand}</td> */}
+              <td>
+                <LinkContainer to={`/items/update/${product.id}`}>
+                  <Button variant="light" className="btn-sm" onClick = {updateHandler(product.id)}>
+                    <i className="fas fa-edit"></i>
+                  </Button>
+                </LinkContainer>
+                <Button
+                  variant="danger"
+                  className="btn-sm"
+                  onClick={() => deleteHandler(product.id)}
+                >
+                  <i className="fas fa-trash"></i>
+                </Button>
+              </td>
+            </tr>) : null
+          ))}
+        </tbody>) : null
+      }
+
       </Table>
       {/* <Paginate pages={pages} page={page} keyword="" isAdmin={true} /> */}
       </div>

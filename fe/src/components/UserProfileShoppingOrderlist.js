@@ -27,10 +27,10 @@ function UserProfileShoppingOrderlist() {
               <tr>
                 <th>ID</th>
                 <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th></th>
+                <th>TOTAL PRICE</th>
+                <th>PAID AT</th>
+                <th>DELIVERED AT</th>
+                <th>DETAIL</th>
               </tr>
             </thead>
               <tbody>
