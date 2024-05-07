@@ -15,6 +15,7 @@ import QA from '../components/QA';
 import Loading from '../components/Loading';
 import Message from '../components/Message';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -44,6 +45,7 @@ function HomeScreen({ location }) {
     dispatch(listBoards());
     dispatch(listQNA());
   }, [dispatch, location]);
+  
   function createCarouselItem(products) {
     return (
       <Carousel.Item>
@@ -84,7 +86,7 @@ function HomeScreen({ location }) {
         <Message variant={"danger"}>{boardError}</Message>
       ) : (
         <Carousel>
-          {boards.map((board) => (
+          {boards.slice(0,4).map((board) => (
             <Carousel.Item key={board.id}>
               <Box display="flex" justifyContent="center">
               <Card variant="outlined">
@@ -98,7 +100,13 @@ function HomeScreen({ location }) {
           ))}
         </Carousel>
       )}
-      <Typography variant="h5" className={classes.title}>Q&A</Typography>
+      {/* <Typography variant="h5" className={classes.title} style={{ color: '#3f51b5'}}>Q&A</Typography> */}
+      <Box display="flex" alignItems="center">
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm2-4h-2V7h2v6z"/>
+      </svg>
+      <Typography variant="h5" className={classes.title} style={{ color: '#000000', marginLeft: '10px' }}> Q&A</Typography>
+    </Box>
       {qnaLoading ? (
         <Loading />
       ) : qnaError ? (
@@ -107,8 +115,11 @@ function HomeScreen({ location }) {
         <Grid container spacing={3}>
           {qnas.slice(0,4).map((qna) => (
             <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
-              <Card variant="outlined">
+              <Card variant="outlined" style={{width: '250px', height: '200px' ,border : '2px solid', borderColor: '#898989', borderRadius: '10px'}}>
+              <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '100%' }}>
               <QA qna={qna} />
+
+              </Box>
               </Card>
             </Grid>
           ))}
