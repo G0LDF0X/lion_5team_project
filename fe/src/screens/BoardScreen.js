@@ -63,15 +63,13 @@ function BoardScreen() {
         <h2>Loading...</h2>
       ) : error ? (
         <h3>{error}</h3>
-      ) : userInfo && boards? (
+      ) : boards? (
         <Grid container spacing={3}>
-         {/* <Carousel> */}
           {boards.map((board) => (
             <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
-            {/* <Carousel.Item key={board.id}> */}
-              <Card variant="outlined"style={{ width: 300, overflow: 'auto' }}>
-              <Box display="flex" justifyContent="center"width={300}>
-              <Box height={600} width={300}>
+              <Card variant="outlined"style={{ width: 301, overflow: 'hidden' }}>
+              <Box display="flex" justifyContent="center"width={300} style={{overflow:'hidden'}}>
+              <Box height={600} width={300} style={{overflow:'hidden'}}>
               <CardHeader
         avatar={<Link to={`/board/detail/${board.id}`}>
           <Avatar sx={{ bgcolor: grey[500] }} aria-label="recipe">
@@ -93,7 +91,6 @@ function BoardScreen() {
         image={board.image_url}
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 
-        // alt="Paella dish"
       />
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites" onClick={likeHandler}>
@@ -113,10 +110,8 @@ function BoardScreen() {
               </Box>
               </Box>
               </Card>
-            {/* </Carousel.Item> */}
              </Grid>
           ))}
-        {/* </Carousel> */}
         </Grid>
       ) : null}
       <div>
