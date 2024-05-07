@@ -38,6 +38,7 @@ import ProductDetailScreen from './screens/ProductDetailScreen';
 import ReviewEditScreen from './screens/ReviewEditScreen';
 import OrderCreateScreen from './screens/OrderCreateScreen';
 import ShippingScreen from './screens/ShippingScreen';
+import ShippingAdressScreen from './screens/ShippngAdressScreen';
 import OtherUserProfileNavbar from './components/OtherUserProfileNavbar';
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Route path='/order/:id' element={<PaymentScreen/>} />
             <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />            
             <Route path='/orders/create' element={<OrderCreateScreen/>} />
+            <Route path ='/shippingAdress' element={<ShippingAdressScreen/>} />
 
             <Route path='/login' element = {<LoginScreen/>} />
             <Route path='/register' element = {<RegisterScreen/>} />
