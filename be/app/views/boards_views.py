@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from app.models import Board, User, Reply
 from app.serializer import BoardSerializer, ReplySerializer
 from django.db.models import F
-from django.core.files.images import ImageFile
+from datetime import datetime
 
 @api_view(['GET'])
 def get_Boards(request):
@@ -13,6 +13,24 @@ def get_Boards(request):
 
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
+
+
+
+# @api_view(['GET'])   
+# def get_Board(request, pk):
+#     board = get_object_or_404(Board, id=pk)
+#     replies = Reply.objects.filter(board_id=board)
+
+#     board_serializer = BoardSerializer(board)
+#     reply_serializer = ReplySerializer(replies, many=True)
+    
+#     return Response(
+#         {
+#             'board': board_serializer.data,
+#             'replies': reply_serializer.data
+#         }
+#     )
+
 
 @api_view(['GET', 'POST'])   
 def board_detail_or_create_reply(request, pk):
@@ -34,12 +52,12 @@ def board_detail_or_create_reply(request, pk):
         if not request.user.is_authenticated:
             return Response({'detail': 'Authentication credentials were not provided.'}, status=403)
         
-        user = get_object_or_404(User, user_id=request.user)
+        user = get_object_or_404(User, id=request.user.id)
         board = Board.objects.get(id=pk)
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
-        serializer = ReplySerializer(reply, many=False)
+        serializer = ReplySerializer(reply, many=True)
         return Response(serializer.data)
     
 
@@ -51,27 +69,23 @@ def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
 
 
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_Board(request):
     user = User.objects.get(username=request.user)
-    
-    image_file = request.FILES.get('image_url', None)
-    if image_file:
-        image_file = ImageFile(image_file)
-
+    current_time = datetime.now()
     board = Board.objects.create(
         user_id=user,
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
-        image_url=image_file,
+        image_url=request.data.get('image_url', ''),
         product_url=request.data.get('product_url', ''),
         show=0,
         like=0,
     )
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
+
     
 
 @api_view(['PUT'])
