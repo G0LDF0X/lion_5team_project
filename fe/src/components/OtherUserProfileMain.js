@@ -7,12 +7,6 @@ function OtherUserProfileMain({ userId }) {
         <div>
             <Row className='justify-content-start'>
                 <OtherUserProfileCard userId={userId} />
-                <Col>
-                    <h4>사진</h4>
-                    <Card></Card>
-                    <h4>집들이</h4>
-                    <Card></Card>
-                </Col>
             </Row>
         </div>
     )
