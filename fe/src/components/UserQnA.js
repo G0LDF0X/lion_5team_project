@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -9,9 +9,9 @@ import Badge from 'react-bootstrap/Badge';
 const UserQnA = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const [userQnAs, setuserQnAs] = React.useState([]);
-  const [userAnswers, setUserAnswers] = React.useState([]);
-  React.useEffect(() => {
+  const [userQnAs, setuserQnAs] =  useState([]);
+  const [userAnswers, setUserAnswers] =  useState([]);
+  useEffect(() => {
     fetch('profile/myuserqna/', {
       headers: {
         'Authorization': `Bearer ${userInfo.access}`
@@ -38,7 +38,7 @@ const UserQnA = () => {
     })
     .catch(error => console.error('Error:', error));
   }, []);
-  React.useEffect(() => {
+   useEffect(() => {
     fetch('profile/myuseranswer/', {
       headers: {
         'Authorization': `Bearer ${userInfo.access}`
