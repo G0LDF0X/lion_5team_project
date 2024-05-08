@@ -96,9 +96,9 @@ function OrderDetailScreen() {
               <h2>Payment Method</h2>
                 <strong>Method:</strong>
                 {order[0].payment_method}<br/>
-              <span style={{ color: 'gray', fontSize: 'small' }}>
-          {orderInfo.paid_at.split('T')[0]}
-        </span>
+                <span style={{ color: 'gray', fontSize: 'small' }}>
+                  {orderInfo.paid_at ? orderInfo.paid_at.split('T')[0] : ''}
+                </span>
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
