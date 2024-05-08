@@ -60,9 +60,10 @@ export const userRegisterReducer = (state = {}, action) => {
       case USER_DETAILS_REQUEST:
         return { ...state, loading: true };
       case USER_DETAILS_SUCCESS:
-        return { loading: false, user: action.payload };
+        console.log("USER DETAILS SUCCESS :", action.payload);
+        return { ...state, loading: false, user: action.payload };
       case USER_DETAILS_FAIL:
-        return { loading: false, error: action.payload };
+        return { ...state, loading: false, error: action.payload };
       case USER_DETAILS_RESET:
         return { user: {} };
       default:
@@ -93,6 +94,8 @@ export const userRegisterReducer = (state = {}, action) => {
         return { loading: false, success: true, userInfo: action.payload };
       case USER_UPDATE_PASSWORD_FAIL:
         return { loading: false, error: action.payload };
+      case USER_UPDATE_PASSWORD_RESET:
+        return {};
       default:
         return state;
     }
