@@ -30,8 +30,9 @@ function CartScreen() {
   // Calculate cart products with prices and quantities
  
   const removeFromCartHandler = (id) => {
+    window.alert("Item이 삭제되었습니다.");
     dispatch(removeFromCart(id));
-    
+    window.location.reload();
   };
 
   const checkOutHandler = () => {
