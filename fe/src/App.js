@@ -59,7 +59,7 @@ function App() {
 
             <Route path='/shipping' element={<ShippingScreen/>} />  
             <Route path='/order/:id' element={<PaymentScreen/>} />
-            <Route path='/orders/detail/:id' element={<OrderDetailScreen/>} />            
+            <Route path='/order/detail/:id' element={<OrderDetailScreen/>} />            
             <Route path='/orders/create' element={<OrderCreateScreen/>} />
             <Route path ='/shippingAdress' element={<ShippingAdressScreen/>} />
 
