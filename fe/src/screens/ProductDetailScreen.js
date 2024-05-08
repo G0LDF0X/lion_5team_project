@@ -34,6 +34,7 @@ function Productcreen() {
   const handleClose = () => {
     setState({  open: false });
   };
+
   const { open } = state;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -306,7 +307,6 @@ function Productcreen() {
     <Typography variant="h4">Q&A</Typography>
 
 
-
     {product.item_qna_set && product.item_qna_set.length > 0 ? (
       product.item_qna_set.map((item_qna) => (
         <Card style={{ width: '130%' , minHeight: '250px', marginBottom: '20px'}}>
@@ -315,7 +315,7 @@ function Productcreen() {
         {console.log(item_qna)}
 
         <p style={{ paddingTop: '20px', paddingLeft: '20px' }}>Q. {item_qna.title}</p>
-        <p style={{ paddingLeft: '20px' }}>{item_qna.content}</p>
+        <p style={{ paddingLeft: '20px' , position: 'relative'}}>{item_qna.content}</p>
 
         {item_qna.image && <img src={item_qna.image_url} alt={item_qna.content} />}
         
@@ -326,9 +326,15 @@ function Productcreen() {
                     답변 보기
                 </Dropdown.Toggle>
     
-                <Dropdown.Menu style={{ maxHeight: '400px', overflow: 'auto' }}>
+                <Dropdown.Menu style={{ maxHeight: '400px', overflow: 'auto' , position: 'relative', top: '50px'}}>
                     {item_qna.item_answer_set.map((answer) => (
-                        <Dropdown.Item key={answer._id}>
+                        <Dropdown.Item key={answer._id}
+                        style={{ 
+                          width: '100%', 
+                          whiteSpace: 'normal', 
+                          overflow: 'hidden', 
+                          textOverflow: 'ellipsis'  
+                      }}>
                             <p>A.{answer.title}</p>
                             <p>{answer.content}</p>
                         </Dropdown.Item>
@@ -338,6 +344,7 @@ function Productcreen() {
         ) : (
             <p style={{ paddingLeft: '20px' }}>---- 답변이 없습니다 ----</p>
         )}
+
 
             {/* <Box mt={2}> */}
 
