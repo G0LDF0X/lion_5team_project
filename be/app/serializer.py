@@ -63,6 +63,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
 class UserQnASerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = User_QnA
         fields = '__all__'  
@@ -72,6 +73,7 @@ class UserQnASerializer(serializers.ModelSerializer):
     
 
 class UserAnswerSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = User_Answer
         fields = '__all__'

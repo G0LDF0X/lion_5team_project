@@ -17,7 +17,7 @@ class User(models.Model):
     address = models.TextField('address', blank=True) 
     nickname = models.CharField('nickname', max_length=50)
     email = models.EmailField('email', max_length=254, unique=True)
-    image_url = models.URLField('image_url', blank=True, null=True)
+    image_url = models.ImageField('image_url', null=True, blank=True, max_length=1000)
     description = models.TextField('description', blank=True)
     is_seller = models.BooleanField(default=False)
 

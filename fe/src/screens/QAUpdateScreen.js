@@ -7,11 +7,12 @@ import { Link } from "react-router-dom";
 import { listQNA, updateQNA, listQNADetails } from "../actions/qnaActions";
 import { Form } from "react-bootstrap";
 import {updqteQNA} from "../actions/qnaActions";
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { QNA_DETAILS_RESET, QNA_UPDATE_RESET } from "../constants/qnaConstants";
 
 
 function QAUpdateScreen() {
+  const navigate = useNavigate();
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
   const [title, setTitle] = useState("");
@@ -37,7 +38,7 @@ function QAUpdateScreen() {
           // data.append("name", file.name);
           data.append("file", file);
           setUploading(true);
-          fetch(`/qna/uploadImage/${qna.id}/`, {
+          fetch(`/qna/uploadImage/${QnaId}/`, {
             method: "PUT",
             body: data,
           })
@@ -85,6 +86,7 @@ function QAUpdateScreen() {
     dispatch(updateQNA({ id: qna.id, content: editorData, title: title, product_url: "product_url"}));
     dispatch({ type: QNA_UPDATE_RESET });
     dispatch({ type: QNA_DETAILS_RESET });
+    navigate(`/qna/detail/${qna.id}`)
   }
   useEffect(() => { 
     if (!qna || qna.id === undefined) {

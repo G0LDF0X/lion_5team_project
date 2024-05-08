@@ -12,6 +12,7 @@ urlpatterns = [
     path('myshopping/myqna/', getMyItemQnA, name = 'my_item_qna'),
     path('myreview/', getMyReview, name='my_review'),
     path('<int:pk>/', get_userprofile, name='user_profile'),
+    path('updateImage/', update_User_Profile_Image, name='update_user_image'),
     path('<int:pk>/bookmark/', get_other_boomark, name='other_bookmark'),
     path('<int:pk>/myqna/', get_other_qna, name='other_item_qna'),
     path('<int:pk>/myanswer/', get_other_answer, name='other_item_answer'),
