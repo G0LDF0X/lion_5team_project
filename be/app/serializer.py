@@ -39,6 +39,9 @@ class SellerSerializer(serializers.ModelSerializer):
         fields = '__all__' 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    shipping_price = serializers.ReadOnlyField(source='order_id.shipping_price')
+    total_price = serializers.ReadOnlyField(source='order_id.total_price')
+    payment_method = serializers.ReadOnlyField(source='order_id.payment_method')
     class Meta:
         model = OrderItem
         fields = '__all__'
@@ -209,11 +212,16 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         return user
 
 class SellerSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user_id.username')
+    email = serializers.ReadOnlyField(source='user_id.email')
+    isAdmin = serializers.ReadOnlyField(source='user_id.is_staff')
+    
     class Meta:
         model = Seller
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
+    item = serializers.ReadOnlyField(source='item_id.name')
     class Meta:
         model = Order
         fields = '__all__'
