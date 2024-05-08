@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
 from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, RefundSerializer, ItemAnswerSerializer
+from rest_framework import status
 
 @api_view(['GET'])
 def index(request):
@@ -101,7 +102,6 @@ def seller_refund_view(request):
     
     serializer = RefundSerializer(refund_items, many=True)
     return Response(serializer.data)
-from rest_framework import status
 
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
