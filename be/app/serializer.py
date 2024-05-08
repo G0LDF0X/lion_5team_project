@@ -38,6 +38,17 @@ class SellerSerializer(serializers.ModelSerializer):
         model = Seller
         fields = '__all__' 
 
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shipping_Address
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    item = serializers.ReadOnlyField(source='item_id.name')
+    class Meta:
+        model = Order
+        fields = '__all__'
+
 class OrderItemSerializer(serializers.ModelSerializer):
     shipping_price = serializers.ReadOnlyField(source='order_id.shipping_price')
     total_price = serializers.ReadOnlyField(source='order_id.total_price')
@@ -220,12 +231,6 @@ class SellerSerializer(serializers.ModelSerializer):
         model = Seller
         fields = '__all__'
 
-class OrderSerializer(serializers.ModelSerializer):
-    item = serializers.ReadOnlyField(source='item_id.name')
-    class Meta:
-        model = Order
-        fields = '__all__'
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -258,11 +263,6 @@ class CartSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Cart
-        fields = '__all__'
-
-class ShippingAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Shipping_Address
         fields = '__all__'
 
 class Board_Serializer(serializers.ModelSerializer):

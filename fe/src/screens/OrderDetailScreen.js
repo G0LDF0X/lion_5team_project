@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, getShippingAddress, get_Order } from "../actions/orderActions";
 import { List } from "@material-ui/core";
 
 function OrderDetailScreen() {
@@ -27,17 +27,25 @@ function OrderDetailScreen() {
   const [sdkReady, setSdkReady] = useState(false);
   const [loadingPay, setLoadingPay] = useState(false);
   const [loadingDeliver, setLoadingDeliver] = useState(false);
+  const shippingAddress = useSelector((state) => state.shippingAddress);
+  const { address, loading: loadingAddress, error: errorAddress } = shippingAddress;
+  const orderState = useSelector((state) => state.getOrder);
+  const { orderInfo } = orderState;
 
-  console.log("email", userInfo);
 
+  console.log("USERINFO", userInfo);
+  console.log("ORDER", order);
+  console.log("ORDERSTATE", orderInfo);
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
     }
     dispatch(getOrderDetails(id));
+    dispatch(getShippingAddress(id));
+    dispatch(get_Order(id));
     console.log("order", order);
   }
-  , [dispatch, id, navigate, userInfo]);
+  , [id]);
 
   const successPaymentHandler = (paymentResult) => {
     // 여기에 결제 성공 시 실행할 코드를 작성하세요.
@@ -62,15 +70,13 @@ function OrderDetailScreen() {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Shipping</h2>
-              { order ? order.map((item, index) => (
                 <p>
                 <strong>Address:</strong>
-                {item.shippingAddress}
+                {address && address.address}
               </p>
-              )) : null}
-               {order.isDelivered ? (
+               {orderInfo.is_delivered ? (
                 <Message variant="success">
-                  Delivered on {order.deliveredAt}
+                  Delivered on {orderInfo.delivered_at.split("T")[0]}
                 </Message>
               ) : (
                 <Message variant="danger">Not Delivered</Message>
@@ -78,36 +84,21 @@ function OrderDetailScreen() {
               </ListGroup.Item>
               <ListGroup.Item>
               <h2>User</h2>
-                <strong> Name:
-                { order ? order.map((item, index) => (
-                <p>{item.user_name}</p>
-                )) : null}
-                </strong>
+                <strong> ID: </strong>
+                {userInfo.username}
               <p>
                 <strong>Email:</strong>
-                {/* <a href={`mailto:${order.user.email}`}>{order.user.email}</a> */}
-              </p>
-                {/* <p> */}
-                {/* <strong>Address:</strong>
-                {order.shippingAddress.address},{order.shippingAddress.city},{" "}
-                {order.shippingAddress.postalCode},{" "}
-                {order.shippingAddress.country}
-              </p> */}
-             
+                {userInfo.email}
+                {}
+             </p>
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Payment Method</h2>
-              <p>
                 <strong>Method:</strong>
-                {order ? order.map((item, index) => (
-                  <p>{item.payment_method}</p>
-                )) : null}
-              </p>
-              {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
-              ) : (
-                <Message variant="danger">Not Paid</Message>
-              )}
+                {order[0].payment_method}<br/>
+              <span style={{ color: 'gray', fontSize: 'small' }}>
+          {orderInfo.paid_at.split('T')[0]}
+        </span>
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
@@ -160,42 +151,24 @@ function OrderDetailScreen() {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  {order ? order.map((item, index) => (
-                  <Col>${item.price_multi_qty}</Col>
-                )) : null}
+                  {orderInfo.total_price}₩
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  {order ? order.map((item, index) => (
-                  <Col>${item.shipping_price}</Col>
-                )) : null}
+                  {orderInfo.shipping_price}₩
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  {order ? order.map((order, index) => (
-                    <Col>${order.total_price}</Col>
-                  )) : null}
+                  {orderInfo.total_price + orderInfo.shipping_price}₩
                   
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
-                <ListGroup.Item>
-                  {loadingPay && <Loading />}
-                  {!sdkReady ? (
-                    <Loading />
-                  ) : (
-                    <div
-                      id="paypal-container-U9DKC2ADCW48W"
-                      amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    ></div>
-                  )}
-                </ListGroup.Item>
-              )}
+              
+              
             </ListGroup>
             {userInfo &&
               userInfo.isAdmin &&

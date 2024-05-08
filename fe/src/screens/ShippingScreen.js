@@ -73,6 +73,7 @@ function ShippingScreen() {
   return (
     <div>
       <Row>
+        {console.log("CARTITEMS", cartItems)}
         <Col md={8}>
           <ListGroup variant="flush">
             <Col md={6}>
@@ -227,7 +228,7 @@ function ShippingScreen() {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>총 상품금액: ₩</Col>
+                  <Col>총 상품금액: {Number(subtotalPrice)}₩</Col>
                   {/* <Col>${cart.itemsPrice}</Col> */}
                 </Row>
               </ListGroup.Item>

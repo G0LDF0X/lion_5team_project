@@ -4,7 +4,7 @@ from rest_framework import status
 from datetime import datetime, timedelta
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
-from app.models import OrderItem, User, Cart, Order, Item
+from app.models import OrderItem, User, Cart, Order, Item, Shipping_Address
 from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
 
 
@@ -157,3 +157,12 @@ def order_detail(request, pk):
         return Response(serializer.data)
     except Order.DoesNotExist:
         raise Response("Order does not exist")
+    
+@api_view(['GET'])
+def get_shipping_address(request, pk):
+    try:
+        shipping_address = Shipping_Address.objects.get(order_id=pk)
+        serializer = ShippingAddressSerializer(shipping_address)
+        return Response(serializer.data)
+    except Shipping_Address.DoesNotExist:
+        raise Response("Shipping address does not exist")

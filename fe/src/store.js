@@ -44,6 +44,8 @@ import {
   // orderListReducer,
   myOrderListReducer,
   //   orderDeliverReducer,
+  shippingAddressReducer,
+  orderReducer,
 } from "./reducers/orderReducers";
 
 import {
@@ -69,6 +71,7 @@ import {
   bookMarkAddReducer,
   bookMarkRemoveReducer,
 } from "./reducers/bookmarkReducer";
+import { getOrder } from "./actions/orderActions";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -99,6 +102,8 @@ const reducer = combineReducers({
   //   orderListMY: orderListMyReducer,
   myOrderList: myOrderListReducer,
   //   orderDeliver: orderDeliverReducer,
+  shippingAddress: shippingAddressReducer,
+  getOrder: orderReducer,
 
   reviewList: reviewListReducer,
   reviewDetail: reviewDetailsReducer,

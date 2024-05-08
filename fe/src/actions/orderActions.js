@@ -9,7 +9,15 @@ import {
 
     MY_ORDER_LIST_REQUEST,
     MY_ORDER_LIST_SUCCESS,
-    MY_ORDER_LIST_FAIL
+    MY_ORDER_LIST_FAIL,
+
+    SHIPPING_ADDRESS_SUCCESS,
+    SHIPPING_ADDRESS_REQUEST,
+    SHIPPING_ADDRESS_FAIL,
+
+    ORDER_REQUEST,
+    ORDER_SUCCESS,
+    ORDER_FAIL
 } from '../constants/orderConstants'
 
 export const createOrder = (order) => async (dispatch, getState) => {
@@ -123,3 +131,66 @@ export const getMyOrders = () => async (dispatch, getState) => {
         })
     }
 }
+
+export const getShippingAddress = (orderId) => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: SHIPPING_ADDRESS_REQUEST
+        })
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        
+        const res = await fetch(`/order/address/${orderId}`)
+
+        const data = await res.json();
+
+        if (res.ok) {
+            dispatch({
+                type: SHIPPING_ADDRESS_SUCCESS,
+                payload: data
+            })
+        } else {
+            dispatch({
+                type: SHIPPING_ADDRESS_FAIL,
+                payload: data.message
+            })
+        }
+    } catch (error) {
+        dispatch({
+            type: SHIPPING_ADDRESS_FAIL,
+            payload: error.message
+        })
+    }
+}
+
+export const get_Order = (orderId) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: ORDER_REQUEST });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const res = await fetch(`/order/${orderId}`);
+
+        const data = await res.json();
+
+        if (res.ok) {
+            dispatch({
+                type: ORDER_SUCCESS,
+                payload: data,
+            });
+        } else {
+            dispatch({
+                type: ORDER_FAIL,
+                payload: data.message,
+            });
+        }
+    } catch (error) {
+        dispatch({
+            type: ORDER_FAIL,
+            payload: error.message,
+        });
+    }
+};
