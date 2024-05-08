@@ -76,11 +76,13 @@ function UserSettingSetting() {
       <Row className="justify-content-center">
         <Col xs={6} md={4}>
           <label htmlFor="fileInput">
-            {userInfo && userInfo.image ? (
-              <Image src={user.user.image_url} roundedCircle width="70%" />
-            ) : (
-              <Image src="https://placehold.co/400" roundedCircle width="70%" />
-            )}
+            {/* {userInfo && userInfo.image ? ( */}
+            {user.user&& user.user.image_url ? 
+              <Image src={user.user.image_url} roundedCircle width="40%" />
+              : <Image src="https://placehold.co/400" roundedCircle width="40%" />}
+            {/* ) : ( */}
+              {/* <Image src="https://placehold.co/400" roundedCircle width="70%" /> */}
+            {/* )} */}
             {/* <Image src="https://placehold.co/400" roundedCircle width="70%" /> */}
           </label>
           <Form.Control

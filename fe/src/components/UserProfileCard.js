@@ -35,11 +35,9 @@ function UserProfileCard() {
       <Card className="ms-auto">
         <Row className="justify-content-center">
           <Col xs={6} md={4} className="d-flex flex-column justify-content-center align-items-center">
-            {
-              userInfo&& userInfo.image ? 
+            {user.user&& user.user.image_url ? 
               <Image src={user.user.image_url} roundedCircle width="40%" />
-              : <Image src="https://placehold.co/400" roundedCircle width="40%" />
-            }
+              : <Image src="https://placehold.co/400" roundedCircle width="40%" />}
             {/* <Image src="https://placehold.co/400" roundedCircle width="40%" /> */}
             {userInfo&& userInfo.nickname !== "" ? 
             <h4 className='text-center'>{userInfo.nickname}</h4>
