@@ -59,6 +59,14 @@ console.log("ANSWERS:",answers);
                 </Card> */}
               </Card>
 
+              {/* Q&A 답변하기 */}
+              <div style={{ width: '100%', textAlign: 'right' }}>
+              <Link to={`/qna/answer/create/${qna.id}/`}>
+                {console.log("ID", qna.id)}
+                <Button className="btn-primary btn-sm">Create Q&A Answer</Button>
+                </Link>
+              </div>
+
               {/* QNA 답변 */}
               <Card className='my-3 p-3 rounded'>
                 <h3>Answers</h3>

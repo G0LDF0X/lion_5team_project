@@ -22,6 +22,14 @@ import {
     USER_UPDATE_PASSWORD_FAIL,
     USER_UPDATE_PASSWORD_RESET,
 
+    SELLER_LIST_REQUEST,
+    SELLER_LIST_SUCCESS,
+    SELLER_LIST_FAIL,
+
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
+    USER_LIST_FAIL,
+
 } from "../constants/userConstants";
 
 export const login = (id, password) => async (dispatch) => {
@@ -281,3 +289,51 @@ export const updateUserLogin = (updateUserInfo) => async (dispatch) => {
         payload: updateUserInfo,
     });
 };
+
+export const listSellers = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: SELLER_LIST_REQUEST });
+        const {
+          userLogin: { userInfo },
+      } = getState();
+        const response = await fetch(`/users/sellers/`, {
+            headers: {
+                Authorization: `Bearer ${userInfo.access}`,
+            },
+        });
+        const data = await response.json();
+        dispatch({ type: SELLER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: SELLER_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+export const listUsers = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_LIST_REQUEST });
+        const {
+          userLogin: { userInfo },
+      } = getState();
+        const response = await fetch(`/users/users`, {
+            headers: {
+                Authorization: `Bearer ${userInfo.access}`,
+            },
+        });
+        const data = await response.json();
+        dispatch({ type: USER_LIST_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({
+            type: USER_LIST_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}

@@ -147,3 +147,13 @@ def refund_item(request, order_id, order_item_id):
         return Response(refund_serializer.data, status=201)
     else:
         return Response(refund_serializer.errors, status=400)
+    
+
+@api_view(['GET'])
+def order_detail(request, pk):
+    try:
+        order = Order.objects.get(id=pk)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
+    except Order.DoesNotExist:
+        raise Response("Order does not exist")

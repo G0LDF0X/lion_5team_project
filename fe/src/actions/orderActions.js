@@ -61,8 +61,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         
         const res = await fetch(`/order/detail/${id}`, {
             headers: {
-                
-                // Authorization: `Bearer ${userInfo.token}`
+                Authorization: `Bearer ${userInfo.access}`
             }
         })
 

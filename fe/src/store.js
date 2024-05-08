@@ -7,6 +7,7 @@ import {
   productDeleteReducer,
   productCreateReducer,
   productUpdateReducer,
+  myProductListReducer,
   //   productReviewCreateReducer,
   //   productTopRatedReducer,
 } from "./reducers/ProductReducers";
@@ -16,7 +17,7 @@ import {
   reviewCreateReducer,
   reviewDeleteReducer,
   reviewUpdateReducer,
-  myReviewListReducer
+  myReviewListReducer,
 } from "./reducers/reviewReducers";
 import {
   cartListReducer,
@@ -30,7 +31,8 @@ import {
   userDetailsReducer,
   userUpdateProfileReducer,
   userUpdatePasswordReducer,
-  //   userListReducer,
+  sellerListReducer,
+  userListReducer,
   //   userDeleteReducer,
   //   userUpdateReducer,
 } from "./reducers/userReducers";
@@ -39,8 +41,8 @@ import {
   orderDetailsReducer,
   //   orderPayReducer,
   //   orderListMyReducer,
-    // orderListReducer,
-    myOrderListReducer,
+  // orderListReducer,
+  myOrderListReducer,
   //   orderDeliverReducer,
 } from "./reducers/orderReducers";
 
@@ -48,6 +50,8 @@ import {
   qnaListReducer,
   qnaDetailsReducer,
   qnaCreateReducer,
+  qnaAnswerCreateReducer,
+  qnaAnswerDetailsReducer,
   qnaDeleteReducer,
   qnaUpdateReducer,
 } from "./reducers/qnaReducers";
@@ -72,8 +76,7 @@ const reducer = combineReducers({
   productUpdate: productUpdateReducer,
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,
-  //   productReviewCreate: productReviewCreateReducer,
-  //   productTopRated : productTopRatedReducer,
+  myProductList: myProductListReducer,
 
   cartList: cartListReducer,
   cartAdd: cartAddReducer,
@@ -85,7 +88,8 @@ const reducer = combineReducers({
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userUpdatePassword: userUpdatePasswordReducer,
-  //   userList: userListReducer,
+  sellerList: sellerListReducer,
+  userList: userListReducer,
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
 
@@ -93,7 +97,7 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
   //   orderListMY: orderListMyReducer,
-    myOrderList: myOrderListReducer,
+  myOrderList: myOrderListReducer,
   //   orderDeliver: orderDeliverReducer,
 
   reviewList: reviewListReducer,
@@ -106,6 +110,8 @@ const reducer = combineReducers({
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
   qnaCreate: qnaCreateReducer,
+  qnaAnswerCreate: qnaAnswerCreateReducer,
+  qnaAnswerDetails: qnaAnswerDetailsReducer,
   qnaUpdate: qnaUpdateReducer,
   qnaDelete: qnaDeleteReducer,
 
@@ -120,21 +126,12 @@ const reducer = combineReducers({
   bookMarkRemove: bookMarkRemoveReducer,
 });
 
-const cartItemsFromStorage = localStorage.getItem("cartItems")
-  ? JSON.parse(localStorage.getItem("cartItems"))
-  : [];
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
-const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
-  ? JSON.parse(localStorage.getItem("shippingAddress"))
-  : {};
+
 const initialState = {
-  // cart: {
-  //   cartItems: cartItemsFromStorage,
-  //   shippingAddress: shippingAddressFromStorage,
-  // },
   userLogin: { userInfo: userInfoFromStorage },
 };
 

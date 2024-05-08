@@ -56,8 +56,8 @@ export default function SellerSettingNavBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const redirect = location.search ? location.search.split("=")[1] : "/";
-  const productList = useSelector((state) => state.productList);
-  const { loading, error, products, pages, success } = productList;
+  const myProductList = useSelector((state) => state.myProductList);
+  const { loading, error, myProducts } = myProductList;
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: loadingDelete, error: errorDelete ,success: successDelete } = productDelete;
   const productCreate = useSelector((state) => state.productCreate);
@@ -80,26 +80,7 @@ export default function SellerSettingNavBar() {
       dispatch(listProducts());
     }}
     , [ dispatch, successCreate, successDelete, successUpdate]);
-useEffect(() => {
-      dispatch(listProducts());
-        if(success){
-          if(products.seller_id === user.seller.id){
-          setSellerProducts(products);
-        }
-      }
-    
-  }
-  , [dispatch, navigate]);
-  useEffect(() => {
-    dispatch(listProducts());
-      if(success){
-        if(products.seller_id === user.seller.id){
-        setSellerProducts(products);
-      }
-    }
-  
-}
-, [dispatch, navigate]);
+
     const createProductHandler = () => {
     dispatch(createProduct());
     // dispatch(createProduct(product));
@@ -168,7 +149,7 @@ const updateHandler = (id) => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => (
+          {myProducts.map((product) => (
             <tr key={product.id}>
               <td>{product.id}</td>
               <td>{product.name}</td>
