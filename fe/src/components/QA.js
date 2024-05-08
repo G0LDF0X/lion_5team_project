@@ -18,7 +18,7 @@ function QA({ qna={} }) {
                     </Card.Title>
                     <Card.Text as="div">
                         <div className="my-3">
-                            {qna.content}
+                        <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                         </div>
                     </Card.Text>
                 </Link>
