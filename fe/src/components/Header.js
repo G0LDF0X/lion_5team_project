@@ -76,6 +76,7 @@ function Header() {
           <SearchBox />
 
         </div>
+        {userInfo? (
         <IconButton
           size="large"
           aria-label="show cart items"
@@ -84,7 +85,7 @@ function Header() {
           <Link to="/cart">
             <i class="fa-solid fa-cart-shopping fa-xs"></i>
           </Link>
-        </IconButton>
+        </IconButton>):null}
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
              {userInfo ? (
