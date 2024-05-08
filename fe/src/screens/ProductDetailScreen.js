@@ -27,9 +27,11 @@ import { createQNA } from "../actions/qnaActions";
 import Accordion from 'react-bootstrap/Accordion';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { TextField } from '@material-ui/core';
 
 
-function Productcreen() {
+
+function ProductDetailScreen() {
   const [qty, setQty] = useState(1);
   const [marked, setMarked] = useState(false);
   const [state, setState] = useState({open: false});
@@ -59,7 +61,8 @@ function Productcreen() {
   const { success: successReviewDelete } = reviewDelete;
   const [showEditor, setShowEditor] = useState(false);
   const [editorData, setEditorData] = useState('');
-
+  const [answer, setAnswer] = useState('');
+ 
 
 
   
@@ -148,6 +151,9 @@ function Productcreen() {
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
 
+  const handleAnswerSubmit = () => {
+    // 답변 제출 로직을 여기에 작성합니다.
+  };
 
  
   return (
@@ -337,15 +343,21 @@ function Productcreen() {
           {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ?
            item_qna.item_answer_set.map((answer, index) => (
             <Box>
-            <h5>A. {answer.title}</h5> 
-            <span style={{ color: 'gray', fontSize: 'small' }}>
-          {answer.created_at.split('T')[0]}
-        </span><br/><br/>
-            <p>{answer.content}</p>
+              <h5>A. {answer.title}</h5> 
+              <span style={{ color: 'gray', fontSize: 'small' }}>
+                {answer.created_at.split('T')[0]}
+              </span><br/><br/>
+              <p>{answer.content}</p>
             </Box>
           )) : (
-            <p> 답변이 없습니다.</p>
+            <div>
+              <p> 답변이 없습니다.</p>
+              <Button variant="contained" color="primary" onClick={handleAnswerSubmit}>
+                답변 작성하기
+              </Button>
+            </div>
           )}
+      
         </Accordion.Body>
       </Accordion.Item>
     )) : <p style= {{padding:'20px'}}>Q&A가 없습니다.</p>}
@@ -359,4 +371,4 @@ function Productcreen() {
   );
 }
 
-export default Productcreen;
+export default ProductDetailScreen;
