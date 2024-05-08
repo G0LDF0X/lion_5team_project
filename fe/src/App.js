@@ -43,6 +43,7 @@ import ShippingScreen from './screens/ShippingScreen';
 import ShippingAdressScreen from './screens/ShippngAdressScreen';
 import OtherUserProfileNavbar from './components/OtherUserProfileNavbar';
 import PasswordChangeConfirm from './screens/PasswordChangeConfirm';
+import ItemQACreateScreen from './screens/ItemQACreateScreen';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Route path='/cart' element={<CartScreen/>} />
             <Route path='/items/update/:id' element={<ProductUpdateScreen/>} />
             <Route path='/items/review/:id' element={<ReviewEditScreen/>} />
+            <Route path= '/items/qna/create/:id' element={<ItemQACreateScreen/>} />
 
             <Route path='/shipping' element={<ShippingScreen/>} />  
             <Route path='/order/:id' element={<PaymentScreen/>} />
