@@ -108,7 +108,7 @@ function OrderDetailScreen() {
                     <Card>
                       <Card.Img variant="top" src={item.image} alt={item.name} style={{width : '200px', height: "200px", margin: '0 auto'}} />
                       <Card.Body>
-                        <Card.Title>{item.name}</Card.Title>
+                        <Card.Title style={{ fontSize: '0.9rem' }}>{item.name}</Card.Title>
                         <Card.Text>
                           수량 : {item.qty}
                           <br />
