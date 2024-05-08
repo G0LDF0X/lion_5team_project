@@ -101,21 +101,30 @@ def seller_refund_view(request):
     
     serializer = RefundSerializer(refund_items, many=True)
     return Response(serializer.data)
+from rest_framework import status
 
-
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def Seller_Apply_Save(request):
-    bs_number = request.data.get('bs_number')
-    if bs_number is None:
-        return Response({'error': 'bs_number is required'}, status=400)
-    
-    user = User.objects.get(username=request.user)
-    user.is_seller = True
-    user.save()
-    seller = Seller.objects.create(
-        user_id=user,
-        bs_number=request.data.get('bs_number')
-        )
-    serializer = SellerSerializer(seller)
-    return Response(serializer.data)
+    if request.method == 'POST':
+        bs_number = request.data.get('bs_number')
+        if bs_number is None:
+            return Response({'error': 'bs_number is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = User.objects.get(username=request.user)
+        user.is_seller = True
+        user.save()
+        seller = Seller.objects.create(
+            user_id=user,
+            bs_number=request.data.get('bs_number')
+            )
+        serializer = SellerSerializer(seller)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    elif request.method == 'GET':
+        user = User.objects.get(username=request.user)
+        if user.is_seller:
+            seller = Seller.objects.get(user_id=user)
+            serializer = SellerSerializer(seller)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'User is not a seller'}, status=status.HTTP_400_BAD_REQUEST)
