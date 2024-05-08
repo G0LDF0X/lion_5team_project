@@ -1,416 +1,211 @@
-import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Image,
-  ListGroup,
-  Button,
-  // Card,
-  Form,
-} from "react-bootstrap";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import Rating from "../components/Rating";
-import { useDispatch, useSelector } from "react-redux";
-import { listProductDetails } from "../actions/productActions";
-import Loading from "../components/Loading";
-import Message from "../components/Message";
-import { createReview } from "../actions/reviewActions";
-import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
-import { addToCart, listCartItems } from "../actions/cartActions";
-import { Snackbar } from "@mui/material";
-import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
-import { deleteReview } from "../actions/reviewActions";
-import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
-import QA from "../components/QA";
-import { makeStyles } from '@material-ui/core/styles';
-import { createQNA } from "../actions/qnaActions";
-import Dropdown from 'react-bootstrap/Dropdown';
-import Accordion from 'react-bootstrap/Accordion';
+import React, {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { useDispatch, useSelector } from 'react-redux';
+import UserSettingSettingNavbar from './UserSettingSettingNavbar';
+import SellerSettingMain from './SellerSettingMain';
+import SellerSettingProfit from './SellerSettingProfit';
+import SellerSettingItemManage from './SellerSettingItemManage';
+import { Button, Table, Row, Col } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { listProducts, deleteProduct, createProduct } from '../actions/productActions';
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import Loading from './Loading';
+import Message from './Message'
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-function Productcreen() {
-  const [qty, setQty] = useState(1);
-  const [marked, setMarked] = useState(false);
-  const [state, setState] = useState({open: false});
-  const handleClose = () => {
-    setState({  open: false });
-  };
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
 
-  const { open } = state;
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const productDetails = useSelector((state) => state.productDetails);
-  const { loading, error, product } = productDetails;
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview, createdReview } = reviewCreate;;
-  const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems, success } = bookMarkList;
-  const cartAdd = useSelector((state) => state.cartAdd);
-  const { success: successCartAdd , fail : failCartAdd} = cartAdd;
-  const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
-  const { success: successBookmarkAdd } = bookMarkAdd;
-  const bookMarkRemove = useSelector((state) => state.bookMarkRemove);
-  const { success: successBookmarkRemove } = bookMarkRemove;
-  const reviewDelete = useSelector((state) => state.reviewDelete);
-  const { success: successReviewDelete } = reviewDelete;
-
-
-  
-  let totalRate =
-    product && product.reviews
-      ? product.reviews.reduce((acc, review) => acc + review.rate, 0)
-      : 0;
-  let avgRate =
-    product && product.reviews ? totalRate / product.reviews.length : 0;
-
-
-    useEffect(() => {
-
-    
-      if (successProductReview) {
-        navigate(`/items/review/${createdReview.id}`);
-        dispatch({type:REVIEW_CREATE_RESET});
-    }
-    if(successCartAdd){
-      setState({open: true});
-    }
-    if(successBookmarkAdd){
-      dispatch(listBookMark());
-      setMarked(true);
-    }
-    if(successBookmarkRemove){
-      dispatch(listBookMark());
-      setMarked(false);
-    }
-    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
-      setMarked(true);
-    }
-    else{
-      setMarked(false);
-    }
-  
-    dispatch(listCartItems()); 
-    dispatch(listProductDetails(id));
-    if(!bookMarkItems){
-    dispatch(listBookMark());}
-  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
-  
-  const addToCartHandler = () => {
-    dispatch(addToCart(id, qty));
-
-  };
-  const createReviewHandler = () => {
-    dispatch(createReview(id));
-
-  };
-  const BookmarkHandler = () => {
-    if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
-      dispatch(removeFromBookMark(id));
-
-    }
-    else {
-      dispatch(addToBookMark(id));
-    }
-  }
-  const editReviewHandler = (review) => {
-    if(userInfo&&userInfo.id===review.user_id){
-      navigate(`/items/review/${review.id}`);
-    } else {
-      alert("You can only edit your own reviews.");
-;  }
-  }
-  const deleteReviewHandler = (review) => {
-    if(userInfo&&userInfo.id===review.user_id){
-      window.confirm("Are you sure you want to delete this review?");
-      if(window.confirm){
-       dispatch(deleteReview(review.id));
-      }
-    } else {
-      alert("You can only delete your own reviews.");
-  }
-  }
-  const useStyles = makeStyles({
-    root: {
-      fontSize: '5rem',  // increase font size
-    },
-  });
-  const createQNAHandler = () => {
-    dispatch(createQNA(id));
-    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
-  };
-
-
- 
   return (
-    <div>
-      <Snackbar
-  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-  autoHideDuration={3000}
-  className={useStyles.root}
-  open={open}
-  onClose={handleClose}
-  message="장바구니에 추가되었습니다."
-  key={'top-center'}
-/>
-      <Link to="/" className="btn btn-light my-2">
-        Go Back
-      </Link>
-      {loading ? (
-        <Loading />
-      ) : error ? (
-        <Message variant={"danger"}>{error}</Message>
-      ) : (
-        <div>
-          <Row>
-            <Col md={6}>
-              <Image src={product.image_url} alt={product.name} fluid />
-            </Col>
-            <Col md={3}>
-              <ListGroup variant="flush">
-                <ListGroup.Item>
-                  <h3>{product.name}</h3>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Rating
-                    value={avgRate}
-                    text={`${avgRate.toFixed(2)}`}
-                    color={"#f8e825"}
-                  />
-                </ListGroup.Item>
-                <ListGroup.Item>Price: {product.price}₩</ListGroup.Item>
-                <ListGroup.Item>
-                  Description: {product.description}
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col>
-              <Card>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Price:</Col>
-                      <Col>
-                        <strong>{product.price}₩</strong>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Status:</Col>
-                      <Col>
-                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Qty</Col>
-                      <Col xs="auto" className="my-1">
-                        <Form.Control
-                          as="select"
-                          value={qty}
-                          onChange={(e) => setQty(e.target.value)}
-                        >
-                          {[...Array(30).keys()].map((x) => (
-                            <option value={x + 1} key={x + 1}>
-                              {x + 1}
-                            </option>
-                          ))}
-                        </Form.Control>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-
-                  <ListGroup.Item>
-                    {!userInfo ? (
-                      <Link to="/login">
-                        <Button className=" ms-auto me-5 bg-info">
-                          Login to Add to Cart
-                        </Button>
-                      </Link>
-                    ) : (
-                      <div>
-                        <Button
-                          onClick={addToCartHandler}
-                          className="btn-block"
-                          type="button"
-                          disabled={product.countInStock === 0}
-                        >
-                          <i class="fa-solid fa-cart-shopping"></i>
-                          Add to Cart
-                        </Button>
-                        {/* <Col className="d-flex jstify-content-end"> */}
-                        <Button
-                          className="btn-block justify-content-between "
-                          onClick={BookmarkHandler}
-                            
-                          
-                        >
-                          <i
-                            className={
-                              marked
-                                ? "fa-regular fa-bookmark"
-                                : "fa-solid fa-bookmark"
-                            }
-                          ></i>
-                        </Button>
-                        {/* </Col> */}
-                      </div>
-                    )}
-                  </ListGroup.Item>
-                </ListGroup>
-  
-              </Card>
-            </Col>
-          </Row>
-
-          <Grid container spacing={3}>
-  <Grid item xs={9}>
-    <Typography variant="h4">Reviews</Typography>
-    <Box display="flex" justifyContent="flex-end">
-      <Button variant="contained" color="primary" onClick={createReviewHandler}>
-        Create a Review
-      </Button>
-    </Box>
-    {product.reviews ? (
-      product.reviews.map((review) => (
-        <Card key={review.id}>
-          <CardContent>
-            <Typography variant="h5">{review.title}</Typography>
-            <Typography variant="subtitle1">Written by: {review.writer}</Typography>
-            <Box my={2}>
-              <Rating value={review.rate} text={review.rate} color={"#f8e825"} />
-            </Box>
-            <Typography variant="body1">{review.comment}</Typography>
-            {review.image && <img src={review.image} alt={review.title} />}
-            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-            <Box mt={2}>
-          <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
-            Edit
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => deleteReviewHandler(review)}>
-            Delete
-          </Button>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
         </Box>
-          </CardContent>
-        </Card>
-      ))
-    ) : (
-      <Typography variant="body1">No Reviews</Typography>
-    )}
-  </Grid>
-</Grid>
-        </div>
       )}
-<Box>
-<Grid container spacing={3}>
-    <Grid item xs={9}>
-    <Typography variant="h4">Q&A</Typography>
-    <Box display="flex" justifyContent="flex-end">
-      {/* QnA 작성 */}
-     <Button variant="contained" color="primary" onClick={createQNAHandler}>
-        Create a Q&A
-      </Button>
-    </Box> 
-
-    {product.item_qna_set && product.item_qna_set.length > 0 ? (
-      product.item_qna_set.map((item_qna) => (
-        <Card style={{ width: '130%' , minHeight: '250px', marginBottom: '20px'}}>
-          <CardContent style={{ padding: '10px' }}>
-       
-        {console.log(item_qna)}
-
-        <p style={{ paddingTop: '20px', paddingLeft: '20px' }}>Q. {item_qna.title}</p>
-        <p style={{ paddingLeft: '20px' , position: 'relative'}}>{item_qna.content}</p>
-
-        {item_qna.image && <img src={item_qna.image_url} alt={item_qna.content} />}
-        
-        <br/>
-        {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ? (
-            <Dropdown>
-                <Dropdown.Toggle style={{ zIndex: 9999, backgroundColor: 'gray', position: 'relative', top: '-50px', right: '0px', float: 'right' }} id="dropdown-basic">
-                    답변 보기
-                </Dropdown.Toggle>
-    
-                <Dropdown.Menu style={{ maxHeight: '400px', overflow: 'auto' , position: 'relative', top: '50px'}}>
-                    {item_qna.item_answer_set.map((answer) => (
-                        <Dropdown.Item key={answer._id}
-                        style={{ 
-                          width: '100%', 
-                          whiteSpace: 'normal', 
-                          overflow: 'hidden', 
-                          textOverflow: 'ellipsis'  
-                      }}>
-                            <p>A.{answer.title}</p>
-                            <p>{answer.content}</p>
-                        </Dropdown.Item>
-                    ))}
-                </Dropdown.Menu>
-            </Dropdown>
-        ) : (
-            <p style={{ paddingLeft: '20px' }}>---- 답변이 없습니다 ----</p>
-        )}
-
-
-            {/* <Box mt={2}> */}
-
-
-          {/* Qna 편집, 삭제 */}
-          {/* <Button variant="contained" color="primary" onClick={() => editQNAHandler(item_qna)}>
-            Edit
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => deleteQNAHandler(item_qna)}>
-            Delete
-          </Button> */}
-       </CardContent>
-    </Card>
-   
-      ))
-    ) : (
-      <Card style={{ width: '130%' , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-
-      <p style={{ paddingTop: '20px' }}>Q&A가 없습니다.</p>
-      </Card>
-    )}
-  
-    <Accordion>
-    {product.reviews ? product.item_qna_set.map((item_qna, index) => (
-      <Accordion.Item eventKey={index.toString()}>
-        <Accordion.Header>
-          <Box><h5>Q. {item_qna.title}</h5>
-          ID : {item_qna.username}<br/>
-          <span style={{ color: 'gray', fontSize: 'small' }}>
-          {item_qna.created_at.split('T')[0]}
-        </span>
-        <br/><br/>
-        <p>{item_qna.content}</p></Box>
-        </Accordion.Header>
-        <Accordion.Body>
-          
-          {item_qna.item_answer_set ? item_qna.item_answer_set.map((answer, index) => (
-            <Box>
-            <h5>{answer.title}</h5> 
-            <span style={{ color: 'gray', fontSize: 'small' }}>
-          {answer.created_at.split('T')[0]}
-        </span><br/><br/>
-            <p>{answer.content}</p>
-            </Box>
-          )) : null}
-        </Accordion.Body>
-      </Accordion.Item>
-    )) : null}
-  </Accordion>
-
-
-  </Grid>
-  </Grid>
-  </Box>
-      </div>
-
+    </div>
   );
 }
 
-export default Productcreen;
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+export default function SellerSettingNavBar() {
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products, pages, success } = productList;
+  const productDelete = useSelector((state) => state.productDelete);
+  const { loading: loadingDelete, error: errorDelete ,success: successDelete } = productDelete;
+  const productCreate = useSelector((state) => state.productCreate);
+  const { loading:loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const { success: successUpdate } = productUpdate;
+  const [sellerProducts, setSellerProducts] = useState([]);
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
+  useEffect(() => { 
+    if(successCreate){
+      console.log("success")
+      navigate(`/items/update/${createdProduct.id}`);
+      dispatch({ type: PRODUCT_CREATE_RESET });
+    }
+    if(successDelete){
+      dispatch(listProducts());
+    }
+    if(successUpdate){
+      dispatch(listProducts());
+    }}
+    , [ dispatch, successCreate, successDelete, successUpdate]);
+useEffect(() => {
+      dispatch(listProducts());
+        if(success){
+          if(products.seller_id === user.seller.id){
+          setSellerProducts(products);
+        }
+      }
+    
+  }
+  , [dispatch, navigate]);
+  useEffect(() => {
+    dispatch(listProducts());
+      if(success){
+        if(products.seller_id === user.seller.id){
+        setSellerProducts(products);
+      }
+    }
+  
+}
+, [dispatch, navigate]);
+    const createProductHandler = () => {
+    dispatch(createProduct());
+    // dispatch(createProduct(product));
+}
+const deleteHandler = (id) => {   
+  if(window.confirm("Are you sure?")){
+    dispatch(deleteProduct(id));
+  }else{
+    redirect("/admin/productlist"); 
+  }}
+const updateHandler = (id) => {
+  navigate(`/items/update/${id}`);
+}
+  const [value, setValue] = useState(0);
+    const userLogin = useSelector((state) => state.userLogin);  
+    const { userInfo } = userLogin;
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+          <Tab label="전체보기" {...a11yProps(0)} />
+          <Tab label="상품 관리" {...a11yProps(1)} />
+          <Tab label="수익 확인" {...a11yProps(2)} />
+          
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <SellerSettingMain />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+      <div><Row className="align-items-center">
+    <Col>
+      <h1>Products</h1>
+    </Col>
+    <Col className="text-right">
+        <Button variant="light" className="btn-sm" onClick={createProductHandler}>
+      {/* <Link to="/admin/product/create" className="btn btn-primary my-3"> */}
+        <i className="fas fa-plus"></i> Create Product
+      {/* </Link> */}
+      </Button>
+    </Col>
+    </Row>
+    {loadingDelete && <Loading /> }
+    {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+    {loadingCreate && <Loading /> }
+    {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+    {loading ? (
+      <Loading />
+    ) : error ? (
+      <Message variant="danger">{error}</Message>
+    ) : (<div>
+      <Table striped bordered hover responsive className="table-sm">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>PRICE</th>
+            <th>CATEGORY</th>
+            {/* <th>BRAND</th> */}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr key={product.id}>
+              <td>{product.id}</td>
+              <td>{product.name}</td>
+              <td>{product.price}₩</td>
+              {product.category_id === 1 ? (
+                <td>산책용품</td> ) :
+                product.category_id === 2 ? (
+                  <td>간식</td>
+                ) : null }
+              {/* <td>{product.category}</td> */}
+              {/* <td>{product.brand}</td> */}
+              <td>
+                {/* <LinkContainer to={`/items/update/${product.id}`}> */}
+                  <Button variant="light" className="btn-sm" onClick={()=>updateHandler(product.id)}>
+                    <i className="fas fa-edit"></i>
+                    
+                  </Button>
+                {/* </LinkContainer> */}
+                <Button
+                  variant="danger"
+                  className="btn-sm"
+                  onClick={() => deleteHandler(product.id)}
+                >
+                  <i className="fas fa-trash"></i>
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      </div>
+    )}
+    </div>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <SellerSettingProfit />
+      </CustomTabPanel>
+    </Box>
+  );
+}
