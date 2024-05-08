@@ -117,14 +117,6 @@ export default function AdminNavBar() {
         item2
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-              <Tab label="전체보기" {...a11yProps(0)} />
-              <Tab label="상품 관리" {...a11yProps(1)} />
-              <Tab label="수익 확인" {...a11yProps(2)} />
-            </Tabs>
-          </Box>
             <div>
               <Row className="align-items-center">
                 <Col>
@@ -138,7 +130,7 @@ export default function AdminNavBar() {
               </Row>
               {loadingDelete && <Loading />}
               {errorDelete && <Message variant="danger">{errorDelete}</Message>}
-              {loadingCreate && <Loading />}
+              
               {errorCreate && <Message variant="danger">{errorCreate}</Message>}
               {loading ? (
                 <Loading />
@@ -182,9 +174,9 @@ export default function AdminNavBar() {
                 </div>
               )}
             </div>
-        </Box>
       </CustomTabPanel>
-    </Box>
+        </Box>
+    
   );
 }
  
