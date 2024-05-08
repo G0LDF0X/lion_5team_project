@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -16,6 +16,7 @@ import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 import Loading from './Loading';
 import Message from './Message'
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,9 +52,10 @@ function a11yProps(index) {
 }
 
 export default function SellerSettingNavBar() {
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = location.search ? location.search.split("=")[1] : "/";
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages, success } = productList;
   const productDelete = useSelector((state) => state.productDelete);
@@ -65,17 +67,49 @@ export default function SellerSettingNavBar() {
   const [sellerProducts, setSellerProducts] = useState([]);
   const userDetails = useSelector((state) => state.userDetails);
   const { user } = userDetails;
+  useEffect(() => { 
+    if(successCreate){
+      console.log("success")
+      navigate(`/items/update/${createdProduct.id}`);
+      dispatch({ type: PRODUCT_CREATE_RESET });
+    }
+    if(successDelete){
+      dispatch(listProducts());
+    }
+    if(successUpdate){
+      dispatch(listProducts());
+    }}
+    , [ dispatch]);
+useEffect(() => {
+      dispatch(listProducts());
+        if(success){
+          if(products.seller_id === user.seller.id){
+          setSellerProducts(products);
+        }
+      }
+    
+  }
+  , [dispatch, navigate]);
+  useEffect(() => {
+    dispatch(listProducts());
+      if(success){
+        if(products.seller_id === user.seller.id){
+        setSellerProducts(products);
+      }
+    }
   
-
+}
+, [dispatch, navigate]);
     const createProductHandler = () => {
     dispatch(createProduct());
     // dispatch(createProduct(product));
 }
-const deleteHandler = (id) => {
-  if (window.confirm('Are you sure')) {
+const deleteHandler = (id) => {   
+  if(window.confirm("Are you sure?")){
     dispatch(deleteProduct(id));
-  }
-}
+  }else{
+    redirect("/admin/productlist"); 
+  }}
 const updateHandler = (id) => {
   navigate(`/items/update/${id}`);
 }
