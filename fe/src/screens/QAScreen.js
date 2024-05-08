@@ -47,6 +47,7 @@ function QAScreen() {
               <Card.Body>
                 <Row>
                   <Col xs={1}>
+                  {qna.image_url && 
                     <Link to={`/qna/detail/${qna.id}`}>
                     <Card.Img src={qna.image_url}
                     style={{
@@ -54,7 +55,7 @@ function QAScreen() {
                       height: '100px', // 원하는 높이로 설정
                       objectFit: 'cover', // 이미지가 정사각형에 맞게 잘리도록 설정
                       margin: '-20px',
-                    }}></Card.Img></Link>
+                    }}></Card.Img></Link>}
                   </Col>
                   <Col xs={11}>
                     <Card.Title as='div'>
