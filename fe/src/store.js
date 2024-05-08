@@ -10,7 +10,7 @@ import {
   myProductListReducer,
   //   productReviewCreateReducer,
   //   productTopRatedReducer,
-} from "./reducers/ProductReducers";
+} from "./reducers/productReducers";
 import {
   reviewListReducer,
   reviewDetailsReducer,

@@ -38,24 +38,32 @@ function HomeScreen({ location }) {
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
-  function createCarouselItems(boards) {
-    return (
-      <Carousel.Item>
-      <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
-          {boards.map((board) => (
-            <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
-              <Box display="flex" justifyContent="center">
-                <Card variant="outlined">
-                  <Box height={500} width={300}>
-                    <BoardForm board={board} />
-                  </Box>
-                </Card>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Carousel.Item>
-    );
+  function createCarouselItemsForBoards(boards) {
+    const itemsPerSlide = 4;
+    let carouselItems = [];
+  
+    for (let i = 0; i < boards.length; i += itemsPerSlide) {
+      let boardsInThisItem = boards.slice(i, i + itemsPerSlide);
+      carouselItems.push(
+        <Carousel.Item key={i}>
+          <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
+            {boardsInThisItem.map((board) => (
+              <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
+                <Box display="flex" justifyContent="center">
+                  <Card variant="outlined">
+                    <Box height={500} width={300}>
+                      <BoardForm board={board} />
+                    </Box>
+                  </Card>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Carousel.Item>
+      );
+    }
+  
+    return carouselItems;
   }
   useEffect(() => {
     dispatch(listProducts());
@@ -64,22 +72,30 @@ function HomeScreen({ location }) {
     dispatch(listQNA());
   }, [dispatch, Navigate]);
   
-  function createCarouselItem(products) {
-    return (
-      <Carousel.Item>
-      <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
-          {products.map((product) => (
-            <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <Card variant="outlined" style={{width:"250px"}}>
-                <Box height={400} style={{width:"250px"}}>
-                  <Product product={product} id={product.id} />
-                </Box>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Carousel.Item>
-    );
+  function createProductCarouselItems(products) {
+    const itemsPerSlide = 4;
+    let productCarouselItems = [];
+  
+    for (let i = 0; i < products.length; i += itemsPerSlide) {
+      let productsInThisItem = products.slice(i, i + itemsPerSlide);
+      productCarouselItems.push(
+        <Carousel.Item key={i}>
+          <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
+            {productsInThisItem.map((product) => (
+              <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
+                <Card variant="outlined" style={{width:"250px"}}>
+                  <Box height={400} style={{width:"250px"}}>
+                    <Product product={product} id={product.id} />
+                  </Box>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Carousel.Item>
+      );
+    }
+  
+    return productCarouselItems;
   }
 
   return (
@@ -92,10 +108,7 @@ function HomeScreen({ location }) {
         <Message variant={"danger"}>{productError}</Message>
       ) : (
         <Carousel>
-        {createCarouselItem(products.slice(0, 4))}
-        {createCarouselItem(products.slice(4, 8))}
-        {createCarouselItem(products.slice(8, 12))}
-        {createCarouselItem(products.slice(12, 14))}
+          {createProductCarouselItems(products)}
         </Carousel>
       )}
       <Typography variant="h5" className={classes.title}>Boards</Typography>
@@ -106,11 +119,7 @@ function HomeScreen({ location }) {
       ) : (
         <Carousel>
          <Carousel>
-  {createCarouselItems(boards.slice(0, 4))}
-  {createCarouselItems(boards.slice(4, 8))}
-  {createCarouselItems(boards.slice(8, 12))}
-  {createCarouselItems(boards.slice(12, 16))}
-  {createCarouselItems(boards.slice(16, 18))}
+          {createCarouselItemsForBoards(boards)}
 </Carousel>
         </Carousel>
       )}
