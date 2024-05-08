@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react'
-import { Card, Row, Col, Image } from 'react-bootstrap'
+import { Card, Row, Col, Image, Button } from 'react-bootstrap'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +13,12 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 import Loading from './Loading';
-
 import { getUserDetails } from '../actions/userActions';
+
+
 function OtherUserProfileCard({ userId }) {
+    const token = useSelector((state) => state.userLogin.userInfo.access);
+
     const dispatch = useDispatch();
     const Navigate = useNavigate();
     const [value, setValue] = useState(0);
@@ -52,12 +55,42 @@ function OtherUserProfileCard({ userId }) {
     
         fetchData();
       }, [userId]);
-    
+      
+
+      
+
+
+      async function handleFollow(userId) {
+  
+        try {
+          
+            const userId = window.location.pathname.split('/').pop();
+            console.log(token);
+            const response = await fetch(`/users/follow/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+      
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message}`);
+          }
+          
+        } catch (error) {
+          console.error('Failed to follow:', error);
+      }
+      
+      };
+
+
       if (!userData) {
         return <div>Loading...</div>;
       }
 
-      return (
+    return (
         <Card className="ms-auto">
           <Row className="justify-content-center">
             <Col xs={6} md={4} className="d-flex flex-column justify-content-center align-items-center">
@@ -66,6 +99,7 @@ function OtherUserProfileCard({ userId }) {
               <h4 className='text-center'>{userData.User.nickname}</h4>
             : <h4 className='text-center'>{userData.User.username}</h4>}
               <h6>팔로워  {followerCount} |  팔로잉  {followingCount}</h6>
+              <Button variant="primary" onClick={() => handleFollow(userId)}>팔로우</Button>
             </Col>
           </Row>
           <Card.Body className='text-center'>
@@ -86,4 +120,7 @@ function OtherUserProfileCard({ userId }) {
         </Card>
       )
   }
-export default OtherUserProfileCard
+  
+  
+
+export default OtherUserProfileCard;

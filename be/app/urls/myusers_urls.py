@@ -24,6 +24,7 @@ urlpatterns = [
     path('bookmark/delete/<int:pk>/', delete_bookmark, name='delete_bookmark'),
     path('follower/<int:pk>/',getFollower , name='user_follower'),
     path('following/<int:pk>/',getFollowing , name='user_following'),
+    path('follow/<int:pk>/', follow_save, name='follow_user'),
     path('profile/myboard/', get_MyBoard, name='get_myboard'),
     path('profile/myuserqna/', getMyUserQnA, name='my_user_qna'),
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),

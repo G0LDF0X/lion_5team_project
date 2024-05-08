@@ -195,7 +195,7 @@ def get_userprofile(request, pk):
 
     review = Review.objects.filter(user_id=user)
     review_serializer = ReviewSerializer(review, many=True)
-
+    
     data = {
         'User': serializer.data,
         'Board_posts': board_serializer.data,
@@ -276,3 +276,16 @@ def get_other_answer(request, pk):
     answers = User_Answer.objects.filter(user_id=user)
     serializer = UserAnswerSerializer(answers, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def follow_save(request, pk):
+    follower = User.objects.get(username=request.user)
+    followed = User.objects.get(id=pk)
+    follow = Follow.objects.create(
+        follower_id=follower,
+        followed_id=followed
+    )
+    serializer = FollowSerializer(follow)
+    return Response(serializer.data, status=201)
