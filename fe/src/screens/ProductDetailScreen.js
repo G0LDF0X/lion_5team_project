@@ -24,8 +24,10 @@ import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
-import Dropdown from 'react-bootstrap/Dropdown';
 import Accordion from 'react-bootstrap/Accordion';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -55,6 +57,9 @@ function Productcreen() {
   const { success: successBookmarkRemove } = bookMarkRemove;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
+  const [showEditor, setShowEditor] = useState(false);
+  const [editorData, setEditorData] = useState('');
+
 
 
   
@@ -136,7 +141,9 @@ function Productcreen() {
       fontSize: '5rem',  // increase font size
     },
   });
-  const createQNAHandler = () => {
+  const createQnAHandler = () => {
+    navigate(`/items/qna/create/${id}`);
+    setShowEditor(true);
     dispatch(createQNA(id));
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
@@ -309,7 +316,15 @@ function Productcreen() {
 <Grid container spacing={3}>
     <Grid item xs={9}>
     <Typography variant="h4">Q&A</Typography>
+    <Box display="flex" justifyContent="flex-end">
+    <div>
+      <Button variant="contained" color="primary" onClick={createQnAHandler}>
+        Create a Q&A
+      </Button>
 
+        
+    </div>
+    </Box>
     <Accordion>
     {product.item_qna_set && product.item_qna_set.length > 0 ? 
       product.item_qna_set.map((item_qna, index) => (

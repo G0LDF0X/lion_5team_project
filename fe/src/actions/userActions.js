@@ -181,7 +181,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
         const {
             userLogin: { userInfo },
         } = getState();
-
+       
         const response = await fetch(`/users/update_profile/`, {
             method: "PUT",
             headers: {
