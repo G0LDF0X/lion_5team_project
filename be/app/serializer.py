@@ -205,6 +205,7 @@ class SellerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
+    item = serializers.ReadOnlyField(source='item_id.name')
     class Meta:
         model = Order
         fields = '__all__'

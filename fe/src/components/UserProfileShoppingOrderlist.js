@@ -4,9 +4,7 @@ import { Row, Col, Table, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Message from "./Message";
 import Loading from "./Loading";
-import { useEffect } from "react";
 import { Typography, Paper } from '@material-ui/core';
-
 
 function UserProfileShoppingOrderlist() {
   const myOrderList = useSelector((state) => state.myOrderList);
@@ -20,8 +18,7 @@ function UserProfileShoppingOrderlist() {
           <Loading />
         ) : errorOrders ? (
           <Message variant="danger">{errorOrders}</Message>
-        ) : 
-            orders && orders.length !== 0 ? (
+        ) : orders && orders.length !== 0 ? (
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr>
@@ -33,49 +30,30 @@ function UserProfileShoppingOrderlist() {
                 <th>DETAIL</th>
               </tr>
             </thead>
-              <tbody>
-                {orders&&orders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.created_at.substring(0, 10)}</td>
-                    <td>{order.total_price}</td>
-                    <td>
-                      {order.paid_at ? (
-                        order.paid_at.substring(0, 10)
-                      ) : (
-                        <i
-                          className="fas fa-times"
-                          style={{ color: "red" }}
-                        ></i>
-                      )}
-                    </td>
-                    <td>
-                      {order.delivered_at? (
-                        order.delivered_at.substring(0, 10)
-                      ) : (
-                        <i
-                          className="fas fa-times"
-                          style={{ color: "red" }}
-                        ></i>
-                      )}
-                    </td>
-                    <td>
-                      <LinkContainer to={`/order/${order.id}`}>
-                        <Button variant="light" className="btn-sm">
-                          Details
-                        </Button>
-                      </LinkContainer>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+            <tbody>
+              {orders.map((orderItem) => (
+                <tr key={orderItem.id}>
+                  <td>{orderItem.id}</td>
+                  <td>{orderItem.created_at ? orderItem.created_at.substring(0, 10) : '-'}</td>
+                  <td>{orderItem.total_price}</td>
+                  <td>{orderItem.paid_at ? orderItem.paid_at.substring(0, 10) : '-'}</td>
+                  <td>{orderItem.delivered_at ? orderItem.delivered_at.substring(0, 10) : '-'}</td>
+                  <td>
+                    <LinkContainer to={`/order/detail/${orderItem.id}`}>
+                      <Button variant="light" className="btn-sm">
+                        Details
+                      </Button>
+                    </LinkContainer>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </Table>
-            ) : (
-<Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
-    <Typography variant="h6" align="center">You have no orders</Typography>
-  </Paper>
-            )}
-        
+        ) : (
+          <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
+            <Typography variant="h6" align="center">You have no orders</Typography>
+          </Paper>
+        )}
       </Col>
     </Row>
   );
