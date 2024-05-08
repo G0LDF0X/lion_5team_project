@@ -66,7 +66,7 @@ function BoardDetailScreen() {
 
 { isUploader || userInfo.isadmin ? ( 
                 <>
-                    <LinkContainer to={`board/update/${board.id}`}>
+                    <LinkContainer to={`board/update/${board.board.id}`}>
                         <Button variant="light" className="btn-sm">
                             <i className="fas fa-edit"></i>
                         </Button>
@@ -75,7 +75,7 @@ function BoardDetailScreen() {
                     <Button
                         variant="danger"
                         className="btn-sm"
-                        onClick={() => deleteHandler(board.id)}
+                        onClick={() => deleteHandler(board.board.id)}
                     >
                         <i className="fas fa-trash"></i>
                     </Button>
