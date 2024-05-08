@@ -50,6 +50,7 @@ class ItemAnswerSerializer(serializers.ModelSerializer):
 
 class ItemQnASerializer(serializers.ModelSerializer):
     item_answer_set = ItemAnswerSerializer(many=True, read_only=True)
+    username = serializers.ReadOnlyField(source='user_id.username')
     class Meta:
         model = Item_QnA
         fields = '__all__'
