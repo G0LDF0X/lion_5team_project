@@ -20,6 +20,11 @@ import {
     REVIEW_UPDATE_SUCCESS,
     REVIEW_UPDATE_FAIL,
 
+    MY_REVIEW_LIST_REQUEST,
+    MY_REVIEW_LIST_SUCCESS,
+    MY_REVIEW_LIST_FAIL,
+
+
 } from "../constants/reviewConstants";
 
 
@@ -184,6 +189,39 @@ export const deleteReview = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: REVIEW_DELETE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+export const listMyReviews = () => async (dispatch, getState) => {
+    try {
+        dispatch({
+            type: MY_REVIEW_LIST_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+
+        const response = await fetch(`/items/myreviews`, {
+            headers: {
+                Authorization: `Bearer ${userInfo.access}`,
+            },
+        });
+
+        const data = await response.json();
+
+        dispatch({
+            type: MY_REVIEW_LIST_SUCCESS,
+            payload: data,
+        });
+    } catch (error) {
+        dispatch({
+            type: MY_REVIEW_LIST_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

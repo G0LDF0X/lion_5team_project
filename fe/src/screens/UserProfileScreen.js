@@ -6,6 +6,7 @@ import { getUserDetails, logout } from '../actions/userActions'
 import { listBookMark } from '../actions/bookmarkActions'
 import { listProducts } from '../actions/productActions'
 import { getMyOrders } from '../actions/orderActions'
+import { listMyReviews } from '../actions/reviewActions'
 function UserProfileScreen() {
 const dispatch = useDispatch()
 const navigate = useNavigate()
@@ -22,6 +23,7 @@ dispatch(listBookMark())
 dispatch(getUserDetails(userInfo.id))
 dispatch(listProducts())
 dispatch(getMyOrders())
+dispatch(listMyReviews())
 
 }
 }

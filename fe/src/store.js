@@ -16,6 +16,7 @@ import {
   reviewCreateReducer,
   reviewDeleteReducer,
   reviewUpdateReducer,
+  myReviewListReducer
 } from "./reducers/reviewReducers";
 import {
   cartListReducer,
@@ -100,6 +101,7 @@ const reducer = combineReducers({
   reviewCreate: reviewCreateReducer,
   reviewDelete: reviewDeleteReducer,
   reviewUpdate: reviewUpdateReducer,
+  myReviewList: myReviewListReducer,
 
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
