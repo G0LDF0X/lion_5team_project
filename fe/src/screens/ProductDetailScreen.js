@@ -25,7 +25,7 @@ import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import Accordion from 'react-bootstrap/Accordion';
 
 function Productcreen() {
   const [qty, setQty] = useState(1);
@@ -136,6 +136,10 @@ function Productcreen() {
       fontSize: '5rem',  // increase font size
     },
   });
+  const createQNAHandler = () => {
+    dispatch(createQNA(id));
+    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
+  };
 
 
  
@@ -305,7 +309,12 @@ function Productcreen() {
 <Grid container spacing={3}>
     <Grid item xs={9}>
     <Typography variant="h4">Q&A</Typography>
-
+    <Box display="flex" justifyContent="flex-end">
+      {/* QnA 작성 */}
+     <Button variant="contained" color="primary" onClick={createQNAHandler}>
+        Create a Q&A
+      </Button>
+    </Box> 
 
     {product.item_qna_set && product.item_qna_set.length > 0 ? (
       product.item_qna_set.map((item_qna) => (
@@ -367,6 +376,35 @@ function Productcreen() {
       </Card>
     )}
   
+    <Accordion>
+    {product.reviews ? product.item_qna_set.map((item_qna, index) => (
+      <Accordion.Item eventKey={index.toString()}>
+        <Accordion.Header>
+          <Box><h5>Q. {item_qna.title}</h5>
+          ID : {item_qna.username}<br/>
+          <span style={{ color: 'gray', fontSize: 'small' }}>
+          {item_qna.created_at.split('T')[0]}
+        </span>
+        <br/><br/>
+        <p>{item_qna.content}</p></Box>
+        </Accordion.Header>
+        <Accordion.Body>
+          
+          {item_qna.item_answer_set ? item_qna.item_answer_set.map((answer, index) => (
+            <Box>
+            <h5>{answer.title}</h5> 
+            <span style={{ color: 'gray', fontSize: 'small' }}>
+          {answer.created_at.split('T')[0]}
+        </span><br/><br/>
+            <p>{answer.content}</p>
+            </Box>
+          )) : null}
+        </Accordion.Body>
+      </Accordion.Item>
+    )) : null}
+  </Accordion>
+
+
   </Grid>
   </Grid>
   </Box>
