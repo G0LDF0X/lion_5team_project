@@ -60,7 +60,7 @@ function UserProfileShoppingOrderlist() {
                       )}
                     </td>
                     <td>
-                      <LinkContainer to={`/order/${order.id}`}>
+                      <LinkContainer to={`/order/detail/${order.id}`}>
                         <Button variant="light" className="btn-sm">
                           Details
                         </Button>
