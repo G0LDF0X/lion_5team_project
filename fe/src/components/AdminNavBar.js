@@ -84,10 +84,7 @@ export default function AdminNavBar() {
     }
   }, [dispatch, successCreate, successDelete, successUpdate]);
 
-  const createProductHandler = () => {
-    dispatch(createProduct());
-  };
-
+ 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
       dispatch(deleteProduct(id));
@@ -232,11 +229,7 @@ const userDeleteHandler = (id) => {
                 <Col>
                   <h1>Products</h1>
                 </Col>
-                <Col className="text-right">
-                  <Button variant="light" className="btn-sm" onClick={createProductHandler}>
-                    <i className="fas fa-plus"></i> Create Product
-                  </Button>
-                </Col>
+               
               </Row>
               {loadingDelete && <Loading />}
               {errorDelete && <Message variant="danger">{errorDelete}</Message>}
