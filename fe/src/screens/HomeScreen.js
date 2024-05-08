@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Container, Grid, Typography, Card, CardContent, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { listProducts } from '../actions/productActions';
@@ -44,7 +44,7 @@ function HomeScreen({ location }) {
     // dispatch(listReviews());
     dispatch(listBoards());
     dispatch(listQNA());
-  }, [dispatch, location]);
+  }, [dispatch, Navigate]);
   
   function createCarouselItem(products) {
     return (

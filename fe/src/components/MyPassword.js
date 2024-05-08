@@ -50,7 +50,7 @@ function MyPassword() {
         dispatch(logout());
         dispatch({ type: USER_UPDATE_PASSWORD_RESET });
         navigate("/password-change-confirm");
-        navigate("/password-change-confirm");
+        
     }
   }, [userInfo]);
 

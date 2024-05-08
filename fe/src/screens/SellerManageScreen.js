@@ -18,8 +18,6 @@ function ProductListScreen() {
     const redirect = location.search ? location.search.split("=")[1] : "/";
     const productList = useSelector((state) => state.productList);
     const { loading, error, products, pages, success } = productList;
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
     const productDelete = useSelector((state) => state.productDelete);
     const { loading: loadingDelete, error: errorDelete ,success: successDelete } = productDelete;
     const productCreate = useSelector((state) => state.productCreate);
@@ -27,6 +25,8 @@ function ProductListScreen() {
     const productUpdate = useSelector((state) => state.productUpdate);
     const { success: successUpdate } = productUpdate;
     const [sellerProducts, setSellerProducts] = useState([]);
+    const userDetails = useSelector((state) => state.userDetails);
+    const { user } = userDetails;
 
 
     // const page = params.get('page') || 1;
@@ -35,33 +35,38 @@ function ProductListScreen() {
       dispatch(createProduct());
       // dispatch(createProduct(product));
   }
-  
-    useEffect(() => {
-      // if(!userInfo.isAdmin) {
-        //     navigate("/login");
-        // }
-        dispatch({ type: PRODUCT_CREATE_RESET });
+    useEffect(() => { 
         if(successCreate){
+          console.log("success")
           navigate(`/items/update/${createdProduct.id}`);
-        }else{
+          dispatch({ type: PRODUCT_CREATE_RESET });
+        }
+        if(successDelete){
           dispatch(listProducts());
-          if(products){
+        }
+        if(successUpdate){
+          dispatch(listProducts());
+        }}
+        , [ dispatch]);
+    useEffect(() => {
+          dispatch(listProducts());
             if(success){
-              if(products.seller_id === userInfo.id){
+              if(products.seller_id === user.seller.id){
               setSellerProducts(products);
             }
           }
-        }}
         
       }
-      , [dispatch, navigate, userInfo, successDelete, successCreate, successUpdate]);
+      , [dispatch, navigate]);
       const deleteHandler = (id) => {   
         if(window.confirm("Are you sure?")){
           dispatch(deleteProduct(id));
-          // dispatch(deleteProduct(id));
         }else{
           redirect("/admin/productlist"); 
         }
+      }
+      const updateHandler = (id) => {
+        navigate(`/items/update/${id}`);
       }
   return (
     <div><Row className="align-items-center">
@@ -110,15 +115,16 @@ function ProductListScreen() {
               {/* <td>{product.category}</td> */}
               {/* <td>{product.brand}</td> */}
               <td>
-                <LinkContainer to={`/items/update/${product.id}`}>
-                  <Button variant="light" className="btn-sm">
+                {/* <LinkContainer to={`/items/update/${product.id}`}> */}
+                  <Button variant="light" className="btn-sm" onClick={()=>updateHandler(product.id)}>
                     <i className="fas fa-edit"></i>
+                    
                   </Button>
-                </LinkContainer>
+                {/* </LinkContainer> */}
                 <Button
                   variant="danger"
                   className="btn-sm"
-                  onClick={() => deleteHandler(product.id)}
+                  onClick={(product) => deleteHandler(product.id)}
                 >
                   <i className="fas fa-trash"></i>
                 </Button>
@@ -127,7 +133,6 @@ function ProductListScreen() {
           ))}
         </tbody>
       </Table>
-      {/* <Paginate pages={pages} page={page} keyword="" isAdmin={true} /> */}
       </div>
     )}
     </div>
