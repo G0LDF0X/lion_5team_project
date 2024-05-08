@@ -48,6 +48,8 @@ import {
   qnaListReducer,
   qnaDetailsReducer,
   qnaCreateReducer,
+  qnaAnswerCreateReducer,
+  qnaAnswerDetailsReducer,
   qnaDeleteReducer,
   qnaUpdateReducer,
 } from "./reducers/qnaReducers";
@@ -106,6 +108,8 @@ const reducer = combineReducers({
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
   qnaCreate: qnaCreateReducer,
+  qnaAnswerCreate: qnaAnswerCreateReducer,
+  qnaAnswerDetails: qnaAnswerDetailsReducer,
   qnaUpdate: qnaUpdateReducer,
   qnaDelete: qnaDeleteReducer,
 

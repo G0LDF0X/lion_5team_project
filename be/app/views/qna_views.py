@@ -42,6 +42,24 @@ def create_user_qna(request):
     serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_user_answer(request, pk):
+    user = User.objects.get(username=request.user)
+    qna = User_QnA.objects.get(id=pk)
+    current_time = datetime.now()
+
+    qna_board = User_Answer.objects.create(
+        user_id=user,
+        title=request.data.get('title', ''),
+        content=request.data.get('content', ''),
+        user_qna_id=qna,
+        created_at=current_time,
+    )
+    serializer = UserAnswerSerializer(qna_board, many=False)
+    return Response(serializer.data)
+    
+
 @api_view(['PUT'])
 def uploadImage(request, pk):
     qna = User_QnA.objects.get(id=pk)
@@ -67,36 +85,31 @@ def delete_user_qna(request, pk):
     qna_board.delete()
     return Response({"message": "Question deleted successfully"})
 
+@api_view(['PUT'])
+def update_user_qna(request, pk):
+    qna_board = User_QnA.objects.get(id=pk)
+    qna_board.title = request.data['title']
+    qna_board.content = request.data['content'] 
+    qna_board.save()    
 
-@api_view(['POST'])
-def create_user_answer(request):
-    user = request.user
-    user_qna_id = request.data.get('user_qna_id')
-    content = request.data.get('content')
-    current_time = datetime.now()
-
-    try:
-        user_qna = User_QnA.objects.get(pk=user_qna_id)
-    except User_QnA.DoesNotExist:
-        return Response({"error": "Question does not exist"})
-
-    user_answer = User_Answer.objects.create(user=user, user_qna=user_qna, content=content, created_at=current_time)
-
-    serializer = UserAnswerSerializer(user_answer, many=False)
+    serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
 
-
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_user_answer(request, pk):
     try:
-        user_answer = User_Answer.objects.get(pk=pk)
+        user_answer_list = User_Answer.objects.filter(user_qna_id_id=pk)
     except User_Answer.DoesNotExist:
         return Response({"error": "Answer does not exist"})
-    
-    user_answer.content = request.data.get('content', user_answer.content)
-    user_answer.save()
-    
-    serializer = UserAnswerSerializer(user_answer)
+    user = User.objects.get(username=request.user)
+    user_answers = user_answer_list.filter(user_id=user)
+    for user_answer in user_answers:
+        user_answer.title = request.data['title']
+        user_answer.content = request.data['content']
+        user_answer.save()
+
+    serializer = UserAnswerSerializer(user_answers, many=True)
     return Response(serializer.data)
 
 @api_view(['DELETE'])

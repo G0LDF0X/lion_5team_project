@@ -29,6 +29,8 @@ import BoardUpdateScreen from './screens/BoardUpdateScreen';
 import QAScreen from './screens/QAScreen';
 import QACreateScreen from './screens/QACreateScreen';
 import QADetailScreen from './screens/QADetailScreen';
+import QAAnswerCreateScreen from './screens/QAAnswerCreateScreen';
+import QAAnswerUpdateScreen from './screens/QAAnswerUpdateScreen';
 import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -89,6 +91,8 @@ function App() {
 
             <Route path='/qna' element={<QAScreen/>} />
             <Route path='/qna/create' element={<QACreateScreen/>} />
+            <Route path='/qna/answer/create/:id' element={<QAAnswerCreateScreen/>} />
+            <Route path='/qna/answer/update/:id' element={<QAAnswerUpdateScreen/>} />
             <Route path='/qna/detail/:id' element={<QADetailScreen/>} />
             <Route path='/qna/update/:id' element={<QAUpdateScreen/>} />
 

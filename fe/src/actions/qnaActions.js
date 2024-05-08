@@ -18,6 +18,20 @@ import {
   QNA_DELETE_SUCCESS,
   QNA_DELETE_FAIL,
 
+  QNA_ANSWER_CREATE_REQUEST,
+  QNA_ANSWER_CREATE_SUCCESS,
+  QNA_ANSWER_CREATE_FAIL,
+  QNA_ANSWER_CREATE_RESET,
+
+  QNA_ANSWER_UPDATE_REQUEST,
+  QNA_ANSWER_UPDATE_SUCCESS,
+  QNA_ANSWER_UPDATE_FAIL,
+  QNA_ANSWER_UPDATE_RESET,
+
+  QNA_ANSWER_DETAILS_REQUEST,
+  QNA_ANSWER_DETAILS_SUCCESS,
+  QNA_ANSWER_DETAILS_FAIL,
+  QNA_ANSWER_DETAILS_RESET,
 
 } from "../constants/qnaConstants";
 
@@ -143,6 +157,71 @@ export const deleteQNA = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: QNA_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+
+export const createQNAAnswer = (qnaId) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: QNA_ANSWER_CREATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+  } = getState();
+    const response = await fetch(`/qna/answer/create/${qnaId}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+      body: JSON.stringify({ qnaId : qnaId }),
+    });
+
+    const data = await response.json();
+
+    dispatch({
+      type: QNA_ANSWER_CREATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: QNA_ANSWER_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateQNAAnswer = (qna) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: QNA_ANSWER_UPDATE_REQUEST });
+    const {
+      userLogin: { userInfo },
+  } = getState();
+    const response = await fetch(`/qna/answer/update/${qna.id}/`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+      body: JSON.stringify(qna),
+    });
+
+    const data = await response.json();
+
+    dispatch({
+      type: QNA_ANSWER_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: QNA_ANSWER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

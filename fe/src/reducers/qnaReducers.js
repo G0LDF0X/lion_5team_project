@@ -22,6 +22,21 @@ import {
     QNA_DELETE_SUCCESS,
     QNA_DELETE_FAIL,
 
+    QNA_ANSWER_CREATE_REQUEST,
+    QNA_ANSWER_CREATE_SUCCESS,
+    QNA_ANSWER_CREATE_FAIL,
+    QNA_ANSWER_CREATE_RESET,
+
+    QNA_ANSWER_UPDATE_REQUEST,
+    QNA_ANSWER_UPDATE_SUCCESS,
+    QNA_ANSWER_UPDATE_FAIL,
+    QNA_ANSWER_UPDATE_RESET,
+
+    QNA_ANSWER_DETAILS_REQUEST,
+    QNA_ANSWER_DETAILS_SUCCESS,
+    QNA_ANSWER_DETAILS_FAIL,
+    QNA_ANSWER_DETAILS_RESET,
+    
 } from "../constants/qnaConstants";
 
 
@@ -55,6 +70,20 @@ export const qnaDetailsReducer = (state = { qna: {} }, action) => {
             return state;
     }
 }
+export const qnaAnswerDetailsReducer = (state = { qna: {} }, action) => {
+    switch (action.type) {
+        case QNA_ANSWER_DETAILS_REQUEST:
+            return { loading: true, ...state };
+        case QNA_ANSWER_DETAILS_SUCCESS:
+            return { loading: false, qna: action.payload.question , answers: action.payload.answers};
+        case QNA_ANSWER_DETAILS_FAIL:
+            return { loading: false, error: action.payload };
+        case QNA_ANSWER_DETAILS_RESET:
+            return { qna: {} };
+        default:
+            return state;
+    }
+}
 
 export const qnaCreateReducer = (state = {}, action) => {
     switch (action.type) {
@@ -71,6 +100,21 @@ export const qnaCreateReducer = (state = {}, action) => {
     }
 }
 
+export const qnaAnswerCreateReducer = (state = {}, action) => {
+    switch (action.type) {
+        case QNA_ANSWER_CREATE_REQUEST:
+            return { loading: true };
+        case QNA_ANSWER_CREATE_SUCCESS:
+            return { loading: false, success: true, qna: action.payload };
+        case QNA_ANSWER_CREATE_FAIL:
+            return { loading: false, error: action.payload };
+        case QNA_ANSWER_CREATE_RESET:
+            return {};
+        default:
+            return state;
+    }
+}
+
 export const qnaUpdateReducer = (state = { qna: {} }, action) => {
     switch (action.type) {
         case QNA_UPDATE_REQUEST:
@@ -80,6 +124,21 @@ export const qnaUpdateReducer = (state = { qna: {} }, action) => {
         case QNA_UPDATE_FAIL:
             return { loading: false, error: action.payload };
         case QNA_UPDATE_RESET:
+            return { qna: {} };
+        default:
+            return state;
+    }
+
+}
+export const qnaAnswerUpdateReducer = (state = { qna: {} }, action) => {
+    switch (action.type) {
+        case QNA_ANSWER_UPDATE_REQUEST:
+            return { loading: true };
+        case QNA_ANSWER_UPDATE_SUCCESS:
+            return { loading: false, success: true, qna: action.payload };
+        case QNA_ANSWER_UPDATE_FAIL:
+            return { loading: false, error: action.payload };
+        case QNA_ANSWER_UPDATE_RESET:
             return { qna: {} };
         default:
             return state;
