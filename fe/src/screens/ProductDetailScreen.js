@@ -18,16 +18,13 @@ import { createReview } from "../actions/reviewActions";
 import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
 import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
-import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
+import { Card, CardContent, Typography,  Box, Grid, TextField } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
 import Accordion from 'react-bootstrap/Accordion';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { TextField } from '@material-ui/core';
 
 
 
@@ -62,8 +59,7 @@ function ProductDetailScreen() {
   const [showEditor, setShowEditor] = useState(false);
   const [editorData, setEditorData] = useState('');
   const [answer, setAnswer] = useState('');
- 
-
+  const [showTextField, setShowTextField] = useState(false);
 
   
   let totalRate =
@@ -151,9 +147,23 @@ function ProductDetailScreen() {
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
 
-  const handleAnswerSubmit = () => {
-    // 답변 제출 로직을 여기에 작성합니다.
+  const handleAnswerChange = (event) => {
+    setAnswer(event.target.value); // 사용자가 입력한 값을 상태에 저장합니다.
   };
+
+  const handleAnswerSubmit = () => {
+      if (userInfo && userInfo.is_seller) {
+        console.log("답변 작성하기 버튼이 클릭되었습니다.");
+        console.log("작성된 답변: ", answer);
+        setAnswer(''); 
+        setShowTextField(false); 
+      } else {
+        alert("판매자만 답변을 작성할 수 있습니다.");
+      }
+    };
+    const handleButtonClick = () => {
+      setShowTextField(true); 
+    };
 
  
   return (
@@ -333,42 +343,56 @@ function ProductDetailScreen() {
     </Box>
     <Accordion>
     {product.reviews ? product.item_qna_set.map((item_qna, index) => (
-      <Accordion.Item eventKey={index.toString()}>
-        <Accordion.Header>
-          <Box><h5>Q. {item_qna.title}</h5>
-          ID : {item_qna.username}<br/>
-          <span style={{ color: 'gray', fontSize: 'small' }}>
+  <Accordion.Item eventKey={index.toString()}>
+    <Accordion.Header>
+      <Box>
+        <h5>Q. {item_qna.title}</h5>
+        ID : {item_qna.username}<br/>
+        <span style={{ color: 'gray', fontSize: 'small' }}>
           {item_qna.created_at.split('T')[0]}
         </span>
         <br/><br/>
-        <p>{item_qna.content}</p></Box>
-        </Accordion.Header>
-        <Accordion.Body>
-
-          {item_qna.item_answer_set ? item_qna.item_answer_set.map((answer, index) => (
-            <Box>
-              <h5>A. {answer.title}</h5> 
-              <span style={{ color: 'gray', fontSize: 'small' }}>
-                {answer.created_at.split('T')[0]}
-              </span><br/><br/>
-              <p>{answer.content}</p>
-            </Box>
-<<<<<<< HEAD
-          )) : (
-            <div>
-              <p> 답변이 없습니다.</p>
-              <Button variant="contained" color="primary" onClick={handleAnswerSubmit}>
-                답변 작성하기
-              </Button>
-            </div>
-          )}
-      
-=======
-          )) : null}
->>>>>>> main
-        </Accordion.Body>
-      </Accordion.Item>
-    )) : null}
+        <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+      </Box>
+    </Accordion.Header>
+    <Accordion.Body>
+      {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ? (
+        item_qna.item_answer_set.map((answer, index) => (
+          <Box>
+            <h5>A. {answer.title}</h5> 
+            <span style={{ color: 'gray', fontSize: 'small' }}>
+              {answer.created_at.split('T')[0]}
+            </span>
+            <br/><br/>
+            <p>{answer.content}</p>
+          </Box>
+        ))
+      ) : (
+        <>
+        <Button variant="contained" color="primary" onClick={handleButtonClick}>
+          답변 작성하기
+        </Button>
+        {showTextField && (
+          <>
+          <TextField
+          
+            value={answer}
+            onChange={handleAnswerChange}
+            variant="outlined"
+            multiline
+            rows={4}
+            placeholder="답변을 작성해주세요."
+          />
+            <Button variant="contained" color="primary" onClick={handleAnswerSubmit}>
+                  제출하기
+                </Button>
+          </>
+        )}
+        </>
+      )}
+    </Accordion.Body>
+  </Accordion.Item>
+)) : null}
   </Accordion>
 
   </Grid>
@@ -378,5 +402,4 @@ function ProductDetailScreen() {
 
   );
 }
-
 export default ProductDetailScreen;
