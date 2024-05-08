@@ -104,7 +104,7 @@ function BoardDetailScreen() {
                 <Card.Body>
                   {board.image_url && <Image src={board.image_url}  fluid />}
                   <Card.Text>
-                    {board.content}
+                    <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                   </Card.Text>
                   <Button variant="link" href={board.product_url} target="_blank">
                     Visit Product

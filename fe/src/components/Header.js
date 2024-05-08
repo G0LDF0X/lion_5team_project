@@ -163,6 +163,7 @@ function Header() {
               </LinkContainer>
             </NavDropdown>
           )}
+          {userInfo? (
           <Card className="ms-auto me-2 bg-info">
           <Nav className="ms-auto me-2">
             <NavDropdown title="글쓰기" id="navbarScrollingDropdown" drop='left'>
@@ -175,7 +176,7 @@ function Header() {
             </NavDropdown>
             <NavDropdown.Divider />
           </Nav>
-        </Card>
+        </Card>): null}
         </Navbar.Collapse>
       </Container>
     </Navbar>
