@@ -24,7 +24,7 @@ import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
 import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
-// import { QNA_CREATE_RESET } from "../constants/qnaConstants";
+import Dropdown from 'react-bootstrap/Dropdown';
 
 
 function Productcreen() {
@@ -55,6 +55,7 @@ function Productcreen() {
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
 
+
   
   let totalRate =
     product && product.reviews
@@ -66,6 +67,7 @@ function Productcreen() {
 
     useEffect(() => {
 
+    
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
         dispatch({type:REVIEW_CREATE_RESET});
@@ -87,10 +89,7 @@ function Productcreen() {
     else{
       setMarked(false);
     }
-    // if (successProductQNA) {
-    //   navigate(`/items/qna/${createdQNA.id}`);
-    //   dispatch({type:QNA_CREATE_RESET});
-    // }
+  
     dispatch(listCartItems()); 
     dispatch(listProductDetails(id));
     if(!bookMarkItems){
@@ -136,10 +135,7 @@ function Productcreen() {
       fontSize: '5rem',  // increase font size
     },
   });
-  const createQNAHandler = () => {
-    dispatch(createQNA(id));
-    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
-  };
+
 
  
   return (
@@ -309,33 +305,39 @@ function Productcreen() {
     <Grid item xs={9}>
     <Typography variant="h4">Q&A</Typography>
 
-     <Box display="flex" justifyContent="flex-end">
-      {/* QnA 작성 */}
-     <Button variant="contained" color="primary" onClick={createQNAHandler}>
-        Create a Q&A
-      </Button>
-    </Box> 
 
-     <Card>
-      <CardContent>
-    {product.item_qna_set ? (
 
+    {product.item_qna_set && product.item_qna_set.length > 0 ? (
       product.item_qna_set.map((item_qna) => (
-        <QA qna = {item_qna}>
-  
+        <Card style={{ width: '130%' , minHeight: '250px', marginBottom: '20px'}}>
+          <CardContent style={{ padding: '10px' }}>
+       
+        {console.log(item_qna)}
 
-          <CardContent>
-            {console.log(item_qna)}
-            <Typography variant="h5">{item_qna.item_answer_set.title}</Typography>
-            {/* <Typography variant="subtitle1">Written by: {qna.writer}</Typography> */}
-            
-            <Typography variant="body1">{item_qna.content}</Typography>
-            {item_qna.image && <img src={item_qna.image_url} alt={item_qna.content} />}
-            {item_qna.item_answer_set? (<div>
-              {item_qna.item_answer_set.map((answer) => (
-                <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-              ))}</div>):(null)
-              } 
+        <p style={{ paddingTop: '20px', paddingLeft: '20px' }}>Q. {item_qna.title}</p>
+        <p style={{ paddingLeft: '20px' }}>{item_qna.content}</p>
+
+        {item_qna.image && <img src={item_qna.image_url} alt={item_qna.content} />}
+        
+        <br/>
+        {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ? (
+            <Dropdown>
+                <Dropdown.Toggle style={{ zIndex: 9999, backgroundColor: 'gray', position: 'relative', top: '-50px', right: '0px', float: 'right' }} id="dropdown-basic">
+                    답변 보기
+                </Dropdown.Toggle>
+    
+                <Dropdown.Menu style={{ maxHeight: '400px', overflow: 'auto' }}>
+                    {item_qna.item_answer_set.map((answer) => (
+                        <Dropdown.Item key={answer._id}>
+                            <p>A.{answer.title}</p>
+                            <p>{answer.content}</p>
+                        </Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+        ) : (
+            <p style={{ paddingLeft: '20px' }}>---- 답변이 없습니다 ----</p>
+        )}
 
             {/* <Box mt={2}> */}
 
@@ -347,20 +349,17 @@ function Productcreen() {
           <Button variant="contained" color="secondary" onClick={() => deleteQNAHandler(item_qna)}>
             Delete
           </Button> */}
-
+       </CardContent>
+    </Card>
    
-          </CardContent>
-
-        </QA>
-
       ))
     ) : (
+      <Card style={{ width: '130%' , display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
-      <Typography variant="body1">Q&A가 없습니다.</Typography>
-
+      <p style={{ paddingTop: '20px' }}>Q&A가 없습니다.</p>
+      </Card>
     )}
-    </CardContent>
-    </Card>
+  
   </Grid>
   </Grid>
   </Box>

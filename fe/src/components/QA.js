@@ -1,8 +1,9 @@
-import React from "react";
-import { Card } from "react-bootstrap";
+import React , { useState }from "react";
+import { Card, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
 function QA({ qna={} }) {
     // if (!qna) return <div>QA not found</div>;
+
     return (
             <div>
          {/* <Card className="my-3 p-3 rounded"> */}
@@ -22,11 +23,9 @@ function QA({ qna={} }) {
                         </div>
                     </Card.Text>
                 </Link>
-
-            </Card.Body>
-        {/* </Card>
-         */}
-    </div>
+             </Card.Body>
+         {/* </Card> */}
+    </div> 
     );
 }
 
