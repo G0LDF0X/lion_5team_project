@@ -17,15 +17,9 @@ BOARD_UPDATE_RESET,
 BOARD_DELETE_REQUEST,
 BOARD_DELETE_SUCCESS,
 BOARD_DELETE_FAIL,
-<<<<<<< HEAD
-BOARD_CREATE_COMMENT_FAIL, 
-BOARD_CREATE_COMMENT_REQUEST, 
-BOARD_CREATE_COMMENT_SUCCESS
-=======
 BOARD_CREATE_REPLY_REQUEST,
 BOARD_CREATE_REPLY_SUCCESS,
 BOARD_CREATE_REPLY_FAIL,
->>>>>>> main
 } from "../constants/boardConstants";
 
 
@@ -225,44 +219,6 @@ catch (error) {
 }
 }
 
-<<<<<<< HEAD
-export const createBoardComment = (boardId, comment) => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: BOARD_CREATE_COMMENT_REQUEST,
-      });
-  
-      const { userLogin: { userInfo } } = getState();
-  
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-            Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
-      console.log("InnovationPARK");
-      console.log(`Bearer ${userInfo.token}`);  // Add this line
-      const response = await fetch(`/board/create/comment/${boardId}/`, {
-        method: 'POST',
-        headers: config.headers,
-        body: JSON.stringify(comment)
-      });
-  
-      const data = await response.json();
-  
-      dispatch({
-        type: BOARD_CREATE_COMMENT_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: BOARD_CREATE_COMMENT_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message,
-      });
-    }
-  };
-
-=======
 // export const createReply = (board) => async (dispatch, getState) => {
 //     try {
 //         dispatch({ type: BOARD_CREATE_REPLY_REQUEST });
@@ -299,4 +255,3 @@ export const createBoardComment = (boardId, comment) => async (dispatch, getStat
 //         });
 //       }
 //     };
->>>>>>> main
