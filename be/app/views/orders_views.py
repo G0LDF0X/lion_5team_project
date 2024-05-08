@@ -11,8 +11,8 @@ from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer,
 @api_view(['GET'])
 def order_item_detail(request, pk):
     try:
-        order_item = OrderItem.objects.get(id=pk)
-        serializer = OrderItemSerializer(order_item)
+        order_item = OrderItem.objects.filter(order_id=pk)
+        serializer = OrderItemSerializer(order_item, many=True)
         return Response(serializer.data)
     except OrderItem.DoesNotExist:
         raise Response("Order item does not exist")
