@@ -332,16 +332,20 @@ function ProductDetailScreen() {
     </div>
     </Box>
     <Accordion>
-    {product.item_qna_set && product.item_qna_set.length > 0 ? 
-      product.item_qna_set.map((item_qna, index) => (
+    {product.reviews ? product.item_qna_set.map((item_qna, index) => (
       <Accordion.Item eventKey={index.toString()}>
-        <Box>
-          <h5>Q. {item_qna.title}</h5>
-        </Box>
+        <Accordion.Header>
+          <Box><h5>Q. {item_qna.title}</h5>
+          ID : {item_qna.username}<br/>
+          <span style={{ color: 'gray', fontSize: 'small' }}>
+          {item_qna.created_at.split('T')[0]}
+        </span>
+        <br/><br/>
+        <p>{item_qna.content}</p></Box>
+        </Accordion.Header>
         <Accordion.Body>
-          
-          {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ?
-           item_qna.item_answer_set.map((answer, index) => (
+
+          {item_qna.item_answer_set ? item_qna.item_answer_set.map((answer, index) => (
             <Box>
               <h5>A. {answer.title}</h5> 
               <span style={{ color: 'gray', fontSize: 'small' }}>
@@ -349,6 +353,7 @@ function ProductDetailScreen() {
               </span><br/><br/>
               <p>{answer.content}</p>
             </Box>
+<<<<<<< HEAD
           )) : (
             <div>
               <p> 답변이 없습니다.</p>
@@ -358,9 +363,12 @@ function ProductDetailScreen() {
             </div>
           )}
       
+=======
+          )) : null}
+>>>>>>> main
         </Accordion.Body>
       </Accordion.Item>
-    )) : <p style= {{padding:'20px'}}>Q&A가 없습니다.</p>}
+    )) : null}
   </Accordion>
 
   </Grid>

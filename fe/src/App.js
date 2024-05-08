@@ -43,6 +43,7 @@ import ShippingScreen from './screens/ShippingScreen';
 import ShippingAdressScreen from './screens/ShippngAdressScreen';
 import OtherUserProfileNavbar from './components/OtherUserProfileNavbar';
 import PasswordChangeConfirm from './screens/PasswordChangeConfirm';
+import OrderScreen from './screens/PaymentScreen';
 import ItemQACreateScreen from './screens/ItemQACreateScreen';
 
 function App() {
@@ -97,6 +98,8 @@ function App() {
             <Route path='/qna/answer/update/:id' element={<QAAnswerUpdateScreen/>} />
             <Route path='/qna/detail/:id' element={<QADetailScreen/>} />
             <Route path='/qna/update/:id' element={<QAUpdateScreen/>} />
+
+            <Route path='/payment' element={<OrderScreen/>} />
 
             <Route path='/editor' element={<SampleEditorScreen/>} />
           </Routes>

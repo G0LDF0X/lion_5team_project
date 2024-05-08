@@ -224,7 +224,14 @@ function OrderScreen() {
 return(
   
   <div>
-    <h1>Order </h1>
+    <h1>Order Complete</h1>
+    <p>주문이 완료되었습니다.</p>
+    <Link to='/items'>
+      <Button variant="primary" style={{marginRight: '10px'}}>더 쇼핑하기</Button>
+    </Link>
+    <Link to='/users/profile'>
+      <Button variant="success">주문 확인하기</Button>
+    </Link>
     </div>
 )}
 export default OrderScreen;
