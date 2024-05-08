@@ -15,6 +15,12 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
+
+    USER_UPDATE_PASSWORD_REQUEST,
+    USER_UPDATE_PASSWORD_SUCCESS,
+    USER_UPDATE_PASSWORD_FAIL,
+    USER_UPDATE_PASSWORD_RESET,
+
 } from "../constants/userConstants";
 
 export const login = (id, password) => async (dispatch) => {
@@ -212,3 +218,63 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
         });
     }
 }
+
+export const updateUserPassword = (user) => async (dispatch, getState) => {
+    console.log("UPDATE USER PASSWORD USER :", user);
+    try {
+        dispatch({
+            type: USER_UPDATE_PASSWORD_REQUEST,
+        });
+
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        const { currentPassword, newPassword } = user;
+        const updatedUser = { password: newPassword };
+
+        const response = await fetch(`/users/update_auth_profile/`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userInfo.access}`,
+            },
+            body: JSON.stringify(updatedUser),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            dispatch({
+                type: USER_UPDATE_PASSWORD_SUCCESS,
+                payload: data,
+            });
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: data,
+            });
+
+            localStorage.setItem("userInfo", JSON.stringify(data));
+        } else {
+            dispatch({
+                type: USER_UPDATE_PASSWORD_FAIL,
+                payload:
+                    data && data.message ? data.message : "Update failed",
+            });
+        }
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_PASSWORD_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+    }
+}
+
+export const updateUserLogin = (updateUserInfo) => async (dispatch) => {
+    dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: updateUserInfo,
+    });
+};
