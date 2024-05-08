@@ -40,19 +40,6 @@ function ProductListScreen() {
   }
   
     useEffect(() => {
-      // if (products && seller &&userInfo.is_seller){
-      //   console.log(seller.id)
-      //   products.map((product) => {
-      //     if(product.seller_id === seller.id){
-      //       setSellerProducts(product);
-      //     }
-      //   }
-      //   )}
-
-      
-      // if(!userInfo.isAdmin) {
-        //     navigate("/login");
-        // }
         dispatch({ type: PRODUCT_CREATE_RESET });
         if(successCreate){
           navigate(`/items/update/${createdProduct.id}`);
@@ -77,8 +64,8 @@ function ProductListScreen() {
         }
       }
       const updateHandler = (id) => {
-        // navigate(`/items/update/${id}`);
-        // dispatch(listProductDetails(id));
+        navigate(`/items/update/${id}`);
+        dispatch(listProductDetails(id));
         console.log("updateHandler");
       }
   return (
