@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import UserSettingNavBar from '../components/UserSetitngNavbar'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { getUserDetails, logout } from '../actions/userActions'
+import { getUserDetails, listSellers, listUsers, logout } from '../actions/userActions'
 import { listBookMark } from '../actions/bookmarkActions'
 import { listMyProducts, listProducts } from '../actions/productActions'
 import { getMyOrders } from '../actions/orderActions'
@@ -26,6 +26,8 @@ dispatch(getMyOrders())
 dispatch(listMyReviews())
 if(userInfo.is_seller){
   dispatch(listMyProducts())
+  dispatch(listSellers())
+  dispatch(listUsers()) 
 }
 
 }

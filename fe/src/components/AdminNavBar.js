@@ -13,6 +13,7 @@ import Loading from './Loading';
 import Message from './Message';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,6 +61,10 @@ export default function AdminNavBar() {
   const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
   const productUpdate = useSelector((state) => state.productUpdate);
   const { success: successUpdate } = productUpdate;
+  const sellerList = useSelector((state) => state.sellerList);
+  const { sellers } = sellerList;
+  const userList = useSelector((state) => state.userList);
+  const { users } = userList;
   const userDetails = useSelector((state) => state.userDetails);
   const { user } = userDetails;
   const userLogin = useSelector((state) => state.userLogin);
@@ -96,7 +101,11 @@ export default function AdminNavBar() {
   };
 
   const [value, setValue] = useState(0);
-
+const userDeleteHandler = (id) => {
+    if (window.confirm("Are you sure?")) {
+      // DELETE SELLER
+    }
+  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -111,10 +120,111 @@ export default function AdminNavBar() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        item1
+      <div>
+      <h1>Users</h1>
+    
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+             
+              <th>USER ID</th>
+              
+              <th>NAME</th>
+              <th>EMAIL</th>
+              <th>SELLER</th>
+              <th>ADMIN</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>
+                  {user.is_seller ? (
+                    <i className="fas fa-check" style={{ color: "green" }}></i>
+                  ) : (
+                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  )}
+                </td>
+                <td>
+                  {user.is_staff ? (
+                    <i className="fas fa-check" style={{ color: "green" }}></i>
+                  ) : (
+                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  )}
+                </td>
+                
+               
+                <td>
+                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
+                    <Button variant="light" className="btn-sm">
+                      <i className="fas fa-edit"></i>
+                    </Button>
+                  </LinkContainer>
+                    <Button variant="danger" className="btn-sm" onClick={()=>userDeleteHandler(user.id)}>
+                        <i className="fas fa-trash"></i>
+                    </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      
+    </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        item2
+      <div>
+      <h1>Sellers</h1>
+    
+        <Table striped bordered hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>SELLER ID</th>
+              <th>USER ID</th>
+              <th>BS NUMBER</th>
+              <th>NAME</th>
+              <th>EMAIL</th>
+              <th>ADMIN</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {sellers.map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.user_id}</td>
+                <td>{user.bs_number}</td>
+                <td>{user.user}</td>
+                <td>
+                  <a href={`mailto:${user.email}`}>{user.email}</a>
+                </td>
+                <td>
+                  {user.isAdmin ? (
+                    <i className="fas fa-check" style={{ color: "green" }}></i>
+                  ) : (
+                    <i className="fas fa-times" style={{ color: "red" }}></i>
+                  )}
+                </td>
+                <td>
+                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
+                    <Button variant="light" className="btn-sm">
+                      <i className="fas fa-edit"></i>
+                    </Button>
+                  </LinkContainer>
+                    <Button variant="danger" className="btn-sm" onClick={()=>userDeleteHandler(user.user_id)}>
+                        <i className="fas fa-trash"></i>
+                    </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      
+    </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
             <div>

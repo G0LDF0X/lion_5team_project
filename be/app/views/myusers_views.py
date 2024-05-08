@@ -33,6 +33,19 @@ def get_Seller_Apply(request):
     else:
         return Response(serializer.errors, status=400)
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_sellers(request):
+    sellers = Seller.objects.all()
+    serializer = SellerSerializer(sellers, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_users(request):
+    users = User.objects.all()
+    serializer = User_Serializer(users, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def my_shopping(request):

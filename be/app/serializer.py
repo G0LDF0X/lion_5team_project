@@ -212,6 +212,10 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         return user
 
 class SellerSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user_id.username')
+    email = serializers.ReadOnlyField(source='user_id.email')
+    isAdmin = serializers.ReadOnlyField(source='user_id.is_staff')
+    
     class Meta:
         model = Seller
         fields = '__all__'
