@@ -216,10 +216,11 @@ function ProductUpdateScreen() {
   value="3"
   deleteIcon={chipData&&chipData.includes("3") ?  <DeleteIcon />:<DoneIcon /> }
 />
+<br/><br/>
       
       </Stack>
             </Form.Group>
-            <Button type="submit" variant="">
+            <Button type="submit" variant="primary">
               Update
             </Button>
           </Form>
