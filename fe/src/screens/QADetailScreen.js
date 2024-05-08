@@ -45,7 +45,9 @@ console.log("ANSWERS:",answers);
               <strong>{qna.user}</strong></Link>
               {qna.created_at && qna.created_at.substring(0, 10)}<br /><br />
               {qna.image_url && <img src={qna.image_url} alt="QnA" />}<br /><br />
-              {qna.content}
+              
+            <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+              {/* {qna.content} */}
               {/* <ListGroup.Item>
                 {qna.content}
                 </ListGroup.Item> */}
