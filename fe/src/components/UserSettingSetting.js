@@ -28,7 +28,7 @@ function UserSettingSetting() {
   const location = useLocation();
   const redirect = location.state ? location.state.from : "/";
 
-  console.log("SETTING SETTING :", loading, error, user);
+  // console.log("SETTING SETTING :", loading, error, user);
 
   
   useEffect(() => {
@@ -38,7 +38,7 @@ function UserSettingSetting() {
         setNickname(userInfo.nickname);
         setEmail(userInfo.email);
     }
-  }, [dispatch, navigate, userInfo, user]);
+  }, [ userInfo]);
 
   const handleImageChange = async(e) => {
     console.log("handleImageChange activated")
@@ -60,9 +60,11 @@ function UserSettingSetting() {
         setMessage("Image uploaded successfully");
         dispatch(getUserDetails(userInfo.id));
       } else {
+        console.log ("imageupload",data.message)
         setMessage(data.message);
       }
     } catch (error) {
+      console.error(error.message);
       setMessage(error.message);
     }
   };
@@ -84,10 +86,6 @@ function UserSettingSetting() {
             {user.user&& user.user.image_url ? 
               <Image src={user.user.image_url} roundedCircle width="40%" />
               : <Image src="https://placehold.co/400" roundedCircle width="40%" />}
-            {/* ) : ( */}
-              {/* <Image src="https://placehold.co/400" roundedCircle width="70%" /> */}
-            {/* )} */}
-            {/* <Image src="https://placehold.co/400" roundedCircle width="70%" /> */}
           </label>
           <Form.Control
             type="file"

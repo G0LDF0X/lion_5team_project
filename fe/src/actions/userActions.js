@@ -232,8 +232,8 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
         const {
             userLogin: { userInfo },
         } = getState();
-        const { currentPassword, newPassword } = user;
-        const updatedUser = { password: newPassword };
+        // const { currentPassword, newPassword } = user;
+        // const updatedUser = { password: newPassword };
 
         const response = await fetch(`/users/update_auth_profile/`, {
             method: "PUT",
@@ -241,7 +241,7 @@ export const updateUserPassword = (user) => async (dispatch, getState) => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${userInfo.access}`,
             },
-            body: JSON.stringify(updatedUser),
+            body: JSON.stringify(user),
         });
 
         const data = await response.json();

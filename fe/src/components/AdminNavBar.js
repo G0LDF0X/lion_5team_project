@@ -5,12 +5,6 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { useDispatch, useSelector } from 'react-redux';
-import UserSettingSettingNavbar from './UserSettingSettingNavbar';
-import SellerSettingNavBar from './SellerSettingNavbar';
-import UserSettingProfileNavbar from './UserSettingProfileNavBar';
-import UserSettingMyshoppingNavbar from './UserSettingMyshoppingNavbar';
-import UserSettingMyreviewNavbar from './UserSettingMyreviewNavbar';
-import AdminNavBar from './AdminNavBar';
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -44,7 +38,7 @@ function a11yProps(index) {
   };
 }
 
-export default function UserSettingNavBar() {
+export default function AdminNavBar() {
   const [value, setValue] = React.useState(0);
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);  
@@ -58,31 +52,20 @@ export default function UserSettingNavBar() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-          <Tab label="프로필" {...a11yProps(0)} />
-          <Tab label="나의 쇼핑" {...a11yProps(1)} />
-          <Tab label="나의 리뷰" {...a11yProps(2)} />
-            <Tab label="설정" {...a11yProps(3)} />
-          {userInfo&&userInfo.is_seller|| userInfo&&userInfo.is_staff ? (<Tab label="판매자 관리" {...a11yProps(4)} />) : null}
-          {userInfo&&userInfo.is_staff ? (<Tab label="관리자" {...a11yProps(5)} />) : null}
+          <Tab label="사용자 관리" {...a11yProps(0)} />
+          <Tab label="판매자 관리" {...a11yProps(1)} />
+          {/* <Tab label="수익 확인" {...a11yProps(2)} /> */}
+          
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <UserSettingProfileNavbar />
+        item1
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <UserSettingMyshoppingNavbar />
+        item2
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <UserSettingMyreviewNavbar />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <UserSettingSettingNavbar />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={4}>
-        <SellerSettingNavBar />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={5}>
-        <AdminNavBar />
+        item2
       </CustomTabPanel>
     </Box>
   );

@@ -27,7 +27,7 @@ dispatch(listMyReviews())
 
 }
 }
-, [userInfo, navigate, dispatch, redirect, location.state])
+, [navigate])
   return (
     <div>
       <UserSettingNavBar />

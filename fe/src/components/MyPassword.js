@@ -35,7 +35,7 @@ function MyPassword() {
   const userPassword = useSelector((state) => state.userUpdatePassword);
   const { loading: passwordLoading, success, userInfo:loadingPassword } = userPassword
 
-  console.log("USERINFO : ", userInfo);
+  // console.log("USERINFO : ", userInfo);
   useEffect(() => {
     console.log("ACTIVATE USER EFFECT");
     if (!userInfo) {
@@ -44,36 +44,25 @@ function MyPassword() {
         setPassword(userInfo.password);
     }
 
-    // if (success) {
+    if (success) {
         
     //     console.log("SUCCESS :", userInfo);
-    //     dispatch(logout());
-    //     dispatch({ type: USER_UPDATE_PASSWORD_RESET });
-    //     navigate("/password-change-confirm");
-    // }
+        dispatch(logout());
+        dispatch({ type: USER_UPDATE_PASSWORD_RESET });
+        navigate("/password-change-confirm");
+        navigate("/password-change-confirm");
+    }
   }, [userInfo]);
 
   
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log("LOGINPASSWORD : ", loginPassword);
-    console.log("CURRENTPASSWORD : ", currentPassword);
     if (loginPassword !== currentPassword) {
         setMessage("현재 비밀번호가 일치하지 않습니다.");
     } else if (newPassword !== confirmNewPassword) {
         alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
     } else {
-        console.log("CURRENT PASSWORD : ", currentPassword);
-        console.log("NEW PASSWORD : ", newPassword);
-        const updateUser = {
-            currentPassword: currentPassword,
-            newPassword: newPassword,
-        }
-        dispatch(updateUserPassword(updateUser));
-        setMessage("비밀번호 변경이 완료되었습니다.");
-        console.log("AFTER PASSWORD CHANGE : ", userLogin);
-        dispatch(logout());
-        navigate("/password-change-confirm");
+        dispatch(updateUserPassword({ password: newPassword }));
     }
 
 
@@ -83,7 +72,7 @@ function MyPassword() {
     <Container>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
-            {console.log("COL MESSAGE : ", message, " COL ERROR :", error)}
+            {/* {console.log("COL MESSAGE : ", message, " COL ERROR :", error)} */}
           {message && <Message variant="danger">{message}</Message>}
           {error && <Message variant="danger">{error}</Message>} 
           {loading && <Loading />}
