@@ -30,7 +30,7 @@ const Bookmark = () => {
         <Message variant={"danger"}>{error}</Message>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {bookMarkItems.map((bookmark) => (
+          {bookMarkItems&&bookMarkItems.map((bookmark) => (
             <Card style={{ width: '18rem' , margin: '10px' }} key={bookmark.id}>
               <Card.Body>
                 <Card.Title>{bookmark.name}</Card.Title>

@@ -91,6 +91,15 @@ def get_reviews(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def get_my_reviews(request):
+    user = User.objects.get(username=request.user)
+    reviews = Review.objects.filter(user_id=user)
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
 def get_review(request, pk):
     reviews = Review.objects.filter(id=pk)
     serializer = ReviewSerializer(reviews, many=True)
