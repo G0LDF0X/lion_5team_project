@@ -16,7 +16,8 @@ function QADetailSceen() {
   const qnaDetails = useSelector((state) => state.qnaDetails);
   const { loading, error, qna, answers } = qnaDetails;
 
-
+console.log("QNA:", qna);
+console.log("ANSWERS:",answers);
 
   useEffect(() => {
     dispatch(listQNADetails(id));
@@ -35,29 +36,42 @@ function QADetailSceen() {
          <div><Row>
           
           <Col md={12}>
+
+            {/* QNA 질문 */}
             <ListGroup variant="flush">
               <Card className='my-3 p-3 rounded'>
-
-              <ListGroup.Item>
+              <h3>{qna.title}</h3>
+              <Link to={`/users/${qna.user_id}/`}>
+              <strong>{qna.user}</strong></Link>
+              {qna.created_at && qna.created_at.substring(0, 10)}<br /><br />
+              {qna.image_url && <img src={qna.image_url} alt="QnA" />}<br /><br />
+              
+            <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+              {/* {qna.content} */}
+              {/* <ListGroup.Item>
+                {qna.content}
+                </ListGroup.Item> */}
+              {/* <ListGroup.Item>
                 <h3>{qna.title}</h3>
               </ListGroup.Item>
               <Card className="my-3 p-3">
               <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-                </Card>
+                </Card> */}
               </Card>
-              <Card className='my-3 p-3 rounded'>
-              <ListGroup.Item>
-                <h3>Answers</h3>
-                {/* {answers.map((answer) => (
-                  <ListGroup.Item key={answer._id}>
-                    <strong>{answer.name}</strong>
-                    <Rating value={answer.rating} />
-                    <p>{answer.createdAt.substring(0, 10)}</p>
-                    <p>{answer.comment}</p>
-                  </ListGroup.Item>
-                ))} */}
 
-              </ListGroup.Item>
+              {/* QNA 답변 */}
+              <Card className='my-3 p-3 rounded'>
+                <h3>Answers</h3>
+                {answers && answers.map((answer) => (
+                  <ListGroup.Item key={answer._id}>
+                    <h4>{answer.title}</h4>
+                    <Link to={`/users/${answer.user_id}/`}>
+                    <strong>{answer.user}</strong></Link>
+                    <p>{answer.created_at.substring(0, 10)}</p>
+                    <p>{answer.content}</p>
+                  </ListGroup.Item>
+                ))}
+
               </Card>
              
             </ListGroup>

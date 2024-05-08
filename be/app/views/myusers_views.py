@@ -45,6 +45,7 @@ def my_shopping(request):
     return Response(serializer.data)
 
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_mypage_profile(request):
@@ -76,6 +77,21 @@ def update_Auth_Profile(request):
     user.save()
     return Response(serializer.data)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_User_Profile_Image(request):
+    data = request.data
+    try:
+        user = User.objects.get(username=request.user)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found'}, status=404)
+
+    if 'image_url' in data :
+        user.image_url = data['image_url']
+        user.save()
+
+    serializer = User_Serializer(user, many=False)
+    return Response(serializer.data)
 
 
 # model 중 User 테이블의 정보 수정

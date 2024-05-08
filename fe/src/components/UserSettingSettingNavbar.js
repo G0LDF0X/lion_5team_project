@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UserSettingSetting from './UserSettingSetting';
 import SellerApplication from './SellerApplication';
+import MyPassword from './MyPassword';
+
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -70,6 +72,12 @@ export default function UserSettingSettingNavbar() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
         <SellerApplication />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <MyPassword />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
+        Item Six
       </CustomTabPanel>
     </Box>
   );
