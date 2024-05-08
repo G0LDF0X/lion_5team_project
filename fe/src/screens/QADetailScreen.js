@@ -6,23 +6,35 @@ import { useDispatch, useSelector } from "react-redux";
 import {listQNADetails} from "../actions/qnaActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import { qna_CREATE_REVIEW_RESET } from "../constants/qnaConstants";
+import { QNA_ANSWER_CREATE_RESET, qna_CREATE_REVIEW_RESET } from "../constants/qnaConstants";
+import { createQNAAnswer } from "../actions/qnaActions";
+// import { QNA_ANSWER_CREATE_RESET } from "../constants/qnaConstants";
 
 function QADetailSceen() {
-  const [comment, setComment] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const qnaDetails = useSelector((state) => state.qnaDetails);
   const { loading, error, qna, answers } = qnaDetails;
+  const qnaAnswerCreate = useSelector(state => state.qnaAnswerCreate);
+  const { success: successCreate, qna : createdQna } = qnaAnswerCreate;
 
-console.log("QNA:", qna);
-console.log("ANSWERS:",answers);
+// console.log("QNA:", qna);
+// console.log("ANSWERS:",answers);
 
+
+  const answerCreateHandler = () => {
+    console.log("ID", qna.id)
+    dispatch(createQNAAnswer(qna.id))
+  }
   useEffect(() => {
     dispatch(listQNADetails(id));
-
-  }, [dispatch, id]);
+    if (successCreate) {
+      dispatch({type: QNA_ANSWER_CREATE_RESET})
+      navigate(`/qna/answer/update/${createdQna.id}/`);
+    }
+  }
+  , [navigate,successCreate]);
   // const qna = qna.find((p) => p._id === id)s
   return (
     <div>
@@ -61,10 +73,10 @@ console.log("ANSWERS:",answers);
 
               {/* Q&A 답변하기 */}
               <div style={{ width: '100%', textAlign: 'right' }}>
-              <Link to={`/qna/answer/create/${qna.id}/`}>
-                {console.log("ID", qna.id)}
-                <Button className="btn-primary btn-sm">Create Q&A Answer</Button>
-                </Link>
+              {/* <Link to={`/qna/answer/create/${qna.id}/`}> */}
+                {/* {console.log("ID", qna.id)} */}
+                <Button className="btn-primary btn-sm" onClick ={answerCreateHandler}>Create Q&A Answer</Button>
+                {/* </Link> */}
               </div>
 
               {/* QNA 답변 */}
@@ -76,7 +88,7 @@ console.log("ANSWERS:",answers);
                     <Link to={`/users/${answer.user_id}/`}>
                     <strong>{answer.user}</strong></Link>
                     <p>{answer.created_at.substring(0, 10)}</p>
-                    <p>{answer.content}</p>
+                    <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                   </ListGroup.Item>
                 ))}
 

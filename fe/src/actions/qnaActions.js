@@ -178,7 +178,6 @@ export const createQNAAnswer = (qnaId) => async (dispatch, getState) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.access}`,
       },
-      body: JSON.stringify({ qnaId : qnaId }),
     });
 
     const data = await response.json();
