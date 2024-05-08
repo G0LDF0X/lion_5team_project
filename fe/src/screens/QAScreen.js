@@ -46,11 +46,17 @@ function QAScreen() {
             <Card className='my-3 p-3 rounded'>
               <Card.Body>
                 <Row>
-                  <Col xs={2}>
-                    <Card.Img src={qna.image}></Card.Img>
-                    <Card.Text>텍스트 확인</Card.Text>
+                  <Col xs={1}>
+                    <Link to={`/qna/detail/${qna.id}`}>
+                    <Card.Img src={qna.image_url}
+                    style={{
+                      width: '100px',  // 원하는 너비로 설정
+                      height: '100px', // 원하는 높이로 설정
+                      objectFit: 'cover', // 이미지가 정사각형에 맞게 잘리도록 설정
+                      margin: '-20px',
+                    }}></Card.Img></Link>
                   </Col>
-                  <Col xs={10}>
+                  <Col xs={11}>
                     <Card.Title as='div'>
                       <Link to={`/qna/detail/${qna.id}`}>
                       <strong>{qna.title}</strong></Link>
