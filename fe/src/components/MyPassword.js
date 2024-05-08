@@ -14,6 +14,8 @@ import Message from "../components/Message";
 import Loading from "../components/Loading";
 import { updateUserPassword, updateUserLogin } from "../actions/userActions";
 import { getUserDetails } from "../actions/userActions";
+import { logout } from "../actions/userActions";
+import { USER_UPDATE_PASSWORD_RESET } from "../constants/userConstants";
 
 function MyPassword() {
   const [message, setMessage] = useState(null);
@@ -30,16 +32,28 @@ function MyPassword() {
   const navigate = useNavigate();
   const location = useLocation();
   const redirect = location.state ? location.state.from : "/";
+  const userPassword = useSelector((state) => state.userUpdatePassword);
+  const { loading: passwordLoading, success, userInfo:loadingPassword } = userPassword
 
   console.log("USERINFO : ", userInfo);
   useEffect(() => {
+    console.log("ACTIVATE USER EFFECT");
     if (!userInfo) {
       navigate("/login");
     } else {
         setPassword(userInfo.password);
     }
-  }, [dispatch, navigate, userInfo, user]);
 
+    // if (success) {
+        
+    //     console.log("SUCCESS :", userInfo);
+    //     dispatch(logout());
+    //     dispatch({ type: USER_UPDATE_PASSWORD_RESET });
+    //     navigate("/password-change-confirm");
+    // }
+  }, [userInfo]);
+
+  
   const submitHandler = (e) => {
     e.preventDefault();
     console.log("LOGINPASSWORD : ", loginPassword);
@@ -57,17 +71,19 @@ function MyPassword() {
         }
         dispatch(updateUserPassword(updateUser));
         setMessage("비밀번호 변경이 완료되었습니다.");
-        setPassword(newPassword);
-        console.log("체크용 : ", loginPassword);
-        const updateUserInfo = { ...userInfo, password: newPassword };
-        dispatch(updateUserLogin(updateUserInfo));
+        console.log("AFTER PASSWORD CHANGE : ", userLogin);
+        dispatch(logout());
+        navigate("/password-change-confirm");
     }
+
+
   };
 
   return (
     <Container>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
+            {console.log("COL MESSAGE : ", message, " COL ERROR :", error)}
           {message && <Message variant="danger">{message}</Message>}
           {error && <Message variant="danger">{error}</Message>} 
           {loading && <Loading />}

@@ -131,8 +131,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
         user = User.objects.get(user_id=auth_user)
         follower = Follow.objects.filter(follower_id_id=user.id)
         following = Follow.objects.filter(followed_id_id=user.id)
-        image_url = user.image_url.url if user.image_url else None
 
+        if user.image_url and hasattr(user.image_url, 'url'):
+            image_url = user.image_url.url
+        else:
+            image_url = None
         # Add user information to the response
         data.update({
             'username': user.username,

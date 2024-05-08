@@ -76,7 +76,8 @@ const SellerApplication = () => {
         }
         }
     };
-    // 판매자 신청이 성공하면 판매자 신청 페이지를 숨김.
+    // 판매자 인지 확인 후, 이미 판매자면 페이지 숨김.
+
     if (isSeller) {
         return null;
     }

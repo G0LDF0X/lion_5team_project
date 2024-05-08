@@ -100,7 +100,7 @@ function BoardScreen() {
                       }
                       title={
                         <Link to={`/board/detail/${board.id}`}>
-                          {board.title}
+                          {board.title.length > 10 ? board.title.substring(0, 10) + '...' : board.title}
                         </Link>
                       }
                       subheader={board.createdAt}
@@ -131,9 +131,11 @@ function BoardScreen() {
                       <span>
                         <FaUser /> by {board.username}
                       </span>
+                      <br></br>
+                      <br></br>
                       <Typography variant="body2" color="text.secondary">
                         <div
-                          dangerouslySetInnerHTML={{ __html: board.content }}
+                          dangerouslySetInnerHTML={{ __html: board.content.length > 25 ? board.content.substring(0, 25) + '...' : board.content }}
                           style={{ color: "black", backgroundColor: "white" }}
                         />
                       </Typography>

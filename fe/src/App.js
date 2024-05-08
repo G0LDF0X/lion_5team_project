@@ -40,6 +40,8 @@ import OrderCreateScreen from './screens/OrderCreateScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import ShippingAdressScreen from './screens/ShippngAdressScreen';
 import OtherUserProfileNavbar from './components/OtherUserProfileNavbar';
+import PasswordChangeConfirm from './screens/PasswordChangeConfirm';
+
 function App() {
   return (
     <Router>
@@ -70,6 +72,7 @@ function App() {
             <Route path='/users/myreview' element={<MyReviewScreen/>} />
             <Route path='/users/settings' element={<UserSettingScreen/>} />
             <Route path='/users/:id' element={<OtherUserProfileNavbar/>} />
+            <Route path='/password-change-confirm' element={<PasswordChangeConfirm/>} />
 
             <Route path='/seller/register' element={<SellerRegisterScreen/>} />
             <Route path='/seller/index' element={<SellerMainScreen/>} />

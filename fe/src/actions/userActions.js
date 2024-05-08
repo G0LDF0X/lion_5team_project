@@ -1,3 +1,4 @@
+import { unstable_composeClasses } from "@mui/material";
 import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
@@ -47,6 +48,7 @@ export const login = (id, password) => async (dispatch) => {
       password,
     };
     if (response.ok) {
+      console.log("LOGIN USERDATA : ", userData);
       dispatch({
         type: USER_LOGIN_SUCCESS,
         payload: userData,
@@ -73,6 +75,7 @@ export const login = (id, password) => async (dispatch) => {
 
 
 export const logout = () => (dispatch) => {
+    console.log("로그아웃")
     localStorage.removeItem("userInfo");
     dispatch({ type: USER_LOGOUT });
     dispatch({ type: USER_DETAILS_RESET });

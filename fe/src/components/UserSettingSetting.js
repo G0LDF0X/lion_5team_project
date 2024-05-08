@@ -27,7 +27,9 @@ function UserSettingSetting() {
   const navigate = useNavigate();
   const location = useLocation();
   const redirect = location.state ? location.state.from : "/";
-  
+
+  console.log("SETTING SETTING :", loading, error, user);
+
   
   useEffect(() => {
     if (!userInfo) {
@@ -35,14 +37,16 @@ function UserSettingSetting() {
     } else {
         setNickname(userInfo.nickname);
         setEmail(userInfo.email);
-      
     }
   }, [dispatch, navigate, userInfo, user]);
 
   const handleImageChange = async(e) => {
+    console.log("handleImageChange activated")
+
     const image = e.target.files[0];
     const formData = new FormData();
     formData.append("image_url", image);
+
     try {
       const response = await fetch("/users/updateImage/", {
         method: "PUT",

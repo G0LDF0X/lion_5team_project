@@ -150,7 +150,7 @@ function Header() {
             //   </NavDropdown>
             // </Col>
           )}
-          {userInfo && userInfo.is_staff && (
+          {/* {userInfo && userInfo.is_staff && (
             <NavDropdown title="Admin" id="adminmenu">
               <LinkContainer to="/admin/userlist">
                 <NavDropdown.Item>Users</NavDropdown.Item>
@@ -162,7 +162,7 @@ function Header() {
                 <NavDropdown.Item>Orders</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>
-          )}
+          )} */}
           {userInfo? (
           <Card className="ms-auto me-2 bg-info">
           <Nav className="ms-auto me-2">
