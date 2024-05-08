@@ -38,7 +38,25 @@ function HomeScreen({ location }) {
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
-
+  function createCarouselItems(boards) {
+    return (
+      <Carousel.Item>
+      <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
+          {boards.map((board) => (
+            <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
+              <Box display="flex" justifyContent="center">
+                <Card variant="outlined">
+                  <Box height={500} width={300}>
+                    <BoardForm board={board} />
+                  </Box>
+                </Card>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Carousel.Item>
+    );
+  }
   useEffect(() => {
     dispatch(listProducts());
     // dispatch(listReviews());
@@ -49,7 +67,7 @@ function HomeScreen({ location }) {
   function createCarouselItem(products) {
     return (
       <Carousel.Item>
-        <Grid container spacing={3}>
+      <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
               <Card variant="outlined" style={{width:"250px"}}>
@@ -75,8 +93,9 @@ function HomeScreen({ location }) {
       ) : (
         <Carousel>
         {createCarouselItem(products.slice(0, 4))}
-        {createCarouselItem(products.slice(5, 9))}
-        {createCarouselItem(products.slice(10, 15))}
+        {createCarouselItem(products.slice(4, 8))}
+        {createCarouselItem(products.slice(8, 12))}
+        {createCarouselItem(products.slice(12, 14))}
         </Carousel>
       )}
       <Typography variant="h5" className={classes.title}>Boards</Typography>
@@ -86,18 +105,13 @@ function HomeScreen({ location }) {
         <Message variant={"danger"}>{boardError}</Message>
       ) : (
         <Carousel>
-          {boards.map((board) => (
-            <Carousel.Item key={board.id}>
-              <Box display="flex" justifyContent="center">
-              <Card variant="outlined">
-              <Box height={500} width={300}>
-
-              <BoardForm board={board} />
-              </Box>
-              </Card>
-              </Box>
-            </Carousel.Item>
-          ))}
+         <Carousel>
+  {createCarouselItems(boards.slice(0, 4))}
+  {createCarouselItems(boards.slice(4, 8))}
+  {createCarouselItems(boards.slice(8, 12))}
+  {createCarouselItems(boards.slice(12, 16))}
+  {createCarouselItems(boards.slice(16, 18))}
+</Carousel>
         </Carousel>
       )}
       {/* <Typography variant="h5" className={classes.title} style={{ color: '#3f51b5'}}>Q&A</Typography> */}
