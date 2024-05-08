@@ -39,8 +39,28 @@ function UserSettingSetting() {
     }
   }, [dispatch, navigate, userInfo, user]);
 
-  const handleImageChange = (e) => {
-    console.log(e.target.files[0]);
+  const handleImageChange = async(e) => {
+    const image = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image_url", image);
+    try {
+      const response = await fetch("/users/updateImage/", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage("Image uploaded successfully");
+        dispatch(getUserDetails(userInfo.id));
+      } else {
+        setMessage(data.message);
+      }
+    } catch (error) {
+      setMessage(error.message);
+    }
   };
   const submitHandler = (e) => {
     e.preventDefault();
@@ -56,7 +76,12 @@ function UserSettingSetting() {
       <Row className="justify-content-center">
         <Col xs={6} md={4}>
           <label htmlFor="fileInput">
-            <Image src="https://placehold.co/400" roundedCircle width="70%" />
+            {userInfo && userInfo.image ? (
+              <Image src={user.user.image_url} roundedCircle width="70%" />
+            ) : (
+              <Image src="https://placehold.co/400" roundedCircle width="70%" />
+            )}
+            {/* <Image src="https://placehold.co/400" roundedCircle width="70%" /> */}
           </label>
           <Form.Control
             type="file"
