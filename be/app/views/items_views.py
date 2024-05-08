@@ -23,6 +23,14 @@ def get_items(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def get_my_items(request):
+    user = User.objects.get(username=request.user)
+    seller = Seller.objects.get(user_id=user)
+    items = Item.objects.filter(seller_id=seller)
+    serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def item_details(request, pk):
     item = Item.objects.get(pk=pk)
     serializer = ItemSerializer(item)
