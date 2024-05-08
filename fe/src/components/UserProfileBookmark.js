@@ -67,6 +67,7 @@ function UserProfileBookmark() {
       <Row>
         {bookMarkItems&&bookMarkItems.map((product) => (
           <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
+            {console.log(product)}
             <Product product={product} id={product.item_id} />
           </Col>
         ))}

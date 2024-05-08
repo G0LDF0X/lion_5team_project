@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 from app.models import Seller, OrderItem
+import base64
 
 class ReplySerializer(serializers.ModelSerializer):
     nickname = serializers.ReadOnlyField(source='user_id.nickname')
@@ -232,10 +233,14 @@ class BookmarkSerializer(serializers.ModelSerializer):
     price = serializers.ReadOnlyField(source='item_id.price')
     category = serializers.ReadOnlyField(source='item_id.category_id.name')
     description = serializers.ReadOnlyField(source='item_id.description')
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Bookmark
         fields = '__all__'
+
+    def get_image_url(self, obj):
+        return obj.item_id.image_url.url
         
 class CartSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='item_id.name')
