@@ -111,7 +111,6 @@ def getMyItemQnA(request):
     serializer = ItemQnASerializer(my_user_qna_list, many=True)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getMyReview(request):

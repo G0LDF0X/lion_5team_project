@@ -101,3 +101,21 @@ def seller_refund_view(request):
     
     serializer = RefundSerializer(refund_items, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def Seller_Apply_Save(request):
+    bs_number = request.data.get('bs_number')
+    if bs_number is None:
+        return Response({'error': 'bs_number is required'}, status=400)
+    
+    user = User.objects.get(username=request.user)
+    user.is_seller = True
+    user.save()
+    seller = Seller.objects.create(
+        user_id=user,
+        bs_number=request.data.get('bs_number')
+        )
+    serializer = SellerSerializer(seller)
+    return Response(serializer.data)
