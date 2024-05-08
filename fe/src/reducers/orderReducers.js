@@ -30,7 +30,7 @@ export const orderDetailsReducer = (state = { loading: true, orderItems: [], shi
         case ORDER_DETAILS_REQUEST:
             return { ...state, loading: true }
         case ORDER_DETAILS_SUCCESS:
-            return { loading: false, order: action.payload }
+            return { loading: false, order: action.payload, orderItems: action.payload.orderItems, shippingAddress: action.payload.shippingAddress}
         case ORDER_DETAILS_FAIL:
             return { loading: false, error: action.payload }
         default:
