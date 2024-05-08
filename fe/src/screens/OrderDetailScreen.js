@@ -102,15 +102,23 @@ function OrderDetailScreen() {
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Order Items</h2>
-              {order ? order.map((item, index) => (
-            <div>
-            <img src={item.image} alt={item.name} style={{width : '200px', height: "200px"}} />
-            <h5>item : {item.name}</h5> 
-            <h5>수량 : {item.qty} </h5> 
-            <h5>합계 : {item.price_multi_qty} </h5> 
-            
-            </div>
-          )) : null}
+              <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start'}} >
+                {order ? order.map((item, index) => (
+                  <Link to={`/items/detail/${item.item_id}`} style={{ width: '30%', margin: '1%', display: 'inline-block'}}>
+                    <Card>
+                      <Card.Img variant="top" src={item.image} alt={item.name} style={{width : '200px', height: "200px", margin: '0 auto'}} />
+                      <Card.Body>
+                        <Card.Title>{item.name}</Card.Title>
+                        <Card.Text>
+                          수량 : {item.qty}
+                          <br />
+                          합계 : {item.price_multi_qty}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Link>
+                )) : null}
+              </div>
               {order && order.orderItems && order.orderItems.length === 0 ? (
                 <Message>Your order is empty</Message>
               ) : (
