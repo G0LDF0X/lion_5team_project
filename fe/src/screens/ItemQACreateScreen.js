@@ -34,7 +34,7 @@ function  ItemQACreateScreen({props}) {
         const res = await fetch(`/items/qna/create/${id}/`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${token}`,
+              'Authorization': `Bearer ${userInfo.access}`,
             },
             body: formData,
         });

@@ -329,15 +329,9 @@ function Productcreen() {
     {product.item_qna_set && product.item_qna_set.length > 0 ? 
       product.item_qna_set.map((item_qna, index) => (
       <Accordion.Item eventKey={index.toString()}>
-        <Accordion.Header>
-          <Box><h5>Q. {item_qna.title}</h5>
-          ID : {item_qna.username}<br/>
-          <span style={{ color: 'gray', fontSize: 'small' }}>
-          {item_qna.created_at.split('T')[0]}
-        </span>
-        <br/><br/>
-        <p>{item_qna.content}</p></Box>
-        </Accordion.Header>
+        <Box>
+          <h5>Q. {item_qna.title}</h5>
+        </Box>
         <Accordion.Body>
           
           {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ?
