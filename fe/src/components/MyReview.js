@@ -18,7 +18,7 @@ const MyReview = () => {
             <Card.Body>
               <Link to={`/items/detail/${review.item_id}`}>
                 <Card.Title as="div">
-                  <h4>{review.item.name}</h4>
+                  <h4>{review.item}</h4>
                 </Card.Title>
               </Link>
               <Card.Text as="div">
