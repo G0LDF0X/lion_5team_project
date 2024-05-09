@@ -8,12 +8,12 @@ const MyReview = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const myReviewList = useSelector((state) => state.myReviewList);
   const { userInfo } = userLogin;
-  const { loading, error, MyReviews } = myReviewList;
+  const { loading, error, reviews } = myReviewList;
 
   return (
     <div>
-      {MyReviews && MyReviews.length !== 0 ? (
-        MyReviews.map((review) => (
+      {reviews && reviews.length !== 0 ? (
+        reviews.map((review) => (
           <Card className="my-3 p-3 rounded" key={review.item_id}>
             <Card.Body>
               <Link to={`/items/detail/${review.item_id}`}>
