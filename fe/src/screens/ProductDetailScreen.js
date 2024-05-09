@@ -58,6 +58,7 @@ function ProductDetailScreen() {
   const { success: successReviewDelete } = reviewDelete;
   const [showEditor, setShowEditor] = useState(false);
   const [editorData, setEditorData] = useState('');
+  const [title, setTitle] = useState('');
   const [answer, setAnswer] = useState('');
   const [showTextField, setShowTextField] = useState(false);
 
@@ -140,6 +141,7 @@ function ProductDetailScreen() {
       fontSize: '5rem',  // increase font size
     },
   });
+
   const createQnAHandler = () => {
     navigate(`/items/qna/create/${id}`);
     setShowEditor(true);
@@ -147,25 +149,51 @@ function ProductDetailScreen() {
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
 
-  const handleAnswerChange = (event) => {
-    setAnswer(event.target.value); // 사용자가 입력한 값을 상태에 저장합니다.
+  const handleButtonClick = () => {
+    setShowTextField(true); 
   };
 
-  const handleAnswerSubmit = () => {
-      if (userInfo && userInfo.is_seller) {
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  const handleAnswerChange = (event) => {
+    setAnswer(event.target.value); 
+  };
+
+  const handleAnswerSubmit = async () => {
+      const formData = new FormData();
+      formData.append('answer', answer);
+
+      try {
+      const res = await fetch('/items/qna/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userInfo.access}`,
+      },
+      body: formData,
+  });
+
+      if (res.ok) {
+        navigate(`/items/detail/${id}`);
+      }
+      if (userInfo && userInfo.is_seller ) {
         console.log("답변 작성하기 버튼이 클릭되었습니다.");
         console.log("작성된 답변: ", answer);
-        setAnswer(''); 
+        setAnswer(answer); 
         setShowTextField(false); 
-      } else {
+        navigate(`/items/detail/${id}`); 
+      } 
+
+      else {
         alert("판매자만 답변을 작성할 수 있습니다.");
       }
-    };
-    const handleButtonClick = () => {
-      setShowTextField(true); 
-    };
-
+    } catch (error) {
+      console.error("답변 등록 중 오류가 발생하였습니다:", error);
+  } 
+  };
  
+
   return (
     <div>
       <Snackbar
@@ -369,23 +397,33 @@ function ProductDetailScreen() {
         ))
       ) : (
         <>
+        {!showTextField && (
         <Button variant="contained" color="primary" onClick={handleButtonClick}>
           답변 작성하기
         </Button>
+        )}
+        <br/>
         {showTextField && (
           <>
+          {/* <TextField
+            value={title}
+            onChange={handleTitleChange}
+            variant="outlined"
+            placeholder="제목을 작성해주세요."
+            style={{ width: '500px', marginBottom: '20px' }}
+          />
+           */}
           <TextField
-          
             value={answer}
             onChange={handleAnswerChange}
             variant="outlined"
             multiline
-            rows={4}
             placeholder="답변을 작성해주세요."
+            style={{ width: '500px' }}
           />
-            <Button variant="contained" color="primary" onClick={handleAnswerSubmit}>
+        <Button variant="contained" color="primary" onClick={() => handleAnswerSubmit(answer)}>
                   제출하기
-                </Button>
+              </Button>
           </>
         )}
         </>
