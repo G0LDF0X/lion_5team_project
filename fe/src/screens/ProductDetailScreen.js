@@ -335,7 +335,8 @@ function Productcreen() {
           {item_qna.created_at.split('T')[0]}
         </span>
         <br/><br/>
-        <p>{item_qna.content}</p></Box>
+        <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+        </Box>
         </Accordion.Header>
         <Accordion.Body>
 
@@ -345,7 +346,8 @@ function Productcreen() {
             <span style={{ color: 'gray', fontSize: 'small' }}>
           {answer.created_at.split('T')[0]}
         </span><br/><br/>
-            <p>{answer.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            {/* <p>{answer.content}</p> */}
             </Box>
           )) : null}
         </Accordion.Body>
