@@ -19,11 +19,14 @@ function UserSettingSetting() {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState(null);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success } = userUpdateProfile;
   const navigate = useNavigate();
   const location = useLocation();
   const redirect = location.state ? location.state.from : "/";
@@ -39,6 +42,14 @@ function UserSettingSetting() {
         setEmail(userInfo.email);
     }
   }, [ userInfo]);
+
+  useEffect(() => {
+    if (success) {
+      alert('수정이 완료되었습니다.');
+      setUpdateSuccess(true);
+      window.location.reload();
+    }
+  }, [success]);
 
   const handleImageChange = async(e) => {
     console.log("handleImageChange activated")
