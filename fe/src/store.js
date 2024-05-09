@@ -56,6 +56,7 @@ import {
   qnaAnswerDetailsReducer,
   qnaDeleteReducer,
   qnaUpdateReducer,
+  qnaAnswerUpdateReducer
 } from "./reducers/qnaReducers";
 
 import {
@@ -71,7 +72,6 @@ import {
   bookMarkAddReducer,
   bookMarkRemoveReducer,
 } from "./reducers/bookmarkReducer";
-import { getOrder } from "./actions/orderActions";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -119,6 +119,7 @@ const reducer = combineReducers({
   qnaAnswerDetails: qnaAnswerDetailsReducer,
   qnaUpdate: qnaUpdateReducer,
   qnaDelete: qnaDeleteReducer,
+  qnaAnswerUpdate: qnaAnswerUpdateReducer,
 
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,

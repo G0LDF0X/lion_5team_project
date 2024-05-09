@@ -101,8 +101,10 @@ function BoardDetailScreen() {
                   </Card.Header>
                 <Link to={board.product_url}>
                 </Link>
-                <Card.Body>
+                <Card.Body >
+                  <div className="d-flex justify-content-center">
                   {board.image_url && <Image src={board.image_url}  fluid />}
+                  </div>
                   <Card.Text>
                     <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                   </Card.Text>

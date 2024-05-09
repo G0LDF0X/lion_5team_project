@@ -47,6 +47,16 @@ def get_users(request):
     serializer = User_Serializer(users, many=True)
     return Response(serializer.data)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_user(request):
+    user = User.objects.get(username=request.user)
+    serializer = User_Serializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)
+
 @api_view(['GET'])
 def my_shopping(request):
     user = User.objects.get(username=request.user)

@@ -46,7 +46,7 @@ function HomeScreen({ location }) {
       let boardsInThisItem = boards.slice(i, i + itemsPerSlide);
       carouselItems.push(
         <Carousel.Item key={i}>
-          <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '90%'}}>
+          <Grid container spacing={3} style={{margin: '0 auto', maxWidth: '100%'}}>
             {boardsInThisItem.map((board) => (
               <Grid item key={board.id} xs={12} sm={6} md={4} lg={3}>
                 <Box display="flex" justifyContent="center">
