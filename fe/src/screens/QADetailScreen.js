@@ -14,6 +14,8 @@ function QADetailSceen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   const qnaDetails = useSelector((state) => state.qnaDetails);
   const { loading, error, qna, answers } = qnaDetails;
   const qnaAnswerCreate = useSelector(state => state.qnaAnswerCreate);
@@ -75,7 +77,9 @@ function QADetailSceen() {
               <div style={{ width: '100%', textAlign: 'right' }}>
               {/* <Link to={`/qna/answer/create/${qna.id}/`}> */}
                 {/* {console.log("ID", qna.id)} */}
+                {userInfo && userInfo.is_staff && (
                 <Button className="btn-primary btn-sm" onClick ={answerCreateHandler}>Create Q&A Answer</Button>
+                )}
                 {/* </Link> */}
               </div>
 
