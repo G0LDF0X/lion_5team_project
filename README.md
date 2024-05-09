@@ -9,12 +9,9 @@
 # lion_5team_project
 fe 사용법
 git clone -> cd fe -> npm init -> npm i -> npm start
+
 안되면 
 npm install --force redux-devtools-extension ->npm start
-
-
-
-
 
 
 
@@ -25,3 +22,9 @@ cd fe ->  밑에꺼 복붙 -> npm start
 
 
 navbar드롭다운 전부 ckeditor 
+
+
+# 세번째 설치
+npm install --force @mui/material @emotion/react @emotion/styled @mui/material @mui/styled-engine-sc styled-components  @fontsource/roboto  @material-ui/core @mui/icons-material @mui/x-charts
+
+npm install react-icons 시도해서 오류 발생할 경우 npm i --force react-icons
