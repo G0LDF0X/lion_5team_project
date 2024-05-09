@@ -13,9 +13,11 @@ function QAAnswerUpdateScreen() {
   const [title, setTitle] = useState("");
   const QnaId = useParams().id;
   const dispatch = useDispatch();
-
-  const qnaDetails = useSelector((state) => state.qnaAnswerDetails);
+  const qnaDetails = useSelector((state) => state.qnaDetails);
   const { qna } = qnaDetails;
+
+  const qnaAnswerDetails = useSelector((state) => state.qnaAnswerDetails);
+  const { qnaAnswer } = qnaAnswerDetails;
   console.log("UPDATE QNA :", qna);
 
   useEffect(() => {
@@ -30,10 +32,10 @@ function QAAnswerUpdateScreen() {
   }, [editorData]);
 
   function submithandler() {
-    dispatch(updateQNAAnswer({ id: QnaId, content: editorData, title: title}));
+    dispatch(updateQNAAnswer({ id: qna.id, content: editorData, title: title}));
     dispatch({ type: QNA_ANSWER_UPDATE_RESET });
     dispatch({ type: QNA_ANSWER_DETAILS_RESET });
-    navigate(`/qna/detail/${QnaId}`)
+    navigate(`/qna/detail/${qna.id}`)
   }
   useEffect(() => { 
     if (!qna || qna.id === undefined) {
@@ -53,7 +55,7 @@ function QAAnswerUpdateScreen() {
               ></Form.Control>
             </Form.Group>
       <CKEditor
-        data={qna &&qna.content ? qna.content : ""}
+        data={qnaAnswer &&qnaAnswer.content ? qnaAnswer.content : ""}
         editor={ClassicEditor}
         onChange={(event, editor) => {
           const data = editor.getData();

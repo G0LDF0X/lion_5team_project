@@ -12,12 +12,14 @@ const SellerApplication = () => {
     useEffect(() => {
         const checkSellerStatus = async () => {
             try {
+                
                 const response = await fetch('/seller/apply/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization' : `Bearer ${token}`
                     },
+                    
                 });
 
                 if (!response.ok) {
@@ -30,7 +32,6 @@ const SellerApplication = () => {
                 console.error('Error:', error);
             }
         };
-
         checkSellerStatus();
     }, [token]);
 
