@@ -29,6 +29,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source='user_id.username')
+    item_name = serializers.ReadOnlyField(source='item_id.name')
     class Meta:
         model = Review
         fields = '__all__'
