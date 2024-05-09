@@ -30,9 +30,10 @@ const MyReview = () => {
                   />
                 </div>
               </Card.Text>
-              {review.content.length > 30
-                ? `${review.content.substring(0, 30)}...`
-                : review.content}
+              {review.content.length > 30 
+                  
+                  ? <div dangerouslySetInnerHTML={{ __html: `${review.content.substring(0, 30)}...` }} style={{color:'black', background:'white'}} />
+                  : <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />}
             </Card.Body>
           </Card>
         ))
