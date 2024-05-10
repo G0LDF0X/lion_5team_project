@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { useSelector } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 
-const UserQnA = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+const UserQnA = ({userInfo}) => {
   const [userQnAs, setuserQnAs] =  useState([]);
   const [userAnswers, setUserAnswers] =  useState([]);
   useEffect(() => {
@@ -61,7 +56,7 @@ const UserQnA = () => {
       <div className="row">
         <div className="col">
           <h2>나의 질문</h2>
-          {userQnAs.map((userQnA, index) => (
+          {userQnAs&&userQnAs.map((userQnA, index) => (
             <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"
@@ -78,7 +73,7 @@ const UserQnA = () => {
                   <small style={{ color: 'gray' }}>{userQnA.created_at.split('T')[0]}</small>
                 </div>
                 <Badge bg="primary" pill>
-                  {userQnA.answers.answers.length}
+                  {userQnA.answers.answers&&userQnA.answers.answers.length}
                 </Badge>
               </ListGroup.Item>
             </ListGroup>
@@ -86,7 +81,7 @@ const UserQnA = () => {
         </div>
         <div className="col">
           <h2>나의 답변</h2>
-          {userAnswers.map((userAnswer, index) => (
+          {userAnswers&&userAnswers.map((userAnswer, index) => (
             <ListGroup as="ol" key={index} className='mb-3'>
               <ListGroup.Item
                 as="li"

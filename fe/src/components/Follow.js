@@ -1,15 +1,13 @@
-import React from 'react';
+import React,{useState ,useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 
-const FollowingList = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const [following, setFollowing] = React.useState([]);
-  console.log(userInfo);
-  React.useEffect(() => {
+const FollowingList = ({userInfo}) => {
+  const [following, setFollowing] = useState([]);
+  
+  useEffect(() => {
     fetch(`/users/following/${userInfo.id}/`, {
       method: 'GET',
       headers: {
@@ -37,7 +35,7 @@ const FollowingList = () => {
       });
     })
     .catch(error => console.error('Error:', error));
-  }, []);
+  }, [userInfo]);
   return (
     <div>
       

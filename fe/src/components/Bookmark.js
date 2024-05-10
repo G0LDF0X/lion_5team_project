@@ -14,21 +14,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 
-const Bookmark = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  // const [bookmarks, setBookmarks] = React.useState([]);
-  const bookMarkList = useSelector(state => state.bookMarkList);
-  const { loading, error, bookMarkItems } = bookMarkList;
+const Bookmark = ({ bookMarkItems}) => {
 
   return (
     <div>
-      <h2>나의 북마크</h2>
-      {loading ? (
-        <Loading />
-      ) : error ? (
-        <Message variant={"danger"}>{error}</Message>
-      ) : (
+      {/* <h2>나의 북마크</h2> */}
+     
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {bookMarkItems&&bookMarkItems.map((bookmark) => (
             <Card style={{ width: '18rem' , margin: '10px' }} key={bookmark.id}>
@@ -49,7 +40,7 @@ const Bookmark = () => {
             </Card>
           ))}
         </div>
-      )}
+      
     </div>
   );
 };

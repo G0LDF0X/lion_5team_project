@@ -134,7 +134,7 @@ const userDeleteHandler = (id) => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {users&&users.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
 
@@ -190,7 +190,7 @@ const userDeleteHandler = (id) => {
             </tr>
           </thead>
           <tbody>
-            {sellers.map((user) => (
+            {sellers&&sellers.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.user_id}</td>

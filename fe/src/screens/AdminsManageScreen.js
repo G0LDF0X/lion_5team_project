@@ -49,8 +49,8 @@ function a11yProps(index) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-function UserSettingScreen() {
-const [value, setValue] = useState(3)
+function AdminManageScreen() {
+const [value, setValue] = useState(5)
 const dispatch = useDispatch()
 const navigate = useNavigate()
 const userLogin = useSelector((state) => state.userLogin)
@@ -82,7 +82,7 @@ if(userInfo.is_seller){
     <Box sx={{ width: '100%' }}>
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
       <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-        <Tab label="프로필" {...a11yProps(0)} />
+        <Link to="/users/profile"><Tab label="프로필" {...a11yProps(0)} /></Link>
        <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
         <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
           <Link to="/users/setting"><Tab label="설정" {...a11yProps(3)} /></Link>
@@ -112,4 +112,4 @@ if(userInfo.is_seller){
   )
 }
 
-export default UserSettingScreen
+export default AdminManageScreen

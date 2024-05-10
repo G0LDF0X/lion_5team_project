@@ -7,15 +7,17 @@ import Footer from './components/Footer';
 import Product from './components/Product';
 import ProductsScreen from './screens/ProductsScreen';
 import CartScreen from './screens/CartScreen';
-import BookmarkScreen from './screens/BookmarkScreen';
+// import BookmarkScreen from './screens/BookmarkScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import MyShoppingScreen from './screens/MyShoppingScreen';
 import MyQAScreen from './screens/MyQAScreen';
 import OrderDetailScreen from './screens/OrderDetailScreen';
 import MyReviewScreen from './screens/MyReviewScreen';
-import UserSettingScreen from './screens/UserSettingScreen';  
-import SellerMainScreen from './screens/SellerMainScreen';
+import UserSettingScreen from './screens/UserSettingScreen';
+import AdminsManageScreen from './screens/AdminsManageScreen';
+// import UserSettingScreen from './screens/UserSettingScreen';  
+// import SellerMainScreen from './screens/SellerMainScreen';
 import SellerManageScreen from './screens/SellerManageScreen';
 import SellerRevenueScreen from './screens/SellerRevenueScreen';
 import SellerQAScreen from './screens/SellerQAScreen';
@@ -35,7 +37,7 @@ import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProductScreen from './screens/ProductScreen';
-import SampleEditorScreen from './screens/SampleEditorScreen';
+// import SampleEditorScreen from './screens/SampleEditorScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import ReviewEditScreen from './screens/ReviewEditScreen';
 import OrderCreateScreen from './screens/OrderCreateScreen';
@@ -68,23 +70,27 @@ function App() {
             <Route path='/orders/create' element={<OrderCreateScreen/>} />
             <Route path ='/shippingAdress' element={<ShippingAdressScreen/>} />
 
-            <Route path='/login' element = {<LoginScreen/>} />
-            <Route path='/register' element = {<RegisterScreen/>} />
-            <Route path='/users/bookmark' element={<BookmarkScreen/>} />
             <Route path='/users/profile' element={<UserProfileScreen/>} />
             <Route path='/users/myshopping'element={<MyShoppingScreen/>} />
-            <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
             <Route path='/users/myreview' element={<MyReviewScreen/>} />
-            <Route path='/users/settings' element={<UserSettingScreen/>} />
+            <Route path='/users/setting' element={<UserSettingScreen/>} />
+            <Route path='/seller/manage' element={<SellerSettingScreen/>} />
+            <Route path='/admin/manage' element={<AdminsManageScreen/>} />
+
+
+            <Route path='/login' element = {<LoginScreen/>} />
+            <Route path='/register' element = {<RegisterScreen/>} />
+            {/* <Route path='/users/bookmark' element={<BookmarkScreen/>} /> */}
+            <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
+            {/* <Route path='/users/settings' element={<UserSettingScreen/>} /> */}
             <Route path='/users/:id' element={<OtherUserProfileNavbar/>} />
             <Route path='/password-change-confirm' element={<PasswordChangeConfirm/>} />
 
             <Route path='/seller/register' element={<SellerRegisterScreen/>} />
-            <Route path='/seller/index' element={<SellerMainScreen/>} />
-            <Route path='/seller/manage' element={<SellerManageScreen/>} />
+            {/* <Route path='/seller/index' element={<SellerMainScreen/>} /> */}
             <Route path='/seller/revenue' element={<SellerRevenueScreen/>} />
             <Route path='/seller/qna' element={<SellerQAScreen/>} />
-            <Route path='/seller/settings' element={<SellerSettingScreen/>} />
+            {/* <Route path='/seller/settings' element={<SellerSettingScreen/>} /> */}
 
             <Route path='/board' element={<BoardScreen/>} />
             <Route path='/board/detail/:id' element={<BoardDetailScreen/>} />
@@ -101,7 +107,7 @@ function App() {
 
             <Route path='/payment' element={<OrderScreen/>} />
 
-            <Route path='/editor' element={<SampleEditorScreen/>} />
+            {/* <Route path='/editor' element={<SampleEditorScreen/>} /> */}
           </Routes>
         </Container>  
       </main>

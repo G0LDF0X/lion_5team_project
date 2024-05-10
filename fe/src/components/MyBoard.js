@@ -1,24 +1,10 @@
-
-
-import Button from 'react-bootstrap/Button';
-
-import { Link } from 'react-router-dom';
-
-import Badge from 'react-bootstrap/Badge';
 import React, { useEffect, useState} from "react";
-import { Row, Col, Form, Card } from "react-bootstrap";
-import Product from "../components/Product";
+import { Link } from 'react-router-dom';
+import {  Card } from "react-bootstrap";
 
-import { useDispatch, useSelector } from "react-redux";
-
-import Loading from "../components/Loading";
-import Message from "../components/Message";
-
-const MyBoard = () => {
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
-    const [MyBoards, setMyBoards] = React.useState([]);
-    React.useEffect(() => {
+const MyBoard = ({userInfo}) => {
+    const [MyBoards, setMyBoards] = useState([]);
+    useEffect(() => {
         fetch('/users/profile/myboard/', {
           headers: {
             'Authorization': `Bearer ${userInfo.access}`
@@ -35,7 +21,7 @@ const MyBoard = () => {
       }, []);
   return (
     <div className='container'>
-      <h2>나의 게시글</h2>
+      {/* <h2>나의 게시글</h2> */}
       <div className='row'>
         {MyBoards.map((board) => (
             <div className='col-lg-3 col-md-6 mb-4'>
