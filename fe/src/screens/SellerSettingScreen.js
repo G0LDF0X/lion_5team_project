@@ -10,13 +10,9 @@ import { listMyReviews } from '../actions/reviewActions'
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
-import UserSettingSettingNavbar from '../components/UserSettingSettingNavbar'
-import SellerSettingNavBar from '../components/SellerSettingNavbar';
-import UserSettingProfileNavbar from '../components/UserSettingProfileNavBar';
-// import UserSettingMyshoppingNavbar from '../components/UserSettingMyshoppingNavbar';
-import UserSettingMyreviewNavbar from '../components/UserSettingMyreviewNavbar';
-import AdminNavBar from '../components/AdminNavBar';
+import SellerSettingMain from '../components/SellerSettingMain'
+import SellerSettingItemManage from '../components/SellerSettingItemManage'
+import SellerSettingProfit from '../components/SellerSettingProfit'
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -50,30 +46,10 @@ function a11yProps(index) {
   };
 }
 function SellerSettingScreen() {
-const [value, setValue] = useState(4)
-const dispatch = useDispatch()
-const navigate = useNavigate()
+const [value, setValue] = useState(0)
 const userLogin = useSelector((state) => state.userLogin)
 const {userInfo} = userLogin
 
-useEffect(() => {
-if (!userInfo || !userInfo.username) {
-navigate('/login')
-}else{
-dispatch(listBookMark())
-dispatch(getUserDetails(userInfo.id))
-dispatch(listProducts())
-dispatch(getMyOrders())
-dispatch(listMyReviews())
-if(userInfo.is_seller){
-  dispatch(listMyProducts())
-  dispatch(listSellers())
-  dispatch(listUsers()) 
-}
-
-}
-}
-, [navigate])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -81,7 +57,7 @@ if(userInfo.is_seller){
   return (
     <Box sx={{ width: '100%' }}>
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+      <Tabs value={4} aria-label="basic tabs example" centered>
         <Link to="/users/profile"><Tab label="프로필" {...a11yProps(0)} /></Link>
        <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
         <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
@@ -90,23 +66,27 @@ if(userInfo.is_seller){
         {userInfo&&userInfo.is_staff ? (<Link to="/admin/manage"><Tab label="관리자" {...a11yProps(5)} /></Link>) : null}
       </Tabs>
     </Box>
-    <CustomTabPanel value={value} index={0}>
-      <UserSettingProfileNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={1}>
-      {/* <UserSettingMyshoppingNavbar /> */}
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={2}>
-      <UserSettingMyreviewNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={3}>
-      <UserSettingSettingNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={4}>
-      <SellerSettingNavBar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={5}>
-      <AdminNavBar />
+    
+    <CustomTabPanel value={4} index={4}>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+          <Tab label="전체보기" {...a11yProps(0)} />
+          <Tab label="상품 관리" {...a11yProps(1)} />
+          <Tab label="수익 확인" {...a11yProps(2)} />
+          
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <SellerSettingMain />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+     <SellerSettingItemManage userInfo={userInfo}/>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <SellerSettingProfit />
+      </CustomTabPanel>
+    </Box>
     </CustomTabPanel>
   </Box>
   )

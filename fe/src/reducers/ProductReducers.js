@@ -21,9 +21,6 @@ import {
     PRODUCT_UPDATE_SUCCESS,
     PRODUCT_UPDATE_RESET,
 
-    MY_PRODUCT_LIST_FAIL,
-    MY_PRODUCT_LIST_REQUEST,
-    MY_PRODUCT_LIST_SUCCESS
   } from "../constants/productConstants";
   
   export const productListReducer = (state = { products: [] }, action) => {
@@ -91,19 +88,6 @@ import {
       case PRODUCT_DELETE_SUCCESS:
         return { loading: false, success: true };
       case PRODUCT_DELETE_FAIL:
-        return { loading: false, error: action.payload };
-      default:
-        return state;
-    }
-  }
-  
-  export const myProductListReducer = (state = { products: [] }, action) => {
-    switch (action.type) {
-      case MY_PRODUCT_LIST_REQUEST:
-        return { loading: true };
-      case MY_PRODUCT_LIST_SUCCESS:
-        return { loading: false, myProducts: action.payload };
-      case MY_PRODUCT_LIST_FAIL:
         return { loading: false, error: action.payload };
       default:
         return state;
