@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Image,
   Container,
@@ -8,16 +8,15 @@ import {
   Button,
   Row,
   Col,
-  Table,
 } from "react-bootstrap";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
-import { updateUserPassword, updateUserLogin } from "../actions/userActions";
-import { getUserDetails } from "../actions/userActions";
+import { updateUserPassword } from "../actions/userActions";
+
 import { logout } from "../actions/userActions";
 import { USER_UPDATE_PASSWORD_RESET } from "../constants/userConstants";
 
-function MyPassword() {
+function MyPassword({userInfo}) {
   const [message, setMessage] = useState(null);
   const [loginPassword, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -25,13 +24,7 @@ function MyPassword() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
   const navigate = useNavigate();
-  const location = useLocation();
-  const redirect = location.state ? location.state.from : "/";
   const userPassword = useSelector((state) => state.userUpdatePassword);
   const { loading: passwordLoading, success, userInfo:loadingPassword } = userPassword
 
@@ -74,8 +67,7 @@ function MyPassword() {
         <Col md={6}>
             {/* {console.log("COL MESSAGE : ", message, " COL ERROR :", error)} */}
           {message && <Message variant="danger">{message}</Message>}
-          {error && <Message variant="danger">{error}</Message>} 
-          {loading && <Loading />}
+      
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="currentPassword">
               <Form.Label>

@@ -71,10 +71,8 @@ function UserProfileScreen() {
     } else {
       dispatch(listBookMark());
       dispatch(getUserDetails(userInfo.id));
-
-          }
+    }
   }, []);
-  
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -82,7 +80,6 @@ function UserProfileScreen() {
         <Tabs value={0} aria-label="basic tabs example" centered>
           <Tab label="프로필" {...a11yProps(0)} />
           <Link to="/users/myshopping">
-            {" "}
             <Tab label="나의 쇼핑" {...a11yProps(1)} />
           </Link>
           <Link to="/users/myreview">
@@ -125,13 +122,13 @@ function UserProfileScreen() {
             <UserProfileMain userInfo={userInfo} user={user} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <MyBoard userInfo={userInfo}/>
+            <MyBoard userInfo={userInfo} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            <Follow userInfo={userInfo}/>
+            <Follow userInfo={userInfo} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
-            <UserQnA userInfo={userInfo}/>
+            <UserQnA userInfo={userInfo} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={4}>
             <Bookmark bookMarkItems={bookMarkItems} />
@@ -146,4 +143,3 @@ function UserProfileScreen() {
 }
 
 export default UserProfileScreen;
-

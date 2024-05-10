@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import UserSettingSetting from './UserSettingSetting';
+// import UserSettingSetting from './UserSetting';
 import SellerApplication from './SellerApplication';
 import MyPassword from './MyPassword';
 
@@ -62,7 +62,7 @@ export default function UserSettingSettingNavbar() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
-        <UserSettingSetting />
+        {/* <UserSettingSetting /> */}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         Item Two

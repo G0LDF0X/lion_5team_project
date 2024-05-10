@@ -1,14 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 
-const MyReview = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const myReviewList = useSelector((state) => state.myReviewList);
-  const { userInfo } = userLogin;
-  const { loading, error, reviews } = myReviewList;
+const MyReview = ({reviews}) => {
 
   return (
     <div>

@@ -8,28 +8,19 @@ import {
   Button,
   Row,
   Col,
-  Table,
 } from "react-bootstrap";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
 import { updateUserProfile } from "../actions/userActions";
 import { getUserDetails } from "../actions/userActions";
 
-function UserSettingSetting() {
+function UserSetting({userInfo, user}) {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState(null);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
   const navigate = useNavigate();
-  const location = useLocation();
-  const redirect = location.state ? location.state.from : "/";
 
   // console.log("SETTING SETTING :", loading, error, user);
 
@@ -93,7 +84,7 @@ function UserSettingSetting() {
       <Row className="justify-content-center">
         <Col xs={6} md={4}>
           <label htmlFor="fileInput">
-            {/* {userInfo && userInfo.image ? ( */}
+            
             {user.user&& user.user.image_url ? 
               <Image src={user.user.image_url} roundedCircle width="40%" />
               : <Image src="https://placehold.co/400" roundedCircle width="40%" />}
@@ -110,9 +101,6 @@ function UserSettingSetting() {
       </Row>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
-          {message && <Message variant="danger">{message}</Message>}
-          {error && <Message variant="danger">{error}</Message>} 
-          {loading && <Loading />}
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
               <Form.Label>
@@ -149,4 +137,4 @@ function UserSettingSetting() {
   );
 }
 
-export default UserSettingSetting;
+export default UserSetting;

@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import UserSettingSetting from './UserSettingSetting';
+import UserSettingSetting from './UserSetting';
 import UserProfileMain from './UserProfileMain';
 import Bookmark from './Bookmark';
 import UserQnA from './UserQnA';

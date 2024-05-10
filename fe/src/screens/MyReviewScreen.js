@@ -1,22 +1,12 @@
 import React, {useEffect, useState} from 'react'
-// import UserSettingNavBar from '../components/UserSetitngNavbar'
 import {useDispatch, useSelector} from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { getUserDetails, listSellers, listUsers, logout } from '../actions/userActions'
-import { listBookMark } from '../actions/bookmarkActions'
-import { listMyProducts, listProducts } from '../actions/productActions'
-import { getMyOrders } from '../actions/orderActions'
+import { useNavigate} from 'react-router-dom'
 import { listMyReviews } from '../actions/reviewActions'
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
-import UserSettingSettingNavbar from '../components/UserSettingSettingNavbar'
-import SellerSettingNavBar from '../components/SellerSettingNavbar';
-import UserSettingProfileNavbar from '../components/UserSettingProfileNavBar';
-import UserSettingMyshoppingNavbar from '../components/UserSettingMyshoppingNavbar';
-import UserSettingMyreviewNavbar from '../components/UserSettingMyreviewNavbar';
-import AdminNavBar from '../components/AdminNavBar';
+import UserSettingCreateReview from '../components/UserSettingCreateReview'
+import MyReview from '../components/MyReview'
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,23 +45,11 @@ const dispatch = useDispatch()
 const navigate = useNavigate()
 const userLogin = useSelector((state) => state.userLogin)
 const {userInfo} = userLogin
+const myReviewList = useSelector((state) => state.myReviewList)
+const { reviews } = myReviewList
 
 useEffect(() => {
-if (!userInfo || !userInfo.username) {
-navigate('/login')
-}else{
-// dispatch(listBookMark())
-// dispatch(getUserDetails(userInfo.id))
-// dispatch(listProducts())
-// dispatch(getMyOrders())
 dispatch(listMyReviews())
-// if(userInfo.is_seller){
-//   dispatch(listMyProducts())
-//   dispatch(listSellers())
-//   dispatch(listUsers()) 
-// }
-
-}
 }
 , [navigate])
 
@@ -81,7 +59,7 @@ dispatch(listMyReviews())
   return (
     <Box sx={{ width: '100%' }}>
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+      <Tabs value={2}  aria-label="basic tabs example" centered>
         <Tab label="프로필" {...a11yProps(0)} />
        <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
         <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
@@ -90,24 +68,26 @@ dispatch(listMyReviews())
         {userInfo&&userInfo.is_staff ? (<Link to="/admin/manage"><Tab label="관리자" {...a11yProps(5)} /></Link>) : null}
       </Tabs>
     </Box>
-    <CustomTabPanel value={value} index={0}>
-      <UserSettingProfileNavbar />
+    
+    <CustomTabPanel value={2} index={2}>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+          <Tab label="리뷰 쓰기" {...a11yProps(0)} />
+          <Tab label="내가 작성한 리뷰" {...a11yProps(1)} />
+         
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0} >
+        <UserSettingCreateReview />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <MyReview reviews={reviews}/>
+      </CustomTabPanel>
+    
+    </Box>
     </CustomTabPanel>
-    <CustomTabPanel value={value} index={1}>
-      <UserSettingMyshoppingNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={2}>
-      <UserSettingMyreviewNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={3}>
-      <UserSettingSettingNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={4}>
-      <SellerSettingNavBar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={5}>
-      <AdminNavBar />
-    </CustomTabPanel>
+    
   </Box>
   )
 }

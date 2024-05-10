@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react'
-// import UserSettingNavBar from '../components/UserSetitngNavbar'
 import {useDispatch, useSelector} from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { getUserDetails, listSellers, listUsers, logout } from '../actions/userActions'
-import { listBookMark } from '../actions/bookmarkActions'
-import { listMyProducts, listProducts } from '../actions/productActions'
-import { getMyOrders } from '../actions/orderActions'
-import { listMyReviews } from '../actions/reviewActions'
+import { useNavigate} from 'react-router-dom'
+import { getUserDetails} from '../actions/userActions'
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
-import UserSettingSettingNavbar from '../components/UserSettingSettingNavbar'
-import SellerSettingNavBar from '../components/SellerSettingNavbar';
-import UserSettingProfileNavbar from '../components/UserSettingProfileNavBar';
-import UserSettingMyshoppingNavbar from '../components/UserSettingMyshoppingNavbar';
-import UserSettingMyreviewNavbar from '../components/UserSettingMyreviewNavbar';
-import AdminNavBar from '../components/AdminNavBar';
+import UserSetting from '../components/UserSetting'
+import SellerApplication from '../components/SellerApplication'
+import MyPassword from '../components/MyPassword'
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -55,25 +46,12 @@ const dispatch = useDispatch()
 const navigate = useNavigate()
 const userLogin = useSelector((state) => state.userLogin)
 const {userInfo} = userLogin
+const userDetails = useSelector((state) => state.userDetails)
+const { user } = userDetails
 
 useEffect(() => {
-if (!userInfo || !userInfo.username) {
-navigate('/login')
-}else{
-dispatch(listBookMark())
-dispatch(getUserDetails(userInfo.id))
-dispatch(listProducts())
-dispatch(getMyOrders())
-dispatch(listMyReviews())
-if(userInfo.is_seller){
-  dispatch(listMyProducts())
-  dispatch(listSellers())
-  dispatch(listUsers()) 
-}
-
-}
-}
-, [navigate])
+dispatch(getUserDetails(userInfo.id))}
+, [])
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -81,7 +59,7 @@ if(userInfo.is_seller){
   return (
     <Box sx={{ width: '100%' }}>
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+      <Tabs value={3}  aria-label="basic tabs example" centered>
         <Tab label="프로필" {...a11yProps(0)} />
        <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
         <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
@@ -90,23 +68,37 @@ if(userInfo.is_seller){
         {userInfo&&userInfo.is_staff ? (<Link to="/admin/manage"><Tab label="관리자" {...a11yProps(5)} /></Link>) : null}
       </Tabs>
     </Box>
-    <CustomTabPanel value={value} index={0}>
-      <UserSettingProfileNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={1}>
-      <UserSettingMyshoppingNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={2}>
-      <UserSettingMyreviewNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={3}>
-      <UserSettingSettingNavbar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={4}>
-      <SellerSettingNavBar />
-    </CustomTabPanel>
-    <CustomTabPanel value={value} index={5}>
-      <AdminNavBar />
+    <CustomTabPanel value={3} index={3}>
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
+          <Tab label="회원정보 수정" {...a11yProps(0)} />
+          <Tab label="알림 설정" {...a11yProps(1)} />
+          <Tab label="사용자 숨기기 신청" {...a11yProps(2)} />
+          <Tab label="판매자 신청" {...a11yProps(3)} />
+          <Tab label="비밀번호 변경" {...a11yProps(4)} />
+          <Tab label="추천코드" {...a11yProps(5)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0} >
+        <UserSetting userInfo={userInfo} user={user}  />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        Item Two
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        Item Three
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <SellerApplication userInfo={userInfo} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <MyPassword userInfo={userInfo} user={user}/>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
+        Item Six
+      </CustomTabPanel>
+    </Box>
     </CustomTabPanel>
   </Box>
   )

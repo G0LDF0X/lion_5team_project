@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import UserSettingSettingNavbar from '../components/UserSettingSettingNavbar'
 import SellerSettingNavBar from '../components/SellerSettingNavbar';
 import UserSettingProfileNavbar from '../components/UserSettingProfileNavBar';
-import UserSettingMyshoppingNavbar from '../components/UserSettingMyshoppingNavbar';
+// import UserSettingMyshoppingNavbar from '../components/UserSettingMyshoppingNavbar';
 import UserSettingMyreviewNavbar from '../components/UserSettingMyreviewNavbar';
 import AdminNavBar from '../components/AdminNavBar';
 function CustomTabPanel(props) {
@@ -94,7 +94,7 @@ if(userInfo.is_seller){
       <UserSettingProfileNavbar />
     </CustomTabPanel>
     <CustomTabPanel value={value} index={1}>
-      <UserSettingMyshoppingNavbar />
+      {/* <UserSettingMyshoppingNavbar /> */}
     </CustomTabPanel>
     <CustomTabPanel value={value} index={2}>
       <UserSettingMyreviewNavbar />
