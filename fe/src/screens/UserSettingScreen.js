@@ -113,3 +113,4 @@ if(userInfo.is_seller){
 }
 
 export default UserSettingScreen
+

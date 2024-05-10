@@ -60,3 +60,4 @@ const FollowingList = ({userInfo}) => {
 };
 
 export default FollowingList;
+
