@@ -7,7 +7,6 @@ import Footer from './components/Footer';
 import Product from './components/Product';
 import ProductsScreen from './screens/ProductsScreen';
 import CartScreen from './screens/CartScreen';
-// import BookmarkScreen from './screens/BookmarkScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import MyShoppingScreen from './screens/MyShoppingScreen';
@@ -16,10 +15,6 @@ import OrderDetailScreen from './screens/OrderDetailScreen';
 import MyReviewScreen from './screens/MyReviewScreen';
 import UserSettingScreen from './screens/UserSettingScreen';
 import AdminsManageScreen from './screens/AdminsManageScreen';
-// import UserSettingScreen from './screens/UserSettingScreen';  
-// import SellerMainScreen from './screens/SellerMainScreen';
-import SellerManageScreen from './screens/SellerManageScreen';
-import SellerRevenueScreen from './screens/SellerRevenueScreen';
 import SellerQAScreen from './screens/SellerQAScreen';
 import SellerSettingScreen from './screens/SellerSettingScreen';
 import BoardScreen from './screens/BoardScreen';
@@ -33,11 +28,8 @@ import QACreateScreen from './screens/QACreateScreen';
 import QADetailScreen from './screens/QADetailScreen';
 import QAAnswerCreateScreen from './screens/QAAnswerCreateScreen';
 import QAAnswerUpdateScreen from './screens/QAAnswerUpdateScreen';
-import SellerRegisterScreen from './screens/SellerRegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ProductScreen from './screens/ProductScreen';
-// import SampleEditorScreen from './screens/SampleEditorScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
 import ReviewEditScreen from './screens/ReviewEditScreen';
 import OrderCreateScreen from './screens/OrderCreateScreen';
@@ -80,22 +72,14 @@ function App() {
 
             <Route path='/login' element = {<LoginScreen/>} />
             <Route path='/register' element = {<RegisterScreen/>} />
-            {/* <Route path='/users/bookmark' element={<BookmarkScreen/>} /> */}
             <Route path='/users/myshopping/myqna'  element={<MyQAScreen/>} />
-            {/* <Route path='/users/settings' element={<UserSettingScreen/>} /> */}
             <Route path='/users/:id' element={<OtherUserProfileNavbar/>} />
             <Route path='/password-change-confirm' element={<PasswordChangeConfirm/>} />
-
-            <Route path='/seller/register' element={<SellerRegisterScreen/>} />
-            {/* <Route path='/seller/index' element={<SellerMainScreen/>} /> */}
-            <Route path='/seller/revenue' element={<SellerRevenueScreen/>} />
-            <Route path='/seller/qna' element={<SellerQAScreen/>} />
-            {/* <Route path='/seller/settings' element={<SellerSettingScreen/>} /> */}
+            <Route path='/seller/qna' element={<SellerQAScreen/>} />            
 
             <Route path='/board' element={<BoardScreen/>} />
             <Route path='/board/detail/:id' element={<BoardDetailScreen/>} />
             <Route path='/board/create/' element={<BoardCreateScreen/>} />
-            {/* <Route path='/board/post' element={<BoardPostScreen/>} /> */}
             <Route path='/board/update/:id' element={<BoardUpdateScreen/>} />
 
             <Route path='/qna' element={<QAScreen/>} />
@@ -107,7 +91,6 @@ function App() {
 
             <Route path='/payment' element={<OrderScreen/>} />
 
-            {/* <Route path='/editor' element={<SampleEditorScreen/>} /> */}
           </Routes>
         </Container>  
       </main>

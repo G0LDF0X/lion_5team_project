@@ -42,7 +42,7 @@ function a11yProps(index) {
   };
 }
 function MyShoppingScreen() {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.userLogin);

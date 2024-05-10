@@ -40,7 +40,7 @@ function a11yProps(index) {
   };
 }
 function MyReviewScreen() {
-const [value, setValue] = useState(2)
+const [value, setValue] = useState(0)
 const dispatch = useDispatch()
 const navigate = useNavigate()
 const userLogin = useSelector((state) => state.userLogin)
