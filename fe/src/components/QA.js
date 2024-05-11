@@ -1,14 +1,14 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-function QA({ qna={} }) {
+function QA({ qna }) {
     // if (!qna) return <div>QA not found</div>;
     return (
             <div>
-         {/* <Card className="my-3 p-3 rounded"> */}
-            {<Link to={`/items/detail/${qna.id}`}> 
-                {/* <Card.Img src={qa.image_url} variant="top" /> */}
-            </Link> }
+         
+            <Link to={`/items/detail/${qna.id}`}> 
+                
+            </Link> 
 
             <Card.Body>
                 <Link to={`/qna/detail/${qna.id}`}> 
@@ -24,8 +24,7 @@ function QA({ qna={} }) {
                 </Link>
 
             </Card.Body>
-        {/* </Card>
-         */}
+    
     </div>
     );
 }

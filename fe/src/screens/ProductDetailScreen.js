@@ -21,7 +21,6 @@ import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid, TextField } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
-import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
 import Accordion from 'react-bootstrap/Accordion';
