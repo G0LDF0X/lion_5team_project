@@ -72,7 +72,10 @@ function ProductDetailScreen() {
 
     useEffect(() => {
 
-    
+      dispatch(listCartItems()); 
+      dispatch(listProductDetails(id));
+    }, [navigate, successCartAdd]);
+    useEffect(() => {
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
         dispatch({type:REVIEW_CREATE_RESET});
@@ -80,26 +83,10 @@ function ProductDetailScreen() {
     if(successCartAdd){
       setState({open: true});
     }
-    if(successBookmarkAdd){
-      dispatch(listBookMark());
-      setMarked(true);
-    }
-    if(successBookmarkRemove){
-      dispatch(listBookMark());
-      setMarked(false);
-    }
-    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
-      setMarked(true);
-    }
-    else{
-      setMarked(false);
-    }
   
-    dispatch(listCartItems()); 
-    dispatch(listProductDetails(id));
-    if(!bookMarkItems){
+    if(bookMarkItems.length===0){
     dispatch(listBookMark());}
-  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
+  }, [ successProductReview, , navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
   
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
@@ -301,9 +288,9 @@ function ProductDetailScreen() {
                         >
                           <i
                             className={
-                              marked
-                                ? "fa-regular fa-bookmark"
-                                : "fa-solid fa-bookmark"
+                              bookMarkItems&&bookMarkItems.find((x) => x.item_id === product.id)
+                                ? "fa-solid fa-bookmark"
+                                : "fa-regular fa-bookmark"
                             }
                           ></i>
                         </Button>
@@ -405,14 +392,6 @@ function ProductDetailScreen() {
         <br/>
         {showTextField && (
           <>
-          {/* <TextField
-            value={title}
-            onChange={handleTitleChange}
-            variant="outlined"
-            placeholder="제목을 작성해주세요."
-            style={{ width: '500px', marginBottom: '20px' }}
-          />
-           */}
           <TextField
             value={answer}
             onChange={handleAnswerChange}
