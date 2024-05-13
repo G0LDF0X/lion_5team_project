@@ -1,17 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import {listSellers, listUsers, logout } from '../actions/userActions'
+import {listSellers, listUsers } from '../actions/userActions'
 import { Tab, Tabs, Box, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Table, Button, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { deleteUser } from '../actions/userActions'
 import Message from '../components/Message'
 import Loading from '../components/Loading'
-
-import AdminNavBar from '../components/AdminNavBar';
 import { listProducts } from '../actions/productActions'
 import { deleteProduct } from '../actions/productActions'
 import  Settings  from '../components/Settings'

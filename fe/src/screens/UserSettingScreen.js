@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUserDetails } from "../actions/userActions";
 import { Tab, Tabs, Box, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import UserSetting from "../components/UserSetting";
 import SellerApplication from "../components/SellerApplication";

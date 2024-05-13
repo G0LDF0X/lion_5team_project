@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-// import UserSettingNavBar from '../components/UserSetitngNavbar'
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate} from "react-router-dom";
 import { listBookMark } from "../actions/bookmarkActions";
 import { getMyOrders } from "../actions/orderActions";
 import { Tab, Tabs, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import UserProfileShoppingOrderlist from "../components/UserProfileShoppingOrderlist";
 import UserProfileBookmark from "../components/UserProfileBookmark";
 import Settings from "../components/Settings";
