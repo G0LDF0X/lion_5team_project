@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+
 import {
   Image,
   Container,
@@ -13,31 +13,17 @@ import { updateUserProfile } from "../actions/userActions";
 import { getUserDetails } from "../actions/userActions";
 
 function UserSetting({userInfo, user}) {
-  const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [message, setMessage] = useState(null);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
-  const navigate = useNavigate();
-
-  // console.log("SETTING SETTING :", loading, error, user);
-
+  const [message, setMessage] = useState("");
+  const nicknameRef = useRef();
+  const emailRef = useRef();
   
-  useEffect(() => {
-    if (!userInfo) {
-      navigate("/login");
-    } else {
-        setNickname(userInfo.nickname);
-        setEmail(userInfo.email);
-    }
-  }, [ userInfo]);
 
   useEffect(() => {
     if (success) {
       alert('수정이 완료되었습니다.');
-      setUpdateSuccess(true);
       window.location.reload();
     }
   }, [success]);
@@ -64,18 +50,20 @@ function UserSetting({userInfo, user}) {
       } else {
         console.log ("imageupload",data.message)
         setMessage(data.message);
+      
       }
     } catch (error) {
       console.error(error.message);
       setMessage(error.message);
+      
     }
   };
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
       updateUserProfile({
-        nickname: nickname,
-        email: email,
+        nickname: nicknameRef.current.value,
+        email: emailRef.current.value,
       })
     );
   };
@@ -108,9 +96,9 @@ function UserSetting({userInfo, user}) {
               </Form.Label>
               <Form.Control
                 type="name"
-                placeholder="Enter name"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                placeholder={user.user&&user.user.nickname  }
+                ref={nicknameRef}
+                
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="email">
@@ -119,9 +107,8 @@ function UserSetting({userInfo, user}) {
               </Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder={user.user&&user.user.email}
+                ref={emailRef}
               ></Form.Control>
             </Form.Group>
 
