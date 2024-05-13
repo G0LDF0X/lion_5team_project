@@ -75,6 +75,7 @@ function ProductDetailScreen() {
       dispatch(listCartItems()); 
       dispatch(listProductDetails(id));
     }, [navigate, successCartAdd]);
+
     useEffect(() => {
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
@@ -86,7 +87,7 @@ function ProductDetailScreen() {
   
    
 
-  }, [ successProductReview, , navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
+  }, [ successProductReview,successReviewDelete ]);
   
   useEffect(() => {
     
