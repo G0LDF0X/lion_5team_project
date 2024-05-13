@@ -26,10 +26,7 @@ const MyReview = ({reviews}) => {
                   />
                 </div>
               </Card.Text>
-              <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-              {/* {review.content.length > 30
-                ? `${review.content.substring(0, 30)}...`
-                : review.content} */}
+              <a dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
             </Card.Body>
           </Card>
         ))

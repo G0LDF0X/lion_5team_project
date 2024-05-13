@@ -21,7 +21,6 @@ const MyBoard = ({userInfo}) => {
       }, []);
   return (
     <div className='container'>
-      {/* <h2>나의 게시글</h2> */}
       <div className='row'>
         {MyBoards.map((board) => (
             <div className='col-lg-3 col-md-6 mb-4'>

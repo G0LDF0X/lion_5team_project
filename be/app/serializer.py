@@ -22,6 +22,8 @@ class ReplySerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)
     username = serializers.ReadOnlyField(source='user_id.username')
+    user_image = serializers.ImageField(source='user_id.image_url')
+    nickname = serializers.ReadOnlyField(source='user_id.nickname')
 
     class Meta:
         model = Board

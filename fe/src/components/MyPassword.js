@@ -10,9 +10,7 @@ import {
   Col,
 } from "react-bootstrap";
 import Message from "../components/Message";
-import Loading from "../components/Loading";
 import { updateUserPassword } from "../actions/userActions";
-
 import { logout } from "../actions/userActions";
 import { USER_UPDATE_PASSWORD_RESET } from "../constants/userConstants";
 
@@ -65,7 +63,6 @@ function MyPassword({userInfo}) {
     <Container>
       <Row className="justify-content-center mt-5">
         <Col md={6}>
-            {/* {console.log("COL MESSAGE : ", message, " COL ERROR :", error)} */}
           {message && <Message variant="danger">{message}</Message>}
       
           <Form onSubmit={submitHandler}>

@@ -1,15 +1,11 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import Rating from "./Rating";
 import { Link } from "react-router-dom";
-
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 function Board({ board }) {
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-    // const {userinfo} = JSON.parse(localStorage.getItem("userInfo"));
-
     return (
         <div>
             

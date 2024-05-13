@@ -174,7 +174,7 @@ function HomeScreen() {
                     <CardHeader title={<strong>{qna.title}</strong>} />
                     <Typography>
                       <div className="my-3">
-                        <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+                        <p dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                       </div>
                     </Typography>
                   </Link>

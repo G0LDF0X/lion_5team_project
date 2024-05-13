@@ -46,7 +46,7 @@ function ProductDetailScreen() {
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview, createdReview } = reviewCreate;;
   const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems, success } = bookMarkList;
+  const { bookMarkItems } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
   const { success: successCartAdd , fail : failCartAdd} = cartAdd;
   const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
@@ -55,12 +55,8 @@ function ProductDetailScreen() {
   const { success: successBookmarkRemove } = bookMarkRemove;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
-  const [showEditor, setShowEditor] = useState(false);
-  const [editorData, setEditorData] = useState('');
-  const [title, setTitle] = useState('');
   const [answer, setAnswer] = useState('');
   const [showTextField, setShowTextField] = useState(false);
-  // const [marked , setMarked] = useState(false)
   
   let totalRate =
     product && product.reviews
@@ -87,16 +83,15 @@ function ProductDetailScreen() {
   
    
 
-  }, [ successProductReview,successReviewDelete ]);
+  }, [ successProductReview,successReviewDelete, dispatch]);
   
   useEffect(() => {
     
       dispatch(listBookMark());
-      if(bookMarkItems.find(x=>x.item_id===product.id)){
+      if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
         setMarked(true);
-      } else {
-        setMarked(false);
-    }
+      }
+      
   }, [navigate, successBookmarkAdd, successBookmarkRemove]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
@@ -109,10 +104,12 @@ function ProductDetailScreen() {
   const BookmarkHandler = () => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
+      setMarked(false);
 
     }
     else {
       dispatch(addToBookMark(id));
+      setMarked(true);
     }
   }
   const editReviewHandler = (review) => {
@@ -140,7 +137,6 @@ function ProductDetailScreen() {
 
   const createQnAHandler = () => {
     navigate(`/items/qna/create/${id}`);
-    setShowEditor(true);
     dispatch(createQNA(id));
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
@@ -149,9 +145,6 @@ function ProductDetailScreen() {
     setShowTextField(true); 
   };
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
 
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value); 
@@ -298,7 +291,7 @@ function ProductDetailScreen() {
                         >
                           <i
                             className={
-                              bookMarkItems&&bookMarkItems.find((x) => x.item_id === product.id)
+                              marked
                                 ? "fa-solid fa-bookmark"
                                 : "fa-regular fa-bookmark"
                             }
@@ -333,7 +326,7 @@ function ProductDetailScreen() {
             </Box>
             <Typography variant="body1">{review.comment}</Typography>
             {review.image && <img src={review.image} alt={review.title} />}
-            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <a dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
             <Box mt={2}>
           <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
             Edit
@@ -376,7 +369,7 @@ function ProductDetailScreen() {
           {item_qna.created_at.split('T')[0]}
         </span>
         <br/><br/>
-        <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+        <a dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
 
       </Box>
     </Accordion.Header>
@@ -389,7 +382,7 @@ function ProductDetailScreen() {
               {answer.created_at.split('T')[0]}
             </span>
             <br/><br/>
-            <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <a dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
           </Box>
         ))
       ) : (
