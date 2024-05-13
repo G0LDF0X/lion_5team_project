@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import UserSettingCreateReview from '../components/UserSettingCreateReview'
 import MyReview from '../components/MyReview'
+import Settings from '../components/Settings'
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -57,18 +58,7 @@ dispatch(listMyReviews())
     setValue(newValue);
   };
   return (
-    <Box sx={{ width: '100%' }}>
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={2}  aria-label="basic tabs example" centered>
-        <Tab label="프로필" {...a11yProps(0)} />
-       <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
-        <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
-          <Link to="/users/setting"><Tab label="설정" {...a11yProps(3)} /></Link>
-        {userInfo&&userInfo.is_seller|| userInfo&&userInfo.is_staff ? (<Link to="/seller/manage"><Tab label="판매자 관리" {...a11yProps(4)} /></Link>) : null}
-        {userInfo&&userInfo.is_staff ? (<Link to="/admin/manage"><Tab label="관리자" {...a11yProps(5)} /></Link>) : null}
-      </Tabs>
-    </Box>
-    
+   <Settings num={2} userInfo={userInfo}>
     <CustomTabPanel value={2} index={2}>
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -88,7 +78,7 @@ dispatch(listMyReviews())
     </Box>
     </CustomTabPanel>
     
-  </Box>
+  </Settings>
   )
 }
 

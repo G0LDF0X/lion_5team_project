@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
-import { useNavigate} from 'react-router-dom'
-import { getUserDetails} from '../actions/userActions'
-import { Tab, Tabs, Box, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import UserSetting from '../components/UserSetting'
-import SellerApplication from '../components/SellerApplication'
-import MyPassword from '../components/MyPassword'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getUserDetails } from "../actions/userActions";
+import { Tab, Tabs, Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import UserSetting from "../components/UserSetting";
+import SellerApplication from "../components/SellerApplication";
+import MyPassword from "../components/MyPassword";
+import Settings from "../components/Settings";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -37,72 +38,66 @@ CustomTabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 function UserSettingScreen() {
-const [value, setValue] = useState(0)
-const dispatch = useDispatch()
-const navigate = useNavigate()
-const userLogin = useSelector((state) => state.userLogin)
-const {userInfo} = userLogin
-const userDetails = useSelector((state) => state.userDetails)
-const { user } = userDetails
+  const [value, setValue] = useState(0);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { user } = userDetails;
 
-useEffect(() => {
-dispatch(getUserDetails(userInfo.id))}
-, [])
+  useEffect(() => {
+    dispatch(getUserDetails(userInfo.id));
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (
-    <Box sx={{ width: '100%' }}>
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-      <Tabs value={3}  aria-label="basic tabs example" centered>
-        <Tab label="프로필" {...a11yProps(0)} />
-       <Link to="/users/myshopping"> <Tab label="나의 쇼핑" {...a11yProps(1)} /></Link>
-        <Link to="/users/myreview"><Tab label="나의 리뷰" {...a11yProps(2)} /></Link>
-          <Link to="/users/setting"><Tab label="설정" {...a11yProps(3)} /></Link>
-        {userInfo&&userInfo.is_seller|| userInfo&&userInfo.is_staff ? (<Link to="/seller/manage"><Tab label="판매자 관리" {...a11yProps(4)} /></Link>) : null}
-        {userInfo&&userInfo.is_staff ? (<Link to="/admin/manage"><Tab label="관리자" {...a11yProps(5)} /></Link>) : null}
-      </Tabs>
-    </Box>
-    <CustomTabPanel value={3} index={3}>
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-          <Tab label="회원정보 수정" {...a11yProps(0)} />
-          <Tab label="알림 설정" {...a11yProps(1)} />
-          <Tab label="사용자 숨기기 신청" {...a11yProps(2)} />
-          <Tab label="판매자 신청" {...a11yProps(3)} />
-          <Tab label="비밀번호 변경" {...a11yProps(4)} />
-          <Tab label="추천코드" {...a11yProps(5)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0} >
-        <UserSetting userInfo={userInfo} user={user}  />
+    <Settings num={3} userInfo={userInfo}>
+      <CustomTabPanel value={3} index={3}>
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              centered
+            >
+              <Tab label="회원정보 수정" {...a11yProps(0)} />
+              <Tab label="알림 설정" {...a11yProps(1)} />
+              <Tab label="사용자 숨기기 신청" {...a11yProps(2)} />
+              <Tab label="판매자 신청" {...a11yProps(3)} />
+              <Tab label="비밀번호 변경" {...a11yProps(4)} />
+              <Tab label="추천코드" {...a11yProps(5)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <UserSetting userInfo={userInfo} user={user} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            Item Two
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            Item Three
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <SellerApplication userInfo={userInfo} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={4}>
+            <MyPassword userInfo={userInfo} user={user} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={5}>
+            Item Six
+          </CustomTabPanel>
+        </Box>
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <SellerApplication userInfo={userInfo} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={4}>
-        <MyPassword userInfo={userInfo} user={user}/>
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={5}>
-        Item Six
-      </CustomTabPanel>
-    </Box>
-    </CustomTabPanel>
-  </Box>
-  )
+    </Settings>
+  );
 }
 
-export default UserSettingScreen
-
+export default UserSettingScreen;
