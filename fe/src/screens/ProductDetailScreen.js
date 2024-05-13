@@ -60,7 +60,7 @@ function ProductDetailScreen() {
   const [title, setTitle] = useState('');
   const [answer, setAnswer] = useState('');
   const [showTextField, setShowTextField] = useState(false);
-
+  // const [marked , setMarked] = useState(false)
   
   let totalRate =
     product && product.reviews
@@ -84,10 +84,19 @@ function ProductDetailScreen() {
       setState({open: true});
     }
   
-    if(bookMarkItems.length===0){
-    dispatch(listBookMark());}
+   
+
   }, [ successProductReview, , navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
   
+  useEffect(() => {
+    
+      dispatch(listBookMark());
+      if(bookMarkItems.find(x=>x.item_id===product.id)){
+        setMarked(true);
+      } else {
+        setMarked(false);
+    }
+  }, [navigate, successBookmarkAdd, successBookmarkRemove]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
