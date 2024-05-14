@@ -34,6 +34,7 @@ function SearchBox() {
     e.preventDefault();
     if (keyword.trim()) {
       navigate(`/items/?query=${keyword}&?page=1`);
+      setSuggestions([]);
     } else {
       navigate(location.pathname);
     }
@@ -57,12 +58,15 @@ function SearchBox() {
   <List>
     { suggestions.map((suggestion, index) => (
       <Link 
-        to={`/items/?query=${suggestion.name}&?page=1`} 
-        onClick={() => setKeyword(suggestion.name)}
+        to={`/items/?query=${suggestion}&?page=1`} 
+        // onClick={() => setKeyword(suggestion)}
+        onClick={() => {
+          
+          setSuggestions([]);}}
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
         <ListItem button key={index}>
-          <ListItemText primary={suggestion.name} />
+          <ListItemText primary={suggestion} />
         </ListItem>
       </Link>
     ))}

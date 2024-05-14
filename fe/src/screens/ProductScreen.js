@@ -1,12 +1,12 @@
-import React, { useEffect, useState} from "react";
+import React from "react";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import { listProducts } from "../actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import Filter from "../components/Filter";
+
 // import Filter from "../components/Filter";
 // import Star from "../components/Star";
 // import Paginate from "../components/Paginate";
@@ -14,9 +14,7 @@ import Filter from "../components/Filter";
 
 
 function ProductsScreen() {
-
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const {query} = useParams().query;
   const productList = useSelector(state => state.productList);
   const { loading, error, products, pages } = productList;
   return (
@@ -27,6 +25,9 @@ function ProductsScreen() {
           </Col>
           <Col md={9}>
             <h1>Latest Products</h1>
+            {query?
+            <h6>{query}에 관한 검색결과</h6>
+            : null}
             {loading ? (
               <Loading />
             ) : error ? (
