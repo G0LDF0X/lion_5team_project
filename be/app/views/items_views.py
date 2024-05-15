@@ -4,6 +4,8 @@ from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 import json
+# from tensorflow.keras.models import load_model
+
 
 from django.shortcuts import render
 
@@ -22,8 +24,10 @@ def search_suggestions(request):
     query = request.GET.get('query', '')
     if query:
         print (query)
-        suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
-        print (suggestions)
+        suggestions = Item.objects.filter(name__contains=query).values_list('name', flat=True)[:10]
+        # print (suggestions)
+        # if not suggestions:
+        #     suggestions = Item.objects.filter(name__in=query).values_list('name', flat=True)[:10]
         return Response(suggestions)
     
     return Response([])

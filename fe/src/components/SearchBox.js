@@ -10,24 +10,25 @@ function SearchBox() {
 
   const location = useLocation();
   const fetchSuggestions = async (query) => {
-    if (query.length < 2) {
-      setSuggestions([]);
-      return;
-    }
+    // if (query.length < 2) {
+    //   setSuggestions([]);
+    //   return;
+    // }
     try {
       const response = await fetch(`items/search/suggestions?query=${query}`);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setSuggestions(data);
+      console.log(suggestions);
     } catch (error) {
-      console.error('Error fetching suggestions:', error);
+      // console.error('Error fetching suggestions:', error);
     }
   };
   const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
     fetchSuggestions(value);
-    console.log(value);
+    // console.log(value);
   };
 
   const submitHandler = (e) => {
