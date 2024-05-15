@@ -1,6 +1,6 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { thunk } from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
+// import { composeWithDevTools } from "redux-devtools-extension";
 import {
   productListReducer,
   productDetailsReducer,
@@ -80,12 +80,12 @@ const reducer = combineReducers({
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,
   
-
+  
   cartList: cartListReducer,
   cartAdd: cartAddReducer,
   cartRemove: cartRemoveReducer,
   cartQtyUpdate: cartQtyUpdateReducer,
-
+  
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
@@ -95,7 +95,7 @@ const reducer = combineReducers({
   userList: userListReducer,
   //   userDelete: userDeleteReducer,
   //   userUpdate: userUpdateReducer,
-
+  
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   //   orderPay: orderPayReducer,
@@ -104,14 +104,14 @@ const reducer = combineReducers({
   //   orderDeliver: orderDeliverReducer,
   shippingAddress: shippingAddressReducer,
   getOrder: orderReducer,
-
+  
   reviewList: reviewListReducer,
   reviewDetail: reviewDetailsReducer,
   reviewCreate: reviewCreateReducer,
   reviewDelete: reviewDeleteReducer,
   reviewUpdate: reviewUpdateReducer,
   myReviewList: myReviewListReducer,
-
+  
   qnaList: qnaListReducer,
   qnaDetails: qnaDetailsReducer,
   qnaCreate: qnaCreateReducer,
@@ -120,13 +120,13 @@ const reducer = combineReducers({
   qnaUpdate: qnaUpdateReducer,
   qnaDelete: qnaDeleteReducer,
   qnaAnswerUpdate: qnaAnswerUpdateReducer,
-
+  
   boardList: boardListReducer,
   boardDetails: boardDetailsReducer,
   boardCreate: boardCreateReducer,
   boardUpdate: boardUpdateReducer,
   boardDelete: boardDeleteReducer,
-
+  
   bookMarkList: bookMarkListReducer,
   bookMarkAdd: bookMarkAddReducer,
   bookMarkRemove: bookMarkRemoveReducer,
@@ -134,18 +134,19 @@ const reducer = combineReducers({
 
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
-  ? JSON.parse(localStorage.getItem("userInfo"))
-  : null;
+? JSON.parse(localStorage.getItem("userInfo"))
+: null;
 
 const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
 };
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middleware = [thunk];
 const store = createStore(
   reducer,
   initialState,
-  composeWithDevTools(applyMiddleware(...middleware))
+  composeEnhancers(applyMiddleware(...middleware))
 );
 
 export default store;

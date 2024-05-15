@@ -1,8 +1,9 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
 
-export const fetchLogin = createAsyncThunk(
+
+export const login = createAsyncThunk(
     "userLogin/login",
-    async (user) => {
+    async (user, {rejectWithValue}) => {
         try {
         const res = await fetch(`/app/token/`, {
             method: "POST",
@@ -23,9 +24,9 @@ export const fetchLogin = createAsyncThunk(
         }
     }
     );
-export const fetchLogout = createAsyncThunk(
+export const logout = createAsyncThunk(
     "userLogout/logout",
-    async () => {
+    async (_,{rejectWithValue}) => {
         try {
         const res = await fetch(`/app/logout/`, {
             method: "POST",
@@ -46,18 +47,19 @@ export const fetchLogout = createAsyncThunk(
     }
     );
 
-export const fetchRegister = createAsyncThunk(  
+export const register = createAsyncThunk(  
     "userRegister/register",
-    async (user) => {
+    async ({name, email, password, nickname, adress, phone}, {rejectWithValue}) => {
         try {
         const res = await fetch(`/app/register/`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({ 'username':name, 'email':email, 'password':password, 'nickname':nickname, 'address':adress, 'phone':phone }),
         });
         const data = await res.json();
+        localStorage.setItem("userInfo", JSON.stringify(data));
         return data;
         } catch (error) {
         return rejectWithValue(
@@ -68,9 +70,9 @@ export const fetchRegister = createAsyncThunk(
         }
     }
     );
-export const fetchUserdetail = createAsyncThunk(
+export const getUserdetail = createAsyncThunk(
     "userDetail/detail",
-    async (id) => {
+    async (_, { getState, rejectWithValue }) => {
         try {
             const {userLogin: {userInfo}} = getState();
         const res = await fetch(`/users/profile/`, 
@@ -94,9 +96,9 @@ export const fetchUserdetail = createAsyncThunk(
     }
     );
 
-export const fetchUserUpdate = createAsyncThunk(
+export const updateUserProfile = createAsyncThunk(
     "userUpdate/update",
-    async (user) => {
+    async (user,{getState, rejectWithValue}) => {
         try {
             const {userLogin: {userInfo}} = getState();
         const res = await fetch(`/users/update_profile/`, {
@@ -120,9 +122,9 @@ export const fetchUserUpdate = createAsyncThunk(
     }
     );
 
-export const fetchPasswordUpdate = createAsyncThunk(
+export const updateUserPassword = createAsyncThunk(
     "passwordUpdate/update",
-    async (password) => {
+    async (password, {getState, rejectWithValue}) => {
         try {
             const {userLogin: {userInfo}} = getState();
         const res = await fetch(`/users/update_password/`, {
@@ -146,7 +148,7 @@ export const fetchPasswordUpdate = createAsyncThunk(
     );
 export const fetchUserList = createAsyncThunk(
     "userList/list",
-    async () => {
+    async (_, {getState, rejectWithValue}) => {
         try {
             const {userLogin: {userInfo}} = getState();
         const res = await fetch(`/users/users`, {
@@ -167,7 +169,7 @@ export const fetchUserList = createAsyncThunk(
     );
 export const fetchUserDelete = createAsyncThunk(
     "userDelete/delete",
-    async (id) => {
+    async (id, {getState, rejectWithValue}) => {
         try {
             const {userLogin: {userInfo}} = getState();
         const res = await fetch(`/users/delete/${id}`, {

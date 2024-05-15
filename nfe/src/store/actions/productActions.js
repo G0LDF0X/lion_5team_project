@@ -1,10 +1,10 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
 
 
 
-export const fetchProducts = createAsyncThunk(
+export const listProducts = createAsyncThunk(
     "productList/listProducts",
-    async (query = "", page = "", category = "") => {
+    async ({query = "", page = "", category = ""},{rejectWithValue}) => {
       try {
         const categoryParams =
           category === ""
@@ -25,9 +25,9 @@ export const fetchProducts = createAsyncThunk(
     }
   );
   
-  export const fetchProductDetails = createAsyncThunk(   
+  export const listProductDetails = createAsyncThunk(   
       "productDetails/listProductDetails",
-      async (id) => {
+      async (id, {rejectWithValue}) => {
           try {
           const res = await fetch(`/items/detail/${id}`);
           const data = await res.json();
@@ -41,9 +41,9 @@ export const fetchProducts = createAsyncThunk(
           }
       }
       );
-  export const productCreate = createAsyncThunk(
+  export const createProduct = createAsyncThunk(
     "productCreate/createProduct",
-    async (product) => {
+    async (product, {rejectWithValue}) => {
       try {
         const res = await fetch(`/items/create/`, {
           method: "POST",
@@ -64,9 +64,9 @@ export const fetchProducts = createAsyncThunk(
     }
   );
   
-  export const productUpdate = createAsyncThunk(
+  export const updateProduct = createAsyncThunk(
     "productUpdate/updateProduct",
-    async (product) => {
+    async (product, {rejectWithValue}) => {
       try {
         const res = await fetch(`/items/update/${product.id}`, {
           method: "PUT",
@@ -86,9 +86,9 @@ export const fetchProducts = createAsyncThunk(
       }
     }
   );
-  export const productDelete = createAsyncThunk(
+  export const deleteProduct = createAsyncThunk(
     "productDelete/deleteProduct",
-    async (id) => {
+    async (id, {rejectWithValue}) => {
       try {
         const res = await fetch(`/items/delete/${id}`, {
           method: "DELETE",

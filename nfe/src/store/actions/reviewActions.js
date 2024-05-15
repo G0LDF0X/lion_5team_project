@@ -1,8 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
 
-export const fetchReviews = createAsyncThunk(
+export const listReviews = createAsyncThunk(
     "reviewList/listReviews",
-    async () => {
+    async (_, {rejectWithValue}) => {
         try {
         const res = await fetch(`/items/reviews`);
         const data = await res.json();
@@ -17,9 +17,9 @@ export const fetchReviews = createAsyncThunk(
     }
     );
 
-export const fetchReviewDetails = createAsyncThunk(
+export const listReviewDetails = createAsyncThunk(
     "reviewDetails/getReviewDetails",
-    async (id) => {
+    async (id, {rejectWithValue}) => {
         try {
         const res = await fetch(`/items/review/detail/${id}`);
         const data = await res.json();
@@ -36,12 +36,16 @@ export const fetchReviewDetails = createAsyncThunk(
 
 export const createReview = createAsyncThunk(
     "reviewCreate/createReview",
-    async (review) => {
+    async (review,{getState, rejectWithValue}) => {
         try {
+        const {
+            userLogin: { userInfo },
+        } = getState();    
         const res = await fetch(`/items/review/create/`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.access}`,
             },
             body: JSON.stringify(review),
         });
@@ -59,12 +63,16 @@ export const createReview = createAsyncThunk(
 
 export const updateReview = createAsyncThunk(
     "reviewUpdate/updateReview",
-    async (review) => {
+    async (review, {getState, rejectWithValue}) => {
         try {
+        const {
+            userLogin: { userInfo },
+        } = getState();
         const res = await fetch(`/items/review/update/${review.id}`, {
             method: "PUT",
             headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.access}`,
             },
             body: JSON.stringify(review),
         });
@@ -82,10 +90,16 @@ export const updateReview = createAsyncThunk(
 
 export const deleteReview = createAsyncThunk(
     "reviewDelete/deleteReview",
-    async (id) => {
+    async (id, {getState, rejectWithValue}) => {
         try {
+        const {
+            userLogin: { userInfo },
+        } = getState();
         const res = await fetch(`/items/review/delete/${id}`, {
             method: "DELETE",
+            headers: {
+            Authorization: `Bearer ${userInfo.access}`,
+            },
         });
         const data = await res.json();
         return data;
@@ -101,9 +115,17 @@ export const deleteReview = createAsyncThunk(
 
 export const myReview = createAsyncThunk(
     "reviewMy/myReview",
-    async () => {
+    async (_, {getState, rejectWithValue}) => {
         try {
-        const res = await fetch(`/items/myreviews`);
+        const {
+            userLogin: { userInfo },
+        } = getState();
+        const res = await fetch(`/items/myreviews`, {
+            headers: {
+            Authorization: `Bearer ${userInfo.access}`,
+            },
+            
+        });
         const data = await res.json();
         return data;
         } catch (error) {

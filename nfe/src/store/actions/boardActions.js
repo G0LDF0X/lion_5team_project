@@ -1,8 +1,8 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
 
-export const fetchBoards = createAsyncThunk(
+export const listBoards = createAsyncThunk(
     "boardList/listBoards",
-    async () => {
+    async (_,{rejectWithValue}) => {
         try {
         const res = await fetch(`/board`);
         const data = await res.json();
@@ -16,9 +16,9 @@ export const fetchBoards = createAsyncThunk(
         }
     }
     );
-export const fetchBoardDetails = createAsyncThunk(
+export const getBoardDetails = createAsyncThunk(
     "boardDetails/getBoardDetails",
-    async (id) => {
+    async (id, {rejectWithValue}) => {
         try {
         const res = await fetch(`/board/detail/${id}/`);
         const data = await res.json();
@@ -35,7 +35,7 @@ export const fetchBoardDetails = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
     "boardCreate/createBoard",
-    async (board) => {
+    async (board, {rejectWithValue}) => {
         try {
         const res = await fetch(`/board/create/`, {
             method: "POST",
@@ -58,7 +58,7 @@ export const createBoard = createAsyncThunk(
 
 export const updateBoard = createAsyncThunk(
     "boardUpdate/updateBoard",
-    async (board) => {
+    async (board, {rejectWithValue}) => {
         try {
         const res = await fetch(`/board/update/${board.id}`, {
             method: "PUT",
@@ -81,7 +81,7 @@ export const updateBoard = createAsyncThunk(
 
 export const deleteBoard = createAsyncThunk(
     "boardDelete/deleteBoard",
-    async (id) => {
+    async (id, {rejectWithValue}) => {
         try {
         const res = await fetch(`/board/delete/${id}`, {
             method: "DELETE",
@@ -98,16 +98,20 @@ export const deleteBoard = createAsyncThunk(
     }
     );
 
-export const createBoardReply = createAsyncThunk(
+export const createReply = createAsyncThunk(
     "boardCreateReply/createBoardReply",
-    async (reply, content, id) => {
+    async ({repliedId = 0, content, id},{getState, rejectWithValue} ) => {
         try {
+        const {
+            userLogin: { userInfo },
+        } = getState();
         const res = await fetch(`/board/detail/${id}`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
             },
-            body: JSON.stringify({content, reply}),
+            body: JSON.stringify({content, repliedId}),
         });
         const data = await res.json();
         return data;
