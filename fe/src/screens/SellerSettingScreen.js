@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import { useSelector} from 'react-redux'
-import { Tab, Tabs, Box, Typography } from '@mui/material'
+import { Tab, Tabs, Box, Typography } from '@mui/material' 
 import PropTypes from 'prop-types'
 import SellerSettingMain from '../components/SellerSettingMain'
 import SellerSettingItemManage from '../components/SellerSettingItemManage'

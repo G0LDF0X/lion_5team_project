@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from 'react-icons/fa';
-
+import useShow from "../hook/useShow";
 
 function BoardDetailScreen() {
   const dispatch = useDispatch();
@@ -22,10 +22,10 @@ function BoardDetailScreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [replyCreated, setReplyCreated] = useState(false);
-  
-  console.log(userInfo);
+  useShow(id);
+  // console.log(userInfo);
 
-  console.log(board);
+  // console.log(board);
   useEffect(() => {
     if(id ===board.user_id) {
       setIsUploader(true);
@@ -38,6 +38,7 @@ function BoardDetailScreen() {
 
   }, [dispatch, id, replyCreated]);
 
+  
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {

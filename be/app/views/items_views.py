@@ -13,7 +13,7 @@ from django.shortcuts import render
 
 # @api_view(['GET'])
 # def search_suggestions(request):
-#     query = request.GET.get('query', '')
+#     query = request.GET.get('query', '') 
 #     if query:
 #         suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
 #         serializer = ItemSerializer(suggestions, many=True)

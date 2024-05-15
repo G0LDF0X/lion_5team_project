@@ -86,7 +86,13 @@ def create_Board(request):
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
-    
+@api_view(['POST'])
+def add_show(request, pk):
+    board = Board.objects.get(id=pk)
+    board.show += 1
+    board.save(update_fields=['show'])
+    return Response('show added')    
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
