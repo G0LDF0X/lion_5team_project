@@ -1,4 +1,4 @@
-import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const listReviews = createAsyncThunk(
     "reviewList/listReviews",

@@ -3,12 +3,12 @@ import {
   login, 
     register,
     logout,
-    getUserDetails,
+    getUserDetail,
     updateUserProfile,
     updateUserPassword,
     listUsers,
     deleteUser,
-    updateUser,
+    // updateUser,
 
 } from "../actions/userActions";
 
@@ -84,14 +84,14 @@ export const userDetailsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(getUserDetails.pending, (state) => {
+        .addCase(getUserDetail.pending, (state) => {
             state.loading = true;
         })
-        .addCase(getUserDetails.fulfilled, (state, action) => {
+        .addCase(getUserDetail.fulfilled, (state, action) => {
             state.loading = false;
             state.user = action.payload;
         })
-        .addCase(getUserDetails.rejected, (state, action) => {
+        .addCase(getUserDetail.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });

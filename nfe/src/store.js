@@ -27,7 +27,7 @@ import {
     userLoginSlice,
     userRegisterSlice,
     userDetailsSlice,
-    userUpdateProfileSlice,
+    // userUpdateSlice,
     userListSlice,
     userDeleteSlice,
     userUpdateSlice,
@@ -56,7 +56,7 @@ import {
 
 
 
-export const sotre = configureStore({
+const sotre = configureStore({
   reducer: {
     productList: productListSlice.reducer,
     productDetails: productDetailsSlice.reducer,
@@ -81,7 +81,7 @@ export const sotre = configureStore({
     userLogin: userLoginSlice.reducer,
     userRegister: userRegisterSlice.reducer,
     userDetails: userDetailsSlice.reducer,
-    userUpdateProfile: userUpdateProfileSlice.reducer,
+    // userUpdateProfile: userUpdateProfileSlice.reducer,
     userList: userListSlice.reducer,
     userDelete: userDeleteSlice.reducer,
     userUpdate: userUpdateSlice.reducer,
@@ -107,3 +107,4 @@ export const sotre = configureStore({
   },
 });
 
+export default sotre;

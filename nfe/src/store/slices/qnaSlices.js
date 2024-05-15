@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   listQnA,
   listQnADetails,
-  createQnA,
-  updateQnA,
+  createQNA,
+  updateQNA,
   deleteQnA,
   createQNAAnswer,
   updateQNAAnswer,
@@ -60,15 +60,15 @@ export const qnaCreateSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(createQnA.pending, (state) => {
+        .addCase(createQNA.pending, (state) => {
             state.loading = true;
         })
-        .addCase(createQnA.fulfilled, (state, action) => {
+        .addCase(createQNA.fulfilled, (state, action) => {
             state.loading = false;
             state.success = true;
             state.qna = action.payload;
         })
-        .addCase(createQnA.rejected, (state, action) => {
+        .addCase(createQNA.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });
@@ -81,15 +81,15 @@ export const qnaUpdateSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(updateQnA.pending, (state) => {
+        .addCase(updateQNA.pending, (state) => {
             state.loading = true;
         })
-        .addCase(updateQnA.fulfilled, (state, action) => {
+        .addCase(updateQNA.fulfilled, (state, action) => {
             state.loading = false;
             state.success = true;
             state.qna = action.payload;
         })
-        .addCase(updateQnA.rejected, (state, action) => {
+        .addCase(updateQNA.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });

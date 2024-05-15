@@ -1,4 +1,4 @@
-import { createAsyncThunk, rejectWithValue } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 export const login = createAsyncThunk(
@@ -70,7 +70,7 @@ export const register = createAsyncThunk(
         }
     }
     );
-export const getUserdetail = createAsyncThunk(
+export const getUserDetail = createAsyncThunk(
     "userDetail/detail",
     async (_, { getState, rejectWithValue }) => {
         try {
@@ -146,7 +146,7 @@ export const updateUserPassword = createAsyncThunk(
         }
     }
     );
-export const fetchUserList = createAsyncThunk(
+export const listUsers = createAsyncThunk(
     "userList/list",
     async (_, {getState, rejectWithValue}) => {
         try {
@@ -167,7 +167,7 @@ export const fetchUserList = createAsyncThunk(
         }
     }
     );
-export const fetchUserDelete = createAsyncThunk(
+export const deleteUser = createAsyncThunk(
     "userDelete/delete",
     async (id, {getState, rejectWithValue}) => {
         try {
