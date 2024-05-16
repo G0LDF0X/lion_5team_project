@@ -1,5 +1,3 @@
-# backend/chatbot/main.py
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -8,14 +6,12 @@ import os
 from dotenv import load_dotenv
 from .schemas import ChatRequest, ChatResponse
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = FastAPI()
 
-# CORS configuration
 origins = [
-    "http://localhost:5173",  # Your React app's origin
+    "http://localhost:5173",  
 ]
 
 app.add_middleware(

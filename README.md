@@ -10,6 +10,8 @@
 python 환경 = 3.10.14
 
 
+현재 nfe 챗봇기능만 구현중 
+
 ```
 git clone
 pip install -r requirements.txt
@@ -21,7 +23,11 @@ pip install -r requirements.txt
 cd be
 python manage.py runserver
 ```
-
+### Chatbot
+```
+cd be
+uvicorn chatbot.main:app --reload   
+```
 ### Frontend
 
 ```
