@@ -164,26 +164,27 @@ function HomeScreen() {
       ) : qnaError ? (
         <Message variant={"danger"}>{qnaError}</Message>
       ) : (
-        <Grid container spacing={3}>
-          {qnas.slice(0, 4).map((qna) => (
-            <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
-            <Card variant="outlined" style={{width: '250px', height: '200px' ,border : '2px solid', borderColor: '#898989', borderRadius: '10px'}}>
-              <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '100%' }}>
-                <CardContent>
-                  <Link to={`/qna/detail/${qna.id}`}> 
-                    <CardHeader title={<strong>{qna.title}</strong>} />
-                    <Typography>
-                      <div className="my-3">
-                        <p dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-                      </div>
-                    </Typography>
-                  </Link>
-                </CardContent>
-              </Box>
-            </Card>
-          </Grid>
-          ))}
-        </Grid>
+        // <Grid container spacing={3}>
+        //   {qnas&&qnas.slice(0, 4).map((qna) => (
+        //     <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
+        //     <Card variant="outlined" style={{width: '250px', height: '200px' ,border : '2px solid', borderColor: '#898989', borderRadius: '10px'}}>
+        //       <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '100%' }}>
+        //         <CardContent>
+        //           <Link to={`/qna/detail/${qna.id}`}> 
+        //             <CardHeader title={<strong>{qna.title}</strong>} />
+        //             <Typography>
+        //               <div className="my-3">
+        //                 <p dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+        //               </div>
+        //             </Typography>
+        //           </Link>
+        //         </CardContent>
+        //       </Box>
+        //     </Card>
+        //   </Grid>
+        //   ))}
+        // </Grid>
+        <></>
       )}
     </Container>
   );

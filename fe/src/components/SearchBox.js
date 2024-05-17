@@ -9,25 +9,35 @@ function SearchBox() {
   const [suggestions, setSuggestions] = useState([]);
 
   const location = useLocation();
+  // const fetchSuggestions = async (query) => {
+  //   try {
+  //     const response = await fetch(`items/search/suggestions?query=${query}`);
+  //     const data = await response.json();
+  //     setSuggestions(data);
+  //   } catch (error) {
+  //   }
+  // };
   const fetchSuggestions = async (query) => {
-    // if (query.length < 2) {
-    //   setSuggestions([]);
-    //   return;
-    // }
     try {
-      const response = await fetch(`items/search/suggestions?query=${query}`);
+      const response = await fetch(`search/?query=${query}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+      );
       const data = await response.json();
-      // console.log(data);
-      setSuggestions(data);
-      console.log(suggestions);
+      console.log(data)
+      setSuggestions(data.results);
     } catch (error) {
-      // console.error('Error fetching suggestions:', error);
+      // Handle error here
     }
   };
   const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
     fetchSuggestions(value);
+    console.log(value)
     // console.log(value);
   };
 
@@ -55,11 +65,11 @@ function SearchBox() {
               onChange={handleChange}
               
             />
-        { suggestions.length > 0 && (
+        { suggestions&&suggestions.length > 0 && (
   <List>
     { suggestions.map((suggestion, index) => (
       <Link 
-        to={`/items/?query=${suggestion}&?page=1`} 
+        to={`/items/?query=${suggestion.page_content}&?page=1`} 
         // onClick={() => setKeyword(suggestion)}
         onClick={() => {
           
@@ -67,7 +77,7 @@ function SearchBox() {
         style={{ textDecoration: 'none', color: 'inherit' }}
       >
         <ListItem button key={index}>
-          <ListItemText primary={suggestion} />
+          <ListItemText primary={suggestion.page_content} />
         </ListItem>
       </Link>
     ))}
