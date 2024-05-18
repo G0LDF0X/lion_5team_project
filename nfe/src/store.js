@@ -26,11 +26,12 @@ import {
 import {
     userLoginSlice,
     userRegisterSlice,
+    userLogoutSlice,
     userDetailsSlice,
-    // userUpdateSlice,
+    userUpdateSlice,
+    passwordUpdateSlice,
     userListSlice,
     userDeleteSlice,
-    userUpdateSlice,
     } from "./store/slices/userSlices";
 // import {
 //     orderCreateSlice,
@@ -81,10 +82,12 @@ const sotre = configureStore({
     userLogin: userLoginSlice.reducer,
     userRegister: userRegisterSlice.reducer,
     userDetails: userDetailsSlice.reducer,
-    // userUpdateProfile: userUpdateProfileSlice.reducer,
     userList: userListSlice.reducer,
     userDelete: userDeleteSlice.reducer,
     userUpdate: userUpdateSlice.reducer,
+    passwordUpdate: passwordUpdateSlice.reducer,
+    userLogout: userLogoutSlice.reducer,
+    
 
     // orderCreate: orderCreateSlice.reducer,
     // orderDetails: orderDetailsSlice.reducer,

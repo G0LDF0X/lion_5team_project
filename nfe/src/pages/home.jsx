@@ -141,7 +141,7 @@ function HomeScreen() {
                   {qna.title}
                 </Typography>
                 <Typography variant="body2" className="text-gray-600">
-                  <div
+                  <span
                     className="my-3"
                     dangerouslySetInnerHTML={{ __html: qna.content }}
                   />

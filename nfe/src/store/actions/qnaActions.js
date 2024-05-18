@@ -1,26 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
-export const listQNA = createAsyncThunk("qnaList/listQnA",
- async (_, {rejectWithValue}) => {
-  try {
-    const res = await mainAxiosInstance.get(`/qna`);
-    
-    return res.data;
-  } catch (error) {
-    return rejectWithValue(
-      error.response && error.response.data.detail
-        ? error.response.data.detail
-        : error.message
-    );
+export const listQNA = createAsyncThunk(
+  "qnaList/listQnA",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await mainAxiosInstance.get(`/qna`);
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message
+      );
+    }
   }
-});
+);
 export const listQnADetails = createAsyncThunk(
   "qnaDetails/getQnADetails",
-  async (id, {rejectWithValue}) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/qna/detail/${id}`);
-      const data = await res.json();
-      return data;
+      const res = await mainAxiosInstance.get(`/qna/detail/${id}`);
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -38,16 +39,9 @@ export const createQNA = createAsyncThunk(
       const {
         userLogin: { userInfo },
       } = getState();
-      const res = await fetch(`/qna/create/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Autorization: `Bearer ${userInfo.token}`,
-        },
-        body: JSON.stringify(qna),
-      });
-      const data = await res.json();
-      return data;
+      const res = await mainAxiosInstance.post(`/qna/create/`, qna);
+
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -60,14 +54,10 @@ export const createQNA = createAsyncThunk(
 
 export const updateQNA = createAsyncThunk(
   "qnaUpdate/updateQnA",
-  async (qna, {rejectWithValue}) => {
+  async (qna, { rejectWithValue }) => {
     try {
-      const res = await fetch(`/qna/update/${qna.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(qna),
+      const res = await mainAxiosInstance.put(`/qna/update/${qna.id}`, {
+        qna,
       });
       const data = await res.json();
       return data;
@@ -80,23 +70,23 @@ export const updateQNA = createAsyncThunk(
     }
   }
 );
-export const deleteQnA = createAsyncThunk("qnaDelete/deleteQnA",
- async (id, {rejectWithValue}) => {
-  try {
-    const res = await fetch(`/qna/delete/${id}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
+export const deleteQnA = createAsyncThunk(
+  "qnaDelete/deleteQnA",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await mainAxiosInstance.delete(`/qna/delete/${id}`);
+      
 
-    return data;
-  } catch (error) {
-    return rejectWithValue(
-      error.response && error.response.data.detail
-        ? error.response.data.detail
-        : error.message
-    );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message
+      );
+    }
   }
-});
+);
 export const createQNAAnswer = createAsyncThunk(
   "qnaAnswerCreate/createQNAAnswer",
   async (qnaId, { getState, rejectWithValue }) => {
@@ -104,15 +94,20 @@ export const createQNAAnswer = createAsyncThunk(
       const {
         userLogin: { userInfo },
       } = getState();
-      const res = await fetch(`/qna/answer/create/${qnaId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Autorization: `Bearer ${userInfo.token}`,
+      const res = await mainAxiosInstance.post(
+        `/qna/answer/create/${qnaId}`,
+        {
+          qnaId,
         },
-      });
-      const data = await res.json();
-      return data;
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -130,14 +125,13 @@ export const updateQNAAnswer = createAsyncThunk(
       const {
         userLogin: { userInfo },
       } = getState();
-      const res = await fetch(`/qna/answer/update/${qna.id}`, {
-        method: "PUT",
+      const res = await mainAxiosInstance.put(`/qna/answer/update/${qna.id}`, 
+      {qna},{
         headers: {
           "Content-Type": "application/json",
           Autorization: `Bearer ${userInfo.token}`,
-        },
-        body: JSON.stringify(qna),
-      });
+        }}
+      );
       const data = await res.json();
       return data;
     } catch (error) {
