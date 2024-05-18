@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from "@mui/material";
-import { searchAxiosInstance } from "../api/axiosInstances";
+import React, { useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
+import { searchAxiosInstance } from '../api/axiosInstances';
 
 function SearchBox() {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
 
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
-      const data = await response.json();
-      setSuggestions(data.results);
+      
+      setSuggestions(response.data.results);
     } catch (error) {
       // Handle error here
     }
@@ -22,7 +22,11 @@ function SearchBox() {
   const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
-    fetchSuggestions(value);
+    if (value) {
+      fetchSuggestions(value);
+    } else {
+      setSuggestions([]);
+    }
   };
 
   const submitHandler = (e) => {
@@ -36,7 +40,7 @@ function SearchBox() {
   };
 
   return (
-    <Box className="relative w-full max-w-lg mx-auto">
+    <Box className="relative w-full max-w-md mx-auto">
       <form className="flex" onSubmit={submitHandler}>
         <TextField
           type="text"
@@ -47,25 +51,29 @@ function SearchBox() {
           variant="outlined"
           fullWidth
           className="bg-white rounded-l-lg"
+          InputProps={{
+            style: { backgroundColor: 'white', color: 'gray' },
+          }}
         />
         <Button
           type="submit"
           variant="contained"
           color="primary"
           className="ml-2 rounded-r-lg"
+          sx={{ backgroundColor: '#f06292', color: 'white' }}
         >
           Search
         </Button>
       </form>
-      {suggestions && suggestions.length > 0 && (
-        <Paper className="absolute bg-white shadow-lg rounded mt-1 w-full z-10">
+      {suggestions.length > 0 && (
+        <Paper className="absolute left-0 right-0 mt-1 bg-white shadow-lg rounded-lg z-10">
           <List>
             {suggestions.map((suggestion, index) => (
               <Link
                 to={`/items/?query=${suggestion.page_content}&?page=1`}
-                onClick={() => setSuggestions([])}
                 key={index}
                 className="no-underline text-black"
+                onClick={() => setSuggestions([])}
               >
                 <ListItem button>
                   <ListItemText primary={suggestion.page_content} />

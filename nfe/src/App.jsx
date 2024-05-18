@@ -2,7 +2,7 @@ import './App.css'
 import Chatbot from './components/Chatbot'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 // import HomeScreen from './pages/home'
-import RootLayout from './pages/Root'
+import RootLayout from './layouts/Root'
 import Home from './pages/home'
 
 const routers = createBrowserRouter([
@@ -14,7 +14,8 @@ const routers = createBrowserRouter([
       {
         path: '/',
         element: <Home/>
-      }
+      },
+      
     ]
   }
 ])

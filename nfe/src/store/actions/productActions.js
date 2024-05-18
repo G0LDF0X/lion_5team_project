@@ -1,30 +1,41 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { mainAxiosInstance } from "../../api/axiosInstances";
 
 
 export const listProducts = createAsyncThunk(
-    "productList/listProducts",
-    async ({query = "", page = "", category = ""},{rejectWithValue}) => {
-      try {
-        const categoryParams =
-          category === ""
-            ? ""
-            : category.map((cat) => `category=${cat}`).join("&");
-        const res = await fetch(
-          `/items?query=${query}&page=${page}&${categoryParams}`
-        );
-        const data = await res.json();
-        return data;
-      } catch (error) {
-        return rejectWithValue(
-          error.response && error.response.data.detail
-            ? error.response.data.detail
-            : error.message
-        );
+  'products/listProducts',
+  async ({ query = "", page = "", category = [] }, { rejectWithValue }) => {
+    try {
+      let params = new URLSearchParams();
+      if (query) params.append('query', query);
+      if (page) params.append('page', page);
+      if (category.length) {
+        category.forEach(cat => params.append('category', cat));
       }
+
+      const url = `/items?${params.toString()}`;
+      console.log("Request URL:", url); // Log the URL for debugging
+
+      const response = await mainAxiosInstance.get(url);
+      console.log(response.data); // Log the response for debugging
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error('Response error:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('Request error:', error.request);
+      } else {
+        console.error('General error:', error.message);
+      }
+
+      return rejectWithValue(
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message
+      );
     }
-  );
-  
+  }
+);
   export const listProductDetails = createAsyncThunk(   
       "productDetails/listProductDetails",
       async (id, {rejectWithValue}) => {

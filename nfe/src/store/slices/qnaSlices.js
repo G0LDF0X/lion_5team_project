@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  listQnA,
+  listQNA,
   listQnADetails,
   createQNA,
   updateQNA,
@@ -16,15 +16,15 @@ export const qnaListSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(listQnA.pending, (state) => {
+        .addCase(listQNA.pending, (state) => {
             state.loading = true;
             state.qnas = [];
         })
-        .addCase(listQnA.fulfilled, (state, action) => {
+        .addCase(listQNA.fulfilled, (state, action) => {
             state.loading = false;
             state.qnas = action.payload;
         })
-        .addCase(listQnA.rejected, (state, action) => {
+        .addCase(listQNA.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         });

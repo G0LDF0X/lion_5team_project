@@ -5,8 +5,8 @@ export const listBoards = createAsyncThunk(
     async (_,{rejectWithValue}) => {
         try {
         const res = await mainAxiosInstance.get(`/board`);
-        const data = await res.json();
-        return data;
+        
+        return res.data;
         } catch (error) {
         return rejectWithValue(
             error.response && error.response.data.detail

@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
-export const listQnA = createAsyncThunk("qnaList/listQnA",
+import { mainAxiosInstance } from "../../api/axiosInstances";
+export const listQNA = createAsyncThunk("qnaList/listQnA",
  async (_, {rejectWithValue}) => {
   try {
-    const res = await fetch(`/qna`);
-    const data = await res.json();
-    return data;
+    const res = await mainAxiosInstance.get(`/qna`);
+    
+    return res.data;
   } catch (error) {
     return rejectWithValue(
       error.response && error.response.data.detail

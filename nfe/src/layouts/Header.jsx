@@ -1,10 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Avatar, Typography, Box } from "@mui/material";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Button,
+  Avatar,
+  Typography,
+  Box,
+} from '@mui/material';
 import { ShoppingCart, Home, Pets, Forum, QuestionAnswer, AccountCircle } from '@mui/icons-material';
-// import { logout } from "../actions/userActions";
-import SearchBox from "./SearchBox";
+// import { logout } from '../actions/userActions';
+import SearchBox from './SearchBox';
 
 function Header() {
   const navigate = useNavigate();
@@ -15,7 +25,7 @@ function Header() {
 
   const logoutHandler = () => {
     dispatch(logout());
-    navigate("/");
+    navigate('/');
   };
 
   const handleMenu = (event) => {
@@ -27,32 +37,36 @@ function Header() {
   };
 
   return (
-    <AppBar position="static" className="bg-white shadow-md">
+    <AppBar position="static" sx={{ backgroundColor: '#f8bbd0', boxShadow: 'none' }}>
       <Toolbar className="flex justify-between">
-        <Typography variant="h6" component={Link} to="/" className="text-pink-500 no-underline font-bold">
+        <Typography variant="h6" component={Link} to="/" className="text-pink-700 no-underline font-bold">
           PetPals
         </Typography>
         <Box className="flex space-x-4">
-          <Button startIcon={<Home />} component={Link} to="/" className="text-gray-700">Home</Button>
-          <Button startIcon={<Pets />} component={Link} to="/items" className="text-gray-700">Products</Button>
-          <Button startIcon={<Forum />} component={Link} to="/board" className="text-gray-700">Board</Button>
-          <Button startIcon={<QuestionAnswer />} component={Link} to="/qna" className="text-gray-700">Q&A</Button>
+          <Button startIcon={<Home />} component={Link} to="/" className="text-white">
+            Home
+          </Button>
+          <Button startIcon={<Pets />} component={Link} to="/items" className="text-white">
+            Products
+          </Button>
+          <Button startIcon={<Forum />} component={Link} to="/board" className="text-white">
+            Board
+          </Button>
+          <Button startIcon={<QuestionAnswer />} component={Link} to="/qna" className="text-white">
+            Q&A
+          </Button>
         </Box>
         <SearchBox />
         <Box className="flex items-center space-x-2">
           {userInfo && (
             <IconButton color="inherit" component={Link} to="/cart">
-              <ShoppingCart className="text-gray-700" />
+              <ShoppingCart className="text-white" />
             </IconButton>
           )}
           {userInfo ? (
             <div>
               <IconButton onClick={handleMenu} color="inherit">
-                {userInfo.image_url ? (
-                  <Avatar src={userInfo.image_url} />
-                ) : (
-                  <Avatar>{userInfo.name[0]}</Avatar>
-                )}
+                {userInfo.image_url ? <Avatar src={userInfo.image_url} /> : <Avatar>{userInfo.name[0]}</Avatar>}
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
@@ -67,12 +81,14 @@ function Header() {
                   horizontal: 'right',
                 }}
               >
-                <MenuItem onClick={handleClose} component={Link} to="/profile">Profile</MenuItem>
+                <MenuItem onClick={handleClose} component={Link} to="/profile">
+                  Profile
+                </MenuItem>
                 <MenuItem onClick={logoutHandler}>Logout</MenuItem>
               </Menu>
             </div>
           ) : (
-            <Button component={Link} to="/login" variant="outlined" className="text-gray-700 border-gray-700">
+            <Button component={Link} to="/login" variant="outlined" className="text-white border-white">
               <AccountCircle className="mr-1" />
               Login
             </Button>
