@@ -42,14 +42,14 @@ export default function BoardForm({ board }) {
             {board.title}
           </Link>
         }
-        subheader={new Date(board.createdAt).toLocaleDateString()}
+        subheader={new Date(board.created_at).toLocaleDateString()}
       />
       <CardMedia
         component="img"
-        height="220"
         image={board.image_url}
         alt={board.title}
         className="object-cover"
+        sx={{ height: 200 }}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary" component="div">
