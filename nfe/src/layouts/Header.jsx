@@ -13,7 +13,7 @@ import {
   Box,
 } from '@mui/material';
 import { ShoppingCart, Home, Pets, Forum, QuestionAnswer, AccountCircle } from '@mui/icons-material';
-// import { logout } from '../actions/userActions';
+import { logout } from '../store/actions/userActions';
 import SearchBox from './SearchBox';
 
 function Header() {

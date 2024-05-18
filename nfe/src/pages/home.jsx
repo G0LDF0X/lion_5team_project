@@ -1,12 +1,3 @@
-// import React from 'react'
-// function home() {
-//   return (
-//     <div>
-//       <h1>Home</h1>
-//     </div>
-//   )
-// }
-// export default home
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -28,10 +19,13 @@ import Message from "../components/Message";
 
 function HomeScreen() {
   const dispatch = useDispatch();
-  
 
   const productList = useSelector((state) => state.productList);
-  const { loading: productLoading, error: productError, products } = productList;
+  const {
+    loading: productLoading,
+    error: productError,
+    products,
+  } = productList;
 
   const boardList = useSelector((state) => state.boardList);
   const { loading: boardLoading, error: boardError, boards } = boardList;
@@ -66,7 +60,10 @@ function HomeScreen() {
 
   return (
     <Container className="mx-auto p-4">
-      <Typography variant="h4" className="text-center my-4 font-bold text-pink-500">
+      <Typography
+        variant="h4"
+        className="text-center my-4 font-bold text-pink-500"
+      >
         Welcome to our Pet Shop
       </Typography>
 
@@ -83,9 +80,9 @@ function HomeScreen() {
         <Carousel responsive={responsive} infinite>
           {products.map((product) => (
             <Box key={product.id} className="p-2">
-              <Card className="p-4 rounded-lg shadow-lg">
-                <Product product={product} id={product.id} />
-              </Card>
+              {/* <Card className="p-4 rounded-lg shadow-lg"> */}
+              <Product product={product} id={product.id} />
+              {/* </Card> */}
             </Box>
           ))}
         </Carousel>
@@ -104,16 +101,21 @@ function HomeScreen() {
         <Carousel responsive={responsive} infinite>
           {boards.map((board) => (
             <Box key={board.id} className="p-2">
-              <Card className="p-4 rounded-lg shadow-lg">
-                <BoardForm board={board} />
-              </Card>
+              {/* <Card className="p-4 rounded-lg shadow-lg"> */}
+              <BoardForm board={board} />
+              {/* </Card> */}
             </Box>
           ))}
         </Carousel>
       )}
 
       <Box className="flex items-center mt-8">
-        <svg width="24" height="24" viewBox="0 0 24 24" className="text-pink-500">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          className="text-pink-500"
+        >
           <path
             fill="currentColor"
             d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm2-4h-2V7h2v6z"
