@@ -1,16 +1,32 @@
-import { useState } from 'react'
 import './App.css'
 import Chatbot from './components/Chatbot'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+// import HomeScreen from './pages/home'
+import RootLayout from './pages/Root'
+import Home from './pages/home'
+
+const routers = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout/>,
+    exact: true,
+    children: [
+      {
+        path: '/',
+        element: <Home/>
+      }
+    ]
+  }
+])
+
+
 
 function App() {
   
 
   return (
     <>
-      <h1 className="text-4xl font-bold text-center text-blue-500">
-      Hello world!
-    </h1>
-    <Chatbot />
+    <RouterProvider router={routers} />
     </>
   )
 }

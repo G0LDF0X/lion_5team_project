@@ -26,12 +26,12 @@ python manage.py runserver
 ### Chatbot
 ```
 cd be
-uvicorn chatbot.main:app --reload   
+uvicorn chatbot.main:app --reload --port 8001
 ```
 ### Search
 ```
 cd be
-uvicorn fastapi_app.main:app --reload
+uvicorn fastapi_app.main:app --reload --port 8002
 ```
 
 ### Frontend

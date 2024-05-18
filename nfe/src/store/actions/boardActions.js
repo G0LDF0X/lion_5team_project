@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { mainAxiosInstance } from "../../api/axiosInstances";
 export const listBoards = createAsyncThunk(
     "boardList/listBoards",
     async (_,{rejectWithValue}) => {
         try {
-        const res = await fetch(`/board`);
+        const res = await mainAxiosInstance.get(`/board`);
         const data = await res.json();
         return data;
         } catch (error) {
@@ -20,7 +20,7 @@ export const getBoardDetails = createAsyncThunk(
     "boardDetails/getBoardDetails",
     async (id, {rejectWithValue}) => {
         try {
-        const res = await fetch(`/board/detail/${id}/`);
+        const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
         const data = await res.json();
         return data;
         } catch (error) {
@@ -37,13 +37,8 @@ export const createBoard = createAsyncThunk(
     "boardCreate/createBoard",
     async (board, {rejectWithValue}) => {
         try {
-        const res = await fetch(`/board/create/`, {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json",
-            },
-            body: JSON.stringify(board),
-        });
+        const res = await mainAxiosInstance.post
+        (`/board/create/`, board);
         const data = await res.json();
         return data;
         } catch (error) {

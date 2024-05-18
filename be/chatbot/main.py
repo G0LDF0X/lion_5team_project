@@ -9,7 +9,7 @@ from .schemas import ChatRequest, ChatResponse
 load_dotenv()
 
 app = FastAPI()
-
+ 
 origins = [
     "http://localhost:5173",  
 ]

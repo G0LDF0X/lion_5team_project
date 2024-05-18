@@ -1,6 +1,6 @@
 // Chatbot.js
 import React, { useState } from 'react';
-import axios from 'axios';
+import { chatbotAxiosInstance } from '../api/axiosInstances';
 
 const Chatbot = () => {
     const [message, setMessage] = useState('');
@@ -8,7 +8,7 @@ const Chatbot = () => {
 
     const sendMessage = async () => {
         try {
-            const res = await axios.post('http://127.0.0.1:8000/api/chat/', { message });
+            const res = await chatbotAxiosInstance.post('/chat/', { message });
             setResponse(res.data.reply);
         } catch (error) {
             console.error('Error sending message:', error);
