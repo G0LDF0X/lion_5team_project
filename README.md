@@ -12,7 +12,7 @@ python 환경 = 3.10.14
 ```
 git clone
 pip install -r requirements.txt
-pip install pandas langchain sentence-transformers chromadb
+pip install pandas langchain sentence-transformers chromadb dotenv psycopg2
 pip install -U langchain-community
 ```
 ### Backend
@@ -27,6 +27,7 @@ cd be
 uvicorn chatbot.main:app --reload --port 8001
 ```
 ### Search
+매일 자동완성 데이터 업데이트 되로록 설정
 ```
 cd be
 uvicorn fastapi_app.main:app --reload --port 8002
