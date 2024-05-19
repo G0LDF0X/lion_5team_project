@@ -9,15 +9,12 @@
 
 python 환경 = 3.10.14
 
-
-현재 nfe 챗봇기능만 구현중 , be, chatbot, search중 하나씩만 실행가능(포트 겹침)
-
 ```
 git clone
 pip install -r requirements.txt
-```
 pip install pandas langchain sentence-transformers chromadb
 pip install -U langchain-community
+```
 ### Backend
 
 ```
