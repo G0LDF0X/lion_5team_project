@@ -1,9 +1,11 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Typography, Grid, Skeleton } from '@mui/material';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Product from '../Product';
 import Message from '../Message';
+import PropTypes from "prop-types";
+
 
 const responsive = {
   superLargeDesktop: {
@@ -23,6 +25,39 @@ const responsive = {
     items: 1,
   },
 };
+function Media() {
+  
+
+  return (
+    <Grid container wrap="nowrap">
+      {Array.from(new Array(4)).map((index) => (
+        <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
+          <Skeleton variant="rectangular" width={256} height={250} />
+
+          <Box sx={{ pt: 0.5 }}>
+            
+            <Skeleton width="70%" />
+            <Skeleton width="70%" />
+            <Skeleton width="70%" />
+          </Box>
+        </Box>
+      ))}
+    </Grid>
+  );
+}
+
+Media.propTypes = {
+  loading: PropTypes.bool,
+};
+
+function Loading2() {
+  return (
+    <Box sx={{ overflow: "hidden" }}>
+      <Media loading />
+      
+    </Box>
+  );
+}
 
 function ProductCarousel({ loading, error, products }) {
   return (
@@ -32,7 +67,7 @@ function ProductCarousel({ loading, error, products }) {
       </Typography>
       {loading ? (
         <Box className="flex justify-center">
-          <CircularProgress />
+          <Loading2 loading />
         </Box>
       ) : error ? (
         <Message variant="error">{error}</Message>

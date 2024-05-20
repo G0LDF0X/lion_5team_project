@@ -90,7 +90,7 @@ const Chatbot = () => {
                                 type="text"
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
-                                onKeyPress={(e) => {
+                                onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                         sendMessage();
                                         e.preventDefault(); // Prevent form submission & page reload

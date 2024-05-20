@@ -1,8 +1,36 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Typography, Grid, Skeleton } from '@mui/material';
+import PropTypes from "prop-types";
 import { Link } from 'react-router-dom';
 import Message from '../Message';
+function Media() {
+  
 
+  return (
+    <Grid container wrap="nowrap">
+      {Array.from(new Array(4)).map((index) => (
+        <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
+          <Skeleton variant="rectangular" width={251} height={137} />
+
+          
+        </Box>
+      ))}
+    </Grid>
+  );
+}
+
+Media.propTypes = {
+  loading: PropTypes.bool,
+};
+
+function Loading2() {
+  return (
+    <Box sx={{ overflow: "hidden" }}>
+      <Media loading />
+      
+    </Box>
+  );
+}
 function QnASection({ loading, error, qnas }) {
   return (
     <>
@@ -19,7 +47,7 @@ function QnASection({ loading, error, qnas }) {
       </Box>
       {loading ? (
         <Box className="flex justify-center mt-4">
-          <CircularProgress />
+          < Loading2/>
         </Box>
       ) : error ? (
         <Message variant="error">{error}</Message>

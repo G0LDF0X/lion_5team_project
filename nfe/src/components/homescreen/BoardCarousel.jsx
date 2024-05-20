@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Typography, Grid, Skeleton, Avatar } from '@mui/material';
+import PropTypes from "prop-types";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import BoardForm from '../BoardForm';
@@ -24,6 +25,43 @@ const responsive = {
   },
 };
 
+function Media() {
+  
+
+  return (
+    <Grid container wrap="nowrap">
+      {Array.from(new Array(4)).map((index) => (
+        <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
+<Skeleton variant="circular">
+<Avatar />
+</Skeleton>
+          <Skeleton variant="rectangular" width={256} height={250} />
+
+          <Box sx={{ pt: 0.5 }}>
+            
+            <Skeleton width="70%" />
+            <Skeleton width="70%" />
+            <Skeleton width="70%" />
+          </Box>
+        </Box>
+      ))}
+    </Grid>
+  );
+}
+
+Media.propTypes = {
+  loading: PropTypes.bool,
+};
+
+function Loading2() {
+  return (
+    <Box sx={{ overflow: "hidden" }}>
+      <Media loading />
+      
+    </Box>
+  );
+}
+
 function BoardCarousel({ loading, error, boards }) {
   return (
     <>
@@ -32,7 +70,7 @@ function BoardCarousel({ loading, error, boards }) {
       </Typography>
       {loading ? (
         <Box className="flex justify-center">
-          <CircularProgress />
+          <Loading2 />
         </Box>
       ) : error ? (
         <Message variant="error">{error}</Message>
