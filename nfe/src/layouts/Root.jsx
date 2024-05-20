@@ -7,9 +7,9 @@ function RootLayout() {
   return (
     <>
       <Header />
-      <Chatbot />
       <Outlet />
       <Footer />
+      <Chatbot />
     </>
   );
 }

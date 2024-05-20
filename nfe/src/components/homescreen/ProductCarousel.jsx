@@ -39,11 +39,11 @@ function ProductCarousel({ loading, error, products }) {
       ) : (
         <Carousel responsive={responsive} infinite>
           {products.map((product) => (
-            <Box key={product.id} className="p-2 h-full">
+            // <Box key={product.id} className="p-2 h-full">
               <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
                 <Product product={product} id={product.id} />
               </Card>
-            </Box>
+            // </Box>
           ))}
         </Carousel>
       )}

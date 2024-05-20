@@ -28,7 +28,7 @@ function QnASection({ loading, error, qnas }) {
           {qnas.slice(0, 4).map((qna) => (
             <Card
               key={qna.id}
-              className="p-4 rounded-lg shadow-lg border border-gray-200"
+              className="p-4 rounded-lg shadow-lg border border-gray-200 overflow-hidden hover:shadow-2xl"
             >
               <Link to={`/qna/detail/${qna.id}`} className="no-underline">
                 <Typography variant="h6" className="font-bold text-gray-800">

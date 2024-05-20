@@ -39,11 +39,11 @@ function BoardCarousel({ loading, error, boards }) {
       ) : (
         <Carousel responsive={responsive} infinite>
           {boards.map((board) => (
-            <Box key={board.id} className="p-2 h-full">
+            // <Box key={board.id} className="p-2 h-full">
               <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
                 <BoardForm board={board} />
               </Card>
-            </Box>
+            // </Box>
           ))}
         </Carousel>
       )}
