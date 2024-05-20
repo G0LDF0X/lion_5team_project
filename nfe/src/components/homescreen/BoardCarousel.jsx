@@ -1,10 +1,18 @@
-import React from 'react';
-import { Box, Card, CircularProgress, Typography, Grid, Skeleton, Avatar } from '@mui/material';
+import React from "react";
+import {
+  Box,
+  Card,
+  CircularProgress,
+  Typography,
+  Grid,
+  Skeleton,
+  Avatar,
+} from "@mui/material";
 import PropTypes from "prop-types";
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
-import BoardForm from '../BoardForm';
-import Message from '../Message';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import BoardForm from "../BoardForm";
+import Message from "../Message";
 
 const responsive = {
   superLargeDesktop: {
@@ -26,19 +34,16 @@ const responsive = {
 };
 
 function Media() {
-  
-
   return (
     <Grid container wrap="nowrap">
       {Array.from(new Array(4)).map((index) => (
         <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
-<Skeleton variant="circular">
-<Avatar />
-</Skeleton>
+          <Skeleton variant="circular">
+            <Avatar />
+          </Skeleton>
           <Skeleton variant="rectangular" width={256} height={250} />
 
           <Box sx={{ pt: 0.5 }}>
-            
             <Skeleton width="70%" />
             <Skeleton width="70%" />
             <Skeleton width="70%" />
@@ -57,7 +62,6 @@ function Loading2() {
   return (
     <Box sx={{ overflow: "hidden" }}>
       <Media loading />
-      
     </Box>
   );
 }
@@ -78,9 +82,9 @@ function BoardCarousel({ loading, error, boards }) {
         <Carousel responsive={responsive} infinite>
           {boards.map((board) => (
             // <Box key={board.id} className="p-2 h-full">
-              <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-                <BoardForm board={board} />
-              </Card>
+            <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
+              <BoardForm board={board} />
+            </Card>
             // </Box>
           ))}
         </Carousel>
