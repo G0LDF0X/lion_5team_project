@@ -1,5 +1,4 @@
 import './App.css'
-import Chatbot from './components/Chatbot'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 // import HomeScreen from './pages/home'
 import RootLayout from './layouts/Root'

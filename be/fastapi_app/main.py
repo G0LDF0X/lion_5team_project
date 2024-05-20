@@ -82,9 +82,11 @@ async def startup_event():
 @app.post("/search/")
 async def search_books(query: str):
     items = pd.read_csv(csv_file_path)
+    if items.empty:
+        return {"error": "No data available."}
     vector_store = Chroma.from_texts(
         texts=items['name'].tolist(),
         embedding=sbert
     )
-    results = vector_store.similarity_search(query=query, k=3)
-    return {"query": query, "results": results}
+    results = vector_store.similarity_search(query=query, k=4)
+    return {"results": results}
