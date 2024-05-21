@@ -46,7 +46,7 @@ const Chatbot = () => {
                 className="fixed bottom-20 right-12 p-4 rounded-full shadow-lg focus:outline-none z-50"
                 onClick={toggleChatWindow}
             >
-                {isOpen ? 'x' : <img src={'https://127.0.0.1:8000/images/Frame 1.png'} alt="Chat" className="w-8 h-8" />}
+                {isOpen ? 'x' : <img src={'http://127.0.0.1:8000/images/Frame 1.png'} alt="Chat" className="w-8 h-8" />}
             </button>
 
             {isOpen && (

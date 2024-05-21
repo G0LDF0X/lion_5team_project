@@ -12,13 +12,15 @@ const StyledCheckbox = styled(Checkbox)({
 });
 
 export default function BoardForm({ board }) {
+  
   const [isLiked, setIsLiked] = useState(false);
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
   const likeHandler = () => {
     setIsLiked(!isLiked);
   };
+  
 
   return (
     <Card className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300" sx={{ height: 500 }}>
@@ -49,7 +51,7 @@ export default function BoardForm({ board }) {
       <CardMedia
         component="img"
         // image={board.image_url}
-        image={`http://127.0.0.1:8000${board.image_url}`}
+        image={`${VITE_API_BASE_URL}${board.image_url}`}
         alt={board.title}
         className="object-cover"
         sx={{ height: 200 }}
