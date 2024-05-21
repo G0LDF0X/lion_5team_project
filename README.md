@@ -12,7 +12,7 @@ python 환경 = 3.10.14
 ```
 git clone
 pip install -r requirements.txt
-pip install pandas langchain sentence-transformers chromadb dotenv psycopg2
+pip install pandas langchain sentence-transformers chromadb python-dotenv psycopg2
 pip install -U langchain-community
 ```
 ### Backend
