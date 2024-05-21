@@ -3,8 +3,7 @@ import { useSelector } from 'react-redux';
 
 
 
-const SellerApplication = () => {
-    const token = useSelector((state) => state.userLogin.userInfo.access);
+const SellerApplication = ({userInfo}) => {
     const [bsNumber, setBsNumber] = useState('');
     const [error, setError] = useState('');
     const [isSeller, setIsSeller] = useState(false); // 추가된 상태
@@ -17,7 +16,7 @@ const SellerApplication = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization' : `Bearer ${token}`
+                        'Authorization' : `Bearer ${userInfo.access}`
                     },
                     
                 });
@@ -33,7 +32,7 @@ const SellerApplication = () => {
             }
         };
         checkSellerStatus();
-    }, [token]);
+    }, [userInfo]);
 
 
     const handleBsNumberChange = (event) => {
@@ -52,7 +51,7 @@ const SellerApplication = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization' : `Bearer ${token}`
+                'Authorization' : `Bearer ${userInfo.access}`
             },
             body: JSON.stringify({ bs_number: bsNumber }),
 
@@ -79,12 +78,13 @@ const SellerApplication = () => {
     };
     // 판매자 인지 확인 후, 이미 판매자면 페이지 숨김.
 
-    if (isSeller) {
-        return null;
-    }
-
     return (
         <div>
+    {userInfo && userInfo.is_seller ? (
+        <div>
+            <h1>판매자 신청이 완료되었습니다.</h1>
+        </div>
+    ) : (<>
         <h1>판매자 신청하기</h1>
         <form onSubmit={handleSubmit}>
             <label htmlFor="bs_Number">BS_NUMBER:</label>
@@ -96,7 +96,7 @@ const SellerApplication = () => {
             />
             <button type="submit">Submit</button>
         </form>
-        {error && <p>{error}</p>}
+        </>)}
         </div>
     );
     };

@@ -4,7 +4,40 @@ from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 import json
+# from tensorflow.keras.models import load_model
 
+
+from django.shortcuts import render
+
+
+
+# @api_view(['GET'])
+# def search_suggestions(request):
+#     query = request.GET.get('query', '') 
+#     if query:
+#         suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
+#         serializer = ItemSerializer(suggestions, many=True)
+#         return Response(serializer.data)
+#     return Response([])
+@api_view(['GET'])
+def search_suggestions(request):
+    query = request.GET.get('query', '')
+    if query:
+        print (query)
+        suggestions = Item.objects.filter(name__contains=query).values_list('name', flat=True)[:10]
+        # print (suggestions)
+        # if not suggestions:
+        #     suggestions = Item.objects.filter(name__in=query).values_list('name', flat=True)[:10]
+        return Response(suggestions)
+    
+    return Response([])
+
+# @api_view(['GET'])
+# def search_suggestions(request):
+#     query = request.GET.get('query', '')
+#     items = Item.objects.filter(name__icontains=query)
+#     serializer = ItemSerializer(items, many=True)
+#     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_items(request):
@@ -251,4 +284,10 @@ def delete_qna (request, pk):
 def get_tag(request):
     tags = Tag.objects.all()
     serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_qna(request):
+    qna = Item_QnA.objects.all()
+    serializer = ItemQnASerializer(qna, many=True)
     return Response(serializer.data)

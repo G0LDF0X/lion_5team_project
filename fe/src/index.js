@@ -6,9 +6,11 @@ import store from './store';
 import './bootstrap.min.css';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { CssBaseline } from '@material-ui/core';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store = {store}>
+    <CssBaseline />
     <App />
   </Provider>
 );

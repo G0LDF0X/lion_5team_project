@@ -1,26 +1,17 @@
 import React, {useEffect, useState } from 'react'
 import { Card, Row, Col, Image, Button } from 'react-bootstrap'
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
-import Loading from './Loading';
-import { getUserDetails } from '../actions/userActions';
 
 
 function OtherUserProfileCard({ userId }) {
     const token = useSelector((state) => state.userLogin.userInfo.access);
 
-    const dispatch = useDispatch();
-    const Navigate = useNavigate();
     const [value, setValue] = useState(0);
     const [userData, setUserData] = useState(null);
     const [followerCount, setFollowerCount] = useState(0);

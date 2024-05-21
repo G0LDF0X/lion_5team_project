@@ -18,18 +18,16 @@ import { createReview } from "../actions/reviewActions";
 import { addToBookMark, listBookMark, removeFromBookMark } from "../actions/bookmarkActions";
 import { addToCart, listCartItems } from "../actions/cartActions";
 import { Snackbar } from "@mui/material";
-import { Card, CardContent, Typography,  Box, Grid } from '@material-ui/core';
+import { Card, CardContent, Typography,  Box, Grid, TextField } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
-import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
 import Accordion from 'react-bootstrap/Accordion';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-function Productcreen() {
+
+function ProductDetailScreen() {
   const [qty, setQty] = useState(1);
   const [marked, setMarked] = useState(false);
   const [state, setState] = useState({open: false});
@@ -48,7 +46,7 @@ function Productcreen() {
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview, createdReview } = reviewCreate;;
   const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems, success } = bookMarkList;
+  const { bookMarkItems } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
   const { success: successCartAdd , fail : failCartAdd} = cartAdd;
   const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
@@ -57,11 +55,8 @@ function Productcreen() {
   const { success: successBookmarkRemove } = bookMarkRemove;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
-  const [showEditor, setShowEditor] = useState(false);
-  const [editorData, setEditorData] = useState('');
-
-
-
+  const [answer, setAnswer] = useState('');
+  const [showTextField, setShowTextField] = useState(false);
   
   let totalRate =
     product && product.reviews
@@ -73,7 +68,11 @@ function Productcreen() {
 
     useEffect(() => {
 
-    
+      dispatch(listCartItems()); 
+      dispatch(listProductDetails(id));
+    }, [navigate, successCartAdd]);
+
+    useEffect(() => {
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
         dispatch({type:REVIEW_CREATE_RESET});
@@ -81,27 +80,19 @@ function Productcreen() {
     if(successCartAdd){
       setState({open: true});
     }
-    if(successBookmarkAdd){
-      dispatch(listBookMark());
-      setMarked(true);
-    }
-    if(successBookmarkRemove){
-      dispatch(listBookMark());
-      setMarked(false);
-    }
-    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
-      setMarked(true);
-    }
-    else{
-      setMarked(false);
-    }
   
-    dispatch(listCartItems()); 
-    dispatch(listProductDetails(id));
-    if(!bookMarkItems){
-    dispatch(listBookMark());}
-  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
+   
+
+  }, [ successProductReview,successReviewDelete, dispatch]);
   
+  useEffect(() => {
+    
+      dispatch(listBookMark());
+      if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
+        setMarked(true);
+      }
+      
+  }, [navigate, successBookmarkAdd, successBookmarkRemove]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
@@ -113,10 +104,12 @@ function Productcreen() {
   const BookmarkHandler = () => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
+      setMarked(false);
 
     }
     else {
       dispatch(addToBookMark(id));
+      setMarked(true);
     }
   }
   const editReviewHandler = (review) => {
@@ -141,15 +134,55 @@ function Productcreen() {
       fontSize: '5rem',  // increase font size
     },
   });
+
   const createQnAHandler = () => {
     navigate(`/items/qna/create/${id}`);
-    setShowEditor(true);
     dispatch(createQNA(id));
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
 
+  const handleButtonClick = () => {
+    setShowTextField(true); 
+  };
 
+
+  const handleAnswerChange = (event) => {
+    setAnswer(event.target.value); 
+  };
+
+  const handleAnswerSubmit = async () => {
+      const formData = new FormData();
+      formData.append('answer', answer);
+
+      try {
+      const res = await fetch('/items/qna/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userInfo.access}`,
+      },
+      body: formData,
+  });
+
+      if (res.ok) {
+        navigate(`/items/detail/${id}`);
+      }
+      if (userInfo && userInfo.is_seller ) {
+        console.log("답변 작성하기 버튼이 클릭되었습니다.");
+        console.log("작성된 답변: ", answer);
+        setAnswer(answer); 
+        setShowTextField(false); 
+        navigate(`/items/detail/${id}`); 
+      } 
+
+      else {
+        alert("판매자만 답변을 작성할 수 있습니다.");
+      }
+    } catch (error) {
+      console.error("답변 등록 중 오류가 발생하였습니다:", error);
+  } 
+  };
  
+
   return (
     <div>
       <Snackbar
@@ -259,8 +292,8 @@ function Productcreen() {
                           <i
                             className={
                               marked
-                                ? "fa-regular fa-bookmark"
-                                : "fa-solid fa-bookmark"
+                                ? "fa-solid fa-bookmark"
+                                : "fa-regular fa-bookmark"
                             }
                           ></i>
                         </Button>
@@ -293,7 +326,7 @@ function Productcreen() {
             </Box>
             <Typography variant="body1">{review.comment}</Typography>
             {review.image && <img src={review.image} alt={review.title} />}
-            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <a dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
             <Box mt={2}>
           <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
             Edit
@@ -327,30 +360,60 @@ function Productcreen() {
     </Box>
     <Accordion>
     {product.reviews ? product.item_qna_set.map((item_qna, index) => (
-      <Accordion.Item eventKey={index.toString()}>
-        <Accordion.Header>
-          <Box><h5>Q. {item_qna.title}</h5>
-          ID : {item_qna.username}<br/>
-          <span style={{ color: 'gray', fontSize: 'small' }}>
+  <Accordion.Item eventKey={index.toString()}>
+    <Accordion.Header>
+      <Box>
+        <h5>Q. {item_qna.title}</h5>
+        ID : {item_qna.username}<br/>
+        <span style={{ color: 'gray', fontSize: 'small' }}>
           {item_qna.created_at.split('T')[0]}
         </span>
         <br/><br/>
-        <p>{item_qna.content}</p></Box>
-        </Accordion.Header>
-        <Accordion.Body>
+        <a dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
 
-          {item_qna.item_answer_set ? item_qna.item_answer_set.map((answer, index) => (
-            <Box>
+      </Box>
+    </Accordion.Header>
+    <Accordion.Body>
+      {item_qna.item_answer_set && item_qna.item_answer_set.length > 0 ? (
+        item_qna.item_answer_set.map((answer, index) => (
+          <Box>
             <h5>A. {answer.title}</h5> 
             <span style={{ color: 'gray', fontSize: 'small' }}>
-          {answer.created_at.split('T')[0]}
-        </span><br/><br/>
-            <p>{answer.content}</p>
-            </Box>
-          )) : null}
-        </Accordion.Body>
-      </Accordion.Item>
-    )) : null}
+              {answer.created_at.split('T')[0]}
+            </span>
+            <br/><br/>
+            <a dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+          </Box>
+        ))
+      ) : (
+        <>
+        {!showTextField && (
+        <Button variant="contained" color="primary" onClick={handleButtonClick}>
+          답변 작성하기
+        </Button>
+        )}
+        <br/>
+        {showTextField && (
+          <>
+          <TextField
+            value={answer}
+            onChange={handleAnswerChange}
+            variant="outlined"
+            multiline
+            placeholder="답변을 작성해주세요."
+            style={{ width: '500px' }}
+          />
+        <Button variant="contained" color="primary" onClick={() => handleAnswerSubmit(answer)}>
+                  제출하기
+              </Button>
+          </>
+        )}
+        </>
+      )}
+    </Accordion.Body>
+  </Accordion.Item>
+)) : null}
+
   </Accordion>
 
   </Grid>
@@ -360,5 +423,4 @@ function Productcreen() {
 
   );
 }
-
-export default Productcreen;
+export default ProductDetailScreen;

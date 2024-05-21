@@ -5,24 +5,24 @@ import { LinkContainer } from "react-router-bootstrap";
 import Message from "./Message";
 import Loading from "./Loading";
 import { useEffect } from "react";
-import { Typography, Paper } from '@material-ui/core';
+import { Typography, Paper } from "@material-ui/core";
 
-
-function UserProfileShoppingOrderlist() {
-  const myOrderList = useSelector((state) => state.myOrderList);
-  const { loading: loadingOrders, error: errorOrders, orders } = myOrderList;
-
+function UserProfileShoppingOrderlist({ orders }) {
   return (
     <Row>
       <Col md={9}>
-        <h2>My Orders</h2>
-        {loadingOrders ? (
-          <Loading />
-        ) : errorOrders ? (
-          <Message variant="danger">{errorOrders}</Message>
-        ) : 
-            orders && orders.length !== 0 ? (
-          <Table striped bordered hover responsive className="table-sm">
+        {/* <h2>My Orders</h2> */}
+
+        {orders && orders.length === 0 ? (
+          <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+            <Typography variant="h6" align="center">
+              You have no orders
+            </Typography>
+          </Paper>
+        ) : (
+        // <div style={{ display: 'flex', justifyContent: 'center' }}>
+
+          <Table striped bordered hover responsive className="table-sm" style={{ textAlign: 'center' }}>
             <thead>
               <tr>
                 <th>ID</th>
@@ -33,8 +33,9 @@ function UserProfileShoppingOrderlist() {
                 <th>DETAIL</th>
               </tr>
             </thead>
-              <tbody>
-                {orders&&orders.map((order) => (
+            <tbody>
+              {orders &&
+                orders.map((order) => (
                   <tr key={order.id}>
                     <td>{order.id}</td>
                     <td>{order.created_at.substring(0, 10)}</td>
@@ -50,7 +51,7 @@ function UserProfileShoppingOrderlist() {
                       )}
                     </td>
                     <td>
-                      {order.delivered_at? (
+                      {order.delivered_at ? (
                         order.delivered_at.substring(0, 10)
                       ) : (
                         <i
@@ -68,14 +69,10 @@ function UserProfileShoppingOrderlist() {
                     </td>
                   </tr>
                 ))}
-              </tbody>
+            </tbody>
           </Table>
-            ) : (
-<Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
-    <Typography variant="h6" align="center">You have no orders</Typography>
-  </Paper>
-            )}
-        
+        // </div>
+        )}
       </Col>
     </Row>
   );

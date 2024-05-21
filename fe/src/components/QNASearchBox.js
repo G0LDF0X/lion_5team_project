@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Navbar, Container, Form, Button, Row, Col } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Form, Button, Row, Col } from "react-bootstrap";
 
 function QNASearchBox() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const location = useLocation();
-  
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -29,7 +26,6 @@ function QNASearchBox() {
               className="ml-5"
               style={{ width: "500px" }}
               onChange={(e) => setKeyword(e.target.value)}
-              
             />
           </Col>
           <Col xs="auto">
@@ -42,5 +38,5 @@ function QNASearchBox() {
     </div>
   );
 }
-
+ 
 export default QNASearchBox;

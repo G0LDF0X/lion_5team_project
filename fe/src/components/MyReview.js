@@ -1,24 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 
-const MyReview = () => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const myReviewList = useSelector((state) => state.myReviewList);
-  const { userInfo } = userLogin;
-  const { loading, error, MyReviews } = myReviewList;
+const MyReview = ({reviews}) => {
 
   return (
     <div>
-      {MyReviews && MyReviews.length !== 0 ? (
-        MyReviews.map((review) => (
+      {console.log(reviews)}
+      {reviews && reviews.length !== 0 ? (
+        reviews.map((review) => (
           <Card className="my-3 p-3 rounded" key={review.item_id}>
             <Card.Body>
               <Link to={`/items/detail/${review.item_id}`}>
                 <Card.Title as="div">
-                  <h4>{review.item.name}</h4>
+                  <h4>{review.item_name}</h4>
                 </Card.Title>
               </Link>
               <Card.Text as="div">
@@ -30,9 +26,7 @@ const MyReview = () => {
                   />
                 </div>
               </Card.Text>
-              {review.content.length > 30
-                ? `${review.content.substring(0, 30)}...`
-                : review.content}
+              <a dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
             </Card.Body>
           </Card>
         ))
