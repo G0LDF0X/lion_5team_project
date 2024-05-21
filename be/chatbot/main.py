@@ -6,12 +6,14 @@ import os
 from dotenv import load_dotenv
 from .schemas import ChatRequest, ChatResponse
 
-load_dotenv()
+load_dotenv('./chatbot/.env')
 
 app = FastAPI()
  
 origins = [
-    "http://localhost:5173",  
+    # 127.0.0.1:5173으로 접속된다면 해당 주소로, localhost:5173으로 접속된다면
+    # 하단의 127.0.0.1 부분을 localhost로 변경할 것
+    "http://127.0.0.1:5173",  
 ]
 
 app.add_middleware(
