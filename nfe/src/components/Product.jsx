@@ -3,8 +3,8 @@ import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 import { Link } from "react-router-dom";
 import { CardMedia, Typography, Box } from "@mui/material";
-
 function Product({ product, id }) {
+  
   return (
     <Card className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-full flex flex-col justify-between">
       <Link to={`/items/detail/${id}`}>
@@ -12,7 +12,7 @@ function Product({ product, id }) {
           component="img"
           height={250}
           className="object-cover w-full"
-          image={product.image_url}
+          image={`http://127.0.0.1:8000${product.image_url}`}
           alt={product.name}
           style={{height:"250px"}} // Ensure image is not too tall
         />
