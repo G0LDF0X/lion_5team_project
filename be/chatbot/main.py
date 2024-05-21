@@ -6,7 +6,8 @@ import os
 from dotenv import load_dotenv
 from .schemas import ChatRequest, ChatResponse
 
-load_dotenv()
+
+load_dotenv('./chatbot/.env')
 
 app = FastAPI()
  

@@ -66,7 +66,7 @@ function UserProfileScreen() {
       dispatch(listBookMark());
       dispatch(getUserDetails(userInfo.id));
     }
-  }, []);
+  }, [dispatch, navigate, userInfo]);
 
   return (
     <Settings num={0} userInfo={userInfo}>
