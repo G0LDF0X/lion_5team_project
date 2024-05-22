@@ -14,13 +14,16 @@ const StyledCheckbox = styled(Checkbox)({
 export default function BoardForm({ board }) {
   
   const [isLiked, setIsLiked] = useState(false);
+  const [showTags, setShowTags] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
   const likeHandler = () => {
     setIsLiked(!isLiked);
   };
-  
+  const tagHandler = () => {  
+    setShowTags(!showTags);
+  }
 
   return (
     <Card className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300" sx={{ height: 500 }}>
@@ -28,7 +31,7 @@ export default function BoardForm({ board }) {
         avatar={
           <Link to={`/board/detail/${board.id}`}>
             {board.user_image ? (
-              <Avatar src={board.user_image} aria-label="user" />
+              <Avatar src={VITE_API_BASE_URL+board.user_image} aria-label="user" />
             ) : (
               <Avatar sx={{ bgcolor: grey[500] }} aria-label="user">
                 {board.username[0]}
@@ -61,12 +64,12 @@ export default function BoardForm({ board }) {
                     component="img"
                     height="220"
                     image={`${VITE_API_BASE_URL}${board.image_url}`}
-
+                    onClick={tagHandler }
                 />
                 {/* Tag */}
-                <div style={{ position: 'absolute', top: '100px', left: '40px', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px 10px', borderRadius: '1000px' }}>
+                {showTags ?  <div style={{ position: 'absolute', top: '100px', left: '40px', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px 10px', borderRadius: '1000px' }}>
                   tag
-                </div>
+                </div>: null}
             </div>
       <CardContent>
         <Typography variant="body2" color="text.secondary" component="div">
