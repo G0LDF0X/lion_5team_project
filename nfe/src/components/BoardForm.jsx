@@ -48,14 +48,26 @@ export default function BoardForm({ board }) {
         }
         subheader={new Date(board.created_at).toLocaleDateString()}
       />
-      <CardMedia
+      {/* <CardMedia
         component="img"
         // image={board.image_url}
         image={`${VITE_API_BASE_URL}${board.image_url}`}
         alt={board.title}
         className="object-cover"
         sx={{ height: 200 }}
-      />
+      /> */}
+       <div style={{ position: 'relative' }}>
+                <CardMedia
+                    component="img"
+                    height="220"
+                    image={`${VITE_API_BASE_URL}${board.image_url}`}
+
+                />
+                {/* Tag */}
+                <div style={{ position: 'absolute', top: '100px', left: '40px', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px 10px', borderRadius: '1000px' }}>
+                  tag
+                </div>
+            </div>
       <CardContent>
         <Typography variant="body2" color="text.secondary" component="div">
           {board.content.length > 100 ? (
