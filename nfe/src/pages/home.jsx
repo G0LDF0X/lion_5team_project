@@ -8,6 +8,8 @@ import ProductCarousel from "../components/homescreen/ProductCarousel";
 import BoardCarousel from "../components/homescreen/BoardCarousel";
 import QnASection from "../components/homescreen/QnASection";
 import PostModal from "../modals/PostModal";
+import { useOutletContext } from 'react-router-dom';
+
 
 function HomeScreen() {
   const dispatch = useDispatch();
@@ -52,3 +54,9 @@ function HomeScreen() {
 }
 
 export default HomeScreen;
+
+
+
+
+
+

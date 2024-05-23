@@ -22,10 +22,13 @@ export const userLoginSlice = createSlice({
         builder
         .addCase(login.pending, (state) => {
             state.loading = true;
+            state.userInfo = null;
+            state.error = null;
         })
         .addCase(login.fulfilled, (state, action) => {
             state.loading = false;
             state.userInfo = action.payload;
+            state.error = null;
         })
         .addCase(login.rejected, (state, action) => {
             state.loading = false;

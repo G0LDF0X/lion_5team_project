@@ -16,7 +16,7 @@ import { ShoppingCart, Home, Pets, Forum, QuestionAnswer, AccountCircle } from '
 import { logout } from '../store/actions/userActions';
 import SearchBox from './SearchBox';
 
-function Header() {
+function Header({openModal}) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
@@ -88,8 +88,7 @@ function Header() {
               </Menu>
             </div>
           ) : (
-            <Button component={Link} to="/login" variant="outlined" className="text-white border-white">
-              <AccountCircle className="mr-1" />
+<Button onClick={openModal} className="py-2 px-4 bg-blue-500 rounded-md hover:bg-blue-700">              <AccountCircle className="mr-1" />
               Login
             </Button>
           )}

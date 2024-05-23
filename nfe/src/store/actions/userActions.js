@@ -7,7 +7,7 @@ export const login = createAsyncThunk(
     try {
       const res = await mainAxiosInstance.post(
         `/app/token/`,
-        { user },
+        { username: user.username, password: user.password},
         {
           headers: {
             "Content-Type": "application/json",
