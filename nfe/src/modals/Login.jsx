@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { login } from '../store/actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,19 +8,22 @@ const Login = ({ isOpen, onRequestClose }) => {
   const [password, setPassword] = useState('');
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo, loading, error } = userLogin;
   const dispatch = useDispatch();
   const handleLogin = (e) => {
     e.preventDefault();
     
         dispatch(login({"username":id, "password":password}));
-        if(userInfo){
-            onRequestClose();
-        }
-        else{
-            window.alert("Login failed");
-        }
   };
+  useEffect(() => {
+    if (userInfo) {
+      onRequestClose();
+    }
+  
+  if(error){
+    alert("Invalid credentials")
+  }
+}, [userInfo]);
   const handleOpenRegisterModal = () => {
     setIsRegisterModalOpen(true);
   };

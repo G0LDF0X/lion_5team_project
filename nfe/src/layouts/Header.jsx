@@ -25,7 +25,8 @@ import SearchBox from "./SearchBox";
 
 function Header({ openModal, openPostModal }) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
+  const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -35,19 +36,24 @@ function Header({ openModal, openPostModal }) {
     navigate("/");
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleProfileMenu = (event) => {
+    setProfileMenuAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handlePostMenu = (event) => {
+    setPostMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseProfileMenu = () => {
+    setProfileMenuAnchorEl(null);
+  };
+
+  const handleClosePostMenu = () => {
+    setPostMenuAnchorEl(null);
   };
 
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#f8bbd0", boxShadow: "none" }}
-    >
+    <AppBar position="static" sx={{ backgroundColor: "#f8bbd0", boxShadow: "none" }}>      
       <Toolbar className="flex justify-between">
         <Typography
           variant="h6"
@@ -62,7 +68,7 @@ function Header({ openModal, openPostModal }) {
             startIcon={<Home />}
             component={Link}
             to="/"
-            className="text-white"
+            className="text-gray-700 hover:text-gray-900"
           >
             Home
           </Button>
@@ -70,7 +76,7 @@ function Header({ openModal, openPostModal }) {
             startIcon={<Pets />}
             component={Link}
             to="/items"
-            className="text-white"
+            className="text-gray-700 hover:text-gray-900"
           >
             Products
           </Button>
@@ -78,7 +84,7 @@ function Header({ openModal, openPostModal }) {
             startIcon={<Forum />}
             component={Link}
             to="/board"
-            className="text-white"
+            className="text-gray-700 hover:text-gray-900"
           >
             Board
           </Button>
@@ -86,7 +92,7 @@ function Header({ openModal, openPostModal }) {
             startIcon={<QuestionAnswer />}
             component={Link}
             to="/qna"
-            className="text-white"
+            className="text-gray-700 hover:text-gray-900"
           >
             Q&A
           </Button>
@@ -95,22 +101,22 @@ function Header({ openModal, openPostModal }) {
         <Box className="flex items-center space-x-2">
           {userInfo && (
             <IconButton color="inherit" component={Link} to="/cart">
-              <ShoppingCart className="text-white" />
+              <ShoppingCart className="text-gray-700 hover:text-gray-900" />
             </IconButton>
           )}
           {userInfo ? (
             <div>
-              <IconButton onClick={handleMenu} color="inherit">
+              <IconButton onClick={handleProfileMenu} color="inherit">
                 {userInfo.image_url ? (
                   <Avatar src={userInfo.image_url} />
                 ) : (
-                  <Avatar>{userInfo.name[0]}</Avatar>
+                  <Avatar>{userInfo.username[0]}</Avatar>
                 )}
               </IconButton>
               <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
+                anchorEl={profileMenuAnchorEl}
+                open={Boolean(profileMenuAnchorEl)}
+                onClose={handleCloseProfileMenu}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -120,7 +126,7 @@ function Header({ openModal, openPostModal }) {
                   horizontal: "right",
                 }}
               >
-                <MenuItem onClick={handleClose} component={Link} to="/profile">
+                <MenuItem onClick={handleCloseProfileMenu} component={Link} to="/profile">
                   Profile
                 </MenuItem>
                 <MenuItem onClick={logoutHandler}>Logout</MenuItem>
@@ -129,25 +135,39 @@ function Header({ openModal, openPostModal }) {
           ) : (
             <Button
               onClick={openModal}
-              className="py-2 px-4 bg-blue-500 rounded-md hover:bg-blue-700"
+              className="py-2 px-4 bg-blue-200 text-gray-700 rounded-md hover:bg-blue-300"
             >
-              {" "}
               <AccountCircle className="mr-1" />
               Login
             </Button>
           )}
           {userInfo && (
             <div className="ml-4">
-              <NavDropdown title="글쓰기" id="navbarScrollingDropdown" drop="left" className="bg-blue-500 text-white rounded-md">
-                <NavDropdown.Item >
-                  <Button className="text-white" onClick={openPostModal}>
-                  <i className="fa-regular fa-image mr-2"></i>PET 사진/영상올리기
-                  </Button>
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/qna/create/">
-                  <i className="fa-regular fa-question-circle mr-2"></i>Q&A 글쓰기
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Button
+                aria-controls="post-menu"
+                aria-haspopup="true"
+                onClick={handlePostMenu}
+                className="bg-blue-200 text-gray-700 rounded-md hover:bg-blue-300"
+              >
+                글쓰기
+              </Button>
+              <Menu
+                id="post-menu"
+                anchorEl={postMenuAnchorEl}
+                keepMounted
+                open={Boolean(postMenuAnchorEl)}
+                onClose={handleClosePostMenu}
+                className="mt-2"
+              >
+                <MenuItem onClick={openPostModal} className="flex items-center space-x-2">
+                  <i className="fa-regular fa-image"></i>
+                  <Typography>PET 사진/영상올리기</Typography>
+                </MenuItem>
+                <MenuItem component={Link} to="/qna/create/" className="flex items-center space-x-2">
+                  <i className="fa-regular fa-question-circle"></i>
+                  <Typography>Q&A 글쓰기</Typography>
+                </MenuItem>
+              </Menu>
             </div>
           )}
         </Box>
