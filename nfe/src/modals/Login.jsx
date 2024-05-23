@@ -20,9 +20,6 @@ const Login = ({ isOpen, onRequestClose }) => {
         else{
             window.alert("Login failed");
         }
-
-    // Handle login logic here
-    
   };
   const handleOpenRegisterModal = () => {
     setIsRegisterModalOpen(true);

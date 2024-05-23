@@ -90,10 +90,10 @@ function Header() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                {userInfo.image_url ? (
+                {userInfo.image_url&& userInfo.name ? (
                   <Avatar src={userInfo.image_url} />
                 ) : (
-                  <Avatar>{userInfo.name[0]}</Avatar>
+                  <Avatar>{userInfo.name}</Avatar>
                 )}
               </IconButton>
               <Menu

@@ -1,8 +1,8 @@
 import './App.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-// import HomeScreen from './pages/home'
 import RootLayout from './layouts/Root'
 import Home from './pages/home'
+import BoardPage from './pages/Board'
 
 
 const routers = createBrowserRouter([
@@ -15,10 +15,10 @@ const routers = createBrowserRouter([
         path: '/',
         element: <Home/>
       },
-      // {
-      //   path:'/post',
-      //   element: <PostForm />
-      // }
+      {
+        path:'/board',
+        element: <BoardPage />
+      }
       
     ]
   }
