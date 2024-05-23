@@ -51,6 +51,7 @@ function SearchBox() {
           variant="outlined"
           fullWidth
           className="bg-white rounded-l-lg"
+          id='search-box'
           InputProps={{
             style: { backgroundColor: 'white', color: 'gray' },
           }}
