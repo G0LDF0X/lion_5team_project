@@ -11,8 +11,14 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     content: '',
     hashtags: '',
     location: '',
-    tagPeople: []
   });
+  const [tagName, setTagName] = useState('');
+  const selectTag = (tag) => {
+    setFormData({
+      ...formData,
+      tags: [...formData.tags, tag],
+    });
+  };
 
   const onDrop = (acceptedFiles) => {
     setFormData({
@@ -30,7 +36,6 @@ const PostModal = ({ isOpen, onRequestClose }) => {
   };
 
   const handleTagClick = (imageIndex, e) => {
-    const tagName = prompt("Enter the tag name:");
     if (tagName) {
       const newTag = {
         imageIndex,
@@ -41,37 +46,32 @@ const PostModal = ({ isOpen, onRequestClose }) => {
       setFormData({
         ...formData,
         tags: [...formData.tags, newTag],
-        tagPeople: [...formData.tagPeople, tagName]
       });
     }
   };
 
   const handleDeleteTag = (tagIndex) => {
-    const { tags, tagPeople } = formData;
-    const tagToDelete = tags[tagIndex].tag;
+    const { tags } = formData;
     setFormData({
       ...formData,
       tags: tags.filter((_, index) => index !== tagIndex),
-      tagPeople: tagPeople.filter(tag => tag !== tagToDelete)
     });
   };
 
   const handleDeleteImage = (imageIndex) => {
-    const { images, tags, tagPeople } = formData;
+    const { images, tags } = formData;
     const newTags = tags.filter(tag => tag.imageIndex !== imageIndex);
-    const newTagPeople = newTags.map(tag => tag.tag);
     setFormData({
       ...formData,
       images: images.filter((_, index) => index !== imageIndex),
       tags: newTags,
-      tagPeople: newTagPeople
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData();
-    formData.images.forEach((image, index) => {
+    formData.images.forEach((image) => {
       data.append('images', image);
     });
     data.append('tags', JSON.stringify(formData.tags));
@@ -79,7 +79,6 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     data.append('content', formData.content);
     data.append('hashtags', formData.hashtags);
     data.append('location', formData.location);
-    data.append('tagPeople', JSON.stringify(formData.tagPeople));
 
     fetch('YOUR_DRF_BACKEND_URL', {
       method: 'POST',
@@ -104,11 +103,11 @@ const PostModal = ({ isOpen, onRequestClose }) => {
         <div className="w-2/3 border-r">
           <div {...getRootProps()} className="p-4 border-2 border-dashed border-gray-300 rounded-md cursor-pointer mb-4 h-64 flex items-center justify-center">
             <input {...getInputProps()} />
-            {
-              isDragActive ?
-                <p className="text-center text-gray-500">Drop the files here ...</p> :
-                <p className="text-center text-gray-500">Drag & drop some files here, or click to select files</p>
-            }
+            {isDragActive ? (
+              <p className="text-center text-gray-500">Drop the files here ...</p>
+            ) : (
+              <p className="text-center text-gray-500">Drag & drop some files here, or click to select files</p>
+            )}
           </div>
           {formData.images.length > 0 && formData.images.map((image, index) => (
             <div key={index} className="relative mb-4">
@@ -121,7 +120,7 @@ const PostModal = ({ isOpen, onRequestClose }) => {
               {formData.tags.filter(tag => tag.imageIndex === index).map((tag, tagIndex) => (
                 <div
                   key={tagIndex}
-                  style={{ position: 'absolute', top: tag.x, left: tag.y, backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '2px 5px', cursor: 'pointer' }}
+                  style={{ position: 'absolute', top: tag.y, left: tag.x, backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '2px 5px', cursor: 'pointer' }}
                   onClick={() => handleDeleteTag(tagIndex)}
                 >
                   ✖ {tag.tag}
@@ -182,8 +181,8 @@ const PostModal = ({ isOpen, onRequestClose }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700">Tag People:</label>
-              <TagInput selectedTags={formData.tagPeople} setSelectedTags={(tags) => setFormData({ ...formData, tagPeople: tags })} />
+              <label className="block text-gray-700">Tag Products:</label>
+              <TagInput selectedTags={tagName} setSelectedTags={setTagName} />
             </div>
             <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700">Submit</button>
           </form>
