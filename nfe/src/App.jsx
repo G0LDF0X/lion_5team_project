@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 // import HomeScreen from './pages/home'
 import RootLayout from './layouts/Root'
 import Home from './pages/home'
+import PostForm from './components/PostForm'
 
 const routers = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const routers = createBrowserRouter([
         path: '/',
         element: <Home/>
       },
+      {
+        path:'/post',
+        element: <PostForm />
+      }
       
     ]
   }

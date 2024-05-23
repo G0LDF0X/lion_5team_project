@@ -36,7 +36,7 @@ const responsive = {
 function Media() {
   return (
     <Grid container wrap="nowrap">
-      {Array.from(new Array(4)).map((index) => (
+      {Array.from(new Array(4)).map((_, index) => (
         <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
           <Skeleton variant="circular">
             <Avatar />
@@ -79,10 +79,10 @@ function BoardCarousel({ loading, error, boards }) {
       ) : error ? (
         <Message variant="error">{error}</Message>
       ) : (
-        <Carousel responsive={responsive} infinite>
+        <Carousel  responsive={responsive} infinite>
           {boards.map((board) => (
             // <Box key={board.id} className="p-2 h-full">
-            <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
+            <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
               <BoardForm board={board} />
             </Card>
             // </Box>
