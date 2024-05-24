@@ -9,6 +9,7 @@ import MyBoard from "../components/profilescreen/MyBoard";
 import Follow from "../components/profilescreen/Follow";
 import UserQnA from "../components/profilescreen/UserQnA";
 import Bookmark from "../components/profilescreen/Bookmark";
+import { Tab, Tabs, Box } from "@mui/material";
 
 
 function CustomTabPanel({ children, value, index, ...other }) {
@@ -67,86 +68,42 @@ function UserProfileScreen() {
   }, [dispatch, navigate, userInfo]);
 
   return (
-    
-      <div className="w-full">
-        <div className="border-b border-gray-300">
-          <div className="flex justify-center">
-            <button
-              className={`py-2 px-4 ${
-                value === 0 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 0)}
-              {...a11yProps(0)}
+    <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              centered
             >
-              모두보기
-            </button>
-            <button
-              className={`py-2 px-4 ${
-                value === 1 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 1)}
-              {...a11yProps(1)}
-            >
-              사진
-            </button>
-            <button
-              className={`py-2 px-4 ${
-                value === 2 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 2)}
-              {...a11yProps(2)}
-            >
-              팔로잉
-            </button>
-            <button
-              className={`py-2 px-4 ${
-                value === 3 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 3)}
-              {...a11yProps(3)}
-            >
-              질문과 답변
-            </button>
-            <button
-              className={`py-2 px-4 ${
-                value === 4 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 4)}
-              {...a11yProps(4)}
-            >
-              북마크
-            </button>
-            <button
-              className={`py-2 px-4 ${
-                value === 5 ? "border-b-2 border-blue-500 text-blue-500" : ""
-              }`}
-              onClick={() => handleChange(null, 5)}
-              {...a11yProps(5)}
-            >
-              좋아요
-            </button>
-          </div>
-        </div>
-        <CustomTabPanel value={value} index={0}>
-          <UserProfileMain userInfo={userInfo} user={user} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <MyBoard userInfo={userInfo} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          <Follow userInfo={userInfo} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-          <UserQnA userInfo={userInfo} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-          <Bookmark bookMarkItems={bookMarkItems} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
-          Item Seven
-        </CustomTabPanel>
-      </div>
-    
+              <Tab label="모두보기" {...a11yProps(0)} />
+              <Tab label="사진" {...a11yProps(1)} />
+              <Tab label="팔로잉" {...a11yProps(2)} />
+              <Tab label="질문과 답변" {...a11yProps(3)} />
+              <Tab label="북마크" {...a11yProps(4)} />
+              <Tab label="좋아요" {...a11yProps(5)} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={value} index={0}>
+            <UserProfileMain userInfo={userInfo} user={user} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            <MyBoard userInfo={userInfo} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={2}>
+            <Follow userInfo={userInfo} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={3}>
+            <UserQnA userInfo={userInfo} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={4}>
+            <Bookmark bookMarkItems={bookMarkItems} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={5}>
+            Item Seven
+          </CustomTabPanel>
+        </Box>
+         
   );
 }
 
