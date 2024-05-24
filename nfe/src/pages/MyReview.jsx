@@ -46,6 +46,10 @@ const myReviewList = useSelector((state) => state.myReviewList)
 const { reviews } = myReviewList
 
 useEffect(() => {
+  if (!localStorage.getItem("userInfo")) {
+    navigate("/login")
+  }
+  
 dispatch(listMyReviews())
 }
 , [navigate])

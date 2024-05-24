@@ -110,6 +110,7 @@ export const userUpdateSlice = createSlice({
         builder
         .addCase(updateUserProfile.pending, (state) => {
             state.loading = true;
+            state.success = false;
         })
         .addCase(updateUserProfile.fulfilled, (state, action) => {
             state.loading = false;
@@ -131,6 +132,7 @@ export const passwordUpdateSlice = createSlice({
         builder
         .addCase(updateUserPassword.pending, (state) => {
             state.loading = true;
+            state.success = false;
         })
         .addCase(updateUserPassword.fulfilled, (state, action) => {
             state.loading = false;

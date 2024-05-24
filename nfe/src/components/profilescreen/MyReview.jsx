@@ -22,7 +22,7 @@ const MyReview = ({ reviews }) => {
                   color={"#f8e825"}
                 />
               </div>
-              <div
+              <span
                 dangerouslySetInnerHTML={{ __html: review.content }}
                 className="text-black bg-white"
               />

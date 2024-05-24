@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetail } from "../store/actions/userActions";
+import { Tab, Tabs, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import UserSetting from "../components/UserSetting";
-import SellerApplication from "../components/SellerApplication";
-import MyPassword from "../components/MyPassword";
-import Settings from "../components/Settings";
-
+import UserSetting from "../components/profilescreen/UserSetting";
+import SellerApplication from "../components/profilescreen/SellerApplication";
+import MyPassword from "../components/profilescreen/MyPassword";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -20,9 +19,9 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <div className="p-3">
-          {children}
-        </div>
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
       )}
     </div>
   );
@@ -40,7 +39,6 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
 function UserSettingScreen() {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
@@ -51,67 +49,32 @@ function UserSettingScreen() {
   const { user } = userDetails;
 
   useEffect(() => {
-    if (userInfo) {
-      dispatch(getUserDetails(userInfo.id));
-    } else {
+    if (!localStorage.getItem("userInfo")) {
       navigate("/login");
     }
-  }, [dispatch, userInfo, navigate]);
+    dispatch(getUserDetail(userInfo.id));
+  }, [navigate]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   return (
-    <Settings num={3} userInfo={userInfo}>
-      <CustomTabPanel value={3} index={3}>
-        <div className="w-full">
-          <div className="border-b border-gray-300">
-            <div className="flex justify-center space-x-4">
-              <button
-                className={`py-2 px-4 ${value === 0 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 0)}
-                {...a11yProps(0)}
-              >
-                회원정보 수정
-              </button>
-              <button
-                className={`py-2 px-4 ${value === 1 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 1)}
-                {...a11yProps(1)}
-              >
-                알림 설정
-              </button>
-              <button
-                className={`py-2 px-4 ${value === 2 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 2)}
-                {...a11yProps(2)}
-              >
-                사용자 숨기기 신청
-              </button>
-              <button
-                className={`py-2 px-4 ${value === 3 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 3)}
-                {...a11yProps(3)}
-              >
-                판매자 신청
-              </button>
-              <button
-                className={`py-2 px-4 ${value === 4 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 4)}
-                {...a11yProps(4)}
-              >
-                비밀번호 변경
-              </button>
-              <button
-                className={`py-2 px-4 ${value === 5 ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-700"}`}
-                onClick={() => handleChange(null, 5)}
-                {...a11yProps(5)}
-              >
-                추천코드
-              </button>
-            </div>
-          </div>
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+              centered
+            >
+              <Tab label="회원정보 수정" {...a11yProps(0)} />
+              <Tab label="알림 설정" {...a11yProps(1)} />
+              <Tab label="사용자 숨기기 신청" {...a11yProps(2)} />
+              <Tab label="판매자 신청" {...a11yProps(3)} />
+              <Tab label="비밀번호 변경" {...a11yProps(4)} />
+              <Tab label="추천코드" {...a11yProps(5)} />
+            </Tabs>
+          </Box>
           <CustomTabPanel value={value} index={0}>
             <UserSetting userInfo={userInfo} user={user} />
           </CustomTabPanel>
@@ -130,9 +93,7 @@ function UserSettingScreen() {
           <CustomTabPanel value={value} index={5}>
             Item Six
           </CustomTabPanel>
-        </div>
-      </CustomTabPanel>
-    </Settings>
+        </Box>
   );
 }
 

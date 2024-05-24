@@ -5,6 +5,7 @@ import Home from './pages/home'
 import BoardPage from './pages/Board'
 import UserProfileScreen from './pages/UserProfile'
 import MyReviewScreen from './pages/MyReview'
+import UserSettingScreen from './pages/UserSetting'
 
 
 const routers = createBrowserRouter([
@@ -28,6 +29,10 @@ const routers = createBrowserRouter([
       {
         path:'/users/myreview',
         element: <MyReviewScreen/>
+      },
+      {
+        path:'/users/setting',
+        element: <UserSettingScreen/>
       }
       
     ]
