@@ -36,12 +36,6 @@ function HomeScreen() {
 
   return (
     <Container className="mx-auto p-4">
-       <div>
-      <button onClick={openModal} className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700">
-        Create Post
-      </button>
-      <PostModal isOpen={modalIsOpen} onRequestClose={closeModal} />
-    </div>  
       <Typography variant="h4" className="text-center my-4 font-bold text-pink-500">
         Welcome to our Pet Shop
       </Typography>

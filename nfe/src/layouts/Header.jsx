@@ -23,7 +23,7 @@ import {
 import { logout } from "../store/actions/userActions";
 import SearchBox from "./SearchBox";
 
-function Header({ openModal, openPostModal }) {
+function Header({ openModal, openPostModal, openSideBar }) {
   const navigate = useNavigate();
   const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
@@ -106,31 +106,14 @@ function Header({ openModal, openPostModal }) {
           )}
           {userInfo ? (
             <div>
-              <IconButton onClick={handleProfileMenu} color="inherit">
+              <IconButton onClick={openSideBar} color="inherit">
                 {userInfo.image_url ? (
                   <Avatar src={userInfo.image_url} />
                 ) : (
                   <Avatar>{userInfo.username[0]}</Avatar>
                 )}
-              </IconButton>
-              <Menu
-                anchorEl={profileMenuAnchorEl}
-                open={Boolean(profileMenuAnchorEl)}
-                onClose={handleCloseProfileMenu}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <MenuItem onClick={handleCloseProfileMenu} component={Link} to="/profile">
-                  Profile
-                </MenuItem>
-                <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-              </Menu>
+              </IconButton >
+              
             </div>
           ) : (
             <Button
