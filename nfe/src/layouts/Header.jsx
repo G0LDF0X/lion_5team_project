@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   AppBar,
   Toolbar,
@@ -16,39 +16,19 @@ import {
   ShoppingCart,
   Home,
   Pets,
-  Forum,
   QuestionAnswer,
   AccountCircle,
 } from "@mui/icons-material";
 import PhotoIcon from '@mui/icons-material/Photo';
-import { logout } from "../store/actions/userActions";
 import SearchBox from "./SearchBox";
 
 function Header({ openModal, openPostModal, openSideBar }) {
-  const navigate = useNavigate();
-  const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState(null);
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
-  const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  const logoutHandler = () => {
-    dispatch(logout());
-    navigate("/");
-  };
-
-  const handleProfileMenu = (event) => {
-    setProfileMenuAnchorEl(event.currentTarget);
-  };
-
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
   };
-
-  const handleCloseProfileMenu = () => {
-    setProfileMenuAnchorEl(null);
-  };
-
   const handleClosePostMenu = () => {
     setPostMenuAnchorEl(null);
   };
