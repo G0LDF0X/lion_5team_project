@@ -3,6 +3,7 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import RootLayout from './layouts/Root'
 import Home from './pages/home'
 import BoardPage from './pages/Board'
+import UserProfileScreen from './pages/UserProfile'
 
 
 const routers = createBrowserRouter([
@@ -18,6 +19,10 @@ const routers = createBrowserRouter([
       {
         path:'/board',
         element: <BoardPage />
+      },
+      {
+        path:'/users/profile',
+        element: <UserProfileScreen />
       }
       
     ]

@@ -85,7 +85,7 @@ export const getUserDetail = createAsyncThunk(
       const res = await mainAxiosInstance.get(`/users/profile/`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       });
 
@@ -113,7 +113,7 @@ export const updateUserProfile = createAsyncThunk(
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${userInfo.access}`,
           },
         }
       );

@@ -55,6 +55,11 @@ import {
     boardReplySlice
     } from "./store/slices/boardSlices";
 
+import {
+    bookMarkListSlice,
+    bookMarkAddSlice,
+    bookMarkRemoveSlice,
+    } from "./store/slices/bookMarkSlices";
 
 
 const sotre = configureStore({
@@ -106,6 +111,11 @@ const sotre = configureStore({
     boardUpdate: boardUpdateSlice.reducer,
     boardDelete: boardDeleteSlice.reducer,
     boardReply: boardReplySlice.reducer,
+
+    bookMarkList: bookMarkListSlice.reducer,
+    bookMarkAdd: bookMarkAddSlice.reducer,
+    bookMarkRemove: bookMarkRemoveSlice.reducer,
+
     
   },
 });

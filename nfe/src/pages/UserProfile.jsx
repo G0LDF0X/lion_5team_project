@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getUserDetails } from "../actions/userActions";
-import { listBookMark } from "../actions/bookmarkActions";
+import { getUserDetail } from "../store/actions/userActions";
+import { listBookMark } from "../store/actions/bookMarkActions";
 import PropTypes from "prop-types";
-import UserProfileMain from "../components/UserProfileMain";
-import MyBoard from "../components/MyBoard";
-import Follow from "../components/Follow";
-import UserQnA from "../components/UserQnA";
-import Bookmark from "../components/Bookmark";
-import Settings from "../components/Settings";
+import UserProfileMain from "../components/profilescreen/UserProfileMain";
+import MyBoard from "../components/profilescreen/MyBoard";
+// import Follow from "../components/Follow";
+// import UserQnA from "../components/UserQnA";
+// import Bookmark from "../components/Bookmark";
+
 
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
@@ -62,12 +62,12 @@ function UserProfileScreen() {
       navigate("/login");
     } else {
       dispatch(listBookMark());
-      dispatch(getUserDetails(userInfo.id));
+      dispatch(getUserDetail(userInfo.id));
     }
   }, [dispatch, navigate, userInfo]);
 
   return (
-    <Settings num={0} userInfo={userInfo}>
+    
       <div className="w-full">
         <div className="border-b border-gray-300">
           <div className="flex justify-center">
@@ -134,19 +134,19 @@ function UserProfileScreen() {
           <MyBoard userInfo={userInfo} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          <Follow userInfo={userInfo} />
+          {/* <Follow userInfo={userInfo} /> */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-          <UserQnA userInfo={userInfo} />
+          {/* <UserQnA userInfo={userInfo} /> */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-          <Bookmark bookMarkItems={bookMarkItems} />
+          {/* <Bookmark bookMarkItems={bookMarkItems} /> */}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
           Item Seven
         </CustomTabPanel>
       </div>
-    </Settings>
+    
   );
 }
 
