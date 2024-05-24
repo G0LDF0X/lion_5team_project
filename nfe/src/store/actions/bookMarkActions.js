@@ -3,9 +3,16 @@ import { mainAxiosInstance } from "../../api/axiosInstances";
   
 export const listBookMark = createAsyncThunk(
     "bookMarkList/listBookMark",
-    async (_, { rejectWithValue }) => {
+    async (_, { getState, rejectWithValue }) => {
         try {
-            const res = await mainAxiosInstance.get(`/users/bookmark`);
+            const { userInfo } = getState().userLogin;
+            const res = await mainAxiosInstance.get(`/users/bookmark`,
+            {
+                headers: {
+                    Authorization: `Bearer ${userInfo.access}`,
+                },
+            }
+            );
     
             return res.data;
         } catch (error) {
@@ -20,11 +27,20 @@ export const listBookMark = createAsyncThunk(
 
 export const addToBookMark = createAsyncThunk(
     "bookMarkAdd/addToBookMark",
-    async (id, { rejectWithValue }) => {
+    async (id, { getState, rejectWithValue }) => {
         try {
-            const res = await mainAxiosInstance.put(`/users/bookmark/add/${id}/`);
-            const data = await res.json();
-            return data;
+            const { userInfo } = getState().userLogin;
+            const res = await mainAxiosInstance.put(`/users/bookmark/add/${id}/`,
+            
+            {
+                headers: {
+                    Authorization: `Bearer ${userInfo.access}`,
+                },
+            }
+
+            );
+            
+            return res.data;
         } catch (error) {
             return rejectWithValue(
             error.response && error.response.data.detail
@@ -36,11 +52,18 @@ export const addToBookMark = createAsyncThunk(
 );
 export const removeFromBookMark = createAsyncThunk(
     "bookMarkRemove/removeFromBookMark",
-    async (id, { rejectWithValue }) => {
+    async (id, { getState, rejectWithValue }) => {
         try {
-            const res = await mainAxiosInstance.delete(`/users/bookmark/delete/${id}/`);
-            const data = await res.json();
-            return data;
+            const { userInfo } = getState().userLogin;
+            const res = await mainAxiosInstance.delete(`/users/bookmark/delete/${id}/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${userInfo.access}`,
+                },
+            }
+            );
+            
+            return res.data;
         } catch (error) {
             return rejectWithValue(
             error.response && error.response.data.detail

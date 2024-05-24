@@ -6,9 +6,9 @@ import { listBookMark } from "../store/actions/bookMarkActions";
 import PropTypes from "prop-types";
 import UserProfileMain from "../components/profilescreen/UserProfileMain";
 import MyBoard from "../components/profilescreen/MyBoard";
-// import Follow from "../components/Follow";
-// import UserQnA from "../components/UserQnA";
-// import Bookmark from "../components/Bookmark";
+import Follow from "../components/profilescreen/Follow";
+import UserQnA from "../components/profilescreen/UserQnA";
+import Bookmark from "../components/profilescreen/Bookmark";
 
 
 function CustomTabPanel({ children, value, index, ...other }) {
@@ -134,13 +134,13 @@ function UserProfileScreen() {
           <MyBoard userInfo={userInfo} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          {/* <Follow userInfo={userInfo} /> */}
+          <Follow userInfo={userInfo} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-          {/* <UserQnA userInfo={userInfo} /> */}
+          <UserQnA userInfo={userInfo} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-          {/* <Bookmark bookMarkItems={bookMarkItems} /> */}
+          <Bookmark bookMarkItems={bookMarkItems} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={5}>
           Item Seven
