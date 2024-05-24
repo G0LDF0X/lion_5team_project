@@ -13,6 +13,7 @@ import {
     reviewCreateSlice,
     reviewUpdateSlice,
     reviewDeleteSlice,
+    myReviewListSlice
     } from "./store/slices/reviewSlices";
 import {
     qnaListSlice,
@@ -76,6 +77,7 @@ const sotre = configureStore({
     reviewCreate: reviewCreateSlice.reducer,
     reviewUpdate: reviewUpdateSlice.reducer,
     reviewDelete: reviewDeleteSlice.reducer,
+    myReviewList: myReviewListSlice.reducer,
 
     qnaList: qnaListSlice.reducer,
     qnaDetails: qnaDetailsSlice.reducer,

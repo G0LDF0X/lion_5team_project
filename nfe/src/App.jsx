@@ -4,6 +4,7 @@ import RootLayout from './layouts/Root'
 import Home from './pages/home'
 import BoardPage from './pages/Board'
 import UserProfileScreen from './pages/UserProfile'
+import MyReviewScreen from './pages/MyReview'
 
 
 const routers = createBrowserRouter([
@@ -23,6 +24,10 @@ const routers = createBrowserRouter([
       {
         path:'/users/profile',
         element: <UserProfileScreen />
+      },
+      {
+        path:'/users/myreview',
+        element: <MyReviewScreen/>
       }
       
     ]
