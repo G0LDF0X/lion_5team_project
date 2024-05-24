@@ -20,6 +20,7 @@ import {
   QuestionAnswer,
   AccountCircle,
 } from "@mui/icons-material";
+import PhotoIcon from '@mui/icons-material/Photo';
 import { logout } from "../store/actions/userActions";
 import SearchBox from "./SearchBox";
 
@@ -81,7 +82,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             Products
           </Button>
           <Button
-            startIcon={<Forum />}
+            startIcon={<PhotoIcon />}
             component={Link}
             to="/board"
             className="text-gray-700 hover:text-gray-900"
