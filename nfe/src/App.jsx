@@ -9,6 +9,7 @@ import UserSettingScreen from './pages/UserSetting'
 import SellerSettingScreen from './pages/SellerSetting'
 import AdminManageScreen from './pages/Admin'
 import ProductDetail from './pages/Product'
+import ProductsScreen from './pages/Products'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -46,6 +47,10 @@ const routers = createBrowserRouter([
       {
         path:'/items/detail/:id',
         element: <ProductDetail/>
+      },
+      {
+        path:'/items',
+        element: <ProductsScreen/>
       }
       
     ]
