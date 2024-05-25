@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createReply, getBoardDetails } from '../store/actions/boardActions';
+import { createReply } from '../store/actions/boardActions';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close'; 
-
 function BoardDetailModal({ open, handleClose, boardId }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [reply, setReply] = useState('');
   const [replyCreated, setReplyCreated] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   
   const boardDetails = useSelector((state) => state.boardDetails);
   const { loading, error, board, replies } = boardDetails;
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  
   
   useEffect(() => {
-    dispatch(getBoardDetails(boardId));
+   
     if (replyCreated) {
       setReplyCreated(false);
     }
-  }, [dispatch, boardId, replyCreated]);
+  }, [  replyCreated]);
 
   const submitHandler = (e) => {
     e.preventDefault();

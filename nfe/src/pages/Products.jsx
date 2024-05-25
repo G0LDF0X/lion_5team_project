@@ -18,21 +18,17 @@ function ProductsScreen() {
   const params = new URLSearchParams(location.search);
   const query = params.get('query') || '';
   const page = params.get('page') || 1;
-  const category = params.get('category');
   const tag = params.get('tag');
 
-  const getCategories = async () => {
+const getCategories = async () => {
     const response = await mainAxiosInstance('/items/category');
-    
-    return response.data;
-  }
+    setCategories(response.data);
+}
 
-  useEffect(() => {
-    getCategories().then((data) => {
-      setCategories(data);
-    });
+getCategories()
+useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory}));
-  }, [dispatch, query, category, tag, page, selectedCategory]);
+}, [dispatch, query, tag, page, selectedCategory]);
 
   const handleCategoryChange = (e) => {
     if (e.target.checked) {

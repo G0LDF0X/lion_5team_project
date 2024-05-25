@@ -149,18 +149,21 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    user = User.objects.get(username=request.user)
+    user = request.user
     item = Item.objects.get(id=item_id)
-    review = Review.objects.create( 
-        user_id=user,
-        item_id=item,
-        rate=5,
-        content="",
-        image_url="",
-    )
-    serializer = ReviewSerializer(review, many=False)
-    return Response(serializer.data)
+    data = request.data
 
+    review = Review.objects.create(
+        item_id=item,
+        user_id=user,
+        title=data['title'],
+        content=data['content'],
+        rate=data['rate'],
+        image_url=data.get('image_url')
+    )
+
+    serializer = ReviewSerializer(review, many=False)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 @api_view(['PUT'])
 def update_review(request, pk):
     # try:

@@ -13,10 +13,17 @@ import {
 } from "../actions/userActions";
 
 
+
 export const userLoginSlice = createSlice({
     name: "userLogin",
-    initialState: {},
+    initialState: {
+        userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+    },
     reducers: {
+        logout: (state) => {
+            state.userInfo = null;
+            localStorage.removeItem('userInfo');
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -29,6 +36,7 @@ export const userLoginSlice = createSlice({
             state.loading = false;
             state.userInfo = action.payload;
             state.error = null;
+            localStorage.setItem('userInfo', JSON.stringify(action.payload));
         })
         .addCase(login.rejected, (state, action) => {
             state.loading = false;

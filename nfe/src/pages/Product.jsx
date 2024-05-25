@@ -20,6 +20,7 @@ import {
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
+import { mainAxiosInstance } from "../api/axiosInstances";
 
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -69,10 +70,6 @@ function ProductDetail() {
     setState({ open: true });
   };
 
-  const createReviewHandler = () => {
-    dispatch(createReview(id));
-  };
-
   const BookmarkHandler = () => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
@@ -103,7 +100,7 @@ function ProductDetail() {
 
   const createQnAHandler = () => {
     navigate(`/items/qna/create/${id}`);
-    dispatch(createQNA(id));
+    // dispatch(createQNA(id));
   };
 
   const handleButtonClick = () => {
@@ -119,28 +116,31 @@ function ProductDetail() {
     formData.append("answer", answer);
 
     try {
-      const res = await fetch("/items/qna/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userInfo.access}`,
-        },
-        body: formData,
-      });
-
-      if (res.ok) {
-        navigate(`/items/detail/${id}`);
-      }
-      if (userInfo && userInfo.is_seller) {
-        setAnswer(answer);
-        setShowTextField(false);
-        navigate(`/items/detail/${id}`);
-      } else {
-        alert("판매자만 답변을 작성할 수 있습니다.");
-      }
+        const res = await mainAxiosInstance.post("/items/qna/",formData, {
+            
+            headers: {
+                Authorization: `Bearer ${userInfo.access}`,
+            }
+        });
+        if (userInfo && userInfo.is_seller) {
+            setAnswer(answer);
+            setShowTextField(false);
+            navigate(`/items/detail/${id}`);
+        } else {
+            alert("판매자만 답변을 작성할 수 있습니다.");
+        }
     } catch (error) {
-      console.error("답변 등록 중 오류가 발생하였습니다:", error);
+        console.error("답변 등록 중 오류가 발생하였습니다:", error);
     }
   };
+  const createReviewHandler = () => {
+    if (userInfo) {
+      navigate(`/items/review/create/${id}`);
+    }
+    else {
+        window.alert("로그인 후 이용해주세요.");
+    }
+    };
 
   const handleClose = () => {
     setState({ open: false });
@@ -184,7 +184,7 @@ function ProductDetail() {
                 <h3 className="text-2xl font-bold mb-4">{product.name}</h3>
                  <Rating
                   value={avgRate}
-                  text={`${avgRate.toFixed(2)}`}
+                  text={avgRate}
                   color={"#f8e825"}
                 />
                 <p className="text-xl font-semibold my-4">{product.price}₩</p>
@@ -253,7 +253,7 @@ function ProductDetail() {
             <h2 className="text-3xl font-bold mb-4">Reviews</h2>
             <div className="flex justify-end mb-4">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className="bg-blue-500 text-white py-2 px-4 rounded"
                 onClick={createReviewHandler}
               >
                 Create a Review

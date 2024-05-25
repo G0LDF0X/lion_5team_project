@@ -50,26 +50,33 @@ export const reviewDetailsSlice = createSlice({
   },
 });
 
+const initialState = { loading: false, success: false, review: {}, error: null };
+
 export const reviewCreateSlice = createSlice({
   name: "reviewCreate",
-  initialState: { loading: false, success: false, review: {} },
-  reducers: {},
+  initialState,
+  reducers: {
+    reset: () => initialState, // Correctly define the reset action here
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createReview.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createReview.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.review = action.payload;
-      })
-      .addCase(createReview.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+    .addCase(createReview.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(createReview.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.review = action.payload;
+    })
+    .addCase(createReview.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
+
+export const { reset: reviewCreateReset } = reviewCreateSlice.actions; // Correctly export the reset action
+export default reviewCreateSlice.reducer;
 
 export const reviewUpdateSlice = createSlice({
   name: "reviewUpdate",
@@ -111,6 +118,7 @@ export const reviewDeleteSlice = createSlice({
       });
   },
 });
+
 export const myReviewListSlice = createSlice({
   name: "myReviewList",
   initialState: { loading: false, reviews: [] },

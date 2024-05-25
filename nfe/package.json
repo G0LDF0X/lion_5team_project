@@ -20,6 +20,8 @@
     "@tinymce/tinymce-react": "^5.0.1",
     "axios": "^1.7.2",
     "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "html-to-draftjs": "^1.5.0",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-bootstrap": "^2.10.2",

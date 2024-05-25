@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listBoards } from '../store/actions/boardActions';
+import { listBoards, getBoardDetails } from '../store/actions/boardActions';
 import { Grid, Box, Skeleton } from '@mui/material';
 import  BoardDetailModal  from '../modals/BoardDetail';
+import { mainAxiosInstance } from '../api/axiosInstances';
+
 
 
 function StandardImageList() {
@@ -12,13 +14,17 @@ function StandardImageList() {
   const dispatch = useDispatch();
   const boardList = useSelector((state) => state.boardList);
   const { boards, loading } = boardList;
-
+  const useShow = (id) => {
+    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
+  };
   useEffect(() => {
     dispatch(listBoards());
   }, [dispatch]);
   const handleOpenModal = (id) => {
     setSelectedBoardId(id);
+    dispatch(getBoardDetails(id));
     setModalOpen(true);
+    useShow(id);
   };
 
   const handleCloseModal = () => {

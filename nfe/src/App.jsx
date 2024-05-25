@@ -10,6 +10,7 @@ import SellerSettingScreen from './pages/SellerSetting'
 import AdminManageScreen from './pages/Admin'
 import ProductDetail from './pages/Product'
 import ProductsScreen from './pages/Products'
+import CreateReviewScreen from './pages/CreateReview'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -51,7 +52,12 @@ const routers = createBrowserRouter([
       {
         path:'/items',
         element: <ProductsScreen/>
+      },
+      {
+        path:'/items/review/create/:id',
+        element: <CreateReviewScreen/>
       }
+
       
     ]
   }
