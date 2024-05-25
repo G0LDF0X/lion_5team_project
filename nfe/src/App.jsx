@@ -7,7 +7,7 @@ import UserProfileScreen from './pages/UserProfile'
 import MyReviewScreen from './pages/MyReview'
 import UserSettingScreen from './pages/UserSetting'
 import SellerSettingScreen from './pages/SellerSetting'
-
+import AdminManageScreen from './pages/Admin'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -37,6 +37,10 @@ const routers = createBrowserRouter([
       {
         path:'/seller/manage',
         element: <SellerSettingScreen/>
+      },
+      {
+        path:'/admin/manage',
+        element: <AdminManageScreen/>
       }
       
     ]
