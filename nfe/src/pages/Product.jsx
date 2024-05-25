@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createReview, deleteReview } from "../store/actions/reviewActions";
+import { deleteReview } from "../store/actions/reviewActions";
 import { listProductDetails } from "../store/actions/productActions";
 import {
   addToBookMark,
@@ -20,6 +20,9 @@ import {
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { mainAxiosInstance } from "../api/axiosInstances";
 
 function ProductDetail() {
@@ -50,6 +53,7 @@ function ProductDetail() {
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
+    dispatch(listBookMark());
   }, [navigate, dispatch]);
 
   useEffect(() => {
@@ -57,27 +61,24 @@ function ProductDetail() {
       navigate(`/items/review/${createdReview.id}`);
     }
   }, [successProductReview, successReviewDelete, dispatch]);
-
-  //   useEffect(() => {
-  //     dispatch(listBookMark());
-  //     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
-  //       setMarked(true);
-  //     }
-  //   }, [navigate, successBookmarkAdd, successBookmarkRemove]);
-
-  const addToCartHandler = () => {
-    dispatch(addToCart(id, qty));
-    setState({ open: true });
-  };
+  useEffect(() => {
+    if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
+      setMarked(true);
+    }
+  }, [bookMarkItems, product.id]);
 
   const BookmarkHandler = () => {
-    if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
+    if (marked) {
       dispatch(removeFromBookMark(id));
       setMarked(false);
     } else {
       dispatch(addToBookMark(id));
       setMarked(true);
     }
+  };
+  const addToCartHandler = () => {
+    dispatch(addToCart({ id, qty }));
+    setState({ open: true });
   };
 
   const editReviewHandler = (review) => {
@@ -116,39 +117,37 @@ function ProductDetail() {
     formData.append("answer", answer);
 
     try {
-        const res = await mainAxiosInstance.post("/items/qna/",formData, {
-            
-            headers: {
-                Authorization: `Bearer ${userInfo.access}`,
-            }
-        });
-        if (userInfo && userInfo.is_seller) {
-            setAnswer(answer);
-            setShowTextField(false);
-            navigate(`/items/detail/${id}`);
-        } else {
-            alert("판매자만 답변을 작성할 수 있습니다.");
-        }
+      mainAxiosInstance.post("/items/qna/", formData, {
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+      });
+      if (userInfo && userInfo.is_seller) {
+        setAnswer(answer);
+        setShowTextField(false);
+        navigate(`/items/detail/${id}`);
+      } else {
+        alert("판매자만 답변을 작성할 수 있습니다.");
+      }
     } catch (error) {
-        console.error("답변 등록 중 오류가 발생하였습니다:", error);
+      console.error("답변 등록 중 오류가 발생하였습니다:", error);
     }
   };
   const createReviewHandler = () => {
     if (userInfo) {
       navigate(`/items/review/create/${id}`);
+    } else {
+      window.alert("로그인 후 이용해주세요.");
     }
-    else {
-        window.alert("로그인 후 이용해주세요.");
-    }
-    };
+  };
 
   const handleClose = () => {
     setState({ open: false });
   };
-  const avgRate = 
+  const avgRate =
     product.reviews &&
-    product.reviews.reduce((acc, item) => item.rate + acc, 0) /
-    product.reviews.length;
+    (product.reviews.reduce((acc, item) => item.rate + acc, 0) /
+      product.reviews.length).toFixed(2);
 
   return (
     <div className="container mx-auto py-8">
@@ -173,7 +172,6 @@ function ProductDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="col-span-1">
               <img
-              
                 src={`${VITE_API_BASE_URL}${product.image_url}`}
                 alt={product.name}
                 className="w-full rounded-lg"
@@ -182,11 +180,7 @@ function ProductDetail() {
             <div className="col-span-1">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <h3 className="text-2xl font-bold mb-4">{product.name}</h3>
-                 <Rating
-                  value={avgRate}
-                  text={avgRate}
-                  color={"#f8e825"}
-                />
+                <Rating value={avgRate} text={avgRate} color={"#f8e825"} />
                 <p className="text-xl font-semibold my-4">{product.price}₩</p>
                 <p>{product.description}</p>
               </div>
@@ -194,17 +188,17 @@ function ProductDetail() {
             <div className="col-span-1">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="font-semibold">Price:</span>
+                  <span className="font-semibold">가격:</span>
                   <span className="text-lg font-bold">{product.price}₩</span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="font-semibold">Status:</span>
+                  <span className="font-semibold">재고:</span>
                   <span className="text-lg font-bold">
-                    {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                    {product.countInStock > 0 ? "In Stock" : "매진"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="font-semibold">Qty</span>
+                  <span className="font-semibold">수량</span>
                   <select
                     className="border rounded-lg p-2"
                     value={qty}
@@ -219,30 +213,30 @@ function ProductDetail() {
                 </div>
                 {!userInfo ? (
                   <Link to="/login">
-                    <button className="w-full bg-blue-500 text-white py-2 rounded-lg">
+                    <button className="w-full bg-gradient-to-r from-pink-300 to-pink-500 text-white py-2 rounded-lg shadow-md hover:from-pink-400 hover:to-pink-600 transition duration-300">
                       Login to Add to Cart
                     </button>
                   </Link>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="flex space-x-4">
                     <button
                       onClick={addToCartHandler}
-                      className="w-full bg-blue-500 text-white py-2 rounded-lg"
+                      className="flex-1 bg-gradient-to-r from-yellow-300 to-yellow-500 text-white py-2 rounded-lg shadow-md hover:from-yellow-400 hover:to-yellow-600 transition duration-300 flex items-center justify-center"
                       disabled={product.countInStock === 0}
                     >
-                      <i className="fa-solid fa-cart-shopping"></i> Add to Cart
+                      <ShoppingCartIcon className="mr-2" /> 장바구니에 담기
                     </button>
                     <button
-                      className="w-full bg-gray-500 text-white py-2 rounded-lg"
+                      className={`w-16 h-16 bg-gradient-to-r from-purple-300 to-purple-500 text-white py-2 rounded-full shadow-md hover:from-purple-400 hover:to-purple-600 transition duration-300 flex items-center justify-center ${
+                        marked ? "bg-purple-400" : ""
+                      }`}
                       onClick={BookmarkHandler}
                     >
-                      <i
-                        className={
-                          marked
-                            ? "fa-solid fa-bookmark"
-                            : "fa-regular fa-bookmark"
-                        }
-                      ></i>
+                      {marked ? (
+                        <BookmarkIcon className="w-6 h-6" />
+                      ) : (
+                        <BookmarkBorderIcon className="w-6 h-6" />
+                      )}
                     </button>
                   </div>
                 )}
@@ -397,5 +391,4 @@ function ProductDetail() {
     </div>
   );
 }
-
 export default ProductDetail;
