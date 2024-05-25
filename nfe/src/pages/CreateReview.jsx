@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Editor, EditorState, convertToRaw } from "draft-js";
 import "draft-js/dist/Draft.css";
-import { Button, Snackbar, Typography, Slider } from "@mui/material";
+import { Button, Snackbar, Typography, Rating } from "@mui/material";
 import { createReview } from "../store/actions/reviewActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -12,7 +12,7 @@ import { reviewCreateReset } from "../store/slices/reviewSlices";
 function CreateReviewScreen() {
   const [title, setTitle] = useState("");
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [rate, setRate] = useState(0);
+  const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [state, setState] = useState({ open: false });
@@ -25,7 +25,6 @@ function CreateReviewScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id);
 
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { loading, error, success } = reviewCreate;
@@ -106,15 +105,12 @@ function CreateReviewScreen() {
               <Typography id="rate-slider" gutterBottom>
                 Rating
               </Typography>
-              <Slider
-                value={rate}
-                onChange={(e, newValue) => setRate(newValue)}
-                aria-labelledby="rate-slider"
-                valueLabelDisplay="auto"
-                step={0.1}
-                marks
-                min={0}
-                max={5}
+              <Rating
+                name="simple-controlled"
+                value={Number(rate)} 
+                onChange={(e) => {
+                  setRate(Number(e.target.value)); 
+                }}
               />
             </div>
             <div className="mb-4">
