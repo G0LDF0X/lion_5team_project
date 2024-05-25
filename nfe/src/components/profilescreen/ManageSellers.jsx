@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function ManageSellers({ sellers, userDeleteHandler }) {
   return (
@@ -29,23 +33,23 @@ function ManageSellers({ sellers, userDeleteHandler }) {
                   <a href={`mailto:${user.email}`} className="text-blue-600 hover:text-blue-800">{user.email}</a>
                 </td>
                 <td className="py-3 px-6 text-center">
-                  {user.is_staff ? (
-                    <i className="fas fa-check text-green-500"></i>
+                  {user.isAdmin ? (
+                    <CheckCircleIcon className="text-green-500" />
                   ) : (
-                    <i className="fas fa-times text-red-500"></i>
+                    <CancelIcon className="text-red-500" />
                   )}
                 </td>
-                <td className="py-3 px-6 text-center">
-                  <Link to={`/admin/user/${user._id}/edit`} className="text-blue-600 hover:text-blue-800">
+                <td className="py-3 px-6 text-center flex justify-center">
+                  <Link to={`/admin/user/${user.id}/edit`} className="text-blue-600 hover:text-blue-800">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
-                      <i className="fas fa-edit"></i>
+                      <EditIcon />
                     </button>
                   </Link>
                   <button
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
                     onClick={() => userDeleteHandler(user.user_id)}
                   >
-                    <i className="fas fa-trash"></i>
+                    <DeleteIcon />
                   </button>
                 </td>
               </tr>

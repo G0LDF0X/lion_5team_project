@@ -1,6 +1,8 @@
 import React from 'react';
-import ItemListSkeleton from '../ItemListSkeleton';
 import { Link } from 'react-router-dom';
+import ItemListSkeleton from '../ItemListSkeleton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function ManageProducts({ products, updateHandler, deleteHandler, loading, error }) {
   return (
@@ -38,18 +40,18 @@ function ManageProducts({ products, updateHandler, deleteHandler, loading, error
                       ? '간식'
                       : ''}
                   </td>
-                  <td className="py-3 px-6 text-center">
+                  <td className="py-3 px-6 text-center flex justify-center">
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
                       onClick={() => updateHandler(product.id)}
                     >
-                      <i className="fas fa-edit"></i>
+                      <EditIcon />
                     </button>
                     <button
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                       onClick={() => deleteHandler(product.id)}
                     >
-                      <i className="fas fa-trash"></i>
+                      <DeleteIcon />
                     </button>
                   </td>
                 </tr>
