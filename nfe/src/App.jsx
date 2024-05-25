@@ -8,6 +8,7 @@ import MyReviewScreen from './pages/MyReview'
 import UserSettingScreen from './pages/UserSetting'
 import SellerSettingScreen from './pages/SellerSetting'
 import AdminManageScreen from './pages/Admin'
+import ProductDetail from './pages/Product'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -41,6 +42,10 @@ const routers = createBrowserRouter([
       {
         path:'/admin/manage',
         element: <AdminManageScreen/>
+      },
+      {
+        path:'/items/detail/:id',
+        element: <ProductDetail/>
       }
       
     ]

@@ -37,7 +37,7 @@ function StandardImageList() {
        </Grid>
       ) : (
         boards.map((board) => (
-          <div key={board.id} className="relative w-full h-64 cursor-pointer" onClick={() => handleOpenModal(board.id)}>
+          <div key={board.id} className="relative w-full h-full cursor-pointer" onClick={() => handleOpenModal(board.id)}>
             <img
               src={`${VITE_API_BASE_URL}${board.image_url}`}
               alt={board.title}

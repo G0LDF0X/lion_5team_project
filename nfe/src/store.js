@@ -61,6 +61,7 @@ import {
     bookMarkAddSlice,
     bookMarkRemoveSlice,
     } from "./store/slices/bookMarkSlices";
+import { cartSlice } from "./store/slices/cartSlices";
 
 
 const sotre = configureStore({
@@ -118,7 +119,7 @@ const sotre = configureStore({
     bookMarkAdd: bookMarkAddSlice.reducer,
     bookMarkRemove: bookMarkRemoveSlice.reducer,
 
-    
+    cartSlice: cartSlice.reducer,
   },
 });
 

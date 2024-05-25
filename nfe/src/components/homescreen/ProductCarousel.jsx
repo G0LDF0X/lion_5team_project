@@ -73,7 +73,7 @@ function ProductCarousel({ loading, error, products }) {
           {products.map((product) => (
             
               <Card  key={product.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-                <Product product={product} />
+                <Product product={product} id={product.id}/>
               </Card>
             
           ))}
