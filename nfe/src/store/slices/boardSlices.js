@@ -44,6 +44,7 @@ export const boardDetailsSlice = createSlice({
         state.loading = false;
         state.board = action.payload;
         state.replies = action.payload.replies;
+        state.error = null;
       })
       .addCase(getBoardDetails.rejected, (state, action) => {
         state.loading = false;

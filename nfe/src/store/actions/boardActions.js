@@ -21,8 +21,7 @@ export const getBoardDetails = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
-      const data = await res.json();
-      return data;
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -38,8 +37,8 @@ export const createBoard = createAsyncThunk(
   async (board, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.post(`/board/create/`, board);
-      const data = await res.json();
-      return data;
+    
+      return res.data;
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail

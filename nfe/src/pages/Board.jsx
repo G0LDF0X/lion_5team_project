@@ -1,22 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { listBoards } from '../store/actions/boardActions';
 import { Grid, Box, Skeleton } from '@mui/material';
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import  BoardDetailModal  from '../modals/BoardDetail';
 
-function MediaSkeleton() {
-  return (
-    <Grid container wrap="nowrap">
-      {Array.from(new Array(3)).map((_, index) => (
-        <Box key={index} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
-            <Skeleton variant="rectangular" width={490} height={490} />
-         </Box>
-      ))}
-    </Grid>
-  ); 
-}
 
 function StandardImageList() {
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
   const dispatch = useDispatch();
   const boardList = useSelector((state) => state.boardList);
   const { boards, loading } = boardList;
@@ -24,14 +16,28 @@ function StandardImageList() {
   useEffect(() => {
     dispatch(listBoards());
   }, [dispatch]);
+  const handleOpenModal = (id) => {
+    setSelectedBoardId(id);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       {loading ? (
-        <MediaSkeleton />
+         <Grid container wrap="nowrap">
+         {Array.from(new Array(3)).map((_, index) => (
+           <Box key={index} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
+               <Skeleton variant="rectangular" width={490} height={490} />
+            </Box>
+         ))}
+       </Grid>
       ) : (
         boards.map((board) => (
-          <div key={board.id} className="relative">
+          <div key={board.id} className="relative w-full h-64 cursor-pointer" onClick={() => handleOpenModal(board.id)}>
             <img
               src={`${VITE_API_BASE_URL}${board.image_url}`}
               alt={board.title}
@@ -44,6 +50,7 @@ function StandardImageList() {
           </div>
         ))
       )}
+       <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
     </div>
   );
 }
