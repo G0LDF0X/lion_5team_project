@@ -31,7 +31,7 @@ function ProductsScreen() {
     getCategories().then((data) => {
       setCategories(data);
     });
-    dispatch(listProducts(query, page, selectedCategory));
+    dispatch(listProducts({query:query, page:page, category:selectedCategory}));
   }, [dispatch, query, category, tag, page, selectedCategory]);
 
   const handleCategoryChange = (e) => {
@@ -75,7 +75,7 @@ function ProductsScreen() {
               {query && <h6 className="text-xl mb-4">{query}에 관한 검색결과</h6>}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products.map((product) => (
-                  <Product key={product._id} product={product} id={product.id} />
+                  <Product key={product.id} product={product} id={product.id} />
                 ))}
               </div>
             </>

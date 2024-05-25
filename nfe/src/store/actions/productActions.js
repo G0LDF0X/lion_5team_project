@@ -2,14 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
 export const listProducts = createAsyncThunk(
-  "products/listProducts",
-  async ({ query = "", page = "", category = [] }, { rejectWithValue }) => {
+  'products/listProducts',
+  async ({ query = '', page = '', category = [] }, { rejectWithValue }) => {
     try {
       let params = new URLSearchParams();
-      if (query) params.append("query", query);
-      if (page) params.append("page", page);
+      if (query) params.append('query', query);
+      console.log(query, page, category);
+      if (page) params.append('page', page);
       if (category.length) {
-        category.forEach((cat) => params.append("category", cat));
+        category.forEach((cat) => params.append('category', cat));
       }
       const url = `/items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
