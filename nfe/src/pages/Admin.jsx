@@ -5,7 +5,6 @@ import { Tab, Tabs, Box, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import { listProducts } from '../store/actions/productActions'
 import { deleteProduct } from '../store/actions/productActions'
- 
 import { mainAxiosInstance } from '../api/axiosInstances'
 import ManageUsers from '../components/profilescreen/ManageUsers'
 import ManageSellers from '../components/profilescreen/ManageSellers'
@@ -52,6 +51,8 @@ const productList = useSelector((state) => state.productList)
 const { loading, error, products } = productList
 const productDelete = useSelector((state) => state.productDelete)
 const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
+const userLogin = useSelector((state) => state.userLogin)
+const { userInfo } = userLogin
 const deleteHandler = (id) => {
   if (window.confirm("Are you sure?")) {
     dispatch(deleteProduct(id));
@@ -71,7 +72,7 @@ const userDeleteHandler = (id) => {
 const getSellerList = async () => {
     mainAxiosInstance.get('/users/sellers',
     {headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${userInfo.access}`
     }}
     )
     .then((res) => {
@@ -79,7 +80,11 @@ const getSellerList = async () => {
     })}
         
 const getUserList = async () => {
-    mainAxiosInstance.get('/users/users')
+    mainAxiosInstance.get('/users/users',
+    {headers: {
+        Authorization: `Bearer ${userInfo.access}`
+    }}
+    )
     .then((res) => {
         setUsers(res.data)
     })}
@@ -88,7 +93,7 @@ const getUserList = async () => {
 useEffect(() => {
     getSellerList()
     getUserList()
-  dispatch (listProducts())
+    dispatch(listProducts({ query: "", page: 1, category: [] }));
 }
 , [navigate])
 
