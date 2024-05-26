@@ -34,12 +34,18 @@ export const listQnADetails = createAsyncThunk(
 
 export const createQNA = createAsyncThunk(
   "qnaCreate/createQnA",
-  async (qna, { getState, rejectWithValue }) => {
+  async ({ formData}, { getState, rejectWithValue }) => {
     try {
       const {
         userLogin: { userInfo },
       } = getState();
-      const res = await mainAxiosInstance.post(`/qna/create/`, qna);
+      const res = await mainAxiosInstance.post(`/qna/create/`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+      );
 
       return res.data;
     } catch (error) {

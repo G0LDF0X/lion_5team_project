@@ -28,15 +28,15 @@ def qna_detail(request, pk):
 @permission_classes([IsAuthenticated])
 def create_user_qna(request):
     user = User.objects.get(username=request.user)
-
+    data = request.data
     image_file = request.FILES.get('image_url', None)
     if image_file:
         image_file = ImageFile(image_file)
 
     qna_board = User_QnA.objects.create(
         user_id=user,
-        title=request.data.get('title', ''),
-        content=request.data.get('content', ''),
+        title=data['title'],
+        content=data['content'],
         image_url=image_file,
     )
     serializer = UserQnASerializer(qna_board, many=False)

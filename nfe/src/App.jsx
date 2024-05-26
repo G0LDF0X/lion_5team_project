@@ -12,6 +12,7 @@ import ProductDetail from './pages/Product'
 import ProductsScreen from './pages/Products'
 import CreateReviewScreen from './pages/CreateReview'
 import QAScreen from './pages/QnA'
+import CreateQnAScreen from './pages/CreateQnA'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -61,6 +62,10 @@ const routers = createBrowserRouter([
       {
         path:'/qna',
         element: <QAScreen/>
+      },
+      {
+        path:'/qna/create',
+        element: <CreateQnAScreen/>
       }
 
       

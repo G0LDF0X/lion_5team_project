@@ -10,39 +10,20 @@ function QAScreen() {
   const navigate = useNavigate();
   const qnaList = useSelector((state) => state.qnaList);
   const { qnas } = qnaList;
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const qnaCreate = useSelector((state) => state.qnaCreate);
-  const { success: successCreate, qna: createdQNA } = qnaCreate;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const createHandler = () => {
-    dispatch(createQNA());
-    if (successCreate) {
-      dispatch({ type: QNA_CREATE_RESET });
-      navigate(`/qna/update/${createdQNA.id}`);
-    }
-  };
+  
 
   useEffect(() => {
-    dispatch(listQNA(userInfo));
-    if (successCreate) {
-      navigate(`/qna/update/${createdQNA.id}`);
-    }
-  }, [dispatch, successCreate, navigate, createdQNA, userInfo]);
+    dispatch(listQNA());
+   
+  }, [ navigate]);
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Q&A</h1>
-        {userInfo && (
-          <button
-            onClick={createHandler}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg"
-          >
-            Create Q&A
-          </button>
-        )}
+        
       </div>
       <Row>
         {qnas.map((qna) => (
