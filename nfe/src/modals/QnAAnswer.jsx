@@ -1,26 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { createQNAAnswer } from "../store/actions/qnaActions";
-// import { QNA_ANSWER_DETAILS_RESET, QNA_ANSWER_UPDATE_RESET } from "../store/constants/qnaConstants";
-import { useParams, useNavigate } from 'react-router-dom';
 
-function QnAAnswer({ open, handleClose, id }) {
-  const navigate = useNavigate();
+function QnAAnswer({ open, handleClose , submithandler}) {
   const [editorData, setEditorData] = useState("");
   const [title, setTitle] = useState("");
-  const dispatch = useDispatch();
 
-  function submithandler() {
-    console.log(id)
-    dispatch(createQNAAnswer({ id: id, content: editorData, title: title }));
-    dispatch({ type: QNA_ANSWER_UPDATE_RESET });
-    dispatch({ type: QNA_ANSWER_DETAILS_RESET });
-    handleClose();
-    navigate(`/qna/detail/${qna.id}`);
-  }
+ 
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">

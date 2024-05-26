@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listQnADetails, createQNAAnswer } from "../store/actions/qnaActions";
-// import { QNA_ANSWER_CREATE_RESET } from "../store/constants/qnaConstants";
 import {  Button, List, ListItem, ListItemText, Card, CardContent, Typography } from "@mui/material";
 import QnAAnswer from "../modals/QnAAnswer";
 function QADetailScreen() {
@@ -12,15 +11,18 @@ function QADetailScreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const qnaDetails = useSelector((state) => state.qnaDetails);
-  const { loading, error, qna, answers } = qnaDetails;
-  const qnaAnswerCreate = useSelector((state) => state.qnaAnswerCreate);
-  const { success: successCreate, qna: createdQna } = qnaAnswerCreate;
+  const { loading, error, qna } = qnaDetails;
   const [state, setState] = useState({ open: false });
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const answerCreateHandler = () => {
     setState({ open: true });
   };
+  function submithandler() {
+    console.log(id)
+    dispatch(createQNAAnswer({ id: id, content: editorData, title: title }));
+    handleClose();
+  }
 
   const handleClose = () => {
     setState({ open: false });
@@ -33,7 +35,7 @@ function QADetailScreen() {
 
   return (
     <div className="container mx-auto py-8">
-      <QnAAnswer open={state.open} handleClose={handleClose} id={id} />
+      <QnAAnswer open={state.open} handleClose={handleClose} submithandler={submithandler} />
       <Link to="/" className="btn btn-light my-2">
         Go Back
       </Link>
