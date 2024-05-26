@@ -47,12 +47,13 @@ def create_user_qna(request):
 def create_user_answer(request, pk):
     user = User.objects.get(username=request.user)
     qna = User_QnA.objects.get(id=pk)
+    data = request.data
     current_time = datetime.now()
 
     qna_board = User_Answer.objects.create(
         user_id=user,
-        title=request.data.get('title', ''),
-        content=request.data.get('content', ''),
+        title=data['title'],
+        content=data['content'],
         user_qna_id=qna,
         created_at=current_time,
     )

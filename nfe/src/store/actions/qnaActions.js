@@ -95,15 +95,15 @@ export const deleteQnA = createAsyncThunk(
 );
 export const createQNAAnswer = createAsyncThunk(
   "qnaAnswerCreate/createQNAAnswer",
-  async (qnaId, { getState, rejectWithValue }) => {
+  async ({id, content, title }, { getState, rejectWithValue }) => {
     try {
       const {
         userLogin: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.post(
-        `/qna/answer/create/${qnaId}`,
+        `/qna/answer/create/${id}/`,
         {
-          qnaId,
+          content:content, title:title
         },
         {
           headers: {

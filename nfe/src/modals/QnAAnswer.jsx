@@ -7,14 +7,15 @@ import { createQNAAnswer } from "../store/actions/qnaActions";
 // import { QNA_ANSWER_DETAILS_RESET, QNA_ANSWER_UPDATE_RESET } from "../store/constants/qnaConstants";
 import { useParams, useNavigate } from 'react-router-dom';
 
-function QnAAnswer({ open, handleClose }) {
+function QnAAnswer({ open, handleClose, id }) {
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState("");
   const [title, setTitle] = useState("");
   const dispatch = useDispatch();
 
   function submithandler() {
-    dispatch(createQNAAnswer({ id: qna.id, content: editorData, title: title }));
+    console.log(id)
+    dispatch(createQNAAnswer({ id: id, content: editorData, title: title }));
     dispatch({ type: QNA_ANSWER_UPDATE_RESET });
     dispatch({ type: QNA_ANSWER_DETAILS_RESET });
     handleClose();

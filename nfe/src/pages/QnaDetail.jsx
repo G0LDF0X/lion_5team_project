@@ -33,7 +33,7 @@ function QADetailScreen() {
 
   return (
     <div className="container mx-auto py-8">
-      <QnAAnswer open={state.open} handleClose={handleClose} />
+      <QnAAnswer open={state.open} handleClose={handleClose} id={id} />
       <Link to="/" className="btn btn-light my-2">
         Go Back
       </Link>
