@@ -3,8 +3,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listQnADetails, createQNAAnswer } from "../store/actions/qnaActions";
 // import { QNA_ANSWER_CREATE_RESET } from "../store/constants/qnaConstants";
-import { Snackbar, Button, List, ListItem, ListItemText, Card, CardContent, Typography } from "@mui/material";
-
+import {  Button, List, ListItem, ListItemText, Card, CardContent, Typography } from "@mui/material";
+import QnAAnswer from "../modals/QnAAnswer";
 function QADetailScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ function QADetailScreen() {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const answerCreateHandler = () => {
-    dispatch(createQNAAnswer(qna.id));
     setState({ open: true });
   };
 
@@ -28,22 +27,13 @@ function QADetailScreen() {
   };
 
   useEffect(() => {
-    dispatch(listQnADetails(id));
-    if (successCreate) {
-      dispatch({ type: QNA_ANSWER_CREATE_RESET });
-      navigate(`/qna/answer/update/${createdQna.id}/`);
-    }
-  }, [dispatch, id, navigate, successCreate, createdQna]);
+    dispatch(listQnADetails(id));}
+    , [navigate]);
+    
 
   return (
     <div className="container mx-auto py-8">
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={state.open}
-        onClose={handleClose}
-        message="Q&A Answer Created"
-      />
+      <QnAAnswer open={state.open} handleClose={handleClose} />
       <Link to="/" className="btn btn-light my-2">
         Go Back
       </Link>
@@ -59,15 +49,17 @@ function QADetailScreen() {
             <Card className="shadow-lg rounded-lg">
               <CardContent>
                 <Typography variant="h5" component="div" className="mb-4">
-                  {qna.question.title}
+                  {qna.question&&qna.question.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  <Link to={`/users/${qna.user_id}/`}>{qna.user}</Link> - {qna.question.created_at && qna.question.created_at.substring(0, 10)}
+                  <Link to={`/users/${qna.user_id}/`}>{qna.user}</Link> - {qna.question && qna.question.created_at.substring(0, 10)}
                 </Typography>
-                {qna.question.image_url && (
+                {qna.question && (
                   <img src={VITE_API_BASE_URL+qna.question.image_url} alt="QnA" className="w-full rounded-lg my-4" />
                 )}
+                {qna.question && 
                 <Typography variant="body1" component="p" dangerouslySetInnerHTML={{ __html: qna.question.content }} className="text-gray-800" />
+}
               </CardContent>
             </Card>
           </div>
