@@ -13,6 +13,8 @@ import ProductsScreen from './pages/Products'
 import CreateReviewScreen from './pages/CreateReview'
 import QAScreen from './pages/QnA'
 import CreateQnAScreen from './pages/CreateQnA'
+import QAUpdateScreen from './pages/UpdateQnA'
+import QADetailScreen from './pages/QnaDetail'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -66,6 +68,14 @@ const routers = createBrowserRouter([
       {
         path:'/qna/create',
         element: <CreateQnAScreen/>
+      },
+      {
+        path:'/qna/update/:id',
+        element: <QAUpdateScreen/>
+      },
+      {
+        path:'/qna/detail/:id',
+        element: <QADetailScreen/>
       }
 
       
