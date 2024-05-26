@@ -30,6 +30,7 @@ export const logout = createAsyncThunk(
   "userLogout/logout",
   async (_, { rejectWithValue }) => {
     try {
+      localStorage.removeItem("userInfo");
       const res = await mainAxiosInstance.post(`/app/logout/`);
 
       localStorage.removeItem("userInfo");

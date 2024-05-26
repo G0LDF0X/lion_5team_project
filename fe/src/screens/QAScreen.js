@@ -75,18 +75,6 @@ function QAScreen() {
     </div>
   )
 }
-
-    {/* <div>
-      <div>
-        {qnas.map((qna) => (
-          <div key={qna.id}>
-            <h2>{qna.title}</h2>
-            <div dangerouslySetInnerHTML={{ __html: qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
-          </div>
-        ))}
-      </div>
-      
-    </div> */}
   
 
 

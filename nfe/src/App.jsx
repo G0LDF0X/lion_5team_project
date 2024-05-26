@@ -11,6 +11,7 @@ import AdminManageScreen from './pages/Admin'
 import ProductDetail from './pages/Product'
 import ProductsScreen from './pages/Products'
 import CreateReviewScreen from './pages/CreateReview'
+import QAScreen from './pages/QnA'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -56,6 +57,10 @@ const routers = createBrowserRouter([
       {
         path:'/items/review/create/:id',
         element: <CreateReviewScreen/>
+      },
+      {
+        path:'/qna',
+        element: <QAScreen/>
       }
 
       

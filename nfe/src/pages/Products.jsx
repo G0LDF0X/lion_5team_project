@@ -86,3 +86,42 @@ useEffect(() => {
 }
 
 export default ProductsScreen;
+
+// let isLoading = false;
+// let page = 1;
+
+// function loadMoreContent() {
+//   if (isLoading) return;
+
+//   isLoading = true;
+
+//   // Example API endpoint
+//   fetch(`/api/content?page=${page}`)
+//     .then(response => response.json())
+//     .then(data => {
+//       const container = document.getElementById('content-container');
+//       data.forEach(item => {
+//         const newItem = document.createElement('div');
+//         newItem.innerText = item.text;
+//         container.appendChild(newItem);
+//       });
+//       page++;
+//       isLoading = false;
+//     })
+//     .catch(error => {
+//       console.error('Error fetching content:', error);
+//       isLoading = false;
+//     });
+// }
+
+// window.addEventListener('scroll', () => {
+//   const triggerHeight = window.innerHeight + window.scrollY;
+//   const threshold = document.body.offsetHeight - 200; // 200 pixels from bottom
+
+//   if (triggerHeight >= threshold) {
+//     loadMoreContent();
+//   }
+// });
+
+// // Initial load
+// loadMoreContent();
