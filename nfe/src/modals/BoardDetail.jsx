@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { createReply } from '../store/actions/boardActions';
-import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close'; 
 function BoardDetailModal({ open, handleClose, boardId }) {
   const dispatch = useDispatch();

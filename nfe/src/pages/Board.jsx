@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { listBoards, getBoardDetails } from '../store/actions/boardActions';
 import { Grid, Box, Skeleton } from '@mui/material';
 import  BoardDetailModal  from '../modals/BoardDetail';
@@ -8,6 +9,7 @@ import { mainAxiosInstance } from '../api/axiosInstances';
 
 
 function StandardImageList() {
+  const navigate = useNavigate();
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
@@ -19,7 +21,7 @@ function StandardImageList() {
   };
   useEffect(() => {
     dispatch(listBoards());
-  }, [dispatch]);
+  }, [navigate]);
   const handleOpenModal = (id) => {
     setSelectedBoardId(id);
     dispatch(getBoardDetails(id));
