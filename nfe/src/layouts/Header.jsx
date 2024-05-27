@@ -22,6 +22,7 @@ import {
 } from "@mui/icons-material";
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchIcon from '@mui/icons-material/Search';
+import SearchBox from "./SearchBox";
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
@@ -84,16 +85,9 @@ function Header({ openModal, openPostModal, openSideBar }) {
         </Box>
 
         <Box className="flex items-center space-x-2">
-          <div className="relative">
-            <InputBase
-              placeholder="Search…"
-              className="bg-white rounded-full pl-8 pr-4 py-1"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-              <SearchIcon />
-            </div>
-          </div>
+          
+           <SearchBox />
+          
 
           {userInfo && (
             <IconButton color="inherit" component={Link} to="/cart">

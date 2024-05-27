@@ -39,7 +39,7 @@ function HomeScreen() {
         className="relative bg-cover bg-center py-20"
         style={{
           backgroundImage:
-            "url(https://i.pinimg.com/736x/2f/6b/a7/2f6ba7ae5661b4453e124b13262aa398.jpg)",
+            "url(https://img.wallpapic.com/i0066-425-739/medium/dogs-puppies-white-cute-wallpaper.jpg)",
         }}
       >
         <div className="container mx-auto px-4 flex flex-col items-end text-right">
