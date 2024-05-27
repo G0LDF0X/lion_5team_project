@@ -37,7 +37,7 @@ export const createQNA = createAsyncThunk(
   async ({ formData}, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.post(`/qna/create/`, formData, {
         headers: {
@@ -98,7 +98,7 @@ export const createQNAAnswer = createAsyncThunk(
   async ({id, content, title }, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.post(
         `/qna/answer/create/${id}/`,
@@ -129,7 +129,7 @@ export const updateQNAAnswer = createAsyncThunk(
     // Add { getState } as the second argument
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(`/qna/answer/update/${qna.id}`, 
       {qna},{

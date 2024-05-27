@@ -39,7 +39,7 @@ export const createReview = createAsyncThunk(
   async ({id, formData}, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       console.log(id, formData)
       const res = await mainAxiosInstance.post(
@@ -70,7 +70,7 @@ export const updateReview = createAsyncThunk(
   async (review, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/items/review/update/${review.id}`,
@@ -99,7 +99,7 @@ export const deleteReview = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.delete(`/items/review/delete/${id}`, {
         headers: {
@@ -123,7 +123,7 @@ export const ListMyReview = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.get(`/items/myreviews`, {
         headers: {

@@ -96,7 +96,7 @@ export const createReply = createAsyncThunk(
   async ({ repliedId = 0, content, id }, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user : { userInfo },
       } = getState();
       const res = await mainAxiosInstance.post(
         `/board/detail/${id}`,

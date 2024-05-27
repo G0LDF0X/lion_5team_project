@@ -11,8 +11,8 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/actions/userActions';
 
 export default function SideBar({ toggleDrawer, open }) {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   const dispatch = useDispatch();
 
   const handleLogout = () => {

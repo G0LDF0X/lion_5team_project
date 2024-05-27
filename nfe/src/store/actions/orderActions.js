@@ -6,7 +6,7 @@ export const createOrder = createAsyncThunk(
     async (order, { rejectWithValue, getState }) => {
         try {
             const {
-                userLogin: { userInfo },
+                user: { userInfo },
             } = getState();
             const res = await mainAxiosInstance.post(`/order/payment/`, order, {
                 headers: {
@@ -29,7 +29,7 @@ export const getOrderDetails = createAsyncThunk(
     async (id, { rejectWithValue, getState }) => {
         try {
             const {
-                userLogin: { userInfo },
+                user: { userInfo },
             } = getState();
             const res = await mainAxiosInstance.get(`/order/detail/${id}`, {
                 headers: {
@@ -53,7 +53,7 @@ export const getMyOrders = createAsyncThunk(
     async (_, { rejectWithValue, getState }) => {
         try {
             const {
-                userLogin: { userInfo },
+                user: { userInfo },
             } = getState();
             const res = await mainAxiosInstance.get(`/order/myorderlist/`, {
                 headers: {

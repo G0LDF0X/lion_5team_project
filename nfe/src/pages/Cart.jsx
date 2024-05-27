@@ -12,8 +12,6 @@ function CartScreen() {
   const cart = useSelector((state) => state.cart);
     const { cartItems, successCartRemove, } = cart;
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
 
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) {

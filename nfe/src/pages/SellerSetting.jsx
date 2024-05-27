@@ -37,8 +37,8 @@ function a11yProps(index) {
 }
 function SellerSettingScreen() {
 const [value, setValue] = useState(0)
-const userLogin = useSelector((state) => state.userLogin)
-const {userInfo} = userLogin
+const user = useSelector((state) => state.user)
+const { userInfo } = user
 
 
   const handleChange = (event, newValue) => {

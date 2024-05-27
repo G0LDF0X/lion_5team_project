@@ -42,8 +42,6 @@ function MyShoppingScreen() {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
   const order = useSelector((state) => state.order);
   const { orders } = order;
   const bookMarkList = useSelector((state) => state.bookMarkList);

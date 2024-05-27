@@ -49,8 +49,8 @@ const productList = useSelector((state) => state.productList)
 const { loading, error, products } = productList
 const productDelete = useSelector((state) => state.productDelete)
 const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
-const userLogin = useSelector((state) => state.userLogin)
-const { userInfo } = userLogin
+const user = useSelector((state) => state.user)
+const { userInfo } = user
 const deleteHandler = (id) => {
   if (window.confirm("Are you sure?")) {
     dispatch(deleteProduct(id));

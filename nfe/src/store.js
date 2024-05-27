@@ -25,14 +25,7 @@ import {
     qnaAnswerUpdateSlice,
     } from "./store/slices/qnaSlices";
 import {
-    userLoginSlice,
-    userRegisterSlice,
-    userLogoutSlice,
-    userDetailsSlice,
-    userUpdateSlice,
-    passwordUpdateSlice,
-    userListSlice,
-    userDeleteSlice,
+    userSlice,
     } from "./store/slices/userSlices";
 import {
     orderSlice,    
@@ -56,6 +49,7 @@ import { cartSlice } from "./store/slices/cartSlices";
 
 const sotre = configureStore({
   reducer: {
+    user: userSlice.reducer,
     productList: productListSlice.reducer,
     productDetails: productDetailsSlice.reducer,
     productCreate: productCreateSlice.reducer,
@@ -77,14 +71,7 @@ const sotre = configureStore({
     qnaDelete: qnaDeleteSlice.reducer,
     qnaAnswerCreate: qnaAnswerCreateSlice.reducer,
 
-    userLogin: userLoginSlice.reducer,
-    userRegister: userRegisterSlice.reducer,
-    userDetails: userDetailsSlice.reducer,
-    userList: userListSlice.reducer,
-    userDelete: userDeleteSlice.reducer,
-    userUpdate: userUpdateSlice.reducer,
-    passwordUpdate: passwordUpdateSlice.reducer,
-    userLogout: userLogoutSlice.reducer,
+    
     
 
     // orderCreate: orderCreateSlice.reducer,

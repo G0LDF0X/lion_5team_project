@@ -5,7 +5,9 @@ export const listBookMark = createAsyncThunk(
     "bookMarkList/listBookMark",
     async (_, { getState, rejectWithValue }) => {
         try {
-            const { userInfo } = getState().userLogin;
+            const {
+                user: { userInfo },
+            } = getState();
             const res = await mainAxiosInstance.get(`/users/bookmark`,
             {
                 headers: {
@@ -29,7 +31,9 @@ export const addToBookMark = createAsyncThunk(
     "bookMarkAdd/addToBookMark",
     async (id, { getState, rejectWithValue }) => {
         try {
-            const { userInfo } = getState().userLogin;
+            const {
+                user: { userInfo },
+            } = getState();
             const res = await mainAxiosInstance.put(`/users/bookmark/add/${id}/`,
             
             {
@@ -54,7 +58,9 @@ export const removeFromBookMark = createAsyncThunk(
     "bookMarkRemove/removeFromBookMark",
     async (id, { getState, rejectWithValue }) => {
         try {
-            const { userInfo } = getState().userLogin;
+            const {
+                user: { userInfo },
+            } = getState();
             const res = await mainAxiosInstance.delete(`/users/bookmark/delete/${id}/`,
             {
                 headers: {

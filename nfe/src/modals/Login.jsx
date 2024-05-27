@@ -7,8 +7,8 @@ const Login = ({ isOpen, onRequestClose }) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo, loading, error } = userLogin;
+  const user = useSelector((state) => state.user);
+  const { userInfo, error } = user;
   const dispatch = useDispatch();
   const handleLogin = (e) => {
     e.preventDefault();

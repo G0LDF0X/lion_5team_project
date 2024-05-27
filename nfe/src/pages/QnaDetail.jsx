@@ -8,8 +8,8 @@ function QADetailScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   const qnaDetails = useSelector((state) => state.qnaDetails);
   const { loading, error, qna } = qnaDetails;
   const [state, setState] = useState({ open: false });

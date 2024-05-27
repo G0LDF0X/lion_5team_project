@@ -7,7 +7,7 @@ export const listCartItems = createAsyncThunk(
     async (_, { getState, rejectWithValue }) => {
         try {
             const {
-                userLogin: { userInfo }
+                user: { userInfo }
             } = getState();
             const config = {
                 headers: {
@@ -30,7 +30,7 @@ export const addToCart = createAsyncThunk(
     async ({ id, qty }, { getState, rejectWithValue }) => {
         try {
             const {
-                userLogin: { userInfo }
+                user: { userInfo }
             } = getState();
             const config = {
                 method: 'POST',
@@ -57,7 +57,7 @@ export const removeFromCart = createAsyncThunk(
     async (id, { getState, rejectWithValue }) => {
         try {
             const {
-                userLogin: { userInfo }
+                user: { userInfo }
             } = getState();
             const config = {
                 method: 'DELETE',
@@ -82,7 +82,7 @@ export const updateQty = createAsyncThunk(
     async ({ id, qty }, { getState, rejectWithValue }) => {
         try {
             const {
-                userLogin: { userInfo }
+                user: { userInfo }
             } = getState();
             const config = {
                 method: 'PUT',

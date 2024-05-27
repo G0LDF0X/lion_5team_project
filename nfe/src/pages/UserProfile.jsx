@@ -47,10 +47,8 @@ function UserProfileScreen() {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { user } = userDetails;
+  const user = useSelector((state) => state.user);
+  const { userInfo, userDetail} = user;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
 
@@ -85,7 +83,7 @@ function UserProfileScreen() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <UserProfileMain userInfo={userInfo} user={user} />
+            <UserProfileMain userInfo={userInfo} user={userDetail} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <MyBoard userInfo={userInfo} />

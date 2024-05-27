@@ -41,10 +41,9 @@ function UserSettingScreen() {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { user } = userDetails;
+  const user = useSelector((state) => state.user);
+  const { userInfo , userDetail} = user;
+  
 
   useEffect(() => {
     if (!localStorage.getItem("userInfo")) {
@@ -74,7 +73,7 @@ function UserSettingScreen() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <UserSetting userInfo={userInfo} user={user} />
+            <UserSetting userInfo={userInfo} user={userDetail} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             Item Two
@@ -86,7 +85,7 @@ function UserSettingScreen() {
             <SellerApplication userInfo={userInfo} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={4}>
-            <MyPassword userInfo={userInfo} user={user} />
+            <MyPassword userInfo={userInfo} user={userDetail} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={5}>
             Item Six

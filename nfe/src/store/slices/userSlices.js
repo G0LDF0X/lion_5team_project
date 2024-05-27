@@ -1,196 +1,143 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  login, 
-    register,
-    logout,
-    getUserDetail,
-    updateUserProfile,
-    updateUserPassword,
-    listUsers,
-    deleteUser,
-    // updateUser,
-
+  login,
+  register,
+  logout,
+  getUserDetail,
+  updateUserProfile,
+  updateUserPassword,
+  listUsers,
+  deleteUser,
 } from "../actions/userActions";
 
+const initialState = {
+  userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null,
+  userDetail: {},
+  users: [],
+  loading: false,
+  error: null,
+  success: false,
+};
 
-
-export const userLoginSlice = createSlice({
-    name: "userLogin",
-    initialState: {
-        userInfo: localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null
+export const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
     },
-    reducers: {
-        logout: (state) => {
-            state.userInfo = null;
-            localStorage.removeItem('userInfo');
-        }
+    clearSuccess: (state) => {
+      state.success = false;
     },
-    extraReducers: (builder) => {
-        builder
-        .addCase(login.pending, (state) => {
-            state.loading = true;
-            state.userInfo = null;
-            state.error = null;
-        })
-        .addCase(login.fulfilled, (state, action) => {
-            state.loading = false;
-            state.userInfo = action.payload;
-            state.error = null;
-            localStorage.setItem('userInfo', JSON.stringify(action.payload));
-        })
-        .addCase(login.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
+    logout: (state) => {
+      state.userInfo = null;
+      localStorage.removeItem('userInfo');
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userInfo = action.payload;
+        localStorage.setItem('userInfo', JSON.stringify(action.payload));
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(register.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userInfo = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.loading = false;
+        state.userInfo = null;
+        localStorage.removeItem('userInfo');
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getUserDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userDetail = action.payload;
+      })
+      .addCase(getUserDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateUserProfile.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.userDetail = action.payload;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateUserPassword.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(updateUserPassword.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(updateUserPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(listUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(listUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(listUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const userRegisterSlice = createSlice({
-    name: "userRegister",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(register.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(register.fulfilled, (state, action) => {
-            state.loading = false;
-            state.userInfo = action.payload;
-        })
-        .addCase(register.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-export const userLogoutSlice = createSlice({
-    name: "userLogout",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(logout.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(logout.fulfilled, (state, action) => {
-            state.loading = false;
-            state.userInfo = action.payload;
-        })
-        .addCase(logout.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-
-export const userDetailsSlice = createSlice({
-    name: "userDetails",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(getUserDetail.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(getUserDetail.fulfilled, (state, action) => {
-            state.loading = false;
-            state.user = action.payload;
-        })
-        .addCase(getUserDetail.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-export const userUpdateSlice = createSlice({
-    name: "userUpdate",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(updateUserProfile.pending, (state) => {
-            state.loading = true;
-            state.success = false;
-        })
-        .addCase(updateUserProfile.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        })
-        .addCase(updateUserProfile.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-export const passwordUpdateSlice = createSlice({
-    name: "passwordUpdate",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(updateUserPassword.pending, (state) => {
-            state.loading = true;
-            state.success = false;
-        })
-        .addCase(updateUserPassword.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        })
-        .addCase(updateUserPassword.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-export const userListSlice = createSlice({
-    name: "userList",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(listUsers.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(listUsers.fulfilled, (state, action) => {
-            state.loading = false;
-            state.users = action.payload;
-        })
-        .addCase(listUsers.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
-
-export const userDeleteSlice = createSlice({
-    name: "userDelete",
-    initialState: {},
-    reducers: {
-    },
-    extraReducers: (builder) => {
-        builder
-        .addCase(deleteUser.pending, (state) => {
-            state.loading = true;
-        })
-        .addCase(deleteUser.fulfilled, (state, action) => {
-            state.loading = false;
-            state.success = true;
-        })
-        .addCase(deleteUser.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        });
-    },
-});
+// export const { clearError, clearSuccess, logout } = userSlice.actions;

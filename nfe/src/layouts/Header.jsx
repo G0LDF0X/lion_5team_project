@@ -21,13 +21,12 @@ import {
   AccountCircle,
 } from "@mui/icons-material";
 import PhotoIcon from '@mui/icons-material/Photo';
-import SearchIcon from '@mui/icons-material/Search';
 import SearchBox from "./SearchBox";
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
