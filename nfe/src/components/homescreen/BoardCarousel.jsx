@@ -66,7 +66,8 @@ function Loading2() {
   );
 }
 
-function BoardCarousel({ loading, error, boards }) {
+function BoardCarousel({ loading, error, boards, handleOpenModal}) {
+  
   return (
     <>
       <Typography variant="h5" className="my-4 font-semibold text-gray-700">
@@ -83,7 +84,7 @@ function BoardCarousel({ loading, error, boards }) {
           {boards.map((board) => (
             // <Box key={board.id} className="p-2 h-full">
             <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-              <BoardForm board={board} />
+              <BoardForm board={board}  handleOpenModal={handleOpenModal}  />
             </Card>
             // </Box>
           ))}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
@@ -10,10 +10,15 @@ import QnASection from "../components/homescreen/QnASection";
 import { motion } from "framer-motion";
 import { useOutletContext } from "react-router-dom";
 import "../animations.css";
-
+import BoardDetailModal from "../modals/BoardDetail";
+import { getBoardDetails } from "../store/actions/boardActions";
+import { mainAxiosInstance } from "../api/axiosInstances";
 function HomeScreen() {
   const dispatch = useDispatch();
   const { openModal } = useOutletContext();
+  const useShow = (id) => {
+    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
+  };
   const productList = useSelector((state) => state.productList);
   const {
     loading: productLoading,
@@ -26,6 +31,17 @@ function HomeScreen() {
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
+  const handleOpenModal = (id) => {
+    setSelectedBoardId(id);
+    dispatch(getBoardDetails(id));
+    setModalOpen(true);
+    useShow(id);
+  }
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  }
 
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
@@ -81,8 +97,11 @@ function HomeScreen() {
           loading={boardLoading}
           error={boardError}
           boards={boards}
+          handleOpenModal={handleOpenModal}
         />
       </motion.section>
+      <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
+      
 
       <motion.section
         className="my-16"

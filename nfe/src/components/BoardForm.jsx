@@ -1,37 +1,55 @@
-import React, { useState } from 'react';
-import { Card, CardHeader, CardMedia, CardContent, CardActions, Avatar, IconButton, Typography, Checkbox, Box } from '@mui/material';
-import { Favorite, FavoriteBorder, Share, MoreVert } from '@mui/icons-material';
-import { grey } from '@mui/material/colors';
-import { Link } from 'react-router-dom';
-import { styled } from '@mui/material/styles';
+import React, { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Avatar,
+  IconButton,
+  Typography,
+  Checkbox,
+  Box,
+} from "@mui/material";
+import { Favorite, FavoriteBorder, Share, MoreVert } from "@mui/icons-material";
+import { grey } from "@mui/material/colors";
+import { Link } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import { useOutletContext } from "react-router-dom";
 
 const StyledCheckbox = styled(Checkbox)({
-  '&.Mui-checked': {
-    color: '#ff6d75',
+  "&.Mui-checked": {
+    color: "#ff6d75",
   },
 });
 
-export default function BoardForm({ board }) {
-  
+export default function BoardForm({ board,handleOpenModal  }) {
   const [isLiked, setIsLiked] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-
+  const useShow = (id) => {
+    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
+  };
   const likeHandler = () => {
     setIsLiked(!isLiked);
   };
-  const tagHandler = () => {  
+  const tagHandler = () => {
     setShowTags(!showTags);
-  }
+  };
 
   return (
-    <Card className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300" sx={{ height: 500 }}>
+    <Card
+      className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+      sx={{ height: 500 }}
+    >
       <CardHeader
         avatar={
           <Link to={`/board/detail/${board.id}`}>
             {board.user_image ? (
-              <Avatar src={VITE_API_BASE_URL+board.user_image} aria-label="user" />
+              <Avatar
+                src={VITE_API_BASE_URL + board.user_image}
+                aria-label="user"
+              />
             ) : (
               <Avatar sx={{ bgcolor: grey[500] }} aria-label="user">
                 {board.username[0]}
@@ -44,11 +62,7 @@ export default function BoardForm({ board }) {
             <MoreVert />
           </IconButton>
         }
-        title={
-          <Link to={`/board/detail/${board.id}`} className="no-underline text-black">
-            {board.title}
-          </Link>
-        }
+        title={board.title}
         subheader={new Date(board.created_at).toLocaleDateString()}
       />
       {/* <CardMedia
@@ -59,22 +73,38 @@ export default function BoardForm({ board }) {
         className="object-cover"
         sx={{ height: 200 }}
       /> */}
-       <div style={{ position: 'relative' }}>
-                <CardMedia
-                    component="img"
-                    height="220"
-                    image={`${VITE_API_BASE_URL}${board.image_url}`}
-                    onClick={tagHandler }
-                />
-                {/* Tag */}
-                {showTags ?  <div style={{ position: 'absolute', top: '100px', left: '40px', backgroundColor: 'rgba(0, 0, 0, 0.5)', color: 'white', padding: '5px 10px', borderRadius: '1000px' }}>
-                  tag
-                </div>: null}
-            </div>
+      <div style={{ position: "relative" }}>
+        <CardMedia
+          component="img"
+          height="220"
+          image={`${VITE_API_BASE_URL}${board.image_url}`}
+          onClick={() => handleOpenModal(board.id)}
+        />
+        {/* Tag */}
+        {showTags ? (
+          <div
+            style={{
+              position: "absolute",
+              top: "100px",
+              left: "40px",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              color: "white",
+              padding: "5px 10px",
+              borderRadius: "1000px",
+            }}
+          >
+            tag
+          </div>
+        ) : null}
+      </div>
       <CardContent>
         <Typography variant="body2" color="text.secondary" component="div">
           {board.content.length > 100 ? (
-            <span dangerouslySetInnerHTML={{ __html: `${board.content.substring(0, 100)}...` }} />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: `${board.content.substring(0, 100)}...`,
+              }}
+            />
           ) : (
             <span dangerouslySetInnerHTML={{ __html: board.content }} />
           )}
@@ -82,7 +112,11 @@ export default function BoardForm({ board }) {
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites" onClick={likeHandler}>
-          <StyledCheckbox icon={<FavoriteBorder />} checkedIcon={<Favorite />} checked={isLiked} />
+          <StyledCheckbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite />}
+            checked={isLiked}
+          />
         </IconButton>
         <IconButton aria-label="share">
           <Share />
@@ -90,8 +124,11 @@ export default function BoardForm({ board }) {
       </CardActions>
       <Box className="px-4 py-2">
         <Typography variant="caption" color="text.secondary">
-          by{' '}
-          <Link to={`/users/${board.user_id}`} className="text-blue-600 no-underline">
+          by{" "}
+          <Link
+            to={`/users/${board.user_id}`}
+            className="text-blue-600 no-underline"
+          >
             {board.username}
           </Link>
         </Typography>

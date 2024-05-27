@@ -11,6 +11,7 @@ function RootLayout() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [postModalIsOpen, setPostModalIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -20,7 +21,8 @@ function RootLayout() {
   const closeModal = () => setModalIsOpen(false);
   const openPostModal = () => setPostModalIsOpen(true);
   const closePostModal = () => setPostModalIsOpen(false);
-
+  // const openBoardDetailModal = () => setBoardDetailModalIsOpen(true);
+  // const closeBoardDetailModal = () => se(false);
   return (
     <>
       <Header openModal={openModal} openPostModal={openPostModal} openSideBar={openSideBar}/>
