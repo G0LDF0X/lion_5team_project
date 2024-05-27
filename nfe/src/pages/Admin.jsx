@@ -89,6 +89,9 @@ const getUserList = async () => {
 
 
 useEffect(() => {
+  if(userInfo && userInfo.is_staff === false){
+    navigate('/')
+  }
     getSellerList()
     getUserList()
     dispatch(listProducts({ query: "", page: 1, category: [] }));

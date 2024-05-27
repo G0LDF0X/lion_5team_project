@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import { useSelector} from 'react-redux'
 import { Tab, Tabs, Box, Typography } from '@mui/material' 
 import PropTypes from 'prop-types'
@@ -39,6 +39,12 @@ function SellerSettingScreen() {
 const [value, setValue] = useState(0)
 const user = useSelector((state) => state.user)
 const { userInfo } = user
+useEffect(() => {
+  if (!userInfo.is_staff || !userInfo.is_seller) {
+    navigate("/");
+  }
+}
+, [navigate]);
 
 
   const handleChange = (event, newValue) => {
