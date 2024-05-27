@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react'
 import { useSelector} from 'react-redux'
-import { Tab, Tabs, Box, Typography } from '@mui/material' 
+import { Tab, Tabs, Box } from '@mui/material' 
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import SellerMain from '../components/profilescreen/SellerMain';
 import SellerItem from '../components/profilescreen/SellerItem';
@@ -39,6 +40,7 @@ function SellerSettingScreen() {
 const [value, setValue] = useState(0)
 const user = useSelector((state) => state.user)
 const { userInfo } = user
+const navigate = useNavigate()  
 useEffect(() => {
   if (!userInfo.is_staff || !userInfo.is_seller) {
     navigate("/");

@@ -5,7 +5,7 @@ import { updateUserPassword, logout } from "../../store/actions/userActions";
 
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
-function MyPassword({ userInfo }) {
+function MyPassword({ userInfo, reset }) {
   const [message, setMessage] = useState(null);
   const [loginPassword, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -14,8 +14,8 @@ function MyPassword({ userInfo }) {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const paswordUpdate = useSelector((state) => state.passwordUpdate);
-  const { success } = paswordUpdate;
+  const user = useSelector((state) => state.user);
+  const { success } = user;
 
   useEffect(() => {
     if (!userInfo) {
@@ -26,7 +26,7 @@ function MyPassword({ userInfo }) {
 
     if (success) {
       dispatch(logout());
-      dispatch({ type: USER_UPDATE_PASSWORD_RESET });
+      dispatch( reset );
       navigate("/password-change-confirm");
     }
   }, [userInfo, success]);

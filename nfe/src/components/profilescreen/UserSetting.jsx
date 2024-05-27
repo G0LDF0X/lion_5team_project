@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile, getUserDetails } from "../../../../fe/src/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
-function UserSetting({ userInfo, user }) {
+function UserSetting({ userInfo, userDetail, reset }) {
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
-  const userUpdate = useSelector((state) => state.userUpdate);
-  const { success } = userUpdate;
+  const user = useSelector((state) => state.user);
+  const { success } = user;
   const [message, setMessage] = useState("");
   const nicknameRef = useRef();
   const emailRef = useRef();
@@ -16,6 +16,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     if (success) {
       alert('수정이 완료되었습니다.');
       window.location.reload();
+      dispatch(reset);
     }
   }, [success]);
 
@@ -60,7 +61,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
         <label htmlFor="fileInput">
-            {user&& user.user.image_url ? (
+            {userDetail.user&& userDetail.user.image_url ? (
                 <img
                     src={VITE_API_BASE_URL + user.user.image_url}
                     alt="User"
@@ -92,7 +93,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               <input
                 type="text"
                 id="nickname"
-                placeholder={user&& user.user.nickname}
+                placeholder={userDetail.user&& userDetail.user.nickname}
                 ref={nicknameRef}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
@@ -104,7 +105,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               <input
                 type="email"
                 id="email"
-                placeholder={user && user.user.email}
+                placeholder={userDetail.user && userDetail.user.email}
                 ref={emailRef}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />

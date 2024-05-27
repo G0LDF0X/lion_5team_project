@@ -140,4 +140,4 @@ export const userSlice = createSlice({
   },
 });
 
-// export const { clearError, clearSuccess, logout } = userSlice.actions;
+export const { clearError, clearSuccess } = userSlice.actions;

@@ -81,7 +81,7 @@ export const getUserDetail = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.get(`/users/profile/`, {
         headers: {
@@ -106,7 +106,7 @@ export const updateUserProfile = createAsyncThunk(
   async (user, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/users/update_profile/`,
@@ -136,7 +136,7 @@ export const updateUserPassword = createAsyncThunk(
   async (password, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/users/update_password/`,
@@ -164,7 +164,7 @@ export const listUsers = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.get(`/users/users`, {
         headers: {
@@ -187,7 +187,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.delete(`/users/delete/${id}`, {
         headers: {

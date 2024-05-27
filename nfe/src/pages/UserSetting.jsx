@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import UserSetting from "../components/profilescreen/UserSetting";
 import SellerApplication from "../components/profilescreen/SellerApplication";
 import MyPassword from "../components/profilescreen/MyPassword";
+import { clearSuccess } from "../store/slices/userSlices";
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -46,8 +47,8 @@ function UserSettingScreen() {
   
 
   useEffect(() => {
-    if (!localStorage.getItem("userInfo")) {
-      navigate("/login");
+    if (!userInfo) {
+      navigate("/");
     }
     dispatch(getUserDetail(userInfo.id));
   }, [navigate]);
@@ -73,7 +74,7 @@ function UserSettingScreen() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <UserSetting userInfo={userInfo} user={userDetail} />
+            <UserSetting userInfo={userInfo} userDetail={userDetail} reset={clearSuccess} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             Item Two
@@ -85,7 +86,7 @@ function UserSettingScreen() {
             <SellerApplication userInfo={userInfo} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={4}>
-            <MyPassword userInfo={userInfo} user={userDetail} />
+            <MyPassword userInfo={userInfo} user={userDetail} reset={clearSuccess} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={5}>
             Item Six
