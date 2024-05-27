@@ -11,6 +11,7 @@ import {
   Avatar,
   Typography,
   Box,
+  InputBase
 } from "@mui/material";
 import {
   ShoppingCart,
@@ -20,22 +21,24 @@ import {
   AccountCircle,
 } from "@mui/icons-material";
 import PhotoIcon from '@mui/icons-material/Photo';
-import SearchBox from "./SearchBox";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
   };
+
   const handleClosePostMenu = () => {
     setPostMenuAnchorEl(null);
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#f8bbd0", boxShadow: "none" }}>      
-      <Toolbar className="flex justify-between">
+    <AppBar position="static" className="bg-pink-500 shadow-none">
+      <Toolbar className="flex justify-between bg-pink-200">
         <Typography
           variant="h6"
           component={Link}
@@ -44,12 +47,13 @@ function Header({ openModal, openPostModal, openSideBar }) {
         >
           PetPals
         </Typography>
+        
         <Box className="flex space-x-4">
           <Button
             startIcon={<Home />}
             component={Link}
             to="/"
-            className="text-gray-700 hover:text-gray-900"
+            className="text-gray-700 hover:text-gray-900 transition-colors duration-300"
           >
             Home
           </Button>
@@ -57,7 +61,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             startIcon={<Pets />}
             component={Link}
             to="/items"
-            className="text-gray-700 hover:text-gray-900"
+            className="text-gray-700 hover:text-gray-900 transition-colors duration-300"
           >
             Products
           </Button>
@@ -65,7 +69,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             startIcon={<PhotoIcon />}
             component={Link}
             to="/board"
-            className="text-gray-700 hover:text-gray-900"
+            className="text-gray-700 hover:text-gray-900 transition-colors duration-300"
           >
             Board
           </Button>
@@ -73,33 +77,43 @@ function Header({ openModal, openPostModal, openSideBar }) {
             startIcon={<QuestionAnswer />}
             component={Link}
             to="/qna"
-            className="text-gray-700 hover:text-gray-900"
+            className="text-gray-700 hover:text-gray-900 transition-colors duration-300"
           >
             Q&A
           </Button>
         </Box>
-        <SearchBox />
+
         <Box className="flex items-center space-x-2">
+          <div className="relative">
+            <InputBase
+              placeholder="Search…"
+              className="bg-white rounded-full pl-8 pr-4 py-1"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+              <SearchIcon />
+            </div>
+          </div>
+
           {userInfo && (
             <IconButton color="inherit" component={Link} to="/cart">
-              <ShoppingCart className="text-gray-700 hover:text-gray-900" />
+              <ShoppingCart className="text-gray-700 hover:text-gray-900 transition-colors duration-300" />
             </IconButton>
           )}
           {userInfo ? (
-            <div>
+            <div className="flex items-center">
               <IconButton onClick={openSideBar} color="inherit">
                 {userInfo.image_url ? (
                   <Avatar src={userInfo.image_url} />
                 ) : (
                   <Avatar>{userInfo.username[0]}</Avatar>
                 )}
-              </IconButton >
-              
+              </IconButton>
             </div>
           ) : (
             <Button
               onClick={openModal}
-              className="py-2 px-4 bg-blue-200 text-gray-700 rounded-md hover:bg-blue-300"
+              className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
             >
               <AccountCircle className="mr-1" />
               Login
@@ -111,7 +125,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
                 aria-controls="post-menu"
                 aria-haspopup="true"
                 onClick={handlePostMenu}
-                className="bg-blue-200 text-gray-700 rounded-md hover:bg-blue-300"
+                className="bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-300"
               >
                 글쓰기
               </Button>
