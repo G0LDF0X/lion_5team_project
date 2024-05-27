@@ -44,12 +44,17 @@ export const createProduct = createAsyncThunk(
   "productCreate/createProduct",
   async (product, { rejectWithValue }) => {
     try {
+      const formData = new FormData();
+      for (const key in product) {
+        formData.append(key, product[key]);
+      }
+
       const res = await mainAxiosInstance.post(
         `/items/create/`,
-        { product },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );

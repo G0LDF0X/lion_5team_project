@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { listQNA, createQNA } from '../store/actions/qnaActions';
-import { Card, Col, Row } from 'react-bootstrap';
+import { listQNA } from '../store/actions/qnaActions';
 import { Link } from 'react-router-dom';
+import { Card, CardContent, CardMedia, Typography, Grid, Box, Button, Container } from '@mui/material';
 
 function QAScreen() {
   const dispatch = useDispatch();
@@ -12,55 +12,55 @@ function QAScreen() {
   const { qnas } = qnaList;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  
-
   useEffect(() => {
     dispatch(listQNA());
-   
-  }, [ navigate]);
+  }, [navigate, dispatch]);
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Q&A</h1>
-        
-      </div>
-      <Row>
+    <Container maxWidth="lg" className="mx-auto py-8">
+      <Box className="flex justify-between items-center mb-8">
+        <Typography variant="h4" className="font-bold text-pink-700">
+          Q&A
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/qna/create')}
+          className="bg-blue-500 text-white hover:bg-blue-600"
+        >
+          Create Q&A
+        </Button>
+      </Box>
+      <Grid container spacing={4}>
         {qnas.map((qna) => (
-          <Col key={qna.id} sm={12} md={6} lg={4} xl={12}>
-            <Card className="my-3 p-3 rounded shadow-lg">
-              <Card.Body>
-                <Row>
-                  <Col xs={2}>
-                    {qna.image_url && (
-                      <Link to={`/qna/detail/${qna.id}`}>
-                        <Card.Img
-                          src={VITE_API_BASE_URL+qna.image_url}
-                          className="w-24 h-24 object-cover rounded"
-                        />
-                      </Link>
-                    )}
-                  </Col>
-                  <Col xs={10}>
-                    <Card.Title as="div" className="mb-2">
-                      <Link to={`/qna/detail/${qna.id}`}>
-                        <strong className="text-xl">{qna.title}</strong>
-                      </Link>
-                    </Card.Title>
-                    <Card.Text>
-                      <span
-                        dangerouslySetInnerHTML={{ __html: qna.content }}
-                        className="text-gray-700"
-                      />
-                    </Card.Text>
-                  </Col>
-                </Row>
-              </Card.Body>
+          <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
+            <Card className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+              {qna.image_url && (
+                <Link to={`/qna/detail/${qna.id}`}>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={`${VITE_API_BASE_URL}${qna.image_url}`}
+                    alt={qna.title}
+                    className="object-cover"
+                  />
+                </Link>
+              )}
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="div">
+                  <Link to={`/qna/detail/${qna.id}`} className="no-underline text-gray-900 hover:text-blue-600">
+                    {qna.title}
+                  </Link>
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="div">
+                  <span dangerouslySetInnerHTML={{ __html: qna.content }} className="text-gray-700" />
+                </Typography>
+              </CardContent>
             </Card>
-          </Col>
+          </Grid>
         ))}
-      </Row>
-    </div>
+      </Grid>
+    </Container>
   );
 }
 

@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
+from django.core.paginator import Paginator
 import json
 # from tensorflow.keras.models import load_model
 
@@ -46,9 +47,12 @@ def get_items(request):
     if query == None:
         query = ''
     categories = request.query_params.getlist('category')
+    # page = request.query_params.get('page', 1)
+    # items_per_page = request.query_params.get('items_per_page', 10)
+    
     categories = [c for c in categories if c]
     if categories:
-        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query)
+        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query,)
         print(categories)
     else:
         items = Item.objects.filter(name__icontains=query)
