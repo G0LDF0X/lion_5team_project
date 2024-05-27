@@ -119,7 +119,7 @@ const sotre = configureStore({
     bookMarkAdd: bookMarkAddSlice.reducer,
     bookMarkRemove: bookMarkRemoveSlice.reducer,
 
-    cartSlice: cartSlice.reducer,
+    cart: cartSlice.reducer,
   },
 });
 

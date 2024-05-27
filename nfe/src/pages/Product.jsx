@@ -78,7 +78,9 @@ function ProductDetail() {
   };
   const addToCartHandler = () => {
     dispatch(addToCart({ id, qty }));
+    if (successAdd) {
     setState({ open: true });
+    }
   };
 
   const editReviewHandler = (review) => {
