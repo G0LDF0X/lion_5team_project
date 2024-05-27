@@ -6,7 +6,7 @@ import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Product from "../components/Product";
 import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
-import { mainAxiosInstance } from "../api/axiosInstances";
+import useCategory from "../hook/useCategory";
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -20,16 +20,13 @@ function ProductsScreen() {
   const page = params.get('page') || 1;
   const tag = params.get('tag');
 
-const getCategories = async () => {
-    const response = await mainAxiosInstance('/items/category');
-    setCategories(response.data);
-}
 
-getCategories()
 useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory}));
 }, [dispatch, query, tag, page, selectedCategory]);
 
+useCategory(setCategories);
+// console.log(categories)
   const handleCategoryChange = (e) => {
     if (e.target.checked) {
       setSelectedCategory((prev) => [...prev, e.target.value]);
@@ -45,7 +42,7 @@ useEffect(() => {
           <h3 className="text-2xl font-bold mb-4">Category</h3>
           <FormControl component="fieldset">
             <FormGroup>
-              {categories.map((category) => (
+              {categories&&categories.map((category) => (
                 <FormControlLabel
                   control={
                     <Checkbox
