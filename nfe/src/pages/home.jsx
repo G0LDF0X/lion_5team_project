@@ -32,6 +32,7 @@ function HomeScreen() {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
+    
   }, [dispatch]);
 
   return (

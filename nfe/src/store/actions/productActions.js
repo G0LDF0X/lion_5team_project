@@ -7,7 +7,7 @@ export const listProducts = createAsyncThunk(
     try {
       let params = new URLSearchParams();
       if (query) params.append('query', query);
-      console.log(query, page, category);
+      
       if (page) params.append('page', page);
       if (category.length) {
         category.forEach((cat) => params.append('category', cat));

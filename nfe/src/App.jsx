@@ -16,6 +16,7 @@ import CreateQnAScreen from './pages/CreateQnA'
 import QAUpdateScreen from './pages/UpdateQnA'
 import QADetailScreen from './pages/QnaDetail'
 import CartScreen from './pages/Cart'
+import MyShoppingScreen from './pages/MyShopping'
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -81,6 +82,10 @@ const routers = createBrowserRouter([
       {
         path:'/cart',
         element: <CartScreen/>
+      },
+      {
+        path:'/users/myshopping',
+        element: <MyShoppingScreen/>
       }
 
       

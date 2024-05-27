@@ -5,9 +5,7 @@ import PropTypes from 'prop-types'
 import SellerMain from '../components/profilescreen/SellerMain';
 import SellerItem from '../components/profilescreen/SellerItem';
 import SellerProfit from '../components/profilescreen/SellerProfit';
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
       role="tabpanel"
@@ -17,9 +15,9 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <div className="p-4">
+          <div>{children}</div>
+        </div>
       )}
     </div>
   );

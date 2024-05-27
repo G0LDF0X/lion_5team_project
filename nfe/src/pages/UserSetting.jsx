@@ -7,9 +7,7 @@ import PropTypes from "prop-types";
 import UserSetting from "../components/profilescreen/UserSetting";
 import SellerApplication from "../components/profilescreen/SellerApplication";
 import MyPassword from "../components/profilescreen/MyPassword";
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
       role="tabpanel"
@@ -19,9 +17,9 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <div className="p-4">
+          <div>{children}</div>
+        </div>
       )}
     </div>
   );

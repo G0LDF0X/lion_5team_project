@@ -34,14 +34,9 @@ import {
     userListSlice,
     userDeleteSlice,
     } from "./store/slices/userSlices";
-// import {
-//     orderCreateSlice,
-//     orderDetailsSlice,
-//     orderPaySlice,
-//     orderListMySlice,
-//     orderListSlice,
-//     orderDeliverSlice,
-//     } from "./store/slices/orderSlices";
+import {
+    orderSlice,    
+    } from "./store/slices/orderSlices";
 // import {
 //     cartSlice,
 //     cartSaveShippingAddressSlice,
@@ -120,6 +115,8 @@ const sotre = configureStore({
     bookMarkRemove: bookMarkRemoveSlice.reducer,
 
     cart: cartSlice.reducer,
+
+    order: orderSlice.reducer,
   },
 });
 

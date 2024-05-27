@@ -9,9 +9,7 @@ import { mainAxiosInstance } from '../api/axiosInstances'
 import ManageUsers from '../components/profilescreen/ManageUsers'
 import ManageSellers from '../components/profilescreen/ManageSellers'
 import ManageProducts from '../components/profilescreen/ManageProducts'
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
       role="tabpanel"
@@ -21,9 +19,9 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <div className="p-4">
+          <div>{children}</div>
+        </div>
       )}
     </div>
   );

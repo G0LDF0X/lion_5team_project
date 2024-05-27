@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate} from "react-router-dom";
 import { listBookMark } from "../store/actions/bookMarkActions";
-import { getMyOrders } from "../actions/orderActions";
+import { getMyOrders } from "../store/actions/orderActions";
 import { Tab, Tabs, Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-// import UserProfileShoppingOrderlist from "../components/UserProfileShoppingOrderlist";
-// import UserProfileBookmark from "../components/UserProfileBookmark";
-
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+import Orderlist from "../components/profilescreen/OrderList";
+import BookMarks from "../components/profilescreen/BookMarks";
+function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
       role="tabpanel"
@@ -20,13 +17,14 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <div className="p-4">
+          <div>{children}</div>
+        </div>
       )}
     </div>
   );
 }
+
 
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
@@ -46,8 +44,10 @@ function MyShoppingScreen() {
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const myOrderList = useSelector((state) => state.myOrderList);
-  const { orders } = myOrderList;
+  const order = useSelector((state) => state.order);
+  const { orders } = order;
+  const bookMarkList = useSelector((state) => state.bookMarkList);
+  const { bookMarkItems } = bookMarkList;
 
   useEffect(() => {
       dispatch(listBookMark());
@@ -74,10 +74,10 @@ function MyShoppingScreen() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
-        <UserProfileShoppingOrderlist orders={orders} />
+        <Orderlist orders={orders} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <UserProfileBookmark />
+        <BookMarks bookMarkItems={bookMarkItems} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Item Three
