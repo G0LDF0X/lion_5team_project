@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDropzone } from 'react-dropzone';
 import TagInput from '../components/TagInput';
+import { mainAxiosInstance } from '../api/axiosInstances';
+import { resetSuccess } from '../store/slices/boardSlices';
 
 const PostModal = ({ isOpen, onRequestClose }) => {
   const [formData, setFormData] = useState({
@@ -79,14 +81,11 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     data.append('content', formData.content);
     data.append('hashtags', formData.hashtags);
     data.append('location', formData.location);
-
-    fetch('YOUR_DRF_BACKEND_URL', {
-      method: 'POST',
-      body: data
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
+    mainAxiosInstance.post('/board/create/', data)
+    .then(response => {
+      console.log('Success:', response);
+      dispath(resetSuccess());
+      onRequestClose();
     })
     .catch((error) => {
       console.error('Error:', error);

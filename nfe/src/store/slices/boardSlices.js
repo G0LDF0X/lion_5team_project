@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 import {
   listBoards,
   getBoardDetails,
@@ -9,126 +8,86 @@ import {
   createReply,
 } from "../actions/boardActions";
 
-export const boardListSlice = createSlice({
-  name: "boardList",
-  initialState: { loading: false, boards: [] },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(listBoards.pending, (state) => {
-        state.loading = true;
-        state.boards = [];
-      })
-      .addCase(listBoards.fulfilled, (state, action) => {
-        state.loading = false;
-        state.boards = action.payload;
-      })
-      .addCase(listBoards.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
-});
-export const boardDetailsSlice = createSlice({
-  name: "boardDetails",
-  initialState: { loading: false, board: {}, replies: [] },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(getBoardDetails.pending, (state) => {
-        state.loading = true;
-        state.board = {};
-        state.replies = [];
-      })
-      .addCase(getBoardDetails.fulfilled, (state, action) => {
-        state.loading = false;
-        state.board = action.payload;
-        state.replies = action.payload.replies;
-        state.error = null;
-      })
-      .addCase(getBoardDetails.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
-});
-export const boardCreateSlice = createSlice({
-  name: "boardCreate",
-  initialState: { loading: false, success: false, board: {} },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(createBoard.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createBoard.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.board = action.payload;
-      })
-      .addCase(createBoard.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
-});
-export const boardUpdateSlice = createSlice({
-  name: "boardUpdate",
-  initialState: { loading: false, success: false, board: {} },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(updateBoard.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updateBoard.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.board = action.payload;
-      })
-      .addCase(updateBoard.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  },
-});
+const initialState = {
+  loading: false,
+  success: false,
+  error: null,
+  boardDetail: {},
+  boards: [],
+  replies: [],
+};
 
-export const boardDeleteSlice = createSlice({
-  name: "boardDelete",
-  initialState: { loading: false, success: false },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(deleteBoard.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(deleteBoard.fulfilled, (state) => {
-        state.loading = false;
-        state.success = true;
-      })
-      .addCase(deleteBoard.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+const pendingReducer = (state) => {
+  state.loading = true;
+  state.error = null;
+};
+
+const fulfilledListReducer = (state, action) => {
+  state.loading = false;
+  state.boards = action.payload;
+  state.error = null;
+};
+
+const fulfilledDetailsReducer = (state, action) => {
+  state.loading = false;
+  state.boardDetail = action.payload.board;
+  state.replies = action.payload.replies || [];
+  state.error = null;
+};
+
+const fulfilledCreateUpdateReducer = (state, action) => {
+  state.loading = false;
+  state.success = true;
+  state.boardDetail = action.payload;
+  state.error = null;
+};
+
+const fulfilledDeleteReducer = (state) => {
+  state.loading = false;
+  state.success = true;
+  state.error = null;
+};
+
+const rejectedReducer = (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+};
+
+export const boardSlice = createSlice({
+  name: "board",
+  initialState,
+  reducers: {
+    resetSuccess: (state) => {
+      state.success = false;
+    },
   },
-});
-export const boardReplySlice = createSlice({
-  name: "boardReply",
-  initialState: { loading: false, success: false, reply: {} },
-  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createReply.pending, (state) => {
-        state.loading = true;
-      })
+      .addCase(listBoards.pending, pendingReducer)
+      .addCase(listBoards.fulfilled, fulfilledListReducer)
+      .addCase(listBoards.rejected, rejectedReducer)
+      .addCase(getBoardDetails.pending, pendingReducer)
+      .addCase(getBoardDetails.fulfilled, fulfilledDetailsReducer)
+      .addCase(getBoardDetails.rejected, rejectedReducer)
+      .addCase(createBoard.pending, pendingReducer)
+      .addCase(createBoard.fulfilled, fulfilledCreateUpdateReducer)
+      .addCase(createBoard.rejected, rejectedReducer)
+      .addCase(updateBoard.pending, pendingReducer)
+      .addCase(updateBoard.fulfilled, fulfilledCreateUpdateReducer)
+      .addCase(updateBoard.rejected, rejectedReducer)
+      .addCase(deleteBoard.pending, pendingReducer)
+      .addCase(deleteBoard.fulfilled, fulfilledDeleteReducer)
+      .addCase(deleteBoard.rejected, rejectedReducer)
+      .addCase(createReply.pending, pendingReducer)
       .addCase(createReply.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.reply = action.payload;
+        state.replies = [...state.replies, action.payload];
+        state.error = null;
       })
-      .addCase(createReply.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+      .addCase(createReply.rejected, rejectedReducer);
   },
 });
+
+export const { resetSuccess } = boardSlice.actions;

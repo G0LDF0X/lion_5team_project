@@ -9,9 +9,8 @@ function BoardDetailModal({ open, handleClose, boardId }) {
   const [reply, setReply] = useState('');
   const [replyCreated, setReplyCreated] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  
-  const boardDetails = useSelector((state) => state.boardDetails);
-  const { loading, error, board, replies } = boardDetails;
+  const board = useSelector((state) => state.board);
+  const { loading, error, replies, boardDetail } = board;
   
   
   useEffect(() => {
@@ -53,13 +52,13 @@ function BoardDetailModal({ open, handleClose, boardId }) {
           <div className="w-full flex justify-center items-center p-8">
             <p className="text-red-500">{error}</p>
           </div>
-        ) : board.board?(
+        ) : boardDetail?(
           <>
             <div className="w-2/3">
-              {board.board.image_url && (
+              {boardDetail.image_url && (
                 <img
-                  src={VITE_API_BASE_URL+board.board.image_url}
-                  alt={board.board.title}
+                  src={VITE_API_BASE_URL+boardDetail.image_url}
+                  alt={boardDetail.title}
                   className="w-full h-full object-cover"
                 />
               )}
@@ -67,12 +66,12 @@ function BoardDetailModal({ open, handleClose, boardId }) {
             <div className="w-1/3 p-4 flex flex-col">
               <div className="flex items-center border-b pb-2 mb-4">
                 <div>
-                  <p className="font-bold">{board.board.username}</p>
-                  <p className="text-sm text-gray-500">{board.board.createdAt}</p>
+                  <p className="font-bold">{boardDetail.username}</p>
+                  <p className="text-sm text-gray-500">{boardDetail.createdAt}</p>
                 </div>
               </div>
               <div className="flex-grow overflow-y-auto">
-                <p dangerouslySetInnerHTML={{ __html: board.board.content }} className="text-2xl font-bold mb-2"></p>
+                <p dangerouslySetInnerHTML={{ __html: boardDetail.content }} className="text-2xl font-bold mb-2"></p>
                 <h2 className="text-xl font-bold mb-2">댓글</h2>
                 {replies.length === 0 && <p>No Comments</p>}
                 {replies.map((reply, index) => (

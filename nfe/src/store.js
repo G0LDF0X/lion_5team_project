@@ -43,12 +43,7 @@ import {
 //     cartSavePaymentMethodSlice,
 //     } from "./store/slices/cartSlices";
 import {
-    boardListSlice,
-    boardDetailsSlice,
-    boardCreateSlice,
-    boardUpdateSlice,
-    boardDeleteSlice,
-    boardReplySlice
+    boardSlice
     } from "./store/slices/boardSlices";
 
 import {
@@ -103,13 +98,7 @@ const sotre = configureStore({
     // cartSaveShippingAddress: cartSaveShippingAddressSlice.reducer,
     // cartSavePaymentMethod: cartSavePaymentMethodSlice.reducer,
 
-    boardList: boardListSlice.reducer,
-    boardDetails: boardDetailsSlice.reducer,
-    boardCreate: boardCreateSlice.reducer,
-    boardUpdate: boardUpdateSlice.reducer,
-    boardDelete: boardDeleteSlice.reducer,
-    boardReply: boardReplySlice.reducer,
-
+    board: boardSlice.reducer,
     bookMarkList: bookMarkListSlice.reducer,
     bookMarkAdd: bookMarkAddSlice.reducer,
     bookMarkRemove: bookMarkRemoveSlice.reducer,

@@ -12,8 +12,8 @@ function StandardImageList() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
   const dispatch = useDispatch();
-  const boardList = useSelector((state) => state.boardList);
-  const { boards, loading } = boardList;
+  const board = useSelector((state) => state.board);
+  const { boards, loading } = board;
   const useShow = (id) => {
     mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
   };

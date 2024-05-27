@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
@@ -7,9 +7,7 @@ import { listQNA } from "../store/actions/qnaActions";
 import ProductCarousel from "../components/homescreen/ProductCarousel";
 import BoardCarousel from "../components/homescreen/BoardCarousel";
 import QnASection from "../components/homescreen/QnASection";
-import PostModal from "../modals/PostModal";
-import { useOutletContext } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
 
 function HomeScreen() {
   const dispatch = useDispatch();
@@ -17,41 +15,56 @@ function HomeScreen() {
   const productList = useSelector((state) => state.productList);
   const { loading: productLoading, error: productError, products } = productList;
 
-  const boardList = useSelector((state) => state.boardList);
-  const { loading: boardLoading, error: boardError, boards } = boardList;
+  const board = useSelector((state) => state.board);
+  const { loading: boardLoading, error: boardError, boards } = board;
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
 
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
-    
   }, [dispatch]);
 
   return (
-    <Container className="mx-auto p-4">
-      <Typography variant="h4" className="text-center my-4 font-bold text-pink-500">
-        Welcome to our Pet Shop
-      </Typography>
+    <Container maxWidth="lg" className="mx-auto py-8">
+      
+      {/* <section className="my-16">
+       */}
+       <motion.section 
+        className="my-16" 
+        initial={{ opacity: 0, y: -50 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.5 }}
+      >
+        <ProductCarousel loading={productLoading} error={productError} products={products} />
+      {/* </section> */}
+      </motion.section>
 
-      <ProductCarousel loading={productLoading} error={productError} products={products} />
-      <BoardCarousel loading={boardLoading} error={boardError} boards={boards} />
-      <QnASection loading={qnaLoading} error={qnaError} qnas={qnas} />
+      {/* <section className="my-16"> */}
+      <motion.section 
+        className="my-16" 
+        initial={{ opacity: 0, y: -50 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <BoardCarousel loading={boardLoading} error={boardError} boards={boards} />
+      {/* </section> */}
+      </motion.section>
+
+      {/* <section className="my-16"> */}
+      <motion.section 
+        className="my-16" 
+        initial={{ opacity: 0, y: -50 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <QnASection loading={qnaLoading} error={qnaError} qnas={qnas} />
+      {/* </section> */}
+      </motion.section>
     </Container>
   );
 }
 
 export default HomeScreen;
-
-
-
-
-
-
