@@ -15,7 +15,6 @@ import { Favorite, FavoriteBorder, Share, MoreVert } from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { useOutletContext } from "react-router-dom";
 
 const StyledCheckbox = styled(Checkbox)({
   "&.Mui-checked": {
@@ -27,9 +26,6 @@ export default function BoardForm({ board,handleOpenModal  }) {
   const [isLiked, setIsLiked] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const useShow = (id) => {
-    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
-  };
   const likeHandler = () => {
     setIsLiked(!isLiked);
   };

@@ -82,11 +82,9 @@ function BoardCarousel({ loading, error, boards, handleOpenModal}) {
       ) : (
         <Carousel  responsive={responsive} infinite>
           {boards.map((board) => (
-            // <Box key={board.id} className="p-2 h-full">
             <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
               <BoardForm board={board}  handleOpenModal={handleOpenModal}  />
             </Card>
-            // </Box>
           ))}
         </Carousel>
       )}

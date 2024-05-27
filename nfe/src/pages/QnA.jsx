@@ -48,7 +48,7 @@ function QAScreen() {
                       </Link>
                     </Card.Title>
                     <Card.Text>
-                      <div
+                      <span
                         dangerouslySetInnerHTML={{ __html: qna.content }}
                         className="text-gray-700"
                       />
