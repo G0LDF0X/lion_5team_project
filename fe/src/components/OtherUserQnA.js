@@ -1,14 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { useSelector } from 'react-redux';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 
 const OtherUserQnA = ({ userId }) => {
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
   const [userQnAs, setuserQnAs] =  useState([]);
   const [userAnswers, setUserAnswers] =  useState([]);
   useEffect(() => {
@@ -66,8 +62,8 @@ const OtherUserQnA = ({ userId }) => {
                   </Link>
                   {userQnA.content.length > 100 
                   
-                ? <div dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
-                : <div dangerouslySetInnerHTML={{ __html: userQnA.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
+                ? <span dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <span dangerouslySetInnerHTML={{ __html: userQnA.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userQnA.created_at.split('T')[0]}</small>
                 </div>
                 <Badge bg="primary" pill>
@@ -91,8 +87,8 @@ const OtherUserQnA = ({ userId }) => {
                   </Link>
                   {userAnswer.content.length > 100 
                   
-                ? <div dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
-                : <div dangerouslySetInnerHTML={{ __html: userAnswer.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
+                ? <span dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }} style={{color:'black', background:'white'}} />
+                : <span dangerouslySetInnerHTML={{ __html: userAnswer.content }} style={{ color: 'black', backgroundColor: 'white' }} />}<br/>
                   <small style={{ color: 'gray' }}>{userAnswer.created_at.split('T')[0]}</small>
                 </div>
               </ListGroup.Item>

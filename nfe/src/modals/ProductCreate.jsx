@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Modal, Box, Chip, Stack } from "@mui/material";
 import Message from "../components/Message";
 import Loading from "../components/Loading";
-import { createProduct } from "../store/actions/productActions";
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function ProductCreateModal({ isOpen, onClose }) {
+function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState(null);

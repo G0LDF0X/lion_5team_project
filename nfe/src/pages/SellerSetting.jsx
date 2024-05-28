@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import SellerMain from '../components/profilescreen/SellerMain';
 import SellerItem from '../components/profilescreen/SellerItem';
 import SellerProfit from '../components/profilescreen/SellerProfit';
+import { mainAxiosInstance } from '../api/axiosInstances'
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -38,6 +39,9 @@ function a11yProps(index) {
 }
 function SellerSettingScreen() {
 const [value, setValue] = useState(0)
+const [products, setProducts] = useState([])
+const [isLoading, setIsLoading] = useState(false)
+
 const user = useSelector((state) => state.user)
 const { userInfo } = user
 const navigate = useNavigate()  
@@ -47,7 +51,21 @@ useEffect(() => {
   }
 }
 , [navigate]);
-
+const fetchProducts = async () => {
+  setIsLoading(true);
+  try {
+    const response = await mainAxiosInstance.get("/items/myitems", {
+      headers: {
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    });
+    setProducts(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,7 +84,7 @@ useEffect(() => {
         <SellerMain />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-     <SellerItem userInfo={userInfo}/>
+     <SellerItem  fetchProducts={fetchProducts} products={products} isLoading={isLoading}/>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <SellerProfit/>

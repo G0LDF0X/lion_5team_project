@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Box, Typography, CircularProgress, IconButton } from "@mui/material";
+import { Button, Box, Typography, IconButton } from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import Message from "../Message";
 import Loading from "../Loading";
 import { deleteProduct, createProduct, listProductDetails } from "../../store/actions/productActions";
 import ItemListSkeleton from "../ItemListSkeleton";
-import { mainAxiosInstance } from "../../api/axiosInstances";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import ProductCreateModal from "../../modals/ProductCreate";
-function SellerItem({ userInfo }) {
+function SellerItem({ fetchProducts, products, isLoading}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete;
@@ -27,24 +24,8 @@ function SellerItem({ userInfo }) {
     // dispatch(createProduct());
     setOpenModal(true); 
   };
-
+  
   useEffect(() => {
-    const fetchProducts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await mainAxiosInstance.get("/items/myitems", {
-          headers: {
-            Authorization: `Bearer ${userInfo.access}`,
-          },
-        });
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchProducts();
   }, [navigate, successCreate, successDelete, successUpdate]);
 
@@ -63,7 +44,7 @@ function SellerItem({ userInfo }) {
 
   return (
     <div className="container mx-auto py-8">
-      <ProductCreateModal isOpen={openModal} onClose={() => setOpenModal(false)} />
+      <ProductCreateModal isOpen={openModal} onClose={() => setOpenModal(false)} createProduct={createProduct} />
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">Products</Typography>
         <Button
