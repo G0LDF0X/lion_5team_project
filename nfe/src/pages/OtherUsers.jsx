@@ -5,7 +5,8 @@ import { getUserDetail } from "../store/actions/userActions";
 import PropTypes from "prop-types";
 import { Tab, Tabs, Box } from "@mui/material";
 import UserProfileMain from "../components/OtherUsers/UserProfileMain";
-
+import MyBoard from "../components/OtherUsers/MyBoard";
+import Follow from "../components/OtherUsers/Follow";
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -52,7 +53,7 @@ function OtherUserProfile() {
   useEffect(() => {
       dispatch(getUserDetail(id));
     
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, id]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -75,10 +76,10 @@ function OtherUserProfile() {
             <UserProfileMain userDetail={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            {/* <MyBoard userInfo={userInfo} /> */}
+            <MyBoard userId={id} url={VITE_API_BASE_URL}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            {/* <Follow userInfo={userInfo} /> */}
+            <Follow userId={id} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
             {/* <UserQnA userInfo={userInfo} /> */}

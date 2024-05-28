@@ -5,7 +5,7 @@ import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderI
 function UserProfileMain({userDetail, url}) {
     const [value, setValue] = useState(0);
     
-    console.log(userDetail)
+    // console.log(userDetail)
   return (
     <div className="flex justify-center mt-6">
     <div className="bg-white shadow-md rounded-lg w-full max-w-2xl">
