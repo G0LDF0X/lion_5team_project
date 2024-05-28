@@ -15,8 +15,8 @@ function UserProfileMain({ userInfo, user }) {
             ) : (
               <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
             )}
-            <h4 className="mt-4">{userInfo?.nickname || userInfo.username}</h4>
-            <h6>팔로워 {userInfo?.follower} | 팔로잉 {userInfo?.following}</h6>
+            <h4 className="mt-4">{userInfo.nickname || userInfo.username}</h4>
+            <h6>팔로워 {userInfo.follower} | 팔로잉 {userInfo.following}</h6>
           </div>
         </div>
         <div className="mt-6 mb-4 text-center">
