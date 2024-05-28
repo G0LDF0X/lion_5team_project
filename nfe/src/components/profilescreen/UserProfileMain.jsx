@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
 
-function UserProfileMain({ userInfo, user }) {
+function UserProfileMain({ userInfo, user, url }) {
   const [value, setValue] = useState(0);
 
   return (
@@ -11,7 +11,7 @@ function UserProfileMain({ userInfo, user }) {
         <div className="flex justify-center mt-4">
           <div className="flex flex-col items-center">
             {user?.user?.image_url ? (
-              <img src={user.user.image_url} alt="Profile" className="rounded-full w-32 h-32" />
+              <img src={url+user.user.image_url} alt="Profile" className="rounded-full w-32 h-32" />
             ) : (
               <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
             )}

@@ -78,12 +78,12 @@ export const register = createAsyncThunk(
 );
 export const getUserDetail = createAsyncThunk(
   "userDetail/detail",
-  async (_, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
         user: { userInfo },
       } = getState();
-      const res = await mainAxiosInstance.get(`/users/profile/`, {
+      const res = await mainAxiosInstance.get(`/users/detail/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userInfo.access}`,

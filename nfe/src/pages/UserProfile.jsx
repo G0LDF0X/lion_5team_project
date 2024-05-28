@@ -44,6 +44,7 @@ function a11yProps(index) {
 }
 
 function UserProfileScreen() {
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ function UserProfileScreen() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <UserProfileMain userInfo={userInfo} user={userDetail} />
+            <UserProfileMain userInfo={userInfo} user={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <MyBoard userInfo={userInfo} />

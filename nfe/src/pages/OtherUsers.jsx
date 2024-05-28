@@ -2,15 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUserDetail } from "../store/actions/userActions";
-import { listBookMark } from "../store/actions/bookMarkActions";
 import PropTypes from "prop-types";
-import UserProfileMain from "../components/profilescreen/UserProfileMain";
-import MyBoard from "../components/profilescreen/MyBoard";
-import Follow from "../components/profilescreen/Follow";
-import UserQnA from "../components/profilescreen/UserQnA";
-import Bookmark from "../components/profilescreen/Bookmark";
 import { Tab, Tabs, Box } from "@mui/material";
-
+import UserProfileMain from "../components/OtherUsers/UserProfileMain";
 
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
@@ -44,23 +38,21 @@ function a11yProps(index) {
 }
 
 function OtherUserProfile() {
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {id} = useParams
-  const user = useSelector((state) => state.user);
-  const {  userDetail} = user;
-  const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems } = bookMarkList;
-
+  const { id } = useParams();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const user = useSelector((state) => state.user);
+  const {userDetail} = user
 
   useEffect(() => {
       dispatch(getUserDetail(id));
     
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -80,7 +72,7 @@ function OtherUserProfile() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            {/* <UserProfileMain userInfo={userInfo} user={userDetail} /> */}
+            <UserProfileMain userDetail={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             {/* <MyBoard userInfo={userInfo} /> */}

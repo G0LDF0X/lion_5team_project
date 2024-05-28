@@ -71,9 +71,6 @@ const sotre = configureStore({
     qnaDelete: qnaDeleteSlice.reducer,
     qnaAnswerCreate: qnaAnswerCreateSlice.reducer,
 
-    
-    
-
     // orderCreate: orderCreateSlice.reducer,
     // orderDetails: orderDetailsSlice.reducer,
     // orderPay: orderPaySlice.reducer,
