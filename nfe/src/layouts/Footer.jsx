@@ -3,10 +3,11 @@ import { Box, Container, Grid, Typography, Link as MuiLink } from '@mui/material
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
+
 function Footer() {
   return (
     <Box sx={{ backgroundColor: '#1F2937', color: 'white', py: 4 }}>
-      <Container maxWidth="lg">
+      
         <Grid container spacing={4}>
           <Grid item xs={12} md={3}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
@@ -82,21 +83,21 @@ function Footer() {
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="body2">&copy; 2024 PetPals, Inc.</Typography>
           <Box>
-            <MuiLink href="https://github.com/G0LDF0X/lion_5team_project" color="inherit" underline="hover" sx={{ mr: 2 }}>
-            <GitHubIcon/>
+            <MuiLink href="https://github.com/G0LDF0X/lion_5team_project" color="inherit" underline="hover" sx={{ mr: 1 }}>
+              <GitHubIcon sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
-              <FacebookIcon/>
+              <FacebookIcon sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
-              <InstagramIcon/>
+              <InstagramIcon sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover">
               <i className="fas fa-globe mr-1"></i> English
             </MuiLink>
           </Box>
         </Box>
-      </Container>
+      
     </Box>
   );
 }

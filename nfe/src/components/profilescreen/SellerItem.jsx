@@ -5,20 +5,24 @@ import { Button, Box, Typography, IconButton } from "@mui/material";
 import { Delete, Edit, Add } from "@mui/icons-material";
 import Message from "../Message";
 import Loading from "../Loading";
-import { deleteProduct, createProduct, listProductDetails } from "../../store/actions/productActions";
+import { deleteProduct, createProduct, listProductDetails, updateProduct } from "../../store/actions/productActions";
 import ItemListSkeleton from "../ItemListSkeleton";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import ProductCreateModal from "../../modals/ProductCreate";
+import ProductUpdateModal from "../../modals/ProductUpdate";
 function SellerItem({ fetchProducts, products, isLoading}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete;
   const productCreate = useSelector((state) => state.productCreate);
   const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
   const productUpdate = useSelector((state) => state.productUpdate);
   const { success: successUpdate } = productUpdate;
+  const productDetails = useSelector((state) => state.productDetails);
+  const { product } = productDetails;
 
   const createProductHandler = () => {
     setOpenModal(true); 
@@ -37,14 +41,14 @@ function SellerItem({ fetchProducts, products, isLoading}) {
   };
 
   const updateHandler = (id) => {
-    // navigate(`/items/update/${id}`);
-    // dispatch(listProductDetails(id));
-    
+    setOpenUpdateModal(true);
+    dispatch(listProductDetails(id));
   };
 
   return (
     <div className="container mx-auto py-8">
       <ProductCreateModal isOpen={openModal} onClose={() => setOpenModal(false)} createProduct={createProduct} />
+      <ProductUpdateModal isOpen={openUpdateModal} onClose={() => setOpenUpdateModal(false)} updateProduct={updateProduct} product={product} />
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">Products</Typography>
         <Button
