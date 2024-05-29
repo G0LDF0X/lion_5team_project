@@ -76,7 +76,7 @@ function OtherUserProfile() {
             <UserProfileMain userDetail={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <MyBoard userId={id} url={VITE_API_BASE_URL}/>
+            <MyBoard userId={id} url={VITE_API_BASE_URL} dispatch={dispatch}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
             <Follow userId={id} />

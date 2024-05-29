@@ -21,7 +21,6 @@ function SellerItem({ fetchProducts, products, isLoading}) {
   const { success: successUpdate } = productUpdate;
 
   const createProductHandler = () => {
-    // dispatch(createProduct());
     setOpenModal(true); 
   };
   
@@ -39,7 +38,8 @@ function SellerItem({ fetchProducts, products, isLoading}) {
 
   const updateHandler = (id) => {
     // navigate(`/items/update/${id}`);
-    dispatch(listProductDetails(id));
+    // dispatch(listProductDetails(id));
+    
   };
 
   return (

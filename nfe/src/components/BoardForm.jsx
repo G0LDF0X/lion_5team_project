@@ -40,7 +40,8 @@ export default function BoardForm({ board,handleOpenModal  }) {
     >
       <CardHeader
         avatar={
-          <Link to={`/board/detail/${board.id}`}>
+          
+            <Link to={`/users/${board.user_id}`}>
             {board.user_image ? (
               <Avatar
                 src={VITE_API_BASE_URL + board.user_image}
@@ -49,6 +50,7 @@ export default function BoardForm({ board,handleOpenModal  }) {
             ) : (
               <Avatar sx={{ bgcolor: grey[500] }} aria-label="user">
                 {board.username[0]}
+          
               </Avatar>
             )}
           </Link>

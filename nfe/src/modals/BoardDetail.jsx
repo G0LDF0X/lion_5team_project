@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { createReply } from '../store/actions/boardActions';
 import CloseIcon from '@mui/icons-material/Close'; 
+import { Link } from 'react-router-dom';
 function BoardDetailModal({ open, handleClose, boardId }) {
   const dispatch = useDispatch();
   const [reply, setReply] = useState('');
@@ -65,7 +66,9 @@ function BoardDetailModal({ open, handleClose, boardId }) {
             <div className="w-1/3 p-4 flex flex-col">
               <div className="flex items-center border-b pb-2 mb-4">
                 <div>
+                  <Link to={`/users/${boardDetail.user_id}`}>
                   <p className="font-bold">{boardDetail.username}</p>
+                  </Link>
                   <p className="text-sm text-gray-500">{boardDetail.createdAt}</p>
                 </div>
               </div>
