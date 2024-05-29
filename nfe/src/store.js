@@ -13,6 +13,7 @@ import {
     reviewCreateSlice,
     reviewUpdateSlice,
     reviewDeleteSlice,
+    myReviewListSlice
     } from "./store/slices/reviewSlices";
 import {
     qnaListSlice,
@@ -24,41 +25,31 @@ import {
     qnaAnswerUpdateSlice,
     } from "./store/slices/qnaSlices";
 import {
-    userLoginSlice,
-    userRegisterSlice,
-    userLogoutSlice,
-    userDetailsSlice,
-    userUpdateSlice,
-    passwordUpdateSlice,
-    userListSlice,
-    userDeleteSlice,
+    userSlice,
     } from "./store/slices/userSlices";
-// import {
-//     orderCreateSlice,
-//     orderDetailsSlice,
-//     orderPaySlice,
-//     orderListMySlice,
-//     orderListSlice,
-//     orderDeliverSlice,
-//     } from "./store/slices/orderSlices";
+import {
+    orderSlice,    
+    } from "./store/slices/orderSlices";
 // import {
 //     cartSlice,
 //     cartSaveShippingAddressSlice,
 //     cartSavePaymentMethodSlice,
 //     } from "./store/slices/cartSlices";
 import {
-    boardListSlice,
-    boardDetailsSlice,
-    boardCreateSlice,
-    boardUpdateSlice,
-    boardDeleteSlice,
-    boardReplySlice
+    boardSlice
     } from "./store/slices/boardSlices";
 
+import {
+    bookMarkListSlice,
+    bookMarkAddSlice,
+    bookMarkRemoveSlice,
+    } from "./store/slices/bookMarkSlices";
+import { cartSlice } from "./store/slices/cartSlices";
 
 
 const sotre = configureStore({
   reducer: {
+    user: userSlice.reducer,
     productList: productListSlice.reducer,
     productDetails: productDetailsSlice.reducer,
     productCreate: productCreateSlice.reducer,
@@ -71,6 +62,7 @@ const sotre = configureStore({
     reviewCreate: reviewCreateSlice.reducer,
     reviewUpdate: reviewUpdateSlice.reducer,
     reviewDelete: reviewDeleteSlice.reducer,
+    myReviewList: myReviewListSlice.reducer,
 
     qnaList: qnaListSlice.reducer,
     qnaDetails: qnaDetailsSlice.reducer,
@@ -78,16 +70,6 @@ const sotre = configureStore({
     qnaUpdate: qnaUpdateSlice.reducer,
     qnaDelete: qnaDeleteSlice.reducer,
     qnaAnswerCreate: qnaAnswerCreateSlice.reducer,
-
-    userLogin: userLoginSlice.reducer,
-    userRegister: userRegisterSlice.reducer,
-    userDetails: userDetailsSlice.reducer,
-    userList: userListSlice.reducer,
-    userDelete: userDeleteSlice.reducer,
-    userUpdate: userUpdateSlice.reducer,
-    passwordUpdate: passwordUpdateSlice.reducer,
-    userLogout: userLogoutSlice.reducer,
-    
 
     // orderCreate: orderCreateSlice.reducer,
     // orderDetails: orderDetailsSlice.reducer,
@@ -100,13 +82,14 @@ const sotre = configureStore({
     // cartSaveShippingAddress: cartSaveShippingAddressSlice.reducer,
     // cartSavePaymentMethod: cartSavePaymentMethodSlice.reducer,
 
-    boardList: boardListSlice.reducer,
-    boardDetails: boardDetailsSlice.reducer,
-    boardCreate: boardCreateSlice.reducer,
-    boardUpdate: boardUpdateSlice.reducer,
-    boardDelete: boardDeleteSlice.reducer,
-    boardReply: boardReplySlice.reducer,
-    
+    board: boardSlice.reducer,
+    bookMarkList: bookMarkListSlice.reducer,
+    bookMarkAdd: bookMarkAddSlice.reducer,
+    bookMarkRemove: bookMarkRemoveSlice.reducer,
+
+    cart: cartSlice.reducer,
+
+    order: orderSlice.reducer,
   },
 });
 

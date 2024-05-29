@@ -34,12 +34,18 @@ export const listQnADetails = createAsyncThunk(
 
 export const createQNA = createAsyncThunk(
   "qnaCreate/createQnA",
-  async (qna, { getState, rejectWithValue }) => {
+  async ({ formData}, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
-      const res = await mainAxiosInstance.post(`/qna/create/`, qna);
+      const res = await mainAxiosInstance.post(`/qna/create/`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+      );
 
       return res.data;
     } catch (error) {
@@ -89,15 +95,15 @@ export const deleteQnA = createAsyncThunk(
 );
 export const createQNAAnswer = createAsyncThunk(
   "qnaAnswerCreate/createQNAAnswer",
-  async (qnaId, { getState, rejectWithValue }) => {
+  async ({id, content, title }, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.post(
-        `/qna/answer/create/${qnaId}`,
+        `/qna/answer/create/${id}/`,
         {
-          qnaId,
+          content:content, title:title
         },
         {
           headers: {
@@ -123,7 +129,7 @@ export const updateQNAAnswer = createAsyncThunk(
     // Add { getState } as the second argument
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(`/qna/answer/update/${qna.id}`, 
       {qna},{

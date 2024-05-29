@@ -8,7 +8,7 @@ function Media() {
 
   return (
     <Grid container wrap="nowrap">
-      {Array.from(new Array(4)).map((index) => (
+      {Array.from(new Array(4)).map((_, index) => (
         <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
           <Skeleton variant="rectangular" width={251} height={137} />
 

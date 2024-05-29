@@ -7,7 +7,7 @@ export const login = createAsyncThunk(
     try {
       const res = await mainAxiosInstance.post(
         `/app/token/`,
-        { user },
+        { username: user.username, password: user.password},
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,6 +30,7 @@ export const logout = createAsyncThunk(
   "userLogout/logout",
   async (_, { rejectWithValue }) => {
     try {
+      localStorage.removeItem("userInfo");
       const res = await mainAxiosInstance.post(`/app/logout/`);
 
       localStorage.removeItem("userInfo");
@@ -77,15 +78,15 @@ export const register = createAsyncThunk(
 );
 export const getUserDetail = createAsyncThunk(
   "userDetail/detail",
-  async (_, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
-      const res = await mainAxiosInstance.get(`/users/profile/`, {
+      const res = await mainAxiosInstance.get(`/users/detail/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.access}`,
         },
       });
 
@@ -105,7 +106,7 @@ export const updateUserProfile = createAsyncThunk(
   async (user, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/users/update_profile/`,
@@ -113,7 +114,7 @@ export const updateUserProfile = createAsyncThunk(
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${userInfo.token}`,
+            Authorization: `Bearer ${userInfo.access}`,
           },
         }
       );
@@ -135,7 +136,7 @@ export const updateUserPassword = createAsyncThunk(
   async (password, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/users/update_password/`,
@@ -163,7 +164,7 @@ export const listUsers = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.get(`/users/users`, {
         headers: {
@@ -186,7 +187,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.delete(`/users/delete/${id}`, {
         headers: {

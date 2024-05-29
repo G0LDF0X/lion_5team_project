@@ -36,14 +36,15 @@ export const listReviewDetails = createAsyncThunk(
 
 export const createReview = createAsyncThunk(
   "reviewCreate/createReview",
-  async (review, { getState, rejectWithValue }) => {
+  async ({id, formData}, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
+      console.log(id, formData)
       const res = await mainAxiosInstance.post(
-        `/items/review/create/`,
-        { review },
+        `/items/review/create/${id}/`,
+        { formData },
         {
           headers: {
             "Content-Type": "application/json",
@@ -63,12 +64,13 @@ export const createReview = createAsyncThunk(
   }
 );
 
+
 export const updateReview = createAsyncThunk(
   "reviewUpdate/updateReview",
   async (review, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.put(
         `/items/review/update/${review.id}`,
@@ -97,7 +99,7 @@ export const deleteReview = createAsyncThunk(
   async (id, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.delete(`/items/review/delete/${id}`, {
         headers: {
@@ -116,12 +118,12 @@ export const deleteReview = createAsyncThunk(
   }
 );
 
-export const myReview = createAsyncThunk(
+export const ListMyReview = createAsyncThunk(
   "reviewMy/myReview",
   async (_, { getState, rejectWithValue }) => {
     try {
       const {
-        userLogin: { userInfo },
+        user: { userInfo },
       } = getState();
       const res = await mainAxiosInstance.get(`/items/myreviews`, {
         headers: {

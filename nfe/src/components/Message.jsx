@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { Alert } from '@mui/material';
 
-function Message() {
+function Message({ children, variant = 'info' }) {
   return (
-    <div>
-      
-    </div>
-  )
+    <Alert severity={variant} className="my-4">
+      {children}
+    </Alert>
+  );
 }
 
-export default Message
+export default Message;

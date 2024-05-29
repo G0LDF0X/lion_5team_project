@@ -5,7 +5,7 @@ import {
   createReview,
   updateReview,
   deleteReview,
-  myReview,
+  ListMyReview
 } from "../actions/reviewActions";
 
 export const reviewListSlice = createSlice({
@@ -50,26 +50,33 @@ export const reviewDetailsSlice = createSlice({
   },
 });
 
+const initialState = { loading: false, success: false, review: {}, error: null };
+
 export const reviewCreateSlice = createSlice({
   name: "reviewCreate",
-  initialState: { loading: false, success: false, review: {} },
-  reducers: {},
+  initialState,
+  reducers: {
+    reset: () => initialState, // Correctly define the reset action here
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createReview.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createReview.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.review = action.payload;
-      })
-      .addCase(createReview.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+    .addCase(createReview.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(createReview.fulfilled, (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.review = action.payload;
+    })
+    .addCase(createReview.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   },
 });
+
+export const { reset: reviewCreateReset } = reviewCreateSlice.actions; // Correctly export the reset action
+export default reviewCreateSlice.reducer;
 
 export const reviewUpdateSlice = createSlice({
   name: "reviewUpdate",
@@ -112,21 +119,21 @@ export const reviewDeleteSlice = createSlice({
   },
 });
 
-export const myReviewSlice = createSlice({
-  name: "myReview",
+export const myReviewListSlice = createSlice({
+  name: "myReviewList",
   initialState: { loading: false, reviews: [] },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(myReview.pending, (state) => {
+      .addCase(ListMyReview.pending, (state) => {
         state.loading = true;
         state.reviews = [];
       })
-      .addCase(myReview.fulfilled, (state, action) => {
+      .addCase(ListMyReview.fulfilled, (state, action) => {
         state.loading = false;
         state.reviews = action.payload;
       })
-      .addCase(myReview.rejected, (state, action) => {
+      .addCase(ListMyReview.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
