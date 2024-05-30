@@ -21,7 +21,6 @@ import { Snackbar } from "@mui/material";
 import { Card, CardContent, Typography,  Box, Grid, TextField } from '@material-ui/core';
 import { deleteReview } from "../actions/reviewActions";
 import { REVIEW_CREATE_RESET } from "../constants/reviewConstants";
-import QA from "../components/QA";
 import { makeStyles } from '@material-ui/core/styles';
 import { createQNA } from "../actions/qnaActions";
 import Accordion from 'react-bootstrap/Accordion';
@@ -47,7 +46,7 @@ function ProductDetailScreen() {
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { success: successProductReview, createdReview } = reviewCreate;;
   const bookMarkList = useSelector((state) => state.bookMarkList);
-  const { bookMarkItems, success } = bookMarkList;
+  const { bookMarkItems } = bookMarkList;
   const cartAdd = useSelector((state) => state.cartAdd);
   const { success: successCartAdd , fail : failCartAdd} = cartAdd;
   const bookMarkAdd = useSelector((state) => state.bookMarkAdd);
@@ -56,12 +55,8 @@ function ProductDetailScreen() {
   const { success: successBookmarkRemove } = bookMarkRemove;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
-  const [showEditor, setShowEditor] = useState(false);
-  const [editorData, setEditorData] = useState('');
-  const [title, setTitle] = useState('');
   const [answer, setAnswer] = useState('');
   const [showTextField, setShowTextField] = useState(false);
-
   
   let totalRate =
     product && product.reviews
@@ -73,7 +68,11 @@ function ProductDetailScreen() {
 
     useEffect(() => {
 
-    
+      dispatch(listCartItems()); 
+      dispatch(listProductDetails(id));
+    }, [navigate, successCartAdd]);
+
+    useEffect(() => {
       if (successProductReview) {
         navigate(`/items/review/${createdReview.id}`);
         dispatch({type:REVIEW_CREATE_RESET});
@@ -81,27 +80,19 @@ function ProductDetailScreen() {
     if(successCartAdd){
       setState({open: true});
     }
-    if(successBookmarkAdd){
-      dispatch(listBookMark());
-      setMarked(true);
-    }
-    if(successBookmarkRemove){
-      dispatch(listBookMark());
-      setMarked(false);
-    }
-    if( success  &&bookMarkItems.length !==0 && bookMarkItems.find((x) => x.item_id === product.id)){
-      setMarked(true);
-    }
-    else{
-      setMarked(false);
-    }
   
-    dispatch(listCartItems()); 
-    dispatch(listProductDetails(id));
-    if(!bookMarkItems){
-    dispatch(listBookMark());}
-  }, [dispatch, id, successProductReview, successCartAdd, navigate,successBookmarkAdd, successBookmarkRemove, successReviewDelete ]);
+   
+
+  }, [ successProductReview,successReviewDelete, dispatch]);
   
+  useEffect(() => {
+    
+      dispatch(listBookMark());
+      if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
+        setMarked(true);
+      }
+      
+  }, [navigate, successBookmarkAdd, successBookmarkRemove]);
   const addToCartHandler = () => {
     dispatch(addToCart(id, qty));
 
@@ -113,10 +104,12 @@ function ProductDetailScreen() {
   const BookmarkHandler = () => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       dispatch(removeFromBookMark(id));
+      setMarked(false);
 
     }
     else {
       dispatch(addToBookMark(id));
+      setMarked(true);
     }
   }
   const editReviewHandler = (review) => {
@@ -144,7 +137,6 @@ function ProductDetailScreen() {
 
   const createQnAHandler = () => {
     navigate(`/items/qna/create/${id}`);
-    setShowEditor(true);
     dispatch(createQNA(id));
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
@@ -153,9 +145,6 @@ function ProductDetailScreen() {
     setShowTextField(true); 
   };
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
 
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value); 
@@ -303,8 +292,8 @@ function ProductDetailScreen() {
                           <i
                             className={
                               marked
-                                ? "fa-regular fa-bookmark"
-                                : "fa-solid fa-bookmark"
+                                ? "fa-solid fa-bookmark"
+                                : "fa-regular fa-bookmark"
                             }
                           ></i>
                         </Button>
@@ -337,7 +326,7 @@ function ProductDetailScreen() {
             </Box>
             <Typography variant="body1">{review.comment}</Typography>
             {review.image && <img src={review.image} alt={review.title} />}
-            <div dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <a dangerouslySetInnerHTML={{ __html: review.content }} style={{ color: 'black', backgroundColor: 'white' }} />
             <Box mt={2}>
           <Button variant="contained" color="primary" onClick={() => editReviewHandler(review)}>
             Edit
@@ -380,7 +369,7 @@ function ProductDetailScreen() {
           {item_qna.created_at.split('T')[0]}
         </span>
         <br/><br/>
-        <div dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+        <a dangerouslySetInnerHTML={{ __html: item_qna.content }} style={{ color: 'black', backgroundColor: 'white' }} />
 
       </Box>
     </Accordion.Header>
@@ -393,7 +382,7 @@ function ProductDetailScreen() {
               {answer.created_at.split('T')[0]}
             </span>
             <br/><br/>
-            <div dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+            <a dangerouslySetInnerHTML={{ __html: answer.content }} style={{ color: 'black', backgroundColor: 'white' }} />
           </Box>
         ))
       ) : (
@@ -406,14 +395,6 @@ function ProductDetailScreen() {
         <br/>
         {showTextField && (
           <>
-          {/* <TextField
-            value={title}
-            onChange={handleTitleChange}
-            variant="outlined"
-            placeholder="제목을 작성해주세요."
-            style={{ width: '500px', marginBottom: '20px' }}
-          />
-           */}
           <TextField
             value={answer}
             onChange={handleAnswerChange}

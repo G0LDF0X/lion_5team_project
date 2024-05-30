@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 
 const OtherFollowingList = ({ userId }) => {
-  const [following, setFollowing] = React.useState([]);
-  React.useEffect(() => {
+  const [following, setFollowing] =useState([]);
+  useEffect(() => {
     fetch(`/users/following/${userId}/`)
     .then(response => {
       if (!response.ok) {

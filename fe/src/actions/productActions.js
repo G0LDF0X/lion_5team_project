@@ -17,9 +17,6 @@ import {
     PRODUCT_UPDATE_FAIL,
     PRODUCT_UPDATE_RESET,
 
-    MY_PRODUCT_LIST_REQUEST,
-    MY_PRODUCT_LIST_SUCCESS,
-    MY_PRODUCT_LIST_FAIL,
   } from "../constants/productConstants";
   
   export const listProducts =
@@ -149,28 +146,4 @@ import {
     }
   };
 
-  export const listMyProducts = () => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: MY_PRODUCT_LIST_REQUEST,
-      });
-      const {
-        userLogin: { userInfo },
-      } = getState();
-      const res = await fetch(`/items/myitems/`, {
-        headers: {
-          Authorization: `Bearer ${userInfo.access}`,
-        },
-      });
-      const data = await res.json();
-      dispatch({ type: MY_PRODUCT_LIST_SUCCESS, payload: data });
-    } catch (error) {
-      dispatch({
-        type: MY_PRODUCT_LIST_FAIL,
-        payload:
-          error.response && error.response.data.detail
-            ? error.response.data.detail
-            : error.message,
-      });
-    }
-  }
+ 

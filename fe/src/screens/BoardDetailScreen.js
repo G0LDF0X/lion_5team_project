@@ -1,16 +1,13 @@
 import React, {  useState, useEffect } from "react";
 import { Row, Col, Image, ListGroup, Button, Card, Form} from "react-bootstrap";
 import { Link, useParams, useNavigate} from "react-router-dom";
-import Rating from "../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { getBoardDetails, createReply } from "../actions/boardActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import { board_CREATE_REVIEW_RESET } from "../constants/boardConstants";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaUser } from 'react-icons/fa';
-import ReplyForm from "../components/BoardDetailScreen";
-
+import useShow from "../hook/useShow";
 
 function BoardDetailScreen() {
   const dispatch = useDispatch();
@@ -25,10 +22,10 @@ function BoardDetailScreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [replyCreated, setReplyCreated] = useState(false);
-  
-  console.log(userInfo);
+  useShow(id);
+  // console.log(userInfo);
 
-  console.log(board);
+  // console.log(board);
   useEffect(() => {
     if(id ===board.user_id) {
       setIsUploader(true);
@@ -41,6 +38,7 @@ function BoardDetailScreen() {
 
   }, [dispatch, id, replyCreated]);
 
+  
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {
@@ -106,7 +104,7 @@ function BoardDetailScreen() {
                   {board.image_url && <Image src={board.image_url}  fluid />}
                   </div>
                   <Card.Text>
-                    <div dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
+                    <a dangerouslySetInnerHTML={{ __html: board.content }} style={{ color: 'black', backgroundColor: 'white' }} />
                   </Card.Text>
                   <Button variant="link" href={board.product_url} target="_blank">
                     Visit Product

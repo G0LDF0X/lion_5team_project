@@ -1,0 +1,27 @@
+/* Add animations for the elements */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .fade-in {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  /* Add hover effects for buttons */
+  .button-hover:hover {
+    background-color: #ff007a; /* Adjust color for hover state */
+  }
+  
+  /* Add shadow and transition effects for cards */
+  .card-hover {
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .card-hover:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }

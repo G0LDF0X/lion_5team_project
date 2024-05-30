@@ -194,7 +194,6 @@ def delete_bookmark(request, pk):
     return Response("Bookmark deleted", status=201)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getUserById(request, pk):
     user = User.objects.get(id=pk)
     serializer = User_Serializer(user, many=False)

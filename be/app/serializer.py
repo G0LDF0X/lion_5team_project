@@ -22,6 +22,8 @@ class ReplySerializer(serializers.ModelSerializer):
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)
     username = serializers.ReadOnlyField(source='user_id.username')
+    user_image = serializers.ImageField(source='user_id.image_url')
+    nickname = serializers.ReadOnlyField(source='user_id.nickname')
 
     class Meta:
         model = Board
@@ -29,6 +31,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source='user_id.username')
+    item_name = serializers.ReadOnlyField(source='item_id.name')
     class Meta:
         model = Review
         fields = '__all__'
@@ -131,14 +134,34 @@ class UserSerializerWithToken(UserSerializer):
         token = RefreshToken.for_user(obj)
         return str(token.access_token)
 
+# class User_Serializer(serializers.ModelSerializer):
+#     following = serializers.ReadOnlyField(source='user_id.following_id')
+#     follower = serializers.ReadOnlyField(source='user_id.follower_id')    
+
+
+
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+        
 class User_Serializer(serializers.ModelSerializer):
+    following = serializers.SerializerMethodField()
+    follower = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = '__all__'
-        
+
+    def get_following(self, obj):
+        return Follow.objects.filter(follower_id=obj.id).count()
+
+    def get_follower(self, obj):
+        return Follow.objects.filter(followed_id=obj.id).count()
+    
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     def validate(self, attrs):
         data = super().validate(attrs)
+        print(data)
 
         # Get the user instance for the authenticated user
         auth_user = self.user

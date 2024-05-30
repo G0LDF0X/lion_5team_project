@@ -22,7 +22,7 @@ function ProductsScreen() {
 
   const params = new URLSearchParams(location.search);
   const query = params.get('query') || '';
-  console.log(query);
+  // console.log(query);
   const page = params.get('page') || 1;
   const category = params.get('category');
   const tag = params.get('tag');
@@ -73,6 +73,9 @@ function ProductsScreen() {
       <Message variant={'danger'}>{error}</Message>
     ) : (
       <Row>
+        {query?
+        <h6>{query}에 관한 검색결과</h6>
+        : null}
         {products.map((product) => (
           <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
             <Product product={product} id={product.id} />

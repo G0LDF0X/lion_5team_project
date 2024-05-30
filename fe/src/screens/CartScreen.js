@@ -6,7 +6,6 @@ import Message from "../components/Message";
 import { addToCart, removeFromCart, listCartItems, updateQty, saveShippingAddress } from "../actions/cartActions";
 
 function CartScreen() {
-  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,7 +26,6 @@ function CartScreen() {
 
   }, [dispatch, successCartRemove, navigate]);
 
-  // Calculate cart products with prices and quantities
  
   const removeFromCartHandler = (id) => {
     window.alert("Item이 삭제되었습니다.");
@@ -36,7 +34,6 @@ function CartScreen() {
   };
 
   const checkOutHandler = () => {
-    // dispatch(saveShippingAddress(userInfo.adress))
     navigate("/shipping");
   };
 

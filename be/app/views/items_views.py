@@ -3,8 +3,42 @@ from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
+from django.core.paginator import Paginator
 import json
+# from tensorflow.keras.models import load_model
 
+
+from django.shortcuts import render
+
+
+
+# @api_view(['GET'])
+# def search_suggestions(request):
+#     query = request.GET.get('query', '') 
+#     if query:
+#         suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
+#         serializer = ItemSerializer(suggestions, many=True)
+#         return Response(serializer.data)
+#     return Response([])
+# @api_view(['GET'])
+# def search_suggestions(request):
+#     query = request.GET.get('query', '')
+#     if query:
+#         print (query)
+#         suggestions = Item.objects.filter(name__contains=query).values_list('name', flat=True)[:10]
+#         # print (suggestions)
+#         # if not suggestions:
+#         #     suggestions = Item.objects.filter(name__in=query).values_list('name', flat=True)[:10]
+#         return Response(suggestions)
+    
+#     return Response([])
+
+# @api_view(['GET'])
+# def search_suggestions(request):
+#     query = request.GET.get('query', '')
+#     items = Item.objects.filter(name__icontains=query)
+#     serializer = ItemSerializer(items, many=True)
+#     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_items(request):
@@ -13,9 +47,12 @@ def get_items(request):
     if query == None:
         query = ''
     categories = request.query_params.getlist('category')
+    # page = request.query_params.get('page', 1)
+    # items_per_page = request.query_params.get('items_per_page', 10)
+    
     categories = [c for c in categories if c]
     if categories:
-        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query)
+        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query,)
         print(categories)
     else:
         items = Item.objects.filter(name__icontains=query)
@@ -116,18 +153,21 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    user = User.objects.get(username=request.user)
+    user = request.user
     item = Item.objects.get(id=item_id)
-    review = Review.objects.create( 
-        user_id=user,
-        item_id=item,
-        rate=5,
-        content="",
-        image_url="",
-    )
-    serializer = ReviewSerializer(review, many=False)
-    return Response(serializer.data)
+    data = request.data
 
+    review = Review.objects.create(
+        item_id=item,
+        user_id=user,
+        title=data['title'],
+        content=data['content'],
+        rate=data['rate'],
+        image_url=data.get('image_url')
+    )
+
+    serializer = ReviewSerializer(review, many=False)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 @api_view(['PUT'])
 def update_review(request, pk):
     # try:
@@ -253,10 +293,8 @@ def get_tag(request):
     serializer = TagSerializer(tags, many=True)
     return Response(serializer.data)
 
-@api_view(['POST'])
-def get_qna(request,pk):
-    qna = Item_QnA.objects.get(pk=pk)
-    qna = qna.answer_set.all()
-
+@api_view(['GET'])
+def get_qna(request):
+    qna = Item_QnA.objects.all()
     serializer = ItemQnASerializer(qna, many=True)
     return Response(serializer.data)

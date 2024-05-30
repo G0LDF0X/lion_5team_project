@@ -1,10 +1,11 @@
 from django.urls import path
-from app.views.boards_views import get_Boards, board_detail_or_create_reply, get_TopBoards, create_Board, update_Board, delete_Board
+from app.views.boards_views import get_Boards, board_detail_or_create_reply, get_TopBoards, create_Board, update_Board, delete_Board, add_show
 # from app.views.boards_views import create_Reply
 
 urlpatterns = [
     path('', get_Boards, name='board_index'),  
     path('detail/<str:pk>/', board_detail_or_create_reply, name='board_detail'), 
+    path('detail/<str:pk>/add_show/', add_show, name='board_add_show'),
     path('top/', get_TopBoards, name='board_top'), 
     path('create/', create_Board, name='board_create'), 
     path('detail/<str:detail_pk>/board/update/<str:update_pk>/', update_Board, name='board_update'),

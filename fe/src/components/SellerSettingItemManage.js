@@ -11,50 +11,50 @@ import { listProducts, deleteProduct, createProduct, listProductDetails} from ".
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants"; 
 import ItemListSkeleton from "./ItemListSkeleton";
 
-function ProductListScreen() {
+function ProductListScreen({userInfo}) {
     const dispatch = useDispatch();
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
     const navigate = useNavigate();
-    const redirect = location.search ? location.search.split("=")[1] : "/";
-    const productList = useSelector((state) => state.productList);
-    const { loading, error, products, pages, success } = productList;
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
-    const userDetails = useSelector((state) => state.userDetails);
-    const { user} = userDetails;
+    const [isLoading, setIsLoading] = useState(false);
+    const [products, setProducts] = useState([]);
     const productDelete = useSelector((state) => state.productDelete);
     const { loading: loadingDelete, error: errorDelete ,success: successDelete } = productDelete;
     const productCreate = useSelector((state) => state.productCreate);
     const { loading:loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate;
     const productUpdate = useSelector((state) => state.productUpdate);
     const { success: successUpdate } = productUpdate;
-    const [sellerProducts, setSellerProducts] = useState([]);
     
-
-    // const page = params.get('page') || 1;
-    // let keyword = params.get('query') || '';
+  
     const createProductHandler = () => {
       dispatch(createProduct());
-      // dispatch(createProduct(product));
   }
-  
-    useEffect(() => {
-        dispatch({ type: PRODUCT_CREATE_RESET });
-        if(successCreate){
-          navigate(`/items/update/${createdProduct.id}`);
-        }else{
-          dispatch(listProducts());
-          if(products){
-            if(success){
-              if(products.seller_id === userInfo.id){
-              setSellerProducts(products);
-            }
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/items/myitems', {
+          headers: {
+            'Authorization': `Bearer ${userInfo.access}`
           }
-        }}
-        
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setIsLoading(false);
       }
-      , [dispatch, navigate, userInfo, successDelete, successCreate, successUpdate]);
+    };
+  
+    fetchProducts();
+  }, [navigate, successCreate, successDelete, successUpdate]);
+
+    
+
       const deleteHandler = (id) => {   
         if(window.confirm("Are you sure?")){
           dispatch(deleteProduct(id));
@@ -85,11 +85,8 @@ function ProductListScreen() {
     {errorDelete && <Message variant="danger">{errorDelete}</Message>}
     {loadingCreate && <Loading /> }
     {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-    {loading ? (
-      <ItemListSkeleton />
-    ) : error ? (
-      <Message variant="danger">{error}</Message>
-    ) : (<div>
+   {isLoading ? <ItemListSkeleton /> : (
+     <div>
       <Table striped bordered hover responsive className="table-sm">
         <thead>
           <tr>
@@ -101,9 +98,10 @@ function ProductListScreen() {
             <th></th>
           </tr>
         </thead>
-        { userInfo.is_staff? (
-        <tbody>
-          {products.map((product) => (
+        
+          <tbody>
+          {products.map((product) => ( 
+           
             <tr key={product.id}>
               <td>{product.id}</td>
               <td><Link to = {`/items/detail/${product.id}`}>{product.name}</Link></td>
@@ -112,12 +110,9 @@ function ProductListScreen() {
                 <td>{product.category}</td> 
               
                 
-                
-              {/* <td>{product.category}</td> */}
-              {/* <td>{product.brand}</td> */}
               <td>
                 <LinkContainer to={`/items/update/${product.id}`}>
-                  <Button variant="light" className="btn-sm" onClick = {updateHandler(product.id)}>
+                  <Button variant="light" className="btn-sm" onClick = {()=>updateHandler(product.id)}>
                     <i className="fas fa-edit"></i>
                   </Button>
                 </LinkContainer>
@@ -130,45 +125,15 @@ function ProductListScreen() {
                 </Button>
               </td>
             </tr>
+            
           ))}
-        </tbody>) : userInfo.is_seller? ( 
-          <tbody>
-          {products.map((product) => ( 
-            user.seller&&product.seller_id === user.seller.id ? (
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td><Link to = {`/items/detail/${product.id}`}>{product.name}</Link></td>
-              <td>{product.price}₩</td>
-              
-                <td>{product.category}</td> 
-              
-                
-                
-              {/* <td>{product.category}</td> */}
-              {/* <td>{product.brand}</td> */}
-              <td>
-                <LinkContainer to={`/items/update/${product.id}`}>
-                  <Button variant="light" className="btn-sm" onClick = {updateHandler(product.id)}>
-                    <i className="fas fa-edit"></i>
-                  </Button>
-                </LinkContainer>
-                <Button
-                  variant="danger"
-                  className="btn-sm"
-                  onClick={() => deleteHandler(product.id)}
-                >
-                  <i className="fas fa-trash"></i>
-                </Button>
-              </td>
-            </tr>) : null
-          ))}
-        </tbody>) : null
-      }
+        </tbody>
+      
 
       </Table>
       {/* <Paginate pages={pages} page={page} keyword="" isAdmin={true} /> */}
-      </div>
-    )}
+      </div>)}
+    
     </div>
   )
 }

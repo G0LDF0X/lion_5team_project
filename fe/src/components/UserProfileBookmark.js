@@ -1,63 +1,21 @@
-import React, { useEffect, useState} from "react";
-import { Row, Col, Form, Card } from "react-bootstrap";
+import React from "react";
+import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
-import { useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { listProducts } from "../actions/productActions";
+
+import { useSelector } from "react-redux";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-// import Star from "../components/Star";
-// import Paginate from "../components/Paginate";
-// import ProductCarousel from "../components/ProductCarousel";
 
 
 function UserProfileBookmark() {
 
-  const location = useLocation();
-//   const dispatch = useDispatch();
-//   const [categories, setCategories] = useState([]);
-//   const [selectedCategory, setSelectedCategory] = useState([]);
   const bookMarkList = useSelector(state => state.bookMarkList);
     const { loading, error, bookMarkItems } = bookMarkList;
   
-
-  const params = new URLSearchParams(location.search);
-  const query = params.get('query') || '';
-  console.log(query);
-//   const page = params.get('page') || 1;
-//   const category = params.get('category');
-//   const tag = params.get('tag');
   
-  useEffect(() => {
-    // if (book)
-
-  }
-  , []);
-  return (
     <div>
-        {/* <ProductHeader /> */}
+  
         <Row className="ml-3">
-  <Col md={3}>
-    <h3>Category</h3>
-    <Form className='filter-form'>
-      {/* {categories.map((category) => (
-        <Form.Check 
-          type={'checkbox'}
-          id={category.id}
-          label={category.name}
-          key = {category.id}
-          value={category.id}
-          onChange={(e) => { 
-            if (e.target.checked) {
-              setSelectedCategory(prev => [...prev, e.target.value]);
-            } else {
-              setSelectedCategory(prev => prev.filter(cat => cat !== e.target.value));
-            }
-          }}
-        />
-      ))} */}
-    </Form>
-  </Col>
   <Col md={9}>
     {loading ? (
       <Loading />
@@ -75,11 +33,8 @@ function UserProfileBookmark() {
     )}
   </Col>
 </Row>
-        <div className="pagination-container">
-        {/* <Paginate pages={pages} page={page} keyword={query} /> */}
-      </div>
     </div>
-  )
+  
 }
 
 export default UserProfileBookmark

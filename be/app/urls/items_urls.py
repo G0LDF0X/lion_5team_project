@@ -4,6 +4,7 @@ from app.views.items_views import get_items, get_category, item_details, create_
 urlpatterns = [
     path('', get_items, name="item_index"),
     path('myitems/', get_my_items, name="get_my_items"),
+    # path('search/suggestions/', search_suggestions, name='search-suggestions'),
     path('category/', get_category, name="get_category"),
     path('detail/<int:pk>/', item_details, name="item_details"),
     path('create/', create_item, name="create_item"),
