@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate} from 'react-router-dom'
-import { listMyReviews } from '../../../fe/src/actions/reviewActions'
+import { listMyReviews } from '../store/actions/reviewActions'
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import MyReview from '../components/profilescreen/MyReview'
