@@ -253,8 +253,10 @@ def get_tag(request):
     serializer = TagSerializer(tags, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def get_qna(request):
-    qna = Item_QnA.objects.all()
+@api_view(['POST'])
+def get_qna(request,pk):
+    qna = Item_QnA.objects.get(pk=pk)
+    qna = qna.answer_set.all()
+
     serializer = ItemQnASerializer(qna, many=True)
     return Response(serializer.data)
