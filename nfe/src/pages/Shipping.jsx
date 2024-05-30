@@ -48,14 +48,6 @@ function ShippingScreen() {
       dispatch(listCartItems());
     }
   }, [dispatch]);
-
-//   const cartProducts = cartItems
-//     .map((item) => {
-//       const product = products.find((p) => p.id === item.item_id);
-//       return product ? { ...product, qty: item.qty } : null;
-//     })
-//     .filter((item) => item !== null);
-
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(createOrder({ payment_method: payment, address: address }));
@@ -68,7 +60,6 @@ function ShippingScreen() {
     .toFixed(2);
   const realPrice = Number(subtotalPrice) + 5000;
   const combineCartItems = (items) => {
-    // console.log(cartProducts)
     const combinedItems = {};
     items.forEach((item) => {
       if (combinedItems[item.item_id]) {
@@ -180,7 +171,7 @@ function ShippingScreen() {
                         </ListItemAvatar>
                         <ListItemText
                           primary={
-                            <Link to={`/product/${item.item_id}`}>
+                            <Link to={`/items/detail/${item.item_id}`}>
                               {item.name}
                             </Link>
                           }
