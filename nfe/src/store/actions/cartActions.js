@@ -66,6 +66,7 @@ export const updateQty = createAsyncThunk(
   'cartItems/updateQty',
   async ({ id, qty }, { getState, rejectWithValue }) => {
     try {
+      console.log(id, qty);
       const config = {
         headers: getAuthHeaders(getState),
       };
