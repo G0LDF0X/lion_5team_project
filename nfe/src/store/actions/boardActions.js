@@ -1,21 +1,36 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
+
+// Helper function to handle errors
+const handleError = (error) => {
+  return error.response && error.response.data.detail
+    ? error.response.data.detail
+    : error.message;
+};
+
+// Helper function to get Authorization headers
+const getAuthHeaders = (getState) => {
+  const {
+    user: { userInfo },
+  } = getState();
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${userInfo.access}`,
+  };
+};
+
 export const listBoards = createAsyncThunk(
   "boardList/listBoards",
   async (_, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.get(`/board`);
-
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );
+
 export const getBoardDetails = createAsyncThunk(
   "boardDetails/getBoardDetails",
   async (id, { rejectWithValue }) => {
@@ -23,11 +38,7 @@ export const getBoardDetails = createAsyncThunk(
       const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );
@@ -37,14 +48,9 @@ export const createBoard = createAsyncThunk(
   async (board, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.post(`/board/create/`, board);
-    
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );
@@ -55,21 +61,16 @@ export const updateBoard = createAsyncThunk(
     try {
       const res = await mainAxiosInstance.put(
         `/board/update/${board.id}`,
-        { board },
+        board,
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );
@@ -79,14 +80,9 @@ export const deleteBoard = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.delete(`/board/delete/${id}`);
-
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );
@@ -95,27 +91,15 @@ export const createReply = createAsyncThunk(
   "boardCreateReply/createBoardReply",
   async ({ repliedId = 0, content, id }, { getState, rejectWithValue }) => {
     try {
-      const {
-        user : { userInfo },
-      } = getState();
+      const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.post(
         `/board/detail/${id}`,
         { content, repliedId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
+        { headers }
       );
-
       return res.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(handleError(error));
     }
   }
 );

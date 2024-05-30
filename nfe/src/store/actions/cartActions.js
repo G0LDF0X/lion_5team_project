@@ -1,112 +1,85 @@
-import React from 'react';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
+const handleError = (error) => {
+  return error.response && error.response.data.detail
+    ? error.response.data.detail
+    : error.message;
+};
+
+const getAuthHeaders = (getState) => {
+  const {
+    user: { userInfo },
+  } = getState();
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userInfo.access}`,
+  };
+};
+
 export const listCartItems = createAsyncThunk(
-    'cartItems/listCartItems',
-    async (_, { getState, rejectWithValue }) => {
-        try {
-            const {
-                user: { userInfo }
-            } = getState();
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${userInfo.access}`
-                }
-            };
-            const res = await mainAxiosInstance.get('/order/cart/', config);
-            return res.data;
-        } catch (error) {
-            return rejectWithValue(
-                error.response && error.response.data.detail
-                    ? error.response.data.detail
-                    : error.message
-            );
-        }
+  'cartItems/listCartItems',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const config = {
+        headers: getAuthHeaders(getState),
+      };
+      const res = await mainAxiosInstance.get('/order/cart/', config);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
     }
+  }
 );
+
 export const addToCart = createAsyncThunk(
-    'cartItems/addToCart',
-    async ({ id, qty }, { getState, rejectWithValue }) => {
-        try {
-            const {
-                user: { userInfo }
-            } = getState();
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${userInfo.access}`
-                },
-                body: JSON.stringify({ qty })
-            };
-            const res = await mainAxiosInstance.post(`/order/cart/${id}/`, config);
-            return res.data;
-        } catch (error) {
-            return rejectWithValue(
-                error.response && error.response.data.detail
-                    ? error.response.data.detail
-                    : error.message
-            );
-        }
+  'cartItems/addToCart',
+  async ({ id, qty }, { getState, rejectWithValue }) => {
+    try {
+      const config = {
+        headers: getAuthHeaders(getState),
+      };
+      const res = await mainAxiosInstance.post(`/order/cart/${id}/`, { qty }, config);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
     }
+  }
 );
 
 export const removeFromCart = createAsyncThunk(
-    'cartItems/removeFromCart',
-    async (id, { getState, rejectWithValue }) => {
-        try {
-            const {
-                user: { userInfo }
-            } = getState();
-            const config = {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${userInfo.access}`
-                }
-            };
-            const res = await mainAxiosInstance.delete(`/order/cart/remove/${id}/`, config);
-            return res.data;
-        } catch (error) {
-            return rejectWithValue(
-                error.response && error.response.data.detail
-                    ? error.response.data.detail
-                    : error.message
-            );
-        }
+  'cartItems/removeFromCart',
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const config = {
+        headers: getAuthHeaders(getState),
+      };
+      const res = await mainAxiosInstance.delete(`/order/cart/remove/${id}/`, config);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
     }
+  }
 );
 
 export const updateQty = createAsyncThunk(
-    'cartItems/updateQty',
-    async ({ id, qty }, { getState, rejectWithValue }) => {
-        try {
-            const {
-                user: { userInfo }
-            } = getState();
-            const config = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${userInfo.access}`
-                },
-                body: JSON.stringify({ qty })
-            };
-            const res = await mainAxiosInstance.put(`/order/cart/update/${id}/`, config);
-            return res.data;
-        } catch (error) {
-            return rejectWithValue(
-                error.response && error.response.data.detail
-                    ? error.response.data.detail
-                    : error.message
-            );
-        }
+  'cartItems/updateQty',
+  async ({ id, qty }, { getState, rejectWithValue }) => {
+    try {
+      const config = {
+        headers: getAuthHeaders(getState),
+      };
+      const res = await mainAxiosInstance.put(`/order/cart/update/${id}/`, { qty }, config);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
     }
+  }
 );
 
 export const saveShippingAddress = createAsyncThunk(
-    'cartItems/saveShippingAddress',
-    async (data) => {
-        return data;
-    }
+  'cartItems/saveShippingAddress',
+  async (data) => {
+    return data;
+  }
 );

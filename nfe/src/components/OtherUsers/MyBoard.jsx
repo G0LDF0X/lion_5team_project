@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Card, CardContent, CardMedia, Typography, Grid, Container } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import BoardDetailModal from '../../modals/BoardDetail';
 import { getBoardDetails } from '../../store/actions/boardActions';
 import useShow from '../../hook/useShow';
-const MyBoard = ({ userId, url, dispatch }) => {
+const MyBoard = ({ userId, url }) => {
   const [myBoards, setMyBoards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
-
+  const dispatch = useDispatch();
   const handleCloseModal = () => {
     setModalOpen(false);
   }
