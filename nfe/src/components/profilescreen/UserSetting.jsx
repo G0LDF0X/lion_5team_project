@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserProfile, getUserDetails } from "../../../../fe/src/actions/userActions";
+import { updateUserProfile, getUserDetails } from "../../store/slices/userSlices";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
 function UserSetting({ userInfo, userDetail, reset }) {
