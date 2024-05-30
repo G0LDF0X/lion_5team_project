@@ -49,12 +49,12 @@ function ShippingScreen() {
     }
   }, [dispatch]);
 
-  const cartProducts = cartItems
-    .map((item) => {
-      const product = products.find((p) => p.id === item.item_id);
-      return product ? { ...product, qty: item.qty } : null;
-    })
-    .filter((item) => item !== null);
+//   const cartProducts = cartItems
+//     .map((item) => {
+//       const product = products.find((p) => p.id === item.item_id);
+//       return product ? { ...product, qty: item.qty } : null;
+//     })
+//     .filter((item) => item !== null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -62,11 +62,25 @@ function ShippingScreen() {
     navigate("/payment");
   };
 
-  const subtotalQuantity = cartProducts.reduce((acc, item) => acc + item.qty, 0);
-  const subtotalPrice = cartProducts
+  const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
+  const subtotalPrice = cartItems
     .reduce((acc, item) => acc + item.qty * item.price, 0)
     .toFixed(2);
   const realPrice = Number(subtotalPrice) + 5000;
+  const combineCartItems = (items) => {
+    // console.log(cartProducts)
+    const combinedItems = {};
+    items.forEach((item) => {
+      if (combinedItems[item.item_id]) {
+        combinedItems[item.item_id].qty += item.qty;
+      } else {
+        combinedItems[item.item_id] = { ...item };
+      }
+    });
+    return Object.values(combinedItems);
+  };
+
+  const combinedCartItems = combineCartItems(cartItems);
 
   return (
     <Container maxWidth="lg" className="py-8">
@@ -155,18 +169,18 @@ function ShippingScreen() {
               <Divider />
               <Box my={2}>
                 <Typography variant="h6">주문 상품</Typography>
-                {cartProducts.length === 0 ? (
+                {combinedCartItems.length === 0 ? (
                   <Message>Your cart is empty</Message>
                 ) : (
                   <List>
-                    {cartProducts.map((item, index) => (
+                    {combinedCartItems.map((item, index) => (
                       <ListItem key={index} alignItems="flex-start">
                         <ListItemAvatar>
-                          <Avatar src={VITE_API_BASE_URL+item.image_url} alt={item.name} />
+                          <Avatar src={VITE_API_BASE_URL+item.image} alt={item.name} />
                         </ListItemAvatar>
                         <ListItemText
                           primary={
-                            <Link to={`/product/${item.product}`}>
+                            <Link to={`/product/${item.item_id}`}>
                               {item.name}
                             </Link>
                           }
@@ -182,7 +196,12 @@ function ShippingScreen() {
                             </>
                           }
                         />
+                        <ListItemText primary="수량" secondary={item.qty} />
+
                       </ListItem>
+                    //   <ListItem>
+                    //     <ListItemText primary="수량" secondary={item.qty} />
+                    //     </ListItem>
                     ))}
                   </List>
                 )}

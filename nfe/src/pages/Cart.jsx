@@ -13,8 +13,8 @@ import {
   Card,
   CardContent,
   Typography,
+  IconButton,
 } from "@mui/material";
-import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import {
   removeFromCart,
@@ -31,6 +31,7 @@ function CartScreen() {
   const { cartItems, successCartRemove } = cart;
   const [subtotalQuantity, setSubtotalQuantity] = useState(0);
   const [subtotalPrice, setSubtotalPrice] = useState(0);
+
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) {
       dispatch(listCartItems());
@@ -49,24 +50,41 @@ function CartScreen() {
   const checkOutHandler = () => {
     navigate("/shipping");
   };
+
   const updateQtyHandler = (id, qty) => {
     dispatch(updateQty({ id, qty }));
-  }
+  };
+
+  const combineCartItems = (items) => {
+    const combinedItems = {};
+    items.forEach((item) => {
+      if (combinedItems[item.item_id]) {
+        combinedItems[item.item_id].qty += item.qty;
+      } else {
+        combinedItems[item.item_id] = { ...item };
+      }
+    });
+    return Object.values(combinedItems);
+  };
+
+  const combinedCartItems = combineCartItems(cartItems);
+
   useEffect(() => {
-    if (cartItems) {
-     setSubtotalQuantity(cartItems.reduce((acc, item) => acc + item.qty, 0));
+    if (combinedCartItems) {
+      setSubtotalQuantity(
+        combinedCartItems.reduce((acc, item) => acc + item.qty, 0)
+      );
       setSubtotalPrice(
-        cartItems
+        combinedCartItems
           .reduce((acc, item) => acc + item.qty * item.price, 0)
           .toFixed(2)
       );
-      }
-      else {
-        setSubtotalQuantity(0);
-        setSubtotalPrice(0);
-      }
-  }
-  , [cartItems]);
+    } else {
+      setSubtotalQuantity(0);
+      setSubtotalPrice(0);
+    }
+  }, [combinedCartItems]);
+
   return (
     <div className="container mx-auto py-8">
       <Typography variant="h4" className="mb-6">
@@ -74,61 +92,60 @@ function CartScreen() {
       </Typography>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="col-span-2">
-          {cartItems.length === 0 ? (
+          {combinedCartItems.length === 0 ? (
             <Message variant="info">
               Your cart is empty <Link to="/">Go Back</Link>
             </Message>
           ) : (
             <List>
-              {cartItems &&
-                cartItems.map((item) => (
-                  <ListItem
-                    key={item.id}
-                    className="flex justify-between items-center border-b py-4"
-                  >
-                    <ListItemAvatar>
-                      <Avatar
-                        src={
-                          VITE_API_BASE_URL + item.image || "/placeholder.jpg"
-                        }
-                        alt={item.name}
-                        variant="square"
-                        className="w-24 h-24"
-                      />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Link
-                          to={`/items/detail/${item.id}`}
-                          className="text-blue-500 hover:underline"
-                        >
-                          {item.name}
-                        </Link>
+              {combinedCartItems.map((item) => (
+                <ListItem
+                  key={item.item_id}
+                  className="flex justify-between items-center border-b py-4"
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      src={
+                        VITE_API_BASE_URL + item.image || "/placeholder.jpg"
                       }
-                      secondary={`Price: ${item.price}₩`}
+                      alt={item.name}
+                      variant="square"
+                      className="w-24 h-24"
                     />
-                    <Select
-                      value={item.qty}
-                      onChange={(e) =>
-                        dispatch(updateQtyHandler(item.item_id, e.target.value))
-                      }
-                      className="mr-4"
-                    >
-                      {[...Array(40).keys()].map((x) => (
-                        <MenuItem key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Link
+                        to={`/items/detail/${item.item_id}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        {item.name}
+                      </Link>
+                    }
+                    secondary={`Price: ${item.price}₩`}
+                  />
+                  <Select
+                    value={item.qty}
+                    onChange={(e) =>
+                      updateQtyHandler(item.item_id, e.target.value)
+                    }
+                    className="mr-4"
+                  >
+                    {[...Array(40).keys()].map((x) => (
+                      <MenuItem key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </MenuItem>
+                    ))}
+                  </Select>
 
-                    <IconButton
-                      color="secondary"
-                      onClick={() => removeFromCartHandler(item.item_id)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </ListItem>
-                ))}
+                  <IconButton
+                    color="secondary"
+                    onClick={() => removeFromCartHandler(item.item_id)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </ListItem>
+              ))}
             </List>
           )}
         </div>
@@ -148,7 +165,7 @@ function CartScreen() {
                 variant="contained"
                 color="primary"
                 fullWidth
-                disabled={cartItems.length === 0}
+                disabled={combinedCartItems.length === 0}
                 onClick={checkOutHandler}
               >
                 Proceed To Checkout
