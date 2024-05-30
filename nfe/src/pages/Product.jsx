@@ -9,7 +9,7 @@ import {
   removeFromBookMark,
 } from "../store/actions/bookMarkActions";
 import { addToCart, listCartItems } from "../store/actions/cartActions";
-import { createQNA } from "../store/actions/qnaActions";
+
 import {
   Snackbar,
   Accordion,
@@ -49,7 +49,8 @@ function ProductDetail() {
   const { bookMarkItems } = bookMarkList;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
-
+  const cart = useSelector((state) => state.cart);
+  const { successAdd } = cart;
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));

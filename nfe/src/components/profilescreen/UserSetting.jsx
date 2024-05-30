@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserProfile, getUserDetails } from "../../../../fe/src/actions/userActions";
+import { updateUserProfile, getUserDetail } from "../../store/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
 function UserSetting({ userInfo, userDetail, reset }) {
@@ -35,7 +35,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       });
       if (response.status === 200) {
         setMessage("Image uploaded successfully");
-        dispatch(getUserDetails(userInfo.id));
+        dispatch(getUserDetail(userInfo.id));
       } else {
         console.log("image upload", response.data.message);
         setMessage(response.data.message);

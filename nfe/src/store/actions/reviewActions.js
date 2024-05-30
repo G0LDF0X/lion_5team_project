@@ -93,7 +93,7 @@ export const deleteReview = createAsyncThunk(
   }
 );
 
-export const ListMyReview = createAsyncThunk(
+export const listMyReview = createAsyncThunk(
   "reviewMy/myReview",
   async (_, { getState, rejectWithValue }) => {
     try {
