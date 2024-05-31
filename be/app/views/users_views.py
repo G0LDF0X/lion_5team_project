@@ -4,6 +4,7 @@ from app.serializer import RegisterSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from django.contrib.auth.models import User as auth_user
+from django.contrib.auth import logout
 from rest_framework.permissions import AllowAny
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -33,3 +34,7 @@ def getUser(request, pk):
     serializer = RegisterSerializer(user, many=False)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def logoutUser(request):
+    logout(request)
+    return Response({"message": "Logged out"})
