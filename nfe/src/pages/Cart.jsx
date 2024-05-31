@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,34 +28,41 @@ function CartScreen() {
   const navigate = useNavigate();
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const cart = useSelector((state) => state.cart);
-  const { cartItems, successCartRemove } = cart;
-  const [subtotalQuantity, setSubtotalQuantity] = useState(0);
-  const [subtotalPrice, setSubtotalPrice] = useState(0);
+  const { cartItems = [], successCartRemove } = cart; // Ensure cartItems is an array by default
+  const [combinedCartItems, setCombinedCartItems] = useState([]);
+  const [updatedQty, setUpdatedQty] = useState(false);
 
   useEffect(() => {
-    if (!cartItems || cartItems.length === 0) {
-      dispatch(listCartItems());
-    }
+    dispatch(listCartItems());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (successCartRemove) {
       dispatch(listCartItems());
     }
-  }, [dispatch, successCartRemove, navigate]);
+  }, [dispatch, successCartRemove]);
 
-  const removeFromCartHandler = (id) => {
-    window.alert("Item이 삭제되었습니다.");
-    dispatch(removeFromCart(id));
-    window.location.reload();
-  };
+  const removeFromCartHandler = useCallback((id) => {
+    if (window.confirm("Are you sure you want to remove this item?")) {
+      dispatch(removeFromCart(id));
+    }
+  }, [dispatch]);
 
   const checkOutHandler = () => {
     navigate("/shipping");
   };
 
-  const updateQtyHandler = (id, qty) => {
+  const updateQtyHandler = useCallback((id, qty) => {
     dispatch(updateQty({ id, qty }));
-  };
+    setUpdatedQty(true);
+  }, [dispatch]);
 
-  const combineCartItems = (items) => {
+  const combineCartItems = useCallback((items) => {
+    if (!Array.isArray(items)) {
+      console.error("Expected items to be an array, but got:", items);
+      return [];
+    }
+
     const combinedItems = {};
     items.forEach((item) => {
       if (combinedItems[item.item_id]) {
@@ -65,25 +72,18 @@ function CartScreen() {
       }
     });
     return Object.values(combinedItems);
-  };
-
-  const combinedCartItems = combineCartItems(cartItems);
+  }, []);
 
   useEffect(() => {
-    if (combinedCartItems) {
-      setSubtotalQuantity(
-        combinedCartItems.reduce((acc, item) => acc + item.qty, 0)
-      );
-      setSubtotalPrice(
-        combinedCartItems
-          .reduce((acc, item) => acc + item.qty * item.price, 0)
-          .toFixed(2)
-      );
-    } else {
-      setSubtotalQuantity(0);
-      setSubtotalPrice(0);
-    }
-  }, [combinedCartItems]);
+    setCombinedCartItems(combineCartItems(cartItems));
+    console.log("Cart Items:", cartItems);
+    setUpdatedQty(false);
+  }, [cartItems, combineCartItems, updatedQty]);
+
+  const subtotalQuantity = combinedCartItems.reduce((acc, item) => acc + item.qty, 0);
+  const subtotalPrice = combinedCartItems
+    .reduce((acc, item) => acc + item.qty * item.price, 0)
+    .toFixed(2);
 
   return (
     <div className="container mx-auto py-8">
@@ -127,7 +127,7 @@ function CartScreen() {
                   <Select
                     value={item.qty}
                     onChange={(e) =>
-                      updateQtyHandler(item.item_id, e.target.value)
+                      updateQtyHandler(item.id, e.target.value)
                     }
                     className="mr-4"
                   >
@@ -137,7 +137,6 @@ function CartScreen() {
                       </MenuItem>
                     ))}
                   </Select>
-
                   <IconButton
                     color="secondary"
                     onClick={() => removeFromCartHandler(item.item_id)}

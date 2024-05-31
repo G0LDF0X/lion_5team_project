@@ -50,8 +50,10 @@ function UserSettingScreen() {
   const { user } = userDetails;
 
   useEffect(() => {
-    dispatch(getUserDetails(userInfo.id));
-  }, []);
+    if (userInfo) {
+      dispatch(getUserDetails(userInfo.id));
+    }
+  }, [dispatch, userInfo]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

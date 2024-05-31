@@ -10,7 +10,7 @@ import SellerSettingScreen from './pages/SellerSetting'
 import AdminManageScreen from './pages/Admin'
 import ProductDetail from './pages/Product'
 import ProductsScreen from './pages/Products'
-import CreateReviewScreen from './pages/CreateReview'
+import UpdateReviewScreen from './pages/UpdateReview'
 import QAScreen from './pages/QnA'
 import CreateQnAScreen from './pages/CreateQnA'
 import QAUpdateScreen from './pages/UpdateQnA'
@@ -62,8 +62,8 @@ const routers = createBrowserRouter([
         element: <ProductsScreen/>
       },
       {
-        path:'/items/review/create/:id',
-        element: <CreateReviewScreen/>
+        path:'/items/review/update/:id',
+        element: <UpdateReviewScreen/>
       },
       {
         path:'/qna',

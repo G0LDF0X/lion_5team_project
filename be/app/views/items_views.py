@@ -5,6 +5,7 @@ from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer,
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
+from rest_framework import status
 # from tensorflow.keras.models import load_model
 
 
@@ -153,17 +154,17 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    user = request.user
+    user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
 
     review = Review.objects.create(
         item_id=item,
         user_id=user,
-        title=data['title'],
-        content=data['content'],
-        rate=data['rate'],
-        image_url=data.get('image_url')
+        title='',
+        content='',
+        rate=5,
+        image_url=''
     )
 
     serializer = ReviewSerializer(review, many=False)

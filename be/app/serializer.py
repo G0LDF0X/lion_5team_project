@@ -9,7 +9,6 @@ from rest_framework.validators import UniqueValidator
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
-from app.models import Seller, OrderItem
 import base64
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -199,17 +198,41 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 �
 
         return data
 
+class PetGenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet_Gender
+        fields = '__all__'
+    
+class PetSpeciesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet_Species
+        fields = '__all__'
+
+class PetBreedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet_Breed
+        fields = '__all__'
+
+class PetSerializer(serializers.ModelSerializer):
+    gender = PetGenderSerializer()
+    species = PetSpeciesSerializer()
+    breed = PetBreedSerializer()
+    class Meta:
+        model = Pet
+        fields = '__all__'
+
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     nickname = serializers.CharField(required=True)
     address = serializers.CharField(required=True)
     phone = serializers.CharField(required=True)
+    pet = PetSerializer(required=False)
     # password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'nickname', 'address', 'phone')
+        fields = ['username', 'email', 'password', 'nickname', 'address', 'phone', 'pet']
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -220,12 +243,15 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         return attrs
 
     def create(self, validated_data):
+        print(validated_data)
+        pet_data = validated_data.pop('pet', None)
         auth_user_model = get_user_model()
         auth_user = auth_user_model.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
         )
+        # user = User.objects.create(**validated_data)
         user = User.objects.create(
             user_id=auth_user,
             username=auth_user.username,
@@ -243,6 +269,9 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
             last_login=auth_user.last_login,
             password=auth_user.password,
         )
+
+        if pet_data is not None:
+            Pet.objects.create(user_id=user, **pet_data)
         return user
 
 class SellerSerializer(serializers.ModelSerializer):

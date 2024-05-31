@@ -39,7 +39,6 @@ export const logout = createAsyncThunk(
   "userLogout/logout",
   async (_, { rejectWithValue }) => {
     try {
-      localStorage.removeItem("userInfo");
       const res = await mainAxiosInstance.post(`/app/logout/`);
 
       localStorage.removeItem("userInfo");
@@ -53,19 +52,20 @@ export const logout = createAsyncThunk(
 export const register = createAsyncThunk(
   "userRegister/register",
   async (
-    { username, email, password, nickname, address, phone },
+    { username, email, password, nickname, address, phone, pet },
     { rejectWithValue }
   ) => {
     try {
       const res = await mainAxiosInstance.post(`/app/register/`, {
-        username: username,
-        email: email,
-        password: password,
-        nickname: nickname,
-        address: address,
-        phone: phone,
+        username,
+         email,
+        password,
+         nickname,
+        address,
+        phone,
+        pet
       });
-
+      
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       return res.data;
     } catch (error) {
