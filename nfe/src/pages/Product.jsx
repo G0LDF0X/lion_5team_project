@@ -24,6 +24,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { resetSuccess } from "../store/slices/cartSlices";
 
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -143,10 +144,12 @@ function ProductDetail() {
 useEffect(() => {
     if (successAdd) {
       setState({ open: true });
+      dispatch(resetSuccess());
     }
   }, [successAdd]);
   const handleClose = () => {
     setState({ open: false });
+
   };
   const avgRate =
     product.reviews &&
