@@ -93,12 +93,13 @@ async def startup_event():
 async def search_books(query: str):
     items = pd.read_csv(csv_file_path)
     vector_store = Chroma.from_texts(
-        texts=items['name'].tolist(),
+        texts=items['name', 'category'].tolist(),
+        
         embedding=sbert
-    )
-    results = vector_store.similarity_search(query=query, k=10)  # Increase k to ensure enough results before deduplication
 
-    # Remove duplicates and limit to 4 unique results
+    )
+    results = vector_store.similarity_search(query=query, k=10) 
+
     unique_results = []
     seen = set()
     for result in results:
