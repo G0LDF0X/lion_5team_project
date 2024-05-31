@@ -24,7 +24,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [petAge, setPetAge] = useState('');
   const [petSpecies, setPetSpecies] = useState({pet_kind: ''});
   // const [petBreedId, setPetBreedId] = useState('');
-  const [petBreed, setPetBreed] = useState('')
+  const [petBreed, setPetBreed] = useState('펫 종류를 선택해주세요.')
   const [pet_kind_id, setPet_kind_id] = useState('');
 
   // Options for pet details
