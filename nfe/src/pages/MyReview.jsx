@@ -48,7 +48,7 @@ useEffect(() => {
     navigate("/login")
   }
   
-dispatch(listMyReviews())
+dispatch(listMyReview())
 }
 , [navigate])
 
