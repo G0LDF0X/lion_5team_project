@@ -17,7 +17,7 @@ function ShippingScreen() {
   const navigate = useNavigate();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
+  navigate('/shipping');
   // const shippingAdress = useSelector((state) => state.shippingAdress);
 
   const location = useLocation();

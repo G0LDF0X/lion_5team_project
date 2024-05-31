@@ -21,17 +21,31 @@ function BoardDetailModal({ open, handleClose, boardId }) {
     }
   }, [  replyCreated]);
 
+  // const submitHandler = (e) => {
+  //   e.preventDefault();
+  //   if (reply.trim()) {
+  //     dispatch(createReply({replied_id, reply, boardId}));
+  //     setReply('');
+  //     setReplyCreated(true);
+  //   } else {
+  //     alert('Please enter a comment.');
+  //   }
+  // };
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {
-      dispatch(createReply({replied_id, reply, boardId}));
-      setReply('');
-      setReplyCreated(true);
+      dispatch(createReply({replied_id, reply, boardId}))
+        .then((success) => {
+          if (success) {
+            dispatch(fetchReplies(boardId));
+            setReply('');
+            setReplyCreated(true);
+          }
+        });
     } else {
       alert('Please enter a comment.');
     }
   };
-
   return (
     <Modal
       open={open}

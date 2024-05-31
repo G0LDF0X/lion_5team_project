@@ -24,6 +24,11 @@ import { listProducts } from "../store/actions/productActions";
 import { listCartItems } from "../store/actions/cartActions";
 import Message from "../components/Message";
 import { createOrder } from "../store/actions/orderActions";
+// import {mainAxiosInstance} from "../../api/axiosInstances";
+//포트원 모듈 추가 npm i @portone/browser-sdk로 설치함
+import * as PortOne from "@portone/browser-sdk/v2";
+
+
 
 function ShippingScreen() {
   const dispatch = useDispatch();
@@ -48,11 +53,76 @@ function ShippingScreen() {
       dispatch(listCartItems());
     }
   }, [dispatch]);
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(createOrder({ payment_method: payment, address: address }));
-    navigate("/payment");
+
+
+
+
+
+
+
+
+// 결제하기 버튼 누를시 requestPay() 함수 실행
+//결제요청
+
+  async function requestPay() {
+    console.log("결제하기 버튼 눌림");
+    console.log(combinedCartItems);
+    console.log(realPrice);
+    console.log(address);
+    console.log(payment);
+    console.log(userInfo);
+    console.log(userInfo.username);
+    console.log(userInfo.token);
+    console.log(userInfo.createdAt);
+    
+
+    const response = await PortOne.requestPayment({
+      // Store ID 설정
+      storeId: "store-6744d212-553b-40b5-bd60-4fef72aa2093",
+      // 채널 키 설정
+      channelKey: "channel-key-0d3a759f-1678-4bc4-b640-15cc05170f0b",
+      paymentId: `payment-${crypto.randomUUID()}`,
+      orderName: combinedCartItems[0].name,
+      totalAmount: realPrice,
+      currency: "CURRENCY_KRW",
+      payMethod: "CARD",
+      // redirectUrl: `${BASE_URL}/payment/complete/`,    //redirect 주소 
+    });
+
+    if (response.code != null){
+      // 오류 발생한 경우
+      return alert(response.message);
+    }
+
+    // 고객사 서버에서 /payment/complete 엔드포인트를 구현해야 합니다.
+
+
+    // 결제 완료 처리하기 **
+    // const notified = await mainAxiosInstance.get('${SERVER_BASE_URL}/payment/complete/', 
+    //   {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       // paymentId와 주문 정보를 서버에 전달합니다
+    //       body: JSON.stringify({
+    //         paymentId: paymentId,
+    //         // 주문 정보...
+    //       }),
+    // });
+
+
+        // 주문 정보...
+    // e.preventDefault();
+    // console.log(code);
+    // dispatch(createOrder({ payment_method: payment, address: address }));
+  
   };
+  
+
+
+
+
+
+
 
   const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = cartItems
@@ -73,6 +143,9 @@ function ShippingScreen() {
 
   const combinedCartItems = combineCartItems(cartItems);
 
+
+
+  
   return (
     <Container maxWidth="lg" className="py-8">
       <Grid container spacing={4}>
@@ -133,12 +206,17 @@ function ShippingScreen() {
                   <FormControlLabel
                     value="paypal"
                     control={<Radio />}
-                    label="PayPal 또는 신용카드"
+                    label="PayPal"
                   />
                   <FormControlLabel
                     value="toss"
                     control={<Radio />}
                     label="토스"
+                  />
+                  <FormControlLabel
+                    value="creditcard"
+                    control={<Radio />}
+                    label="신용카드"
                   />
                 </RadioGroup>
               </Box>
@@ -221,10 +299,11 @@ function ShippingScreen() {
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={submitHandler}
+                onClick={requestPay}
               >
                 {realPrice}₩ 결제하기
               </Button>
+              
             </CardContent>
           </Card>
         </Grid>
@@ -232,5 +311,6 @@ function ShippingScreen() {
     </Container>
   );
 }
+
 
 export default ShippingScreen;

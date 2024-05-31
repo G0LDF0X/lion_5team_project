@@ -39,3 +39,11 @@ uvicorn fastapi_app.main:app --reload --port 8002
 cd nfe
 npm i
 npm run dev
+
+
+
+
+### 결제모듈
+npm i @portone/browser-sdk
+
+import * as PortOne from "@portone/browser-sdk/v2"; (반영완료)
