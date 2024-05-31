@@ -59,7 +59,7 @@ function ProductDetail() {
 
   useEffect(() => {
     if (successProductReview) {
-      navigate(`/items/review/${createdReview.id}`);
+      navigate(`/items/review/update/${createdReview.id}`);
     }
   }, [successProductReview, successReviewDelete, dispatch]);
   useEffect(() => {
@@ -79,9 +79,6 @@ function ProductDetail() {
   };
   const addToCartHandler = () => {
     dispatch(addToCart({ id, qty }));
-    if (successAdd) {
-    setState({ open: true });
-    }
   };
 
   const editReviewHandler = (review) => {
@@ -143,12 +140,11 @@ function ProductDetail() {
       window.alert("로그인 후 이용해주세요.");
     }
   };
-  useEffect(() => {
-    if (successProductReview) {
-      navigate(`/items/review/update/${createdReview.id}`);
+useEffect(() => {
+    if (successAdd) {
+      setState({ open: true });
     }
-  }, [successProductReview, dispatch]);
-
+  }, [successAdd]);
   const handleClose = () => {
     setState({ open: false });
   };
