@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { register } from '../store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { useFetch } from '../hook/useFetch';
 
 const RegisterModal = ({ isOpen, onClose }) => {
 
@@ -14,8 +15,10 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [nickname, setNickname] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  
 
   // Pet details
+  const [pet, setPet] = useState(false); // pet
   const [petName, setPetName] = useState('');
   const [petGender, setPetGender] = useState('');
   const [petAge, setPetAge] = useState('');
@@ -23,27 +26,13 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [petBreed, setPetBreed] = useState('');
 
   // Options for pet details
-  const [genders, setGenders] = useState([]);
-  const [species, setSpecies] = useState([]);
+  // const [genders, setGenders] = useState([]);
+  // const [species, setSpecies] = useState([]);
   const [breeds, setBreeds] = useState([]);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchGenders = async () => {
-      const res = await mainAxiosInstance.get(`/pet/gender/`);
-      console.log(res.data);
-      setGenders(res.data);
-    };
-  
-    const fetchSpecies = async () => {
-      const res = await mainAxiosInstance.get('/pet/species/');
-      setSpecies(res.data);
-    };
-  
-    fetchGenders();
-    fetchSpecies();
-  }, []);
+  const {genders, species}=useFetch();
+ 
   
   useEffect(() => {
     const fetchBreeds = async () => {
@@ -63,7 +52,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const pet = petName ? { 'name': petName, 'gender': {'pet_gender':petGender}, 'age': petAge, 'species': {'pet_kind':petSpecies}, 'breed': {'pet_breed':petBreed} } : null;
-    dispatch(register({ username, email, password, nickname, address, phone, pet}));
+    // dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
     onClose();
@@ -149,7 +138,15 @@ const RegisterModal = ({ isOpen, onClose }) => {
             />
           </div>
 
-
+          <div className="mb-4">
+            <label className="block text-gray-700">Pet:</label>
+            <input 
+              type="checkbox"
+              checked={pet}
+              onChange={(e) => setPet(e.target.checked)}
+              ></input>
+          </div>
+        {pet ? ( <>
           <div className="mb-4">
             <label className="block text-gray-700">Pet Name:</label>
             <input
@@ -169,7 +166,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             >
               <option value="">Select Gender</option>
               {genders.map((gender) => (
-                <option key={gender.id} value={gender.pet_gender}>
+                <option key={gender.id} value={gender.id}>
                   {gender.pet_gender}
                 </option>
               ))}
@@ -195,7 +192,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             >
               <option value="">Select Species</option>
               {species.map((kind) => (
-                <option key={kind.id} value={kind.pet_kind}>
+                <option key={kind.id} value={kind.id}>
                   {kind.pet_kind}
                 </option>
               ))}
@@ -213,13 +210,15 @@ const RegisterModal = ({ isOpen, onClose }) => {
               {breeds
               .sort((a, b) => a.pet_breed.localeCompare(b.pet_breed))
               .map((breed) => (
-                <option key={breed.id} value={breed.pet_breed}>
+                <option key={breed.id} value={breed.id}>
                   {breed.pet_breed}
                 </option>
               ))}
             </select>
           </div>
-
+        </>) : (null
+        )
+        }
 
           <button
             type="submit"
