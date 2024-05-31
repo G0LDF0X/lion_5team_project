@@ -54,14 +54,17 @@ def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_Board(request):
+    print(request.user)
     user = User.objects.get(username=request.user)
+
     current_time = datetime.now()
     board = Board.objects.create(
         user_id=user,
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
-        image_url=request.data.get('image_url', ''),
+        image_url=request.data.get('images'),
         product_url=request.data.get('product_url', ''),
+        tag=request.data.get('tag', ''),
         show=0,
         like=0,
     )

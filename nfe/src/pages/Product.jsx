@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteReview } from "../store/actions/reviewActions";
+import { createReview, deleteReview } from "../store/actions/reviewActions";
 import { listProductDetails } from "../store/actions/productActions";
 import {
   addToBookMark,
@@ -138,11 +138,16 @@ function ProductDetail() {
   };
   const createReviewHandler = () => {
     if (userInfo) {
-      navigate(`/items/review/create/${id}`);
+      dispatch(createReview({id}));
     } else {
       window.alert("로그인 후 이용해주세요.");
     }
   };
+  useEffect(() => {
+    if (successProductReview) {
+      navigate(`/items/review/update/${createdReview.id}`);
+    }
+  }, [successProductReview, dispatch]);
 
   const handleClose = () => {
     setState({ open: false });

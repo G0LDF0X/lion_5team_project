@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useDispatch, useSelector } from "react-redux";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Editor, EditorState, convertToRaw } from "draft-js";
-import "draft-js/dist/Draft.css";
 import { Button, Snackbar, Typography, Rating } from "@mui/material";
 import { createReview } from "../store/actions/reviewActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { reviewCreateReset } from "../store/slices/reviewSlices";
+import { mainAxiosInstance } from "../api/axiosInstances";
 
-function CreateReviewScreen() {
+function UpdateReviewScreen() {
   const [title, setTitle] = useState("");
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  
   const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [state, setState] = useState({ open: false });
-
+  const [content, setContent] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    rate: 0,
+    image_url: "",
+  });
   const handleClose = () => {
     setState({ open: false });
   };
@@ -29,27 +36,84 @@ function CreateReviewScreen() {
   const reviewCreate = useSelector((state) => state.reviewCreate);
   const { loading, error, success } = reviewCreate;
 
-  const handleImageUpload = (file) => {
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    formData.append("rate", rate);
-    if (selectedFile) {
-      formData.append("image_url", selectedFile);
+  
+
+  const [editorData, setEditorData] = useState("");
+  const [fileName, setFileName] = useState(null);
+
+  const [uploading, setUploading] = useState(false);  
+      
+  class CustomUploadAdapter {
+    constructor(loader) {
+      this.loader = loader;
     }
-    dispatch(createReview({id, formData}));
-  };
+
+    upload() {
+      return this.loader.file.then((file) => {
+        localStorage.setItem("file", file.name);
+        setFileName(file.name);
+
+        return new Promise((resolve, reject) => {
+          const data = new FormData();
+          // data.append("name", file.name);
+          data.append("file", file);
+          setUploading(true);
+          mainAxiosInstance.post(`/items/review/uploadImage/${id}/`,   
+             data,
+          )
+            .then((response) => response.data)
+            .then((data) => {
+              if (data.error) {
+                reject(data.error);
+                setUploading(false);
+              } else {
+                resolve({
+                  default: data.url, // Assuming the server responds with JSON that has a 'url' property
+                });
+                setUploading(false);
+              }
+            })
+            .catch((error) => {
+              reject(error.message);
+            });
+        });
+      });
+    }
+  }
+  // useEffect(() => {
+  //   dispatch(listReviewDetails(id) );
+  //   if (successUpdate) {
+  //     navigate(`/items/detail/${updatedReview.item_id}`);}
+  //     dispatch({type:REVIEW_UPDATE_RESET})
+    
+  // }, [dispatch, id, successUpdate ]);
+
+  useEffect(() => {
+    
+    const parser = new DOMParser();
+    const parsedHtml = parser.parseFromString(editorData, "text/html");
+    const figures = parsedHtml.querySelectorAll("figure");
+    figures.forEach((figure) => {
+      const img = figure.querySelector("img");
+      if (img) {
+        img.src = "/images/" + fileName;
+      }
+    });
+    const serializer = new XMLSerializer();
+    const updatedData = serializer.serializeToString(parsedHtml);
+  }, [fileName, editorData]);
+  function uploadPlugin(editor) {
+    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+      return new CustomUploadAdapter(loader);
+    };
+  }
+  function submitHandler() {
+    dispatch(createReview({title: title, content: editorData, rate: rate, id: id }));
+  
+  
+  }
+
 
   useEffect(() => {
     if (success) {
@@ -95,11 +159,17 @@ function CreateReviewScreen() {
               />
             </div>
             <div className="mb-4">
-              <Editor
-                editorState={editorState}
-                onChange={setEditorState}
-                placeholder="Write your review..."
-              />
+            <CKEditor
+        data={content}
+        editor={ClassicEditor}
+        config={{
+          extraPlugins: [uploadPlugin],
+        }}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          setEditorData(data);
+        }}
+      />
             </div>
             <div className="mb-4">
               <Typography id="rate-slider" gutterBottom>
@@ -109,33 +179,11 @@ function CreateReviewScreen() {
                 name="simple-controlled"
                 value={Number(rate)} 
                 onChange={(e) => {
-                  setRate(Number(e.target.value)); 
+                  setRate(e.target.value);
                 }}
               />
             </div>
-            <div className="mb-4">
-              <Button
-                variant="contained"
-                component="label"
-                fullWidth
-              >
-                Upload Image
-                <input
-                  type="file"
-                  hidden
-                  onChange={(e) => handleImageUpload(e.target.files[0])}
-                />
-              </Button>
-              {imagePreview && (
-                <div className="mt-4">
-                  <img
-                    src={imagePreview}
-                    alt="Selected"
-                    className="w-full h-auto object-cover"
-                  />
-                </div>
-              )}
-            </div>
+
             <div className="text-center">
               <Button
                 type="submit"
@@ -153,4 +201,4 @@ function CreateReviewScreen() {
   );
 }
 
-export default CreateReviewScreen;
+export default UpdateReviewScreen;
