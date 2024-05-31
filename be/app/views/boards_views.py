@@ -14,24 +14,6 @@ def get_Boards(request):
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
 
-
-
-# @api_view(['GET'])   
-# def get_Board(request, pk):
-#     board = get_object_or_404(Board, id=pk)
-#     replies = Reply.objects.filter(board_id=board)
-
-#     board_serializer = BoardSerializer(board)
-#     reply_serializer = ReplySerializer(replies, many=True)
-    
-#     return Response(
-#         {
-#             'board': board_serializer.data,
-#             'replies': reply_serializer.data
-#         }
-#     )
-
-
 @api_view(['GET', 'POST'])   
 def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':
@@ -124,26 +106,3 @@ def delete_Board(request, pk):
     board.delete()
     return Response('Board Deleted')
 
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def create_Reply(request, pk):
-#     try:
-#         user = User.objects.get(username=request.user)
-#         board = Board.objects.get(id=pk)
-#         reply = Reply.objects.create(
-#             user_id=user,
-#             board_id=board,
-#             content=request.data['reply'],
-#             replied_id=0
-#         )
-#         print("Created Reply:", reply)  # Debugging print statement
-#         serializer = ReplySerializer(reply)
-#         print("Serialized Data:", serializer.data)  # Debugging print statement
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-#     except User.DoesNotExist:
-#         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
-#     except Board.DoesNotExist:
-#         return Response({'error': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
-#     except Exception as e:
-#         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
