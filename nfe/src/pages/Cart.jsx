@@ -28,13 +28,15 @@ function CartScreen() {
   const navigate = useNavigate();
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const cart = useSelector((state) => state.cart);
-  const { cartItems, successCartRemove } = cart;
+  const { cartItems = [], successCartRemove } = cart; // Ensure cartItems is an array by default
   const [combinedCartItems, setCombinedCartItems] = useState([]);
+  const [updatedQty, setUpdatedQty] = useState(false);
 
   useEffect(() => {
-    if (!cartItems || cartItems.length === 0) {
-      dispatch(listCartItems());
-    }
+    dispatch(listCartItems());
+  }, [dispatch]);
+
+  useEffect(() => {
     if (successCartRemove) {
       dispatch(listCartItems());
     }
@@ -52,9 +54,15 @@ function CartScreen() {
 
   const updateQtyHandler = useCallback((id, qty) => {
     dispatch(updateQty({ id, qty }));
+    setUpdatedQty(true);
   }, [dispatch]);
 
   const combineCartItems = useCallback((items) => {
+    if (!Array.isArray(items)) {
+      console.error("Expected items to be an array, but got:", items);
+      return [];
+    }
+
     const combinedItems = {};
     items.forEach((item) => {
       if (combinedItems[item.item_id]) {
@@ -67,9 +75,10 @@ function CartScreen() {
   }, []);
 
   useEffect(() => {
-    if (cartItems.length > 0)
     setCombinedCartItems(combineCartItems(cartItems));
-  }, [cartItems, combineCartItems]);
+    console.log("Cart Items:", cartItems);
+    setUpdatedQty(false);
+  }, [cartItems, combineCartItems, updatedQty]);
 
   const subtotalQuantity = combinedCartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = combinedCartItems
@@ -118,7 +127,7 @@ function CartScreen() {
                   <Select
                     value={item.qty}
                     onChange={(e) =>
-                      updateQtyHandler(item.item_id, e.target.value)
+                      updateQtyHandler(item.id, e.target.value)
                     }
                     className="mr-4"
                   >

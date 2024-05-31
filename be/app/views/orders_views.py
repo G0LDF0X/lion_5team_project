@@ -60,13 +60,13 @@ def remove_from_cart(request, pk):
 
 @api_view(['PUT'])
 def set_cart_qty(request, pk):
-    user = User.objects.get(username=request.user)
-    print(user)
-    item = Item.objects.get(id=pk)
-    cart_item = Cart.objects.get(user_id=user, item_id=item.id)
+    user = User.objects.get(username= request.user)
+    cart_item = Cart.objects.get( id=pk)
     cart_item.qty = request.data["qty"]
     cart_item.save()
-    return Response("Quantity updated")
+    cart_items = Cart.objects.filter(user_id=user)
+    serializer = CartSerializer(cart_items, many=True)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])
