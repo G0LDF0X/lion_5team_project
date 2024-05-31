@@ -8,6 +8,8 @@ from .schemas import ChatRequest, ChatResponse
 
 load_dotenv('./chatbot/.env')
 
+load_dotenv('./chatbot/.env')
+
 app = FastAPI()
  
 origins = [
