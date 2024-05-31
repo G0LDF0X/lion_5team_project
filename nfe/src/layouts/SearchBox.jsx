@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
 import { searchAxiosInstance } from '../api/axiosInstances';
+import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBox() {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ function SearchBox() {
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
-      
       setSuggestions(response.data.results);
     } catch (error) {
       // Handle error here
@@ -51,18 +51,37 @@ function SearchBox() {
           variant="outlined"
           fullWidth
           className="bg-white rounded-l-lg"
+          id='search-box'
           InputProps={{
             style: { backgroundColor: 'white', color: 'gray' },
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#f06292',
+              },
+              '&:hover fieldset': {
+                borderColor: '#ec407a',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#e91e63',
+              },
+            },
           }}
         />
         <Button
           type="submit"
           variant="contained"
-          color="primary"
           className="ml-2 rounded-r-lg"
-          sx={{ backgroundColor: '#f06292', color: 'white' }}
+          sx={{
+            backgroundColor: '#f06292',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#ec407a',
+            },
+          }}
         >
-          Search
+          <SearchIcon/>
         </Button>
       </form>
       {suggestions.length > 0 && (

@@ -1,13 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import  {Card}  from "react-bootstrap";
 import {  useSelector } from "react-redux";
 
 const OtherMyBoard = ({ userId }) => {
-    const userLogin = useSelector((state) => state.userLogin);
-    const { userInfo } = userLogin;
     const [MyBoards, setMyBoards] = useState([]);
-    React.useEffect(() => {
+    useEffect(() => {
         fetch(`/users/${userId}/board/`)
         .then(response => {
           if (!response.ok) {

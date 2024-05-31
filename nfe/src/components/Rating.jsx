@@ -1,75 +1,55 @@
 import React from "react";
+import { Star, StarHalf, StarBorder } from "@mui/icons-material";
 
-function Rating({ value, text, color }) {
+function Rating({ value, text, color = "#f8e825" }) {
   return (
-    <div className="rating">
+    <div className="rating" style={{ display: "flex", alignItems: "center" }}>
       <span>
-        <i
-          style={{ color }}
-          className={
-            value >= 1
-              ? "fas fa-star"
-              : value >= 0.5
-              ? "fas fa-star-half-alt"
-              : "far fa-star"
-
-          }
-        ></i>
+        {value >= 1 ? (
+          <Star style={{ color }} />
+        ) : value >= 0.5 ? (
+          <StarHalf style={{ color }} />
+        ) : (
+          <StarBorder style={{ color }} />
+        )}
       </span>
-        <span>
-            <i
-            style={{ color }}
-            className={
-                value >= 2
-                ? "fas fa-star"
-                : value >= 1.5
-                ? "fas fa-star-half-alt"
-                : "far fa-star"
-    
-            }
-            ></i>
-        </span>
-        <span>
-            <i
-            style={{ color }}
-            className={
-                value >= 3
-                ? "fas fa-star"
-                : value >= 2.5
-                ? "fas fa-star-half-alt"
-                : "far fa-star"
-    
-            }
-            ></i>
-        </span>
-        <span>
-            <i
-            style={{ color }}
-            className={
-                value >= 4
-                ? "fas fa-star"
-                : value >= 3.5
-                ? "fas fa-star-half-alt"
-                : "far fa-star"
-    
-            }
-            ></i>
-        </span>
-        <span>
-            <i
-            style={{ color }}
-            className={
-                value >= 5
-                ? "fas fa-star"
-                : value >= 4.5
-                ? "fas fa-star-half-alt"
-                : "far fa-star"
-    
-            }
-            ></i>
-        </span>
-        <span>{text }</span>
-        
+      <span>
+        {value >= 2 ? (
+          <Star style={{ color }} />
+        ) : value >= 1.5 ? (
+          <StarHalf style={{ color }} />
+        ) : (
+          <StarBorder style={{ color }} />
+        )}
+      </span>
+      <span>
+        {value >= 3 ? (
+          <Star style={{ color }} />
+        ) : value >= 2.5 ? (
+          <StarHalf style={{ color }} />
+        ) : (
+          <StarBorder style={{ color }} />
+        )}
+      </span>
+      <span>
+        {value >= 4 ? (
+          <Star style={{ color }} />
+        ) : value >= 3.5 ? (
+          <StarHalf style={{ color }} />
+        ) : (
+          <StarBorder style={{ color }} />
+        )}
+      </span>
+      <span>
+        {value >= 5 ? (
+          <Star style={{ color }} />
+        ) : value >= 4.5 ? (
+          <StarHalf style={{ color }} />
+        ) : (
+          <StarBorder style={{ color }} />
+        )}
+      </span>
+      <span style={{ marginLeft: "8px" }}>{text}</span>
     </div>
   );
 }

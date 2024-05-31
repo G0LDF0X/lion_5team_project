@@ -1,13 +1,16 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import polyfillNode from 'rollup-plugin-polyfill-node';
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
-server:{
-  proxy: {
-    '/images': 'http://127.0.0.1:8000'}
-}
-
-  
-})
+  plugins: [
+    react(),
+    polyfillNode()
+  ],
+  resolve: {
+    alias: {
+      // Polyfill `global` as `globalThis`
+      'global': 'globalthis',
+    },
+  },
+});

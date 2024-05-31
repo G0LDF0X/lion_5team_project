@@ -2,3 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .sidebar-background {
+    @apply w-64 h-full bg-cover bg-center text-white;
+    background-image: url('/path/to/your/image.jpg');
+  } */

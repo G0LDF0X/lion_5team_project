@@ -2,14 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
 export const listProducts = createAsyncThunk(
-  "products/listProducts",
-  async ({ query = "", page = "", category = [] }, { rejectWithValue }) => {
+  'products/listProducts',
+  async ({ query = '', page = '', category = [] }, { rejectWithValue }) => {
     try {
       let params = new URLSearchParams();
-      if (query) params.append("query", query);
-      if (page) params.append("page", page);
+      if (query) params.append('query', query);
+      
+      if (page) params.append('page', page);
       if (category.length) {
-        category.forEach((cat) => params.append("category", cat));
+        category.forEach((cat) => params.append('category', cat));
       }
       const url = `/items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
@@ -43,12 +44,17 @@ export const createProduct = createAsyncThunk(
   "productCreate/createProduct",
   async (product, { rejectWithValue }) => {
     try {
+      const formData = new FormData();
+      for (const key in product) {
+        formData.append(key, product[key]);
+      }
+
       const res = await mainAxiosInstance.post(
         `/items/create/`,
-        { product },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );

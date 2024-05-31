@@ -21,9 +21,6 @@ function UserSettingCreateReview() {
  
 
 
-            {/* {products.map((product) => (
-                <Product key={product._id} product={product} />
-            ))} */}
       </Col>
     </Row>
   )

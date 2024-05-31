@@ -26,16 +26,13 @@ const responsive = {
   },
 };
 function Media() {
-  
 
   return (
     <Grid container wrap="nowrap">
-      {Array.from(new Array(4)).map((index) => (
+      {Array.from(new Array(4)).map((_, index) => (
         <Box key={index} sx={{ width: 300, marginRight: 0.5, my: 5 }}>
           <Skeleton variant="rectangular" width={256} height={250} />
-
-          <Box sx={{ pt: 0.5 }}>
-            
+          <Box  sx={{ pt: 0.5 }}>
             <Skeleton width="70%" />
             <Skeleton width="70%" />
             <Skeleton width="70%" />
@@ -53,7 +50,7 @@ Media.propTypes = {
 function Loading2() {
   return (
     <Box sx={{ overflow: "hidden" }}>
-      <Media loading />
+      <Media />
       
     </Box>
   );
@@ -74,11 +71,11 @@ function ProductCarousel({ loading, error, products }) {
       ) : (
         <Carousel responsive={responsive} infinite>
           {products.map((product) => (
-            // <Box key={product.id} className="p-2 h-full">
-              <Card className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-                <Product product={product} id={product.id} />
+            
+              <Card  key={product.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
+                <Product product={product} id={product.id}/>
               </Card>
-            // </Box>
+            
           ))}
         </Carousel>
       )}
