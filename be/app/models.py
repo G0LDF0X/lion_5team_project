@@ -233,8 +233,8 @@ class Pet_Breed(models.Model):
 
 class Pet(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    age = models.IntegerField()
-    gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING)
-    species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING)
-    breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING)
+    name = models.CharField(max_length=100, blank=True)
+    age = models.IntegerField(blank=True)
+    gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING, blank=True)
+    species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING, blank=True)
+    breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING, blank=True)
