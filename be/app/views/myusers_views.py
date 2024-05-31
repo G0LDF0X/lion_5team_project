@@ -89,6 +89,7 @@ def update_Auth_Profile(request):
     user = User.objects.get(username= request.user)
     serializer = UserSerializerWithToken(user, many=False)
     data = request.data
+    
     if 'username' in data:
         user.username = data['username']
     if 'email' in data:

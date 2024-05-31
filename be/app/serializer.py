@@ -245,6 +245,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     def create(self, validated_data):
         print(validated_data)
         pet_data = validated_data.pop('pet', None)
+        print(pet_data)
         auth_user_model = get_user_model()
         auth_user = auth_user_model.objects.create_user(
             username=validated_data['username'],
@@ -271,7 +272,16 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         )
 
         if pet_data is not None:
-            Pet.objects.create(user_id=user, **pet_data)
+            Pet.objects.create(
+                user_id=user.user_id, 
+                name = pet_data['name'],
+                age = pet_data['age'],
+                gender = Pet_Gender.objects.get(id=pet_data['gender']),
+                species = Pet_Species.objects.get(id=pet_data['species']),
+
+                breed = Pet_Breed.objects.get(id=pet_data['breed']),
+                )
+
         return user
 
 class SellerSerializer(serializers.ModelSerializer):
