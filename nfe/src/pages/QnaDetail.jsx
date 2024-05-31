@@ -54,7 +54,7 @@ function QADetailScreen() {
                   {qna.question&&qna.question.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  <Link to={`/users/${qna.user_id}/`}>{qna.user}</Link> - {qna.question && qna.question.created_at.substring(0, 10)}
+                  <Link to={`/users/${qna.user_id}/`}>{qna.question.user}</Link> - {qna.question && qna.question.created_at.substring(0, 10)}
                 </Typography>
                 {qna.question && (
                   <img src={VITE_API_BASE_URL+qna.question.image_url} alt="QnA" className="w-full rounded-lg my-4" />

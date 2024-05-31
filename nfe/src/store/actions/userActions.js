@@ -53,16 +53,16 @@ export const logout = createAsyncThunk(
 export const register = createAsyncThunk(
   "userRegister/register",
   async (
-    { name, email, password, nickname, adress, phone },
+    { username, email, password, nickname, address, phone },
     { rejectWithValue }
   ) => {
     try {
       const res = await mainAxiosInstance.post(`/app/register/`, {
-        username: name,
+        username: username,
         email: email,
         password: password,
         nickname: nickname,
-        address: adress,
+        address: address,
         phone: phone,
       });
 
