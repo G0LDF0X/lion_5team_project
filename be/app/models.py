@@ -221,14 +221,23 @@ class Cart(models.Model):
 class Pet_Gender(models.Model):
     pet_gender = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.pet_gender
+
 # 강아지인지 고양이인지 분류하는 테이블
 class Pet_Species(models.Model):
     pet_kind = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.pet_kind
 
 # 강아지, 고양이의 각 품종을 분류하는 테이블
 class Pet_Breed(models.Model):
     pet_kind_id = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING)
     pet_breed = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.pet_breed
 
 
 class Pet(models.Model):
