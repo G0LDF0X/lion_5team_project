@@ -50,10 +50,7 @@ def cart_detail(request):
 @api_view(['DELETE'])
 def remove_from_cart(request, pk):
     user = User.objects.get(username=request.user)
-    print(user.id)
-
     item = Item.objects.get(id=pk)  
-    print(item.id)
     cart_item = Cart.objects.get(user_id_id=user.id, item_id_id=item.id)
     cart_item.delete()
     return Response("Item removed from cart")

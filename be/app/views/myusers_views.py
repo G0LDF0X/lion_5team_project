@@ -86,17 +86,18 @@ def get_mypage_profile(request):
 @api_view(['PUT'])    
 @permission_classes([IsAuthenticated])
 def update_Auth_Profile(request):
-    user = request.user
+    user = User.objects.get(username= request.user)
     serializer = UserSerializerWithToken(user, many=False)
     data = request.data
-    
-    if hasattr(user, 'username'):
-        user.username = data.get('username', user.username)
-    if hasattr(user, 'email'):
-        user.email = data.get('email', user.email)
-    
-    if data.get('password'):
+    if 'username' in data:
+        user.username = data['username']
+    if 'email' in data:
+        user.email = data['email']
+    if 'password' in data:
         user.password = make_password(data['password'])
+    if 'nickname' in data:
+        user.nickname = data['nickname']
+    
     user.save()
     return Response(serializer.data)
 
