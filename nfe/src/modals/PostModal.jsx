@@ -11,8 +11,6 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     tags: [],
     title: '',
     content: '',
-    hashtags: '',
-    location: '',
   });
   const [tagName, setTagName] = useState('');
   const selectTag = (tag) => {
@@ -79,12 +77,14 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     data.append('tags', JSON.stringify(formData.tags));
     data.append('title', formData.title);
     data.append('content', formData.content);
-    data.append('hashtags', formData.hashtags);
-    data.append('location', formData.location);
-    mainAxiosInstance.post('/board/create/', data)
+    mainAxiosInstance.post('/board/create/', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     .then(response => {
       console.log('Success:', response);
-      dispath(resetSuccess());
+      dispatch(resetSuccess());
       onRequestClose();
     })
     .catch((error) => {
@@ -159,26 +159,7 @@ const PostModal = ({ isOpen, onRequestClose }) => {
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md h-24"
               />
             </div>
-            <div>
-              <label className="block text-gray-700">Hashtags:</label>
-              <input
-                type="text"
-                name="hashtags"
-                value={formData.hashtags}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Location:</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              />
-            </div>
+            
             <div>
               <label className="block text-gray-700">Tag Products:</label>
               <TagInput selectedTags={tagName} setSelectedTags={setTagName} />
