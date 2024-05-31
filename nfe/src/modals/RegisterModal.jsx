@@ -1,17 +1,24 @@
 // RegisterModal.jsx
 import React, { useState } from 'react';
+import { register } from '../store/actions/userActions';
+import { useDispatch } from 'react-redux';
 
 const RegisterModal = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
+  const dispatch = useDispatch();
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(register({ username, email, password, nickname, address, phone}));
     // Handle registration logic here
-    console.log('User registered:', { username, email, password });
+    console.log('User registered:', { username, email, password, nickname, address, phone});
     onClose();
   };
 
@@ -56,6 +63,46 @@ const RegisterModal = ({ isOpen, onClose }) => {
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Confirm Password:</label>
+            <input
+              type="password"
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Nickname:</label>
+            <input
+              type="text"
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Address:</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Phone:</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+
+
           <button
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700"

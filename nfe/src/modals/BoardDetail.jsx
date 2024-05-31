@@ -8,6 +8,7 @@ function BoardDetailModal({ open, handleClose, boardId }) {
   const dispatch = useDispatch();
   const [reply, setReply] = useState('');
   const [replyCreated, setReplyCreated] = useState(false);
+  const [replied_id, setReplied_id] = useState(0);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const board = useSelector((state) => state.board);
   const { loading, error, replies, boardDetail } = board;
@@ -23,7 +24,7 @@ function BoardDetailModal({ open, handleClose, boardId }) {
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {
-      dispatch(createReply(boardId, reply, 0));
+      dispatch(createReply({replied_id, reply, boardId}));
       setReply('');
       setReplyCreated(true);
     } else {

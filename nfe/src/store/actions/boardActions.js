@@ -89,12 +89,12 @@ export const deleteBoard = createAsyncThunk(
 
 export const createReply = createAsyncThunk(
   "boardCreateReply/createBoardReply",
-  async ({ repliedId = 0, content, id }, { getState, rejectWithValue }) => {
+  async ({ repliedId = 0, reply, boardId }, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.post(
-        `/board/detail/${id}`,
-        { content, repliedId },
+        `/board/detail/${boardId}/`,
+        { reply, repliedId },
         { headers }
       );
       return res.data;
