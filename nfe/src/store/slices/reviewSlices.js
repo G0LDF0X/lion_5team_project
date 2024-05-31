@@ -5,7 +5,11 @@ import {
   createReview,
   updateReview,
   deleteReview,
+<<<<<<< HEAD
   ListMyReview
+=======
+  listMyReview
+>>>>>>> main
 } from "../actions/reviewActions";
 
 export const reviewListSlice = createSlice({
@@ -125,6 +129,7 @@ export const myReviewListSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+<<<<<<< HEAD
       .addCase(ListMyReview.pending, (state) => {
         state.loading = true;
         state.reviews = [];
@@ -134,6 +139,17 @@ export const myReviewListSlice = createSlice({
         state.reviews = action.payload;
       })
       .addCase(ListMyReview.rejected, (state, action) => {
+=======
+      .addCase(listMyReview.pending, (state) => {
+        state.loading = true;
+        state.reviews = [];
+      })
+      .addCase(listMyReview.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reviews = action.payload;
+      })
+      .addCase(listMyReview.rejected, (state, action) => {
+>>>>>>> main
         state.loading = false;
         state.error = action.payload;
       });

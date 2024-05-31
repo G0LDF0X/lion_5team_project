@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate} from 'react-router-dom'
+<<<<<<< HEAD
 import { listMyReviews } from '../store/actions/reviewActions'
+=======
+import { listMyReview } from '../store/actions/reviewActions'
+>>>>>>> main
 import { Tab, Tabs, Box, Typography } from '@mui/material'
 import PropTypes from 'prop-types'
 import MyReview from '../components/profilescreen/MyReview'
@@ -48,7 +52,11 @@ useEffect(() => {
     navigate("/login")
   }
   
+<<<<<<< HEAD
 dispatch(listMyReviews())
+=======
+dispatch(listMyReview())
+>>>>>>> main
 }
 , [navigate])
 

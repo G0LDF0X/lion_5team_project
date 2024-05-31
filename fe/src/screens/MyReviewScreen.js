@@ -82,3 +82,7 @@ dispatch(listMyReviews())
 }
 
 export default MyReviewScreen
+<<<<<<< HEAD
+=======
+
+>>>>>>> main

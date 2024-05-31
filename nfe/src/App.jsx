@@ -18,7 +18,11 @@ import QADetailScreen from './pages/QnaDetail'
 import CartScreen from './pages/Cart'
 import MyShoppingScreen from './pages/MyShopping'
 import OtherUserProfile from './pages/OtherUsers'
+<<<<<<< HEAD
 
+=======
+import ShippingScreen from './pages/Shipping'
+>>>>>>> main
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -92,8 +96,19 @@ const routers = createBrowserRouter([
       {
         path:'/users/:id',
         element: <OtherUserProfile/>
+<<<<<<< HEAD
       }
 
+=======
+      },
+      {
+        path:'/shipping',
+        element: <ShippingScreen/>
+      }
+
+
+
+>>>>>>> main
       
     ]
   }

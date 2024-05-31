@@ -70,7 +70,11 @@ function ProductCarousel({ loading, error, products }) {
         <Message variant="error">{error}</Message>
       ) : (
         <Carousel responsive={responsive} infinite>
+<<<<<<< HEAD
           {products.map((product) => (
+=======
+          {products&&products.map((product) => (
+>>>>>>> main
             
               <Card  key={product.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
                 <Product product={product} id={product.id}/>
