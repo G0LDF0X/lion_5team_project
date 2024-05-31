@@ -57,7 +57,7 @@ def board_detail_or_create_reply(request, pk):
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
-        serializer = ReplySerializer(reply, many=True)
+        serializer = ReplySerializer(reply)
         return Response(serializer.data)
     
 
@@ -128,14 +128,22 @@ def delete_Board(request, pk):
 # @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 # def create_Reply(request, pk):
-#     user = User.objects.get(username=request.user)
-#     board = Board.objects.get(id=pk)
-#     replied_id = request.data.get('replied_id', None)  # 요청에서 replied_id 값을 가져옴
-#     reply = Reply.objects.create(
-#         user_id=user,
-#         board_id=board,
-#         content=request.data.get('content', ''),
-#         replied_id=replied_id  # 댓글이 답변하는 댓글의 ID를 저장
-#     )
-#     serializer = ReplySerializer(reply, many=False)
-#     return Response(serializer.data)
+#     try:
+#         user = User.objects.get(username=request.user)
+#         board = Board.objects.get(id=pk)
+#         reply = Reply.objects.create(
+#             user_id=user,
+#             board_id=board,
+#             content=request.data['reply'],
+#             replied_id=0
+#         )
+#         print("Created Reply:", reply)  # Debugging print statement
+#         serializer = ReplySerializer(reply)
+#         print("Serialized Data:", serializer.data)  # Debugging print statement
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     except User.DoesNotExist:
+#         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+#     except Board.DoesNotExist:
+#         return Response({'error': 'Board not found'}, status=status.HTTP_404_NOT_FOUND)
+#     except Exception as e:
+#         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

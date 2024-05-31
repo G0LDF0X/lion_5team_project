@@ -9,7 +9,8 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
-
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -303,19 +304,30 @@ def get_other_answer(request, pk):
 @api_view(['POST', 'GET'])
 @permission_classes([IsAuthenticated])
 def follow_save(request, pk):
-    follower = User.objects.get(username=request.user)
+    follower = User.objects.get(id=pk)
     followed = User.objects.get(id=pk)
 
     if request.method == 'POST':
-        follow = Follow.objects.create(
-            follower_id=follower,
-            followed_id=followed
-        )
-        serializer = FollowSerializer(follow)
-        return Response(serializer.data, status=201)
+        follow_relation = Follow.objects.filter(follower_id=follower, followed_id=followed)
+
+        if follow_relation.exists():
+            follow_relation.delete()
+            return Response({'status': 'success', 'message': '팔로우 취소'})
+        else:
+            follow = Follow.objects.create(
+                follower_id=follower,
+                followed_id=followed
+            )  
+            serializer = FollowSerializer(follow)
+            return Response(serializer.data, status=201)
+    
     elif request.method == 'GET':
         # Check if a Follow object exists where follower_id=followed_id
         follow_exists = Follow.objects.filter(follower_id=follower, followed_id=followed).exists()
 
         # Return a JSON response with the result
         return Response({'follow_exists': follow_exists})
+
+
+
+

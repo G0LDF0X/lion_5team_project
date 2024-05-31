@@ -196,7 +196,7 @@ class Reply(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     
     content = models.TextField()
-    replied_id = models.IntegerField()
+    replied_id = models.IntegerField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -24,7 +24,7 @@ function BoardDetailModal({ open, handleClose, boardId }) {
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {
-      dispatch(createReply({replied_id, reply, boardId}));
+      dispatch(createReply({ reply, boardId}));
       setReply('');
       setReplyCreated(true);
     } else {
