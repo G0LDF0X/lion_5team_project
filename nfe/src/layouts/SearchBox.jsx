@@ -40,7 +40,6 @@ function SearchBox() {
       if (chosungIncludes(item.brand, query)) {
         setSuggestions(suggestions => [...suggestions, ...item]);
       }
-      
     }
     
   }

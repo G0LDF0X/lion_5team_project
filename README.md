@@ -32,7 +32,7 @@ uvicorn chatbot.main:app --reload --port 8001
 cd be
 uvicorn fastapi_app.main:app --reload --port 8002
 ```
-### search2
+### search2 (보류(프론트에서 처리중))
 초성 자동완성
 ```
 cd be
