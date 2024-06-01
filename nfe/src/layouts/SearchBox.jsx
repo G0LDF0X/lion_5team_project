@@ -3,36 +3,62 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
 import { searchAxiosInstance, searchByConstantsAxiosInstance } from '../api/axiosInstances';
 import SearchIcon from '@mui/icons-material/Search';
+import {useSelector} from 'react-redux';
+import { chosungIncludes } from 'es-hangul';
+
 
 function SearchBox() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
+  const listProducts = useSelector(state => state.listProducts);  
+  const {products} = listProducts;
+
+  
 
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
       setSuggestions(suggestions => [...suggestions, ...response.data.results]);
     } catch (error) {
-      // Handle error here
     }
+    자음
   };
-  const FetchSuggestionsByConstants = async (query) => {
-    try {
-      const response = await searchByConstantsAxiosInstance.post(`search/?q=${query}`);
-      setSuggestions(suggestions => [...suggestions, ...response.data.results]);
-    } catch (error) {
-      // Handle error here
+  const getConsontants = (query) => {
+    
+    for (const item of products) {
+      if (chosungIncludes(item.name, query)) {
+        setSuggestions(suggestions => [...suggestions, ...item]);
+      }
+      if (chosungIncludes(item.description, query)) {
+        setSuggestions(suggestions => [...suggestions, ...item]);
+      }
+      if (chosungIncludes(item.category, query)) {
+        setSuggestions(suggestions => [...suggestions, ...item]);
+      }
+      if (chosungIncludes(item.brand, query)) {
+        setSuggestions(suggestions => [...suggestions, ...item]);
+      }
+      
     }
+    
   }
+  // const FetchSuggestionsByConstants = async (query) => {
+  //   try {
+  //     const response = await searchByConstantsAxiosInstance.post(`search/?q=${query}`);
+  //     setSuggestions(suggestions => [...suggestions, ...response.data.results]);
+  //   } catch (error) {
+  //   }
+  // }
 
   const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
     if (value) {
       fetchSuggestions(value);
-      FetchSuggestionsByConstants(value);
+      // FetchSuggestionsByConstants(value);
+      getConsontants(value);
     } else {
       setSuggestions([]);
     }
