@@ -41,7 +41,7 @@ app.add_middleware(
 
 sbert = SentenceTransformerEmbeddings(model_name="jhgan/ko-sroberta-multitask")
 
-ddef export_data_to_csv():
+def export_data_to_csv():
     if os.path.exists(item_csv_file_path):
         os.remove(item_csv_file_path)
         logging.info(f"Existing {item_csv_file_path} file deleted.")
