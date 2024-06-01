@@ -3,61 +3,60 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
 import { searchAxiosInstance } from '../api/axiosInstances';
 import SearchIcon from '@mui/icons-material/Search';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { chosungIncludes } from 'es-hangul';
-
 
 function SearchBox() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
-  const listProducts = useSelector(state => state.listProducts);  
-  const {products} = listProducts;
-
-  
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
 
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
-      setSuggestions(suggestions => [...suggestions, ...response.data.results]);
+      return response.data.results.map(result => result.page_content);
     } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      return [];
     }
-    자음
   };
+
   const getConsontants = (query) => {
-    
-    for (const item of products) {
-      if (chosungIncludes(item.name, query)) {
-        setSuggestions(suggestions => [...suggestions, ...item]);
+    const consonantSuggestions = [];
+    for (const product of products) {
+      if (chosungIncludes(product.name, query) && !consonantSuggestions.includes(product.name)) {
+        consonantSuggestions.push(product.name);
       }
-      if (chosungIncludes(item.description, query)) {
-        setSuggestions(suggestions => [...suggestions, ...item]);
+      if (chosungIncludes(product.description, query) && !consonantSuggestions.includes(product.name)) {
+        consonantSuggestions.push(product.name);
       }
-      if (chosungIncludes(item.category, query)) {
-        setSuggestions(suggestions => [...suggestions, ...item]);
-      }
-      if (chosungIncludes(item.brand, query)) {
-        setSuggestions(suggestions => [...suggestions, ...item]);
+      if (chosungIncludes(product.category, query) && !consonantSuggestions.includes(product.name)) {
+        consonantSuggestions.push(product.name);
       }
     }
-    
-  }
-  // const FetchSuggestionsByConstants = async (query) => {
-  //   try {
-  //     const response = await searchByConstantsAxiosInstance.post(`search/?q=${query}`);
-  //     setSuggestions(suggestions => [...suggestions, ...response.data.results]);
-  //   } catch (error) {
-  //   }
-  // }
+    return consonantSuggestions;
+  };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const value = e.target.value;
     setKeyword(value);
+
     if (value) {
-      fetchSuggestions(value);
-      // FetchSuggestionsByConstants(value);
-      getConsontants(value);
+      // Clear existing suggestions
+      setSuggestions([]);
+
+      // Fetch new suggestions from both API and consonant-based method
+      const [apiSuggestions, consonantSuggestions] = await Promise.all([
+        fetchSuggestions(value),
+        getConsontants(value)
+      ]);
+
+      // Merge and deduplicate suggestions
+      const combinedSuggestions = [...new Set([...apiSuggestions, ...consonantSuggestions])];
+      setSuggestions(combinedSuggestions);
     } else {
       setSuggestions([]);
     }
@@ -123,13 +122,13 @@ function SearchBox() {
           <List>
             {suggestions.map((suggestion, index) => (
               <Link
-                to={`/items/?query=${suggestion.page_content}&?page=1`}
+                to={`/items/?query=${suggestion}&?page=1`}
                 key={index}
                 className="no-underline text-black"
                 onClick={() => setSuggestions([])}
               >
                 <ListItem button>
-                  <ListItemText primary={suggestion.page_content} />
+                  <ListItemText primary={suggestion} />
                 </ListItem>
               </Link>
             ))}
