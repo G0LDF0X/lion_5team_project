@@ -84,21 +84,15 @@ async def startup_event():
 @app.post("/search/")
 async def search_items(query: str):
     items = pd.read_csv(item_csv_file_path)
-    
-    # Filter items that are similar to the query
     vector_store = Chroma.from_texts(
         texts=items['item_name'].tolist(),
         embedding=sbert
     )
     results = vector_store.similarity_search(query=query, k=10)
 
-    # Extract the category of the top result
     if results:
         top_result_category = items[items['item_name'] == results[0].page_content]['category_name'].values[0]
-        # Filter items by the same category
         similar_category_items = items[items['category_name'] == top_result_category]
-
-        # Perform a similarity search within the filtered category items
         category_vector_store = Chroma.from_texts(
             texts=similar_category_items['item_name'].tolist(),
             embedding=sbert
