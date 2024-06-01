@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
-import { searchAxiosInstance, searchByConstantsAxiosInstance } from '../api/axiosInstances';
+import { searchAxiosInstance } from '../api/axiosInstances';
 import SearchIcon from '@mui/icons-material/Search';
 import {useSelector} from 'react-redux';
 import { chosungIncludes } from 'es-hangul';
