@@ -73,10 +73,14 @@ def set_cart_qty(request, pk):
 def create_order(request):
     user = User.objects.get(username=request.user)
     cart_items = Cart.objects.filter(user_id=user.id)
-    print(cart_items)
+    payment_info = request.data.get('paymentInfo', None)  # paymentInfo 데이터 추출
+    print(payment_info)
+    if not payment_info:
+        return Response({"detail":"Payment information is missing"}, status=400)
 
     if not cart_items:
         return Response({"detail":"Cart is empty"}, status=400)
+    
     now = datetime.now()
     delivery_date = now + timedelta(days=3)
     order_data = {"user_id": user.id, "payment_method": request.data["payment_method"], "shipping_price": 5000, "total_price": 0, "paid_at": now, "is_delivered": False, "delivered_at": delivery_date}

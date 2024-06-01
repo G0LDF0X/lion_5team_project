@@ -24,11 +24,9 @@ import { listProducts } from "../store/actions/productActions";
 import { listCartItems } from "../store/actions/cartActions";
 import Message from "../components/Message";
 import { createOrder } from "../store/actions/orderActions";
-// import {mainAxiosInstance} from "../../api/axiosInstances";
 //포트원 모듈 추가 npm i @portone/browser-sdk로 설치함
 import * as PortOne from "@portone/browser-sdk/v2";
-
-
+import {mainAxiosInstance} from "../api/axiosInstances";
 
 function ShippingScreen() {
   const dispatch = useDispatch();
@@ -61,17 +59,18 @@ function ShippingScreen() {
 
 
 
-// 결제하기 버튼 누를시 requestPay() 함수 실행
-//결제요청
+// 결제하기 버튼 누를시 requestPayment() 함수 실행
+// 결제요청 시작부분(react 방식, 포트원 V2)
 
-  async function requestPay() {
+  async function requestPayment() {
     console.log("결제하기 버튼 눌림");
-    console.log(combinedCartItems);
-    console.log(realPrice);
-    console.log(address);
+    // console.log(combinedCartItems);
+    // console.log(combinedCartItems.length);
+    // console.log(realPrice);
+    // console.log(address);
     console.log(payment);
+    // console.log(combinedCartItems[0].name, `외`, combinedCartItems.length,`건`);
     console.log(userInfo);
-    console.log(userInfo.username);
     console.log(userInfo.token);
     console.log(userInfo.createdAt);
     
@@ -79,41 +78,42 @@ function ShippingScreen() {
     const response = await PortOne.requestPayment({
       // Store ID 설정
       storeId: "store-6744d212-553b-40b5-bd60-4fef72aa2093",
-      // 채널 키 설정
+      // 채널 키 설정(현재는 토스 test)
       channelKey: "channel-key-0d3a759f-1678-4bc4-b640-15cc05170f0b",
       paymentId: `payment-${crypto.randomUUID()}`,
-      orderName: combinedCartItems[0].name,
+      orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
       payMethod: "CARD",
       // redirectUrl: `${BASE_URL}/payment/complete/`,    //redirect 주소 
     });
-
+    
     if (response.code != null){
       // 오류 발생한 경우
       return alert(response.message);
     }
+    console.log(response);
+      // 결제 오류 없는경우
+    const paymentInfo = {
+      paymentId: response.paymentId,
+      orderName: combinedCartItems[0].name,
+      totalAmount: realPrice,
+      currency: "CURRENCY_KRW",
+      payMethod: "CARD",
+      userInfo: userInfo,
+      address: address,
+      // ... 기타 필요한 정보 ...
+    };
+      // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
+    const savePaymentResponse = await mainAxiosInstance.post('http://127.0.0.1:8000/order/payment/save/', paymentInfo);
 
-    // 고객사 서버에서 /payment/complete 엔드포인트를 구현해야 합니다.
+    if (savePaymentResponse.status !== 200) {
+      // 결제 정보 저장에 실패한 경우
+      return alert('Failed to save payment information.');
+    }
 
-
-    // 결제 완료 처리하기 **
-    // const notified = await mainAxiosInstance.get('${SERVER_BASE_URL}/payment/complete/', 
-    //   {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       // paymentId와 주문 정보를 서버에 전달합니다
-    //       body: JSON.stringify({
-    //         paymentId: paymentId,
-    //         // 주문 정보...
-    //       }),
-    // });
-
-
-        // 주문 정보...
-    // e.preventDefault();
-    // console.log(code);
-    // dispatch(createOrder({ payment_method: payment, address: address }));
+    // 결제 정보 저장에 성공한 경우
+    alert('Payment information saved successfully.');
   
   };
   
@@ -299,7 +299,7 @@ function ShippingScreen() {
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={requestPay}
+                onClick={requestPayment}
               >
                 {realPrice}₩ 결제하기
               </Button>
