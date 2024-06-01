@@ -10,10 +10,8 @@ import logging
 from datetime import datetime, timedelta
 import asyncio
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Load environment variables
 load_dotenv()
 
 db_host = os.getenv('DB_HOST')
@@ -46,25 +44,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Change the embedding model here
+
 sbert = SentenceTransformerEmbeddings(model_name="jhgan/ko-sroberta-multitask")
 
-# Function to export data to CSV
+
 def export_data_to_csv():
-    # Delete the existing CSV file if it exists
+
     if os.path.exists(csv_file_path):
         os.remove(csv_file_path)
         logging.info(f"Existing {csv_file_path} file deleted.")
 
-    # SQL query to select data
     query = "SELECT * FROM app_item;"
 
-    # Connect to PostgreSQL
     try:
         conn = psycopg2.connect(**conn_params)
         df = pd.read_sql_query(query, conn)
 
-        # Export to CSV
         df.to_csv(csv_file_path, index=False)
         logging.info("Data exported successfully.")
     except Exception as e:
@@ -74,7 +69,6 @@ def export_data_to_csv():
             conn.close()
             logging.info("Database connection closed.")
 
-# Background task to run export_data_to_csv once per day
 async def schedule_daily_task():
     while True:
         now = datetime.now()
@@ -86,7 +80,7 @@ async def schedule_daily_task():
 
 @app.on_event("startup")
 async def startup_event():
-    # Schedule the daily task
+
     asyncio.create_task(schedule_daily_task())
 
 @app.post("/search/")

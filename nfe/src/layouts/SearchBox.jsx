@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
-import { searchAxiosInstance } from '../api/axiosInstances';
+import { searchAxiosInstance, searchByConstantsAxiosInstance } from '../api/axiosInstances';
 import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBox() {
@@ -13,17 +13,26 @@ function SearchBox() {
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
-      setSuggestions(response.data.results);
+      setSuggestions(suggestions => [...suggestions, ...response.data.results]);
     } catch (error) {
       // Handle error here
     }
   };
+  const FetchSuggestionsByConstants = async (query) => {
+    try {
+      const response = await searchByConstantsAxiosInstance.post(`search/?q=${query}`);
+      setSuggestions(suggestions => [...suggestions, ...response.data.results]);
+    } catch (error) {
+      // Handle error here
+    }
+  }
 
   const handleChange = (e) => {
     const value = e.target.value;
     setKeyword(value);
     if (value) {
       fetchSuggestions(value);
+      FetchSuggestionsByConstants(value);
     } else {
       setSuggestions([]);
     }
