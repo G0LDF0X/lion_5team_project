@@ -14,24 +14,6 @@ def get_Boards(request):
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
 
-
-
-# @api_view(['GET'])   
-# def get_Board(request, pk):
-#     board = get_object_or_404(Board, id=pk)
-#     replies = Reply.objects.filter(board_id=board)
-
-#     board_serializer = BoardSerializer(board)
-#     reply_serializer = ReplySerializer(replies, many=True)
-    
-#     return Response(
-#         {
-#             'board': board_serializer.data,
-#             'replies': reply_serializer.data
-#         }
-#     )
-
-
 @api_view(['GET', 'POST'])   
 def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':
@@ -57,7 +39,7 @@ def board_detail_or_create_reply(request, pk):
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
-        serializer = ReplySerializer(reply, many=True)
+        serializer = ReplySerializer(reply)
         return Response(serializer.data)
     
 
@@ -70,16 +52,18 @@ def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def create_Board(request):
+    print(request.user)
     user = User.objects.get(username=request.user)
+
     current_time = datetime.now()
     board = Board.objects.create(
         user_id=user,
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
-        image_url=request.data.get('image_url', ''),
+        image_url=request.data.get('images'),
         product_url=request.data.get('product_url', ''),
+        tag=request.data.get('tag', ''),
         show=0,
         like=0,
     )
@@ -124,18 +108,3 @@ def delete_Board(request, pk):
     board.delete()
     return Response('Board Deleted')
 
-
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def create_Reply(request, pk):
-#     user = User.objects.get(username=request.user)
-#     board = Board.objects.get(id=pk)
-#     replied_id = request.data.get('replied_id', None)  # 요청에서 replied_id 값을 가져옴
-#     reply = Reply.objects.create(
-#         user_id=user,
-#         board_id=board,
-#         content=request.data.get('content', ''),
-#         replied_id=replied_id  # 댓글이 답변하는 댓글의 ID를 저장
-#     )
-#     serializer = ReplySerializer(reply, many=False)
-#     return Response(serializer.data)

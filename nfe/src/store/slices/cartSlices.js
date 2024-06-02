@@ -18,7 +18,11 @@ export const cartSlice = createSlice({
         successAdd: false,
         successCartRemove: false,
     },
-    reducers: {},
+    reducers: {resetSuccess: (state) => {
+        state.successAdd = false;
+        state.successCartRemove = false;
+    }
+    },
     extraReducers: (builder) => {
         builder
         .addCase(listCartItems.pending, (state) => {
@@ -62,4 +66,4 @@ export const cartSlice = createSlice({
         });
     },
     });
-
+export const { resetSuccess } = cartSlice.actions;

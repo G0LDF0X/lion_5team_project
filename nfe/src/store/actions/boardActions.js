@@ -16,6 +16,7 @@ const getAuthHeaders = (getState) => {
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${userInfo.access}`,
+    ㄴ,
   };
 };
 
@@ -45,9 +46,12 @@ export const getBoardDetails = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
   "boardCreate/createBoard",
-  async (board, { rejectWithValue }) => {
+  async ({ board }, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.post(`/board/create/`, board);
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.post(`/board/create/`, board, {
+        headers,
+      });
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
@@ -89,12 +93,12 @@ export const deleteBoard = createAsyncThunk(
 
 export const createReply = createAsyncThunk(
   "boardCreateReply/createBoardReply",
-  async ({ repliedId = 0, reply, boardId }, { getState, rejectWithValue }) => {
+  async ({ reply, boardId }, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.post(
         `/board/detail/${boardId}/`,
-        { reply, repliedId },
+        { content: reply },
         { headers }
       );
       return res.data;

@@ -66,9 +66,8 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.loading = false;
-        state.userInfo = null;
         localStorage.removeItem('userInfo');
+        initialState;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;

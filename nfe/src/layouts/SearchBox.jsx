@@ -1,29 +1,77 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { List, ListItem, ListItemText, TextField, Button, Box, Paper } from '@mui/material';
-import { searchAxiosInstance } from '../api/axiosInstances';
-import SearchIcon from '@mui/icons-material/Search';
+import React, { useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  TextField,
+  Button,
+  Box,
+  Paper,
+} from "@mui/material";
+import { searchAxiosInstance } from "../api/axiosInstances";
+import SearchIcon from "@mui/icons-material/Search";
+import { useSelector } from "react-redux";
+import { chosungIncludes } from "es-hangul";
 
 function SearchBox() {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
 
   const fetchSuggestions = async (query) => {
     try {
       const response = await searchAxiosInstance.post(`search/?query=${query}`);
-      setSuggestions(response.data.results);
+      return response.data.results.map((result) => result.page_content);
     } catch (error) {
-      // Handle error here
+      console.error("Error fetching suggestions:", error);
+      return [];
     }
   };
 
-  const handleChange = (e) => {
+  const getConsontants = (query) => {
+    const consonantSuggestions = [];
+    for (const product of products) {
+      if (
+        chosungIncludes(product.name, query) &&
+        !consonantSuggestions.includes(product.name)
+      ) {
+        consonantSuggestions.push(product.name);
+      }
+      if (
+        chosungIncludes(product.description, query) &&
+        !consonantSuggestions.includes(product.name)
+      ) {
+        consonantSuggestions.push(product.name);
+      }
+      if (
+        chosungIncludes(product.category, query) &&
+        !consonantSuggestions.includes(product.name)
+      ) {
+        consonantSuggestions.push(product.name);
+      }
+    }
+    return consonantSuggestions;
+  };
+
+  const handleChange = async (e) => {
     const value = e.target.value;
     setKeyword(value);
+
     if (value) {
-      fetchSuggestions(value);
+      setSuggestions([]);
+      const [apiSuggestions, consonantSuggestions] = await Promise.all([
+        fetchSuggestions(value),
+        getConsontants(value),
+      ]);
+
+      const combinedSuggestions = [
+        ...new Set([...apiSuggestions, ...consonantSuggestions]),
+      ];
+      setSuggestions(combinedSuggestions);
     } else {
       setSuggestions([]);
     }
@@ -32,7 +80,7 @@ function SearchBox() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      navigate(`/items/?query=${keyword}&?page=1`);
+      navigate(`/items/?query=${keyword}&page=1&s=${suggestions}`);
       setSuggestions([]);
     } else {
       navigate(location.pathname);
@@ -51,20 +99,20 @@ function SearchBox() {
           variant="outlined"
           fullWidth
           className="bg-white rounded-l-lg"
-          id='search-box'
+          id="search-box"
           InputProps={{
-            style: { backgroundColor: 'white', color: 'gray' },
+            style: { backgroundColor: "white", color: "gray" },
           }}
           sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#f06292',
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#f06292",
               },
-              '&:hover fieldset': {
-                borderColor: '#ec407a',
+              "&:hover fieldset": {
+                borderColor: "#ec407a",
               },
-              '&.Mui-focused fieldset': {
-                borderColor: '#e91e63',
+              "&.Mui-focused fieldset": {
+                borderColor: "#e91e63",
               },
             },
           }}
@@ -74,14 +122,14 @@ function SearchBox() {
           variant="contained"
           className="ml-2 rounded-r-lg"
           sx={{
-            backgroundColor: '#f06292',
-            color: 'white',
-            '&:hover': {
-              backgroundColor: '#ec407a',
+            backgroundColor: "#f06292",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#ec407a",
             },
           }}
         >
-          <SearchIcon/>
+          <SearchIcon />
         </Button>
       </form>
       {suggestions.length > 0 && (
@@ -89,13 +137,13 @@ function SearchBox() {
           <List>
             {suggestions.map((suggestion, index) => (
               <Link
-                to={`/items/?query=${suggestion.page_content}&?page=1`}
+                to={`/items/?query=${suggestion}&?page=1`}
                 key={index}
                 className="no-underline text-black"
                 onClick={() => setSuggestions([])}
               >
                 <ListItem button>
-                  <ListItemText primary={suggestion.page_content} />
+                  <ListItemText primary={suggestion} />
                 </ListItem>
               </Link>
             ))}

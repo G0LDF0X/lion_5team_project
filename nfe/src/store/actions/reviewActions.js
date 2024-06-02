@@ -42,13 +42,12 @@ export const listReviewDetails = createAsyncThunk(
 
 export const createReview = createAsyncThunk(
   "reviewCreate/createReview",
-  async ({ id, formData }, { getState, rejectWithValue }) => {
+  async ({ id }, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
-      console.log(id, formData);
+      
       const res = await mainAxiosInstance.post(
         `/items/review/create/${id}/`,
-        { formData },
         { headers }
       );
 

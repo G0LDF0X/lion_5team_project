@@ -58,8 +58,8 @@ function UserProfileScreen() {
   };
 
   useEffect(() => {
-    if (!userInfo || !userInfo.username) {
-      navigate("/login");
+    if (!userInfo || !userInfo.username ) {
+      navigate("/");
     } else {
       dispatch(listBookMark());
       dispatch(getUserDetail(userInfo.id));

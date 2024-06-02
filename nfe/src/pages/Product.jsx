@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteReview } from "../store/actions/reviewActions";
+import { createReview, deleteReview } from "../store/actions/reviewActions";
 import { listProductDetails } from "../store/actions/productActions";
 import {
   addToBookMark,
@@ -24,6 +24,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { resetSuccess } from "../store/slices/cartSlices";
 
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -59,7 +60,7 @@ function ProductDetail() {
 
   useEffect(() => {
     if (successProductReview) {
-      navigate(`/items/review/${createdReview.id}`);
+      navigate(`/items/review/update/${createdReview.id}`);
     }
   }, [successProductReview, successReviewDelete, dispatch]);
   useEffect(() => {
@@ -79,9 +80,6 @@ function ProductDetail() {
   };
   const addToCartHandler = () => {
     dispatch(addToCart({ id, qty }));
-    if (successAdd) {
-    setState({ open: true });
-    }
   };
 
   const editReviewHandler = (review) => {
@@ -138,14 +136,20 @@ function ProductDetail() {
   };
   const createReviewHandler = () => {
     if (userInfo) {
-      navigate(`/items/review/create/${id}`);
+      dispatch(createReview({id}));
     } else {
       window.alert("로그인 후 이용해주세요.");
     }
   };
-
+useEffect(() => {
+    if (successAdd) {
+      setState({ open: true });
+      dispatch(resetSuccess());
+    }
+  }, [successAdd]);
   const handleClose = () => {
     setState({ open: false });
+
   };
   const avgRate =
     product.reviews &&

@@ -57,6 +57,7 @@ class Item(models.Model):
     description = models.TextField(blank=True)
     image_url = models.ImageField(blank=True, max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
+    stock = models.IntegerField(default=100)
     rate = models.FloatField()
 
     def __str__(self):
@@ -178,13 +179,24 @@ class Board(models.Model):
     def __str__(self):
         return self.title
 
+class Image(models.Model):
+    board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
+    image_url = models.ImageField(max_length=1000)
+
+class Image_Tag(models.Model):
+    board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
+    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    tag = models.CharField(max_length=100)
+
 class Reply(models.Model):
     # 외래키
     board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     
     content = models.TextField()
-    replied_id = models.IntegerField()
+    replied_id = models.IntegerField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -205,3 +217,24 @@ class Cart(models.Model):
 
     def __str__(self):
         return self.item_id.name
+    
+class Pet_Gender(models.Model):
+    pet_gender = models.CharField(max_length=100)
+
+# 강아지인지 고양이인지 분류하는 테이블
+class Pet_Species(models.Model):
+    pet_kind = models.CharField(max_length=100)
+
+# 강아지, 고양이의 각 품종을 분류하는 테이블
+class Pet_Breed(models.Model):
+    pet_kind_id = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING)
+    pet_breed = models.CharField(max_length=100)
+
+
+class Pet(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True)
+    age = models.IntegerField(blank=True)
+    gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING, blank=True)
+    species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING, blank=True)
+    breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING, blank=True)
