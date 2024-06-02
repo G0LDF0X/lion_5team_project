@@ -80,7 +80,7 @@ function SearchBox() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      navigate(`/items/?query=${keyword}&?page=1`);
+      navigate(`/items/?query=${keyword}&page=1&s=${suggestions}`);
       setSuggestions([]);
     } else {
       navigate(location.pathname);

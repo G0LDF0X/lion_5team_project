@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, ListItemIcon } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-// import '../index.css';
 
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
@@ -14,9 +13,11 @@ export default function SideBar({ toggleDrawer, open }) {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
   const DrawerList = (
     <Box

@@ -3,7 +3,7 @@ import { mainAxiosInstance } from "../../api/axiosInstances";
 
 export const listProducts = createAsyncThunk(
   'products/listProducts',
-  async ({ query = '', page = '', category = [] }, { rejectWithValue }) => {
+  async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue }) => {
     try {
       let params = new URLSearchParams();
       if (query) params.append('query', query);
@@ -11,6 +11,10 @@ export const listProducts = createAsyncThunk(
       if (page) params.append('page', page);
       if (category.length) {
         category.forEach((cat) => params.append('category', cat));
+      }
+      console.log(suggestions);
+      if (suggestions) {
+        params.append('s', suggestions);
       }
       const url = `/items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);

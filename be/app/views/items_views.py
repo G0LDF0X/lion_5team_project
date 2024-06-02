@@ -6,6 +6,7 @@ from datetime import datetime
 from django.core.paginator import Paginator
 import json
 from rest_framework import status
+from django.db.models import Q
 # from tensorflow.keras.models import load_model
 
 
@@ -43,20 +44,45 @@ from django.shortcuts import render
 
 @api_view(['GET'])
 def get_items(request):
-    query = request.GET.get('query')
-    print ("query=", query) 
-    if query == None:
-        query = ''
-    categories = request.query_params.getlist('category')
+    query = request.GET.get('query', '')
+    suggestions = request.query_params.get('s','')
+    categories = request.query_params.getlist('category', [])
+    page = request.query_params.get('page', 1)
+    if suggestions:
+        suggestions_list = suggestions.split(',')
+    
+    else:
+        suggestions_list = []
     # page = request.query_params.get('page', 1)
     # items_per_page = request.query_params.get('items_per_page', 10)
     
     categories = [c for c in categories if c]
+    suggestions_list = [s.strip() for s in suggestions_list if s.strip()]
+    item_query = Q()
     if categories:
-        items = Item.objects.filter(category_id_id__in=categories, name__icontains=query,)
-        print(categories)
-    else:
-        items = Item.objects.filter(name__icontains=query)
+        item_query &= Q(category_id_id__in=categories)
+    if suggestions_list:
+        suggestions_query = Q()
+        for suggestion in suggestions_list:
+            suggestions_query |= Q(name__icontains=suggestion)
+        item_query &= suggestions_query
+    if query:
+        query_condition = Q(name__icontains=query) | Q(description__icontains=query)
+        item_query |= query_condition
+    print(item_query)   
+    items = Item.objects.filter(item_query)
+    # if categories and suggestions_list:
+    #     items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
+    #     print("2",' '.join(suggestions_list))
+    #     print(categories)
+    # elif categories:    
+    #     items = Item.objects.filter( category_id_id__in=categories)
+    #     print("3",' '.join(suggestions_list))
+    # elif suggestions_list:
+    #     items = Item.objects.filter(name__icontains=','.join(suggestions_list))
+    #     print("4",' '.join(suggestions_list))
+        
+        #     items = Item.objects.filter(name__icontains=query)
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 
