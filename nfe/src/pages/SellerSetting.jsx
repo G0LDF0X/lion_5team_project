@@ -46,7 +46,7 @@ const user = useSelector((state) => state.user)
 const { userInfo } = user
 const navigate = useNavigate()  
 useEffect(() => {
-  if (!userInfo.is_staff || !userInfo.is_seller) {
+  if (!userInfo.is_staff && !userInfo.is_seller) {
     navigate("/");
   }
 }
