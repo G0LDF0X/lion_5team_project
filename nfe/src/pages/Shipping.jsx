@@ -28,6 +28,8 @@ import { createOrder } from "../store/actions/orderActions";
 import * as PortOne from "@portone/browser-sdk/v2";
 import {mainAxiosInstance} from "../api/axiosInstances";
 
+
+
 function ShippingScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ function ShippingScreen() {
 
 // 결제하기 버튼 누를시 requestPayment() 함수 실행
 // 결제요청 시작부분(react 방식, 포트원 V2)
-
+  const BASE_URL = "http://localhost:5173";
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
     // console.log(combinedCartItems);
@@ -73,6 +75,7 @@ function ShippingScreen() {
     console.log(userInfo);
     console.log(userInfo.access);
     console.log(userInfo.username);
+    console.log(userInfo.refresh);
     
 
     const response = await PortOne.requestPayment({
@@ -109,12 +112,12 @@ function ShippingScreen() {
       // ... 기타 필요한 정보 ...
     };
     console.log(paymentInfo);
-    
+
       // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
-    const savePaymentResponse = await mainAxiosInstance.post('http://127.0.0.1:8000/order/payment/save/', paymentInfo, 
+    const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
     {  headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${userInfo.access}`
+          'Authorization': `'Bearer ${userInfo.access}'`
         } }
                   );
 
@@ -125,7 +128,25 @@ function ShippingScreen() {
 
     // 결제 정보 저장에 성공한 경우
     alert('Payment information saved successfully.');
-  
+
+    // 결제 완료 처리를 위한 PortOne-API 호출
+    const completePaymentResponse = await mainAxiosInstance.post('/payment/complete/', paymentInfo,
+    {  headers: {
+          "Content-Type": "application/json",
+          'Authorization': `'Bearer ${userInfo.access}'`
+        } }
+        );
+
+    if (completePaymentResponse.status !== 200) {
+    // 결제 완료 확인에 실패한 경우
+
+    return alert('Failed to complete payment.');
+
+    }
+
+    // 결제 완료 확인에 성공한 경우
+    alert('Payment completed successfully.');
+
   };
   
 
