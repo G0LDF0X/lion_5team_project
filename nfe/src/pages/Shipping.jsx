@@ -71,8 +71,8 @@ function ShippingScreen() {
     console.log(payment);
     // console.log(combinedCartItems[0].name, `외`, combinedCartItems.length,`건`);
     console.log(userInfo);
-    console.log(userInfo.token);
-    console.log(userInfo.createdAt);
+    console.log(userInfo.access);
+    console.log(userInfo.username);
     
 
     const response = await PortOne.requestPayment({
@@ -84,8 +84,8 @@ function ShippingScreen() {
       orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
-      payMethod: "CARD",
-      // redirectUrl: `${BASE_URL}/payment/complete/`,    //redirect 주소 
+      payMethod: "CARD", 
+      // redirectUrl: `${BASE_URL}/payment-redirect`,
     });
     
     if (response.code != null){
@@ -93,6 +93,10 @@ function ShippingScreen() {
       return alert(response.message);
     }
     console.log(response);
+
+    // paymentId: "payment-9ce6810e-f611-45fb-81c7-3c799a2cb80f" >> DB에 별도저장 필요
+    // transactionType: "PAYMENT"
+    // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
       // 결제 오류 없는경우
     const paymentInfo = {
       paymentId: response.paymentId,
@@ -104,8 +108,15 @@ function ShippingScreen() {
       address: address,
       // ... 기타 필요한 정보 ...
     };
+    console.log(paymentInfo);
+    
       // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
-    const savePaymentResponse = await mainAxiosInstance.post('http://127.0.0.1:8000/order/payment/save/', paymentInfo);
+    const savePaymentResponse = await mainAxiosInstance.post('http://127.0.0.1:8000/order/payment/save/', paymentInfo, 
+    {  headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${userInfo.access}`
+        } }
+                  );
 
     if (savePaymentResponse.status !== 200) {
       // 결제 정보 저장에 실패한 경우

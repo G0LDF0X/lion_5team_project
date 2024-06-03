@@ -66,6 +66,8 @@ def set_cart_qty(request, pk):
     return Response(serializer.data)
 
 
+
+
 @api_view(['POST'])
 def create_order(request):
     user = User.objects.get(username=request.user)
@@ -113,7 +115,8 @@ def create_order(request):
         return Response(order_serializer.data, status=201)
     else:
         return Response(order_serializer.errors, status=402)
-    
+
+
 @api_view(['GET'])
 def my_order_list(request):
     user = User.objects.get(username=request.user)
