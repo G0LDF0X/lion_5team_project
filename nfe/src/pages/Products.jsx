@@ -19,11 +19,14 @@ function ProductsScreen() {
   const query = params.get('query') || '';
   const page = params.get('page') || 1;
   const tag = params.get('tag');
+  const suggestions = params.get('s') || ''; 
+  console.log(params)
+  console.log(suggestions);
 
 
 useEffect(() => {
-    dispatch(listProducts({query:query, page:page, category:selectedCategory}));
-}, [dispatch, query, tag, page, selectedCategory]);
+    dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
+}, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
 useCategory(setCategories);
   const handleCategoryChange = (e) => {

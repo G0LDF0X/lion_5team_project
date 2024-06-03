@@ -10,13 +10,13 @@ function UserProfileMain({ userInfo, user, url }) {
       <div className="bg-white shadow-md rounded-lg w-full max-w-2xl">
         <div className="flex justify-center mt-4">
           <div className="flex flex-col items-center">
-            {user?.user?.image_url ? (
-              <img src={url+user.user.image_url} alt="Profile" className="rounded-full w-32 h-32" />
+            {user?.image_url ? (
+              <img src={url+user.image_url} alt="Profile" className="rounded-full w-32 h-32" />
             ) : (
               <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
             )}
-            <h4 className="mt-4">{userInfo.nickname || userInfo.username}</h4>
-            <h6>팔로워 {userInfo.follower} | 팔로잉 {userInfo.following}</h6>
+            <h4 className="mt-4">{userInfo?.nickname || userInfo?.username}</h4>
+            <h6>팔로워 {userInfo?.follower} | 팔로잉 {userInfo?.following}</h6>
           </div>
         </div>
         <div className="mt-6 mb-4 text-center">

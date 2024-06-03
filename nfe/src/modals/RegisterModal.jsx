@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { register } from '../store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { useFetch } from '../hook/useFetch';
 
 const RegisterModal = ({ isOpen, onClose }) => {
 
@@ -14,43 +15,31 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [nickname, setNickname] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  
 
   // Pet details
+  const [pet, setPet] = useState(false); 
   const [petName, setPetName] = useState('');
-  const [petGender, setPetGender] = useState('');
+  const [petGender, setPetGender] = useState({pet_gender: ''});
   const [petAge, setPetAge] = useState('');
-  const [petSpecies, setPetSpecies] = useState('');
-  const [petBreed, setPetBreed] = useState('');
+  const [petSpecies, setPetSpecies] = useState({pet_kind: ''});
+  // const [petBreedId, setPetBreedId] = useState('');
+  const [petBreed, setPetBreed] = useState('펫 종류를 선택해주세요.')
+  const [pet_kind_id, setPet_kind_id] = useState('');
 
   // Options for pet details
-  const [genders, setGenders] = useState([]);
-  const [species, setSpecies] = useState([]);
   const [breeds, setBreeds] = useState([]);
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchGenders = async () => {
-      const res = await mainAxiosInstance.get(`/pet/gender/`);
-      console.log(res.data);
-      setGenders(res.data);
-    };
-  
-    const fetchSpecies = async () => {
-      const res = await mainAxiosInstance.get('/pet/species/');
-      setSpecies(res.data);
-    };
-  
-    fetchGenders();
-    fetchSpecies();
-  }, []);
+  const {genders, species}=useFetch();
+ 
   
   useEffect(() => {
     const fetchBreeds = async () => {
       if (petSpecies) {
-        const res = await mainAxiosInstance.get(`/pet/breed/${petSpecies}`);
+        const res = await mainAxiosInstance.get(`/pet/breed/${petSpecies.pet_kind}`);
         setBreeds(res.data);
-        console.log("BREED:", res.data);
+        // console.log("BREED:", res.data);
         console.log("PET BREED:", breeds);
       }
     };
@@ -62,7 +51,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const pet = petName ? { 'name': petName, 'gender': {'pet_gender':petGender}, 'age': petAge, 'species': {'pet_kind':petSpecies}, 'breed': {'pet_breed':petBreed} } : null;
+    const pet = petName ? { 'name': petName, 'gender':petGender, 'age': petAge, 'species':petSpecies, 'breed': {'pet_breed':petBreed,'pet_kind_id':pet_kind_id }} : null;
     dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
@@ -149,7 +138,16 @@ const RegisterModal = ({ isOpen, onClose }) => {
             />
           </div>
 
-
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+  <label style={{ marginRight: '0.5rem' }}>펫 등록하기</label>
+  <input 
+    type="checkbox"
+    checked={pet}
+    onChange={(e) => setPet(e.target.checked)}
+  />
+</div>
+      
+        {pet ? ( <>
           <div className="mb-4">
             <label className="block text-gray-700">Pet Name:</label>
             <input
@@ -164,12 +162,12 @@ const RegisterModal = ({ isOpen, onClose }) => {
             <label className="block text-gray-700">Pet Gender:</label>
             <select
               value={petGender}
-              onChange={(e) => setPetGender(e.target.value)}
+              onChange={(e) => setPetGender({pet_gender:e.target.value})}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Gender</option>
               {genders.map((gender) => (
-                <option key={gender.id} value={gender.pet_gender}>
+                <option key={gender.id} value={gender.id}>
                   {gender.pet_gender}
                 </option>
               ))}
@@ -190,12 +188,12 @@ const RegisterModal = ({ isOpen, onClose }) => {
             <label className="block text-gray-700">Pet Species:</label>
             <select
               value={petSpecies}
-              onChange={(e) => setPetSpecies(e.target.value)}
+              onChange={(e) => {setPetSpecies({pet_kind:e.target.value}); setPet_kind_id(e.target.value)}}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Species</option>
               {species.map((kind) => (
-                <option key={kind.id} value={kind.pet_kind}>
+                <option key={kind.id} value={kind.id}>
                   {kind.pet_kind}
                 </option>
               ))}
@@ -213,13 +211,15 @@ const RegisterModal = ({ isOpen, onClose }) => {
               {breeds
               .sort((a, b) => a.pet_breed.localeCompare(b.pet_breed))
               .map((breed) => (
-                <option key={breed.id} value={breed.pet_breed}>
+                <option key={breed.id} value={breed}>
                   {breed.pet_breed}
                 </option>
               ))}
             </select>
           </div>
-
+        </>) : (null
+        )
+        }
 
           <button
             type="submit"

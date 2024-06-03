@@ -26,12 +26,14 @@ python manage.py runserver
 cd be
 uvicorn chatbot.main:app --reload --port 8001
 ```
-### Search
-매일 자동완성 데이터 업데이트 되로록 설정
+### Search1
+매일 자동완성 데이터 업데이트 되로록 설정(db 업데이트 되면 기능 향상 가능)
 ```
 cd be
 uvicorn fastapi_app.main:app --reload --port 8002
 ```
+### search2 (보류(프론트에서 처리중))
+
 
 ### Frontend
 

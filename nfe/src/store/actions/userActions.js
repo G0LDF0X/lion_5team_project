@@ -77,9 +77,11 @@ export const getUserDetail = createAsyncThunk(
   "userDetail/detail",
   async (id, { getState, rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders(getState);
+      const {userInfo} = getState().user
       const res = await mainAxiosInstance.get(`/users/detail/${id}`, {
-        headers,
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
       });
 
       return res.data;
@@ -101,8 +103,6 @@ export const updateUserProfile = createAsyncThunk(
           headers,
         }
       );
-
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));

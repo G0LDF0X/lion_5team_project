@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserProfile, getUserDetail } from "../../store/actions/userActions";
+import { useNavigate } from "react-router-dom";
+import { updateUserProfile, getUserDetail, logout } from "../../store/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
 function UserSetting({ userInfo, userDetail, reset }) {
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const user = useSelector((state) => state.user);
   const { success } = user;
   const [message, setMessage] = useState("");
@@ -13,10 +15,11 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const emailRef = useRef();
 ``
   useEffect(() => {
-    if (success) {
+    if (success===true) {
       alert('수정이 완료되었습니다.');
-      window.location.reload();
-      dispatch(reset);
+      // window.location.reload();
+      dispatch(logout());
+      navigate("/");
     }
   }, [success]);
 
@@ -61,9 +64,9 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
         <label htmlFor="fileInput">
-            {userDetail.user&& userDetail.user.image_url ? (
+            {userDetail&& userDetail.image_url ? (
                 <img
-                    src={VITE_API_BASE_URL + user.user.image_url}
+                    src={VITE_API_BASE_URL + userDetail.image_url}
                     alt="User"
                     className="rounded-full w-40 h-40 object-cover"
                 />
@@ -96,6 +99,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                 placeholder={userDetail.user&& userDetail.user.nickname}
                 ref={nicknameRef}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
               />
             </div>
             <div className="mb-4">
@@ -108,6 +112,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                 placeholder={userDetail.user && userDetail.user.email}
                 ref={emailRef}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                required
               />
             </div>
             <div className="flex justify-center">
