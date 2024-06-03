@@ -4,6 +4,7 @@ import { register } from '../store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { useFetch } from '../hook/useFetch';
+import AddressSearch from '../components/AddressSearch';
 
 const RegisterModal = ({ isOpen, onClose }) => {
 
@@ -118,14 +119,15 @@ const RegisterModal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Address:</label>
-            <input
+            {/* <label className="block text-gray-700">Address:</label> */}
+            <AddressSearch onAddressSelected={setAddress} />
+            {/* <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               required
-            />
+            /> */}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Phone:</label>
