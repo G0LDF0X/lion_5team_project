@@ -84,23 +84,6 @@ async def startup_event():
 async def search_items(query: str):
     items = pd.read_csv(item_csv_file_path)
     vector_store = Chroma.from_texts(
-<<<<<<< HEAD
-        texts=items['name', 'category'].tolist(),
-        
-        embedding=sbert
-
-    )
-    results = vector_store.similarity_search(query=query, k=10) 
-
-    unique_results = []
-    seen = set()
-    for result in results:
-        if result.page_content not in seen:
-            seen.add(result.page_content)
-            unique_results.append(result)
-        if len(unique_results) == 4:
-            break
-=======
         texts=items['item_name'].tolist(),
         embedding=sbert
     )
@@ -114,7 +97,6 @@ async def search_items(query: str):
             embedding=sbert
         )
         category_results = category_vector_store.similarity_search(query=query, k=10)
->>>>>>> main
 
         unique_results = []
         seen = set()
