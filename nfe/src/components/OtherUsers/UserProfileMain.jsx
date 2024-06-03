@@ -8,52 +8,69 @@ function UserProfileMain({ userDetail, url, userInfo }) {
     const [isFollowing, setIsFollowing] = useState(false);
 
     useEffect(() => {
-        const fetchFollowStatus = async () => {
+
+        const checkFollowStatus = async () => {
             try {
-             
+
                 const response = await mainAxiosInstance.get(`/users/follow/${userDetail.id}/`, {
+                
                     headers: {
                         'Authorization': `Bearer ${userInfo.access}`
                     }
                 });
-   
-                setIsFollowing(response.data.isFollowing);
+    
+                if (response.status === 200) {
+                    console.log('팔로우 상태 확인');
+                    if (response.data.follow_exists) {
+                        setIsFollowing(true);
+                        console.log(".")
+                    } else {
+                        setIsFollowing(false);
+                    }
+                }
             } catch (error) {
-                console.error("Failed to fetch follow status:", error);
+                console.error("팔로우 상태 확인 실패:", error);
             }
         };
-        // fetchFollowStatus();
-
-
+        if (userDetail.id && userInfo.access) {
+            checkFollowStatus();
+        }
     }, [userDetail.id, userInfo.access]);
 
     const handleFollow = async () => {
-      try {
-        console.log('userDetail.id:', userDetail.id);
-        console.log('userInfo.access:', userInfo.access);
-          const response = await mainAxiosInstance.post(`/users/follow/${userDetail.id}/`,{}, {
-                    headers: {
-                      'Authorization': `Bearer ${userInfo.access}`
-                  }
-              });
-              console.log('response:', response);
-          setIsFollowing(true);
-      } catch (error) {
-          console.error('팔로우 실패:', error);
-      }
+        try {
+            console.log('userDetail.id:', userDetail.id);
+            console.log('userInfo.access:', userInfo.access);
+            const response = await mainAxiosInstance.post(`/users/follow/${userDetail.id}/`,{}, {
+                        headers: {
+                        'Authorization': `Bearer ${userInfo.access}`
+                    }
+                });
+                console.log('response:', response);
+                if (response.status === 201) {
+                    setIsFollowing(true);
+                    
+                }
+            
+        } catch (error) {
+            console.error('팔로우 실패:', error);
+        }
   };
 
-      const handleUnfollow = async () => {
+    const handleUnfollow = async () => {
         try {
-          const response = await mainAxiosInstance.delete(`/users/follow/${userDetail.id}/`,{}, {
-              headers: {
-                  'Authorization': `Bearer ${userInfo.access}`
-              }
-          });
-          setIsFollowing(false);
-      } catch (error) {
-          console.error('언팔로우 실패:', error);
-      }
+            console.log('userDetail.id:', userDetail.id);
+            console.log('userInfo.access:', userInfo.access);
+            const response = await mainAxiosInstance.delete(`/users/follow/${userDetail.id}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${userInfo.access}`
+                }
+            });
+            console.log('response:', response);
+            setIsFollowing(false);
+        } catch (error) {
+            console.error('언팔로우 실패:', error);
+        }
     };
   
     return (
@@ -72,7 +89,11 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         variant="contained" 
                         color={isFollowing ? "secondary" : "primary"} 
                         onClick={isFollowing ? handleUnfollow : handleFollow}
-                        className="mt-4"
+                        className="mt-5"
+                        style={{
+                            backgroundColor: isFollowing ? '#E35959' : '#FFB6C1', // 빨강색 또는 베이비 핑크색
+                            color: isFollowing ? 'white': 'black'
+                        }}
                     >
                         {isFollowing ? "언팔로우" : "팔로우"}
                         </Button>

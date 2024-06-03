@@ -303,39 +303,40 @@ def get_other_answer(request, pk):
     return Response(serializer.data)
 
 
-@api_view(['POST', 'GET', 'DELETE'])
+
+@api_view(['POST', 'DELETE','GET' ])
 @permission_classes([IsAuthenticated])
 def follow_save(request, pk):
-    follower = User.objects.get(id=pk)
+    follower = User.objects.get(username=request.user)
     followed = User.objects.get(id=pk)
-
     
     if request.method == 'POST':
         follow_relation = Follow.objects.filter(follower_id=follower, followed_id=followed)
-
-        if follow_relation.exists():
-            return Response({'status': 'error', 'message': '이미 팔로우 중입니다.'}, status=400)
         
+        if follow_relation.exists():
+            return Response({'status': 'info', 'message': '이미 팔로우 중입니다.'})
+        else:
             follow = Follow.objects.create(
                 follower_id=follower,
                 followed_id=followed
-            )  
-            serializer = FollowSerializer(follow)
-            return Response(serializer.data, status=201)
+            )
+ 
+        
+        serializer = FollowSerializer(follow)
+        return Response(serializer.data, status=201)
+       
 
     elif request.method == 'DELETE':
         follow_relation = Follow.objects.filter(follower_id=follower, followed_id=followed)
 
         if follow_relation.exists():
             follow_relation.delete()
-            return Response({'status': 'success', 'message': '팔로우 취소'})
-        else:
-            return Response({'status': 'error', 'message': '팔로우하지 않았습니다.'}, status=400)
 
-    elif request.method == 'GET':
-        # Check if a Follow object exists where follower_id=followed_id
+
+            return Response({'status': 'success', 'message': '팔로우 취소'})
+    
+
+    else :
         follow_exists = Follow.objects.filter(follower_id=follower, followed_id=followed).exists()
 
-        # Return a JSON response with the result
         return Response({'follow_exists': follow_exists})
-    
