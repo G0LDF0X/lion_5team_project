@@ -34,7 +34,7 @@ uvicorn fastapi_app.main:app --reload --port 8002
 ```
 ### search2 (보류(프론트에서 처리중))
 
-### 추천기능1
+### 추천기능1 (추천기능들은 일단은 전부 fastapi로 해놨습니다. 일단 전부 리뷰기반 추천으로 설정. 추후 업데이트 예정)
 
 ```
 pip install scikit-surprise pandas numpy
