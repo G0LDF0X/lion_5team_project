@@ -34,6 +34,14 @@ uvicorn fastapi_app.main:app --reload --port 8002
 ```
 ### search2 (보류(프론트에서 처리중))
 
+### 추천기능
+
+```
+cd be
+uvicorn recommend.knn:app --reload --port 8003
+
+http://localhost:8003/recommend?user_id=1  get요청으로 확인가능
+```
 
 ### Frontend
 
