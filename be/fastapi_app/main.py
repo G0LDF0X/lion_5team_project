@@ -41,31 +41,31 @@ app.add_middleware(
 
 sbert = SentenceTransformerEmbeddings(model_name="jhgan/ko-sroberta-multitask")
 
-# def export_data_to_csv():
-#     if os.path.exists(item_csv_file_path):
-#         os.remove(item_csv_file_path)
-#         logging.info(f"Existing {item_csv_file_path} file deleted.")
+def export_data_to_csv():
+    if os.path.exists(item_csv_file_path):
+        os.remove(item_csv_file_path)
+        logging.info(f"Existing {item_csv_file_path} file deleted.")
 
-#     query = "SELECT * FROM app_item;"
+    query = "SELECT * FROM app_item;"
 
-#     try:
-#         engine = create_engine(connection_string)
-#         df_item = pd.read_sql_query(query, engine)
-#         logging.info(f"Columns in item DataFrame: {df_item.columns.tolist()}")
+    try:
+        engine = create_engine(connection_string)
+        df_item = pd.read_sql_query(query, engine)
+        logging.info(f"Columns in item DataFrame: {df_item.columns.tolist()}")
         
-#         df_category = pd.read_csv(category_csv_file_path)
-#         logging.info(f"Columns in category DataFrame: {df_category.columns.tolist()}")
+        df_category = pd.read_csv(category_csv_file_path)
+        logging.info(f"Columns in category DataFrame: {df_category.columns.tolist()}")
 
-#         df_merged = df_item.merge(df_category, left_on='category_id_id', right_on='id', how='left')
-#         df_merged.rename(columns={'name_y': 'category_name', 'name_x': 'item_name'}, inplace=True)
+        df_merged = df_item.merge(df_category, left_on='category_id_id', right_on='id', how='left')
+        df_merged.rename(columns={'name_y': 'category_name', 'name_x': 'item_name'}, inplace=True)
 
-#         df_merged.to_csv(item_csv_file_path, index=False)
-#         logging.info("Data exported successfully with category names.")
-#     except Exception as e:
-#         logging.error(f"Error: {e}")
-#     finally:
-#         engine.dispose()
-# export_data_to_csv()
+        df_merged.to_csv(item_csv_file_path, index=False)
+        logging.info("Data exported successfully with category names.")
+    except Exception as e:
+        logging.error(f"Error: {e}")
+    finally:
+        engine.dispose()
+export_data_to_csv()
 
 async def schedule_daily_task():
     while True:
@@ -74,7 +74,7 @@ async def schedule_daily_task():
         wait_time = (next_run - now).total_seconds()
         logging.info(f"Next data export scheduled at {next_run}")
         await asyncio.sleep(wait_time)
-        # export_data_to_csv()
+        export_data_to_csv()
 
 @app.on_event("startup")
 async def startup_event():
