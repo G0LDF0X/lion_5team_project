@@ -29,6 +29,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             fetchData();
             console.log(followerCount)
             console.log(followingCount)
+    
         }
       
         const checkFollowStatus = async () => {
