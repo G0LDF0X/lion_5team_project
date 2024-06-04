@@ -77,7 +77,6 @@ class Review(models.Model):
 
 class Order(models.Model):
     user_id =models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
     payment_method = models.CharField(max_length=100)
     shipping_price = models.IntegerField()
     total_price = models.IntegerField()
@@ -85,6 +84,7 @@ class Order(models.Model):
     is_delivered = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     delivered_at = models.DateTimeField(auto_now_add=True)
+    address = models.TextField(blank=True)
 
 class OrderItem(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
@@ -238,3 +238,11 @@ class Pet(models.Model):
     gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING, blank=True)
     species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING, blank=True)
     breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING, blank=True)
+
+
+class Payment(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    payment_method = models.CharField(max_length=100)
+    payment_amount = models.IntegerField()
+    paymentId = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)

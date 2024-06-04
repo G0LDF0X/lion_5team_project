@@ -24,6 +24,12 @@ import { listProducts } from "../store/actions/productActions";
 import { listCartItems } from "../store/actions/cartActions";
 import Message from "../components/Message";
 import { createOrder } from "../store/actions/orderActions";
+//포트원 모듈 추가 npm i @portone/browser-sdk로 설치함
+import * as PortOne from "@portone/browser-sdk/v2";
+import {mainAxiosInstance} from "../api/axiosInstances";
+import AddressSearch from "../components/AddressSearch";
+
+
 
 function ShippingScreen() {
   const dispatch = useDispatch();
@@ -48,11 +54,91 @@ function ShippingScreen() {
       dispatch(listCartItems());
     }
   }, [dispatch]);
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(createOrder({ payment_method: payment, address: address }));
-    navigate("/payment");
+
+
+
+
+
+
+
+
+// 결제하기 버튼 누를시 requestPayment() 함수 실행
+// 결제요청 시작부분(react 방식, 포트원 V2)
+  
+  async function requestPayment() {
+    console.log("결제하기 버튼 눌림");
+    // console.log(combinedCartItems);
+    // console.log(combinedCartItems.length);
+    // console.log(realPrice);
+    // console.log(address);
+    // console.log(payment);
+    // console.log(combinedCartItems[0].name, `외`, combinedCartItems.length,`건`);
+    // console.log(userInfo);
+    // console.log(userInfo.access);
+    // console.log(userInfo.username);
+    // console.log(userInfo.refresh);
+    const response = await PortOne.requestPayment({
+      // Store ID 설정
+      storeId: "store-6744d212-553b-40b5-bd60-4fef72aa2093",
+      // 채널 키 설정(현재는 토스 test)
+      channelKey: "channel-key-0d3a759f-1678-4bc4-b640-15cc05170f0b",
+      paymentId: `payment-${crypto.randomUUID()}`,
+      orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
+      totalAmount: realPrice,
+      currency: "CURRENCY_KRW",
+      payMethod: "CARD", 
+      // redirectUrl: "http://localhost:5173", // 결제 완료 후 리다이렉트할 URL",
+      // noticeUrls: ["https://127.0.0.1:8000/payment/complete/"],
+
+    });
+    
+    if (response.code != null){
+      // 오류 발생한 경우
+      return alert(response.message);
+    }
+
+    // paymentId: "payment-9ce6810e-f611-45fb-81c7-3c799a2cb80f" >> DB에 별도저장 필요
+    // transactionType: "PAYMENT"
+    // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
+      // 결제 오류 없는경우
+
+    const paymentInfo = {
+      paymentId: response.paymentId,
+      orderName: combinedCartItems[0].name,
+      totalAmount: realPrice,
+      currency: "CURRENCY_KRW",
+      payMethod: "CARD",
+      userInfo: userInfo,
+      address: address,
+      // ... 기타 필요한 정보 ...
+    };
+    
+
+      // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
+    const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
+    {  headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${userInfo.access}`
+        } }
+                  );
+
+    if (savePaymentResponse.status !== 200) {
+      // 결제 정보 저장에 실패한 경우
+      return alert('Failed to save payment information.');
+    }
+
+    // 결제 정보 저장에 성공한 경우
+    alert('Payment information saved successfully.');
+    window.location.href = "http://localhost:5173";
+    
   };
+  
+
+
+
+
+
+
 
   const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = cartItems
@@ -73,6 +159,9 @@ function ShippingScreen() {
 
   const combinedCartItems = combineCartItems(cartItems);
 
+
+
+  
   return (
     <Container maxWidth="lg" className="py-8">
       <Grid container spacing={4}>
@@ -88,13 +177,14 @@ function ShippingScreen() {
                 <RadioGroup
                   aria-label="shipping address"
                   name="shippingAddress"
-                  value={isUserAddressSelected ? userInfo.address : address}
+                  value={isUserAddressSelected ? userInfo.address : "other"}
                   onChange={(e) => {
                     if (e.target.value === userInfo.address) {
                       setAddress(userInfo.address);
                       setOtherAddress(false);
                       setIsUserAddressSelected(true);
                     } else {
+                      setAddress("");
                       setOtherAddress(true);
                       setIsUserAddressSelected(false);
                     }
@@ -112,12 +202,8 @@ function ShippingScreen() {
                   />
                 </RadioGroup>
                 {otherAddress && (
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="새로운 배송지 입력"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                  <AddressSearch
+                  onAddressSelected={setAddress}
                   />
                 )}
               </Box>
@@ -133,12 +219,17 @@ function ShippingScreen() {
                   <FormControlLabel
                     value="paypal"
                     control={<Radio />}
-                    label="PayPal 또는 신용카드"
+                    label="PayPal"
                   />
                   <FormControlLabel
                     value="toss"
                     control={<Radio />}
                     label="토스"
+                  />
+                  <FormControlLabel
+                    value="creditcard"
+                    control={<Radio />}
+                    label="신용카드"
                   />
                 </RadioGroup>
               </Box>
@@ -221,10 +312,11 @@ function ShippingScreen() {
                 variant="contained"
                 color="primary"
                 fullWidth
-                onClick={submitHandler}
+                onClick={requestPayment}
               >
                 {realPrice}₩ 결제하기
               </Button>
+              
             </CardContent>
           </Card>
         </Grid>
@@ -232,5 +324,6 @@ function ShippingScreen() {
     </Container>
   );
 }
+
 
 export default ShippingScreen;

@@ -19,6 +19,8 @@ import CartScreen from './pages/Cart'
 import MyShoppingScreen from './pages/MyShopping'
 import OtherUserProfile from './pages/OtherUsers'
 import ShippingScreen from './pages/Shipping'
+
+
 const routers = createBrowserRouter([
   {
     path: '/',
@@ -96,8 +98,8 @@ const routers = createBrowserRouter([
       {
         path:'/shipping',
         element: <ShippingScreen/>
-      }
-
+      },
+      
 
 
       
