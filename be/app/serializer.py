@@ -224,11 +224,12 @@ class PetSerializer(serializers.ModelSerializer):
 
 
 from django.db import transaction
+import json
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     nickname = serializers.CharField(required=True)
-    address = serializers.CharField(required=True)
+    address = serializers.JSONField(required=True)
     phone = serializers.CharField(required=True)
     pet = PetSerializer(required=False)
     # password2 = serializers.CharField(write_only=True, required=True)
@@ -263,7 +264,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                 username=auth_user.username,
                 email=auth_user.email,
                 nickname=validated_data['nickname'],
-                address=validated_data['address'],
+                address=json.dumps(validated_data['address']),
                 phone=validated_data['phone'],
                 is_seller=False,
                 date_joined=auth_user.date_joined,
@@ -289,6 +290,11 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                 Pet.objects.create(**pet_data)
 
         return user
+    
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['address'] = json.loads(instance.address)  # JSON 문자열을 딕셔너리로 변환
+        return ret
 
 class SellerSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user_id.username')
