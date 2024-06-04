@@ -5,15 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python 디버거: Django",
+            "name": "Python 디버거: FastAPI",
             "type": "debugpy",
             "request": "launch",
+            "module": "uvicorn",
             "args": [
-                "runserver"
+                "be.fastapi_app.main:app",
+                "--reload"
             ],
-            "django": true,
-            "autoStartBrowser": false,
-            "program": "${workspaceFolder}\\be\\manage.py"
+            "jinja": true
         }
     ]
 }

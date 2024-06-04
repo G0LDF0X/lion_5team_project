@@ -5,13 +5,34 @@ import { mainAxiosInstance } from '../../api/axiosInstances';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
     const [isFollowing, setIsFollowing] = useState(false);
 
-    useEffect(() => {
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await mainAxiosInstance.get(`/users/follow/${userDetail.id}/`, {
+                
+                    headers: {
+                        'Authorization': `Bearer ${userInfo.access}`
+                    }
+                });
+                setFollowerCount(response.data.followers_count);  
+                setFollowingCount(response.data.following_count);  
+            } catch (error) {
+                console.error(`An error occurred: ${error}`);
+            }
+        };
+        if (userDetail.id && userInfo.access) {
+            fetchData();
+            console.log(followerCount)
+            console.log(followingCount)
+        }
+      
         const checkFollowStatus = async () => {
             try {
-
                 const response = await mainAxiosInstance.get(`/users/follow/${userDetail.id}/`, {
                 
                     headers: {
@@ -19,11 +40,12 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                     }
                 });
     
-                if (response.status === 200) {
+                if (response.status === 201) {
                     console.log('팔로우 상태 확인');
+
                     if (response.data.follow_exists) {
                         setIsFollowing(true);
-                        console.log(".")
+                        console.log('전달됨')
                     } else {
                         setIsFollowing(false);
                     }
@@ -49,6 +71,11 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 console.log('response:', response);
                 if (response.status === 201) {
                     setIsFollowing(true);
+
+                    // setFollowerCount(followerCount + 1);
+                    // setFollowingCount(followingCount + 1); 
+                    setFollowerCount(response.data.followers_count);
+                    setFollowingCount(response.data.following_count);
                     
                 }
             
@@ -67,7 +94,17 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 }
             });
             console.log('response:', response);
-            setIsFollowing(false);
+            if (response.status === 201) {
+                setIsFollowing(false);
+
+                // setFollowerCount(followerCount - 1);
+                // setFollowingCount(followingCount - 1);
+
+                setFollowerCount(response.data.followers_count);
+                setFollowingCount(response.data.following_count);
+                
+            }
+            
         } catch (error) {
             console.error('언팔로우 실패:', error);
         }
@@ -84,14 +121,14 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
                         )}
                         <h4 className="mt-4">{userDetail?.nickname || userDetail?.username}</h4>
-                        <h6>팔로워 {userDetail?.follower} | 팔로잉 {userDetail?.following}</h6>
+                        <h6>팔로워 {followerCount} | 팔로잉 {followingCount}</h6>
                         <Button 
                         variant="contained" 
                         color={isFollowing ? "secondary" : "primary"} 
                         onClick={isFollowing ? handleUnfollow : handleFollow}
                         className="mt-5"
                         style={{
-                            backgroundColor: isFollowing ? '#E35959' : '#FFB6C1', // 빨강색 또는 베이비 핑크색
+                            backgroundColor: isFollowing ? '#E35959' : '#FFB6C1', 
                             color: isFollowing ? 'white': 'black'
                         }}
                     >
