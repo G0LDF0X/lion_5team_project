@@ -293,7 +293,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['address'] = json.loads(instance.address)  # JSON 문자열을 딕셔너리로 변환
+        ret['address'] = ' '.join([instance.address.get('addr', ''), instance.address.get('addrDtl', '')])
         return ret
 
 class SellerSerializer(serializers.ModelSerializer):
