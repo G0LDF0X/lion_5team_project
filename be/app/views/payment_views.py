@@ -23,6 +23,7 @@ def save_payment(request):
             total_price=data['totalAmount'],
             paid_at=datetime.datetime.now(),
             is_delivered=False,
+            address = data['address']
         )
         order.save()
         
