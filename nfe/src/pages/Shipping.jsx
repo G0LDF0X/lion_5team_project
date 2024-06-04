@@ -27,6 +27,7 @@ import { createOrder } from "../store/actions/orderActions";
 //포트원 모듈 추가 npm i @portone/browser-sdk로 설치함
 import * as PortOne from "@portone/browser-sdk/v2";
 import {mainAxiosInstance} from "../api/axiosInstances";
+import AddressSearch from "../components/AddressSearch";
 
 
 
@@ -176,13 +177,14 @@ function ShippingScreen() {
                 <RadioGroup
                   aria-label="shipping address"
                   name="shippingAddress"
-                  value={isUserAddressSelected ? userInfo.address : address}
+                  value={isUserAddressSelected ? userInfo.address : "other"}
                   onChange={(e) => {
                     if (e.target.value === userInfo.address) {
                       setAddress(userInfo.address);
                       setOtherAddress(false);
                       setIsUserAddressSelected(true);
                     } else {
+                      setAddress("");
                       setOtherAddress(true);
                       setIsUserAddressSelected(false);
                     }
@@ -200,12 +202,8 @@ function ShippingScreen() {
                   />
                 </RadioGroup>
                 {otherAddress && (
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="새로운 배송지 입력"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                  <AddressSearch
+                  onAddressSelected={setAddress}
                   />
                 )}
               </Box>
