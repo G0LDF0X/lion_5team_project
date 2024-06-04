@@ -1,37 +1,31 @@
-// AddressSearch.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const AddressSearch = ({ onAddressSelected }) => {
   const [zipCode, setZipCode] = useState('');
   const [addr, setAddr] = useState('');
   const [addrDtl, setAddrDtl] = useState('');
 
+  useEffect(() => {
+    // 상태가 변경될 때마다 상위 컴포넌트에 주소 정보를 전달합니다.
+    onAddressSelected({
+      zipCode,
+      addr,
+      addrDtl,
+    });
+  }, [zipCode, addr, addrDtl, onAddressSelected]);
+
   const handleAddrDtlChange = (e) => {
-    const newAddrDtl = e.target.value;
-    setAddrDtl(newAddrDtl);
+    setAddrDtl(e.target.value);
   };
 
   const openZipSearch = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        let addr = '';
-        if (data.userSelectedType === 'R') {
-          addr = data.roadAddress;
-        } else {
-          addr = data.jibunAddress;
-        }
+        let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
 
         setZipCode(data.zonecode);
         setAddr(addr);
         setAddrDtl('');
-
-        // 상위 컴포넌트에 주소 정보 전달
-        onAddressSelected({
-          zipCode: data.zonecode,
-          addr: addr,
-          addrDtl: addrDtl,
-        });
       },
     }).open();
   };
