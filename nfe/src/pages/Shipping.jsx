@@ -63,21 +63,19 @@ function ShippingScreen() {
 
 // 결제하기 버튼 누를시 requestPayment() 함수 실행
 // 결제요청 시작부분(react 방식, 포트원 V2)
-  const BASE_URL = "http://localhost:5173";
+  
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
     // console.log(combinedCartItems);
     // console.log(combinedCartItems.length);
     // console.log(realPrice);
     // console.log(address);
-    console.log(payment);
+    // console.log(payment);
     // console.log(combinedCartItems[0].name, `외`, combinedCartItems.length,`건`);
-    console.log(userInfo);
-    console.log(userInfo.access);
-    console.log(userInfo.username);
-    console.log(userInfo.refresh);
-    
-
+    // console.log(userInfo);
+    // console.log(userInfo.access);
+    // console.log(userInfo.username);
+    // console.log(userInfo.refresh);
     const response = await PortOne.requestPayment({
       // Store ID 설정
       storeId: "store-6744d212-553b-40b5-bd60-4fef72aa2093",
@@ -88,19 +86,21 @@ function ShippingScreen() {
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
       payMethod: "CARD", 
-      // redirectUrl: `${BASE_URL}/payment-redirect`,
+      // redirectUrl: "http://localhost:5173", // 결제 완료 후 리다이렉트할 URL",
+      // noticeUrls: ["https://127.0.0.1:8000/payment/complete/"],
+
     });
     
     if (response.code != null){
       // 오류 발생한 경우
       return alert(response.message);
     }
-    console.log(response);
 
     // paymentId: "payment-9ce6810e-f611-45fb-81c7-3c799a2cb80f" >> DB에 별도저장 필요
     // transactionType: "PAYMENT"
     // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
       // 결제 오류 없는경우
+
     const paymentInfo = {
       paymentId: response.paymentId,
       orderName: combinedCartItems[0].name,
@@ -111,13 +111,13 @@ function ShippingScreen() {
       address: address,
       // ... 기타 필요한 정보 ...
     };
-    console.log(paymentInfo);
+    
 
       // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
     const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
     {  headers: {
           "Content-Type": "application/json",
-          'Authorization': `'Bearer ${userInfo.access}'`
+          'Authorization': `Bearer ${userInfo.access}`
         } }
                   );
 
@@ -128,25 +128,8 @@ function ShippingScreen() {
 
     // 결제 정보 저장에 성공한 경우
     alert('Payment information saved successfully.');
-
-    // 결제 완료 처리를 위한 PortOne-API 호출
-    const completePaymentResponse = await mainAxiosInstance.post('/payment/complete/', paymentInfo,
-    {  headers: {
-          "Content-Type": "application/json",
-          'Authorization': `'Bearer ${userInfo.access}'`
-        } }
-        );
-
-    if (completePaymentResponse.status !== 200) {
-    // 결제 완료 확인에 실패한 경우
-
-    return alert('Failed to complete payment.');
-
-    }
-
-    // 결제 완료 확인에 성공한 경우
-    alert('Payment completed successfully.');
-
+    window.location.href = "http://localhost:5173";
+    
   };
   
 
