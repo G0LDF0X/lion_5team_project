@@ -1,7 +1,5 @@
 import requests
 import sys
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 import django
 import pandas as pd
 import os
