@@ -37,6 +37,7 @@ uvicorn fastapi_app.main:app --reload --port 8002
 ### 추천기능1
 
 ```
+pip install scikit-surprise pandas numpy
 cd be
 uvicorn recommend.knn:app --reload --port 8003
 
@@ -45,6 +46,8 @@ http://localhost:8003/recommend?user_id=1  get요청으로 확인가능
 ### 추천기능2
 
 ```
+pip install pandas numpy scikit-learn torch
+
 cd be
 uvicorn recommend.rbm:app --reload --port 8003
 
