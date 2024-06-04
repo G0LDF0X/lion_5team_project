@@ -84,6 +84,7 @@ class Order(models.Model):
     is_delivered = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     delivered_at = models.DateTimeField(auto_now_add=True)
+    address = models.TextField(blank=True)
 
 class OrderItem(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
