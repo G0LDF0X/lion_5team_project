@@ -270,7 +270,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                 username=auth_user.username,
                 email=auth_user.email,
                 nickname=validated_data['nickname'],
-                address=json.dumps(validated_data['address']),
+                address=validated_data['address'],
                 phone=validated_data['phone'],
                 is_seller=False,
                 date_joined=auth_user.date_joined,
