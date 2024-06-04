@@ -214,25 +214,35 @@ class PetBreedSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PetSerializer(serializers.ModelSerializer):
-    gender = PetGenderSerializer()
-    species = PetSpeciesSerializer()
-    breed = PetBreedSerializer()
+    user_id = serializers.IntegerField(required=False)
+    gender = PetGenderSerializer(required=False)
+    age = serializers.IntegerField(required=False)
+    species = PetSpeciesSerializer(required=False)
+    breed = PetBreedSerializer(required=False)
     class Meta:
         model = Pet
         fields = '__all__'
 
+    def to_internal_value(self, data):
+        if data is None:
+            return None
+        return super().to_internal_value(data)
+
+
+from django.db import transaction
+import json
 class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     nickname = serializers.CharField(required=True)
-    address = serializers.CharField(required=True)
+    address = serializers.JSONField(required=True)
     phone = serializers.CharField(required=True)
-    pet = PetSerializer(required=False)
+    pet = PetSerializer(required=False, allow_null=True)
     # password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'nickname', 'address', 'phone', 'pet']
+        fields = ('username', 'email', 'password', 'nickname', 'address', 'phone', 'pet')
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -247,42 +257,50 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         pet_data = validated_data.pop('pet', None)
         print(pet_data)
         auth_user_model = get_user_model()
-        auth_user = auth_user_model.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-        )
+        
+        with transaction.atomic():
+            auth_user = auth_user_model.objects.create_user(
+                username=validated_data['username'],
+                email=validated_data['email'],
+                password=validated_data['password'],
+            )
         # user = User.objects.create(**validated_data)
-        user = User.objects.create(
-            user_id=auth_user,
-            username=auth_user.username,
-            email=auth_user.email,
-            nickname=validated_data['nickname'],
-            address=validated_data['address'],
-            phone=validated_data['phone'],
-            is_seller=False,
-            date_joined=auth_user.date_joined,
-            first_name=auth_user.first_name,
-            last_name=auth_user.last_name,
-            is_active=auth_user.is_active,
-            is_staff=auth_user.is_staff,
-            is_superuser=auth_user.is_superuser,
-            last_login=auth_user.last_login,
-            password=auth_user.password,
-        )
+            user = User.objects.create(
+                user_id=auth_user,
+                username=auth_user.username,
+                email=auth_user.email,
+                nickname=validated_data['nickname'],
+                address=json.dumps(validated_data['address']),
+                phone=validated_data['phone'],
+                is_seller=False,
+                date_joined=auth_user.date_joined,
+                first_name=auth_user.first_name,
+                last_name=auth_user.last_name,
+                is_active=auth_user.is_active,
+                is_staff=auth_user.is_staff,
+                is_superuser=auth_user.is_superuser,
+                last_login=auth_user.last_login,
+                password=auth_user.password,
+            )
 
-        if pet_data is not None:
-            Pet.objects.create(
-                user_id=user.user_id, 
-                name = pet_data['name'],
-                age = pet_data['age'],
-                gender = Pet_Gender.objects.get(id=pet_data['gender']),
-                species = Pet_Species.objects.get(id=pet_data['species']),
-
-                breed = Pet_Breed.objects.get(id=pet_data['breed']),
-                )
+            if pet_data is not None:
+                Pet.objects.create(
+                    user_id=user, 
+                    name = pet_data['name'],
+                    age = pet_data['age'],
+                    gender = Pet_Gender.objects.get(id=pet_data['gender']['pet_gender']),
+                    species = Pet_Species.objects.get(id=pet_data['species']['pet_kind']),
+                    breed = Pet_Breed.objects.get(pet_breed=pet_data['breed']['pet_breed']),
+                    )
+                # pet_data['user_id'] = user
+                # Pet.objects.create(**pet_data)
 
         return user
+    
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['address'] = ' '.join([instance.address.get('addr', ''), instance.address.get('addrDtl', '')])
+        return ret
 
 class SellerSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user_id.username')

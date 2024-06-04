@@ -48,7 +48,7 @@ function OtherUserProfile() {
     setValue(newValue);
   };
   const user = useSelector((state) => state.user);
-  const {userDetail} = user
+  const {userDetail, userInfo} = user
 
   useEffect(() => {
       dispatch(getUserDetail(id));
@@ -73,7 +73,7 @@ function OtherUserProfile() {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <UserProfileMain userDetail={userDetail} url={VITE_API_BASE_URL} />
+            <UserProfileMain userInfo={userInfo} userDetail={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <MyBoard userId={id} url={VITE_API_BASE_URL}/>

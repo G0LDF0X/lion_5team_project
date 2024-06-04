@@ -43,4 +43,3 @@ function UserProfileMain({userInfo, user}) {
 }
 
 export default UserProfileMain
-

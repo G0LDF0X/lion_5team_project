@@ -9,6 +9,6 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('register/done/', RegisterView.as_view(), name='auth_register_done'),
-     path('logout/', logoutUser, name='logout'),
+    path('logout/', logoutUser, name='logout'),
     path('', getRoutes)
 ]
