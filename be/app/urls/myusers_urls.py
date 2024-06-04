@@ -32,9 +32,9 @@ urlpatterns = [
     path('profile/myboard/', get_MyBoard, name='get_myboard'),
     path('profile/myuserqna/', getMyUserQnA, name='my_user_qna'),
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
-
-    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    # 비밀번호 재설정
+    path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'), # 이메일 입력
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'), # 이메일 발송 완료
+    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'), #
     path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
