@@ -42,6 +42,7 @@ export const logout = createAsyncThunk(
       const res = await mainAxiosInstance.post(`/app/logout/`);
 
       localStorage.removeItem("userInfo");
+      window.location.href = '/';
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
