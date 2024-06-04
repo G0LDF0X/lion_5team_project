@@ -4,6 +4,7 @@ import { register } from '../store/actions/userActions';
 import { useDispatch } from 'react-redux';
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { useFetch } from '../hook/useFetch';
+import AddressSearch from '../components/AddressSearch';
 
 const RegisterModal = ({ isOpen, onClose }) => {
 
@@ -24,7 +25,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [petAge, setPetAge] = useState('');
   const [petSpecies, setPetSpecies] = useState({pet_kind: ''});
   // const [petBreedId, setPetBreedId] = useState('');
-  const [petBreed, setPetBreed] = useState('펫 종류를 선택해주세요.')
+  const [petBreed, setPetBreed] = useState({pet_breed: ''})
   const [pet_kind_id, setPet_kind_id] = useState('');
 
   // Options for pet details
@@ -51,7 +52,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const pet = petName ? { 'name': petName, 'gender':petGender, 'age': petAge, 'species':petSpecies, 'breed': {'pet_breed':petBreed,'pet_kind_id':pet_kind_id }} : null;
+    const pet = petName ? { 'name': petName, 'gender':petGender, 'age': petAge, 'species':petSpecies, 'breed': {'pet_breed': petBreed.id, 'pet_kind_id':petSpecies.pet_kind}} : null;
     dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
@@ -118,14 +119,15 @@ const RegisterModal = ({ isOpen, onClose }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Address:</label>
-            <input
+            {/* <label className="block text-gray-700">Address:</label> */}
+            <AddressSearch onAddressSelected={setAddress} />
+            {/* <input
               type="text"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               required
-            />
+            /> */}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Phone:</label>
@@ -203,19 +205,20 @@ const RegisterModal = ({ isOpen, onClose }) => {
           <div className="mb-4">
             <label className="block text-gray-700">Pet Breed:</label>
             <select
-              value={petBreed}
-              onChange={(e) => setPetBreed(e.target.value)}
+              value={petBreed.id}
+              onChange={(e) => setPetBreed({id : e.target.value})}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Breed</option>
               {breeds
               .sort((a, b) => a.pet_breed.localeCompare(b.pet_breed))
               .map((breed) => (
-                <option key={breed.id} value={breed}>
+                <option key={breed.id} value={breed.petBreed}>
                   {breed.pet_breed}
                 </option>
               ))}
             </select>
+              {console.log("PETBREED", petBreed)}
           </div>
         </>) : (null
         )
