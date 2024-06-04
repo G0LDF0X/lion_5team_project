@@ -9,8 +9,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -310,7 +309,9 @@ def follow_save(request, pk):
     follower = User.objects.get(username=request.user)
     followed = User.objects.get(id=pk)
 
+    # 팔로워 수
     followers_count = Follow.objects.filter(followed_id=followed).count()
+    # # 팔로잉 수
     following_count = Follow.objects.filter(follower_id=follower).count()
     
     if request.method == 'POST':
@@ -325,7 +326,7 @@ def follow_save(request, pk):
             )
 
         serializer = FollowSerializer(follow)
-        return Response({**serializer.data, 'followers_count': followers_count,  'following_count': following_count}, status=201)
+        return Response({**serializer.data, 'followers_count': followers_count}, status=201)
        
 
     elif request.method == 'DELETE':
