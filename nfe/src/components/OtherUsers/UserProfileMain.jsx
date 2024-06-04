@@ -45,7 +45,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
 
                     if (response.data.follow_exists) {
                         setIsFollowing(true);
-                        console.log('전달됨')
+
                     } else {
                         setIsFollowing(false);
                     }
@@ -72,10 +72,8 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 if (response.status === 201) {
                     setIsFollowing(true);
 
-                    // setFollowerCount(followerCount + 1);
-                    // setFollowingCount(followingCount + 1); 
-                    setFollowerCount(response.data.followers_count);
-                    setFollowingCount(response.data.following_count);
+                    setFollowerCount(followerCount + 1);
+
                     
                 }
             
@@ -97,11 +95,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             if (response.status === 201) {
                 setIsFollowing(false);
 
-                // setFollowerCount(followerCount - 1);
-                // setFollowingCount(followingCount - 1);
-
-                setFollowerCount(response.data.followers_count);
-                setFollowingCount(response.data.following_count);
+                setFollowerCount(followerCount - 1);
                 
             }
             
