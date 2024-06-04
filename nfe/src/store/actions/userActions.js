@@ -61,7 +61,10 @@ export const register = createAsyncThunk(
          email,
         password,
          nickname,
-        address,
+         address: {
+          addr: address.addr,
+          addrDtl: address.addrDtl,
+        },
         phone,
         pet
       });
