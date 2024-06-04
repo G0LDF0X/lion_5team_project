@@ -133,7 +133,9 @@ function SearchBox() {
         </Button>
       </form>
       {suggestions.length > 0 && (
-        <Paper className="absolute left-0 right-0 mt-1 bg-white shadow-lg rounded-lg z-10">
+        <Paper className="absolute left-0 right-0 mt-1 bg-white shadow-lg rounded-lg z-10"
+        style={{maxHeight: "300px", overflowY: "auto"}}
+        >
           <List>
             {suggestions.map((suggestion, index) => (
               <Link
