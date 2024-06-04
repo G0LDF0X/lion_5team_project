@@ -1,4 +1,3 @@
-import requests
 import sys
 from django.contrib.auth.decorators import login_required
 import django
