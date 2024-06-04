@@ -127,7 +127,7 @@ async def recommend(rbm, user_id):
     top_items = []
     for item_id, rating in recommended_items:
         item_id_original = list(item_id_mapping.keys())[list(item_id_mapping.values()).index(item_id)]
-        item = df_items[df_items['id'] == int(item_id_original)].iloc[0]  # Fixed the closing parenthesis
+        item = df_items[df_items['id'] == int(item_id_original)].iloc[0] 
         top_items.append({'item_id': int(item_id_original), 'item_name': item['name'], 'estimated_rating': float(rating)})
 
     print(top_items)

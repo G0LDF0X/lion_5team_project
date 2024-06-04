@@ -53,6 +53,16 @@ uvicorn recommend.rbm:app --reload --port 8003
 
 http://localhost:8003/recommend?user_id=1  get요청으로 확인가능
 ```
+### 추천기능3
+
+```
+pip install scikit-surprise pandas numpy
+
+cd be
+uvicorn recommend.svd:app --reload --port 8003
+
+http://localhost:8003/recommend?user_id=1  get요청으로 확인가능
+```
 
 ### Frontend
 
