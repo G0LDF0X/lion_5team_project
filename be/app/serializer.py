@@ -215,12 +215,18 @@ class PetBreedSerializer(serializers.ModelSerializer):
 
 class PetSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(required=False)
-    gender = PetGenderSerializer()
-    species = PetSpeciesSerializer()
-    breed = PetBreedSerializer()
+    gender = PetGenderSerializer(required=False)
+    age = serializers.IntegerField(required=False)
+    species = PetSpeciesSerializer(required=False)
+    breed = PetBreedSerializer(required=False)
     class Meta:
         model = Pet
         fields = '__all__'
+
+    def to_internal_value(self, data):
+        if data is None:
+            return None
+        return super().to_internal_value(data)
 
 
 from django.db import transaction
@@ -231,7 +237,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
     nickname = serializers.CharField(required=True)
     address = serializers.JSONField(required=True)
     phone = serializers.CharField(required=True)
-    pet = PetSerializer(required=False)
+    pet = PetSerializer(required=False, allow_null=True)
     # password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
@@ -278,16 +284,16 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
             )
 
             if pet_data is not None:
-                # Pet.objects.create(
-                #     user_id=user.id, 
-                #     name = pet_data['name'],
-                #     age = pet_data['age'],
-                #     gender = Pet_Gender.objects.get(id=pet_data['gender']),
-                #     species = Pet_Species.objects.get(id=pet_data['species']),
-                #     breed = Pet_Breed.objects.get(id=pet_data['breed']),
-                #     )
-                pet_data['user_id'] = user
-                Pet.objects.create(**pet_data)
+                Pet.objects.create(
+                    user_id=user, 
+                    name = pet_data['name'],
+                    age = pet_data['age'],
+                    gender = Pet_Gender.objects.get(id=pet_data['gender']['pet_gender']),
+                    species = Pet_Species.objects.get(id=pet_data['species']['pet_kind']),
+                    breed = Pet_Breed.objects.get(pet_breed=pet_data['breed']['pet_breed']),
+                    )
+                # pet_data['user_id'] = user
+                # Pet.objects.create(**pet_data)
 
         return user
     
