@@ -13,15 +13,12 @@ from surprise import accuracy
 from asgiref.sync import sync_to_async
 import numpy as np
 
-# Set up Django settings
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
 
-# Import Django models
 from app.models import Review, User, Item
 
-# Initialize FastAPI app
 app = FastAPI()
 origins = [
     "http://localhost:5173",
@@ -36,7 +33,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Async functions to fetch data from Django models
 async def fetch_reviews():
     reviews = await sync_to_async(list)(Review.objects.all().values('user_id', 'item_id', 'rate'))
     return pd.DataFrame(reviews)
@@ -49,7 +45,6 @@ async def fetch_items():
     items = await sync_to_async(list)(Item.objects.all().values('id', 'name'))
     return pd.DataFrame(items)
 
-# Main function to setup and train the model
 async def setup():
     global df_reviews, df_users, df_items, algo
     df_reviews = await fetch_reviews()
@@ -69,7 +64,6 @@ async def setup():
     algo = KNNBasic(sim_options=sim_options)
     algo.fit(trainset)
 
-# Function to generate recommendations for a user
 async def get_recommendations(user_id: int):
     items_ids = df_items['id'].unique()
     items_to_rate = [item for item in items_ids if item not in df_reviews[df_reviews['user_id'] == user_id]['item_id'].values]
@@ -86,7 +80,6 @@ async def get_recommendations(user_id: int):
 
     return top_items
 
-# FastAPI endpoint to get recommendations
 @app.get("/recommend/")
 async def recommend(user_id: int):
     try:
@@ -95,7 +88,6 @@ async def recommend(user_id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# Setup the model on startup
 @app.on_event("startup")
 async def startup_event():
     await setup()
