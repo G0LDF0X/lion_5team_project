@@ -13,10 +13,9 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 @authentication_classes([TokenAuthentication])
 def save_payment(request):
     if request.method == 'POST':
-        print(bool(request.user))
-        print(bool(request.user.is_authenticated))
         data = json.loads(request.body)
         user = User.objects.get(id=data['userInfo']['id'])
+        
         order = Order.objects.create(
             user_id=user,
             payment_method=data['payMethod'],
