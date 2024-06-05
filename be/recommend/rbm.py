@@ -52,10 +52,6 @@ def export_data_to_csv():
         df_review = pd.read_sql_query(query3, engine)
         df_review.rename(columns={'user_id_id':'user_id', 'item_id_id':'item_id'}, inplace=True)
         logging.info(f"Columns in category DataFrame: {df_review.columns.tolist()}")
-
-
-        
-
         df_item.to_csv(os.path.join(item_csv_file_path), index=False)
         df_review.to_csv(os.path.join(review_csv_file_path), index=False)
         df_user.to_csv(os.path.join(user_csv_file_path), index=False)
@@ -73,6 +69,7 @@ async def schedule_daily_task():
 
 
 async def setup():
+    schedule_daily_task()
     global df_reviews, df_users, df_items, user_id_mapping, item_id_mapping, user_item_matrix, n_users, n_items
     df_reviews = pd.read_csv(os.path.join(review_csv_file_path))
     df_users = pd.read_csv(os.path.join(user_csv_file_path))
@@ -137,6 +134,7 @@ def train(rbm, data, epochs=10, batch_size=64, learning_rate=0.01):
         print(f'Epoch {epoch + 1}, Loss: {epoch_loss / len(data)}')
 
 async def main():
+
     await setup()
 
     user_item_tensor = torch.FloatTensor(user_item_matrix)
