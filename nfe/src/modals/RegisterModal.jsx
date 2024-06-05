@@ -29,30 +29,37 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [pet_kind_id, setPet_kind_id] = useState('');
 
   // Options for pet details
-  const [breeds, setBreeds] = useState([]);
+  // const [breeds, setBreeds] = useState([]);
 
   const dispatch = useDispatch();
-  const {genders, species}=useFetch();
+  const {genders, species, breeds}=useFetch();
  
+  const [filteredBreeds, setFilteredBreeds] = useState([]); 
   
+  // useEffect(() => {
+  //   const fetchBreeds = async () => {
+  //     if (petSpecies) {
+  //       const res = await mainAxiosInstance.get(`/pet/breed/${pet_kind_id}`);
+  //       setBreeds(res.data);
+  //     }
+  //   };
+  
+  //   fetchBreeds();
+  // }, [petSpecies]);
+
   useEffect(() => {
-    const fetchBreeds = async () => {
-      if (petSpecies) {
-        const res = await mainAxiosInstance.get(`/pet/breed/${petSpecies.pet_kind}`);
-        setBreeds(res.data);
-        // console.log("BREED:", res.data);
-        console.log("PET BREED:", breeds);
-      }
-    };
-  
-    fetchBreeds();
-  }, [petSpecies]);
+    console.log("PET KIND ID", pet_kind_id);
+    const newBreeds = (breeds || []).filter((breed) => Number(breed.pet_kind_id) === Number(pet_kind_id));
+    console.log("BEFORE BREEDS", breeds);
+    setFilteredBreeds(newBreeds);
+    console.log("FILTERED BREEDS", newBreeds);
+  }, [breeds, pet_kind_id]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const pet = petName ? { 'name': petName, 'gender':petGender, 'age': petAge, 'species':petSpecies, 'breed': {'pet_breed': petBreed.id, 'pet_kind_id':petSpecies.pet_kind}} : null;
+    const pet = petName ? { 'name': petName, 'gender':{'pet_gender':petGender}, 'age': petAge, 'species':{'pet_kind': petSpecies}, 'breed': {'pet_breed': petBreed.id, 'pet_kind_id':petSpecies.pet_kind}} : null;
     dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
@@ -164,7 +171,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             <label className="block text-gray-700">Pet Gender:</label>
             <select
               value={petGender}
-              onChange={(e) => setPetGender({pet_gender:e.target.value})}
+              onChange={(e) => setPetGender(e.target.value)}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Gender</option>
@@ -190,7 +197,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
             <label className="block text-gray-700">Pet Species:</label>
             <select
               value={petSpecies}
-              onChange={(e) => {setPetSpecies({pet_kind:e.target.value}); setPet_kind_id(e.target.value)}}
+              onChange={(e) => {setPetSpecies(e.target.value); setPet_kind_id(e.target.value)}}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Species</option>
@@ -205,18 +212,19 @@ const RegisterModal = ({ isOpen, onClose }) => {
           <div className="mb-4">
             <label className="block text-gray-700">Pet Breed:</label>
             <select
-              value={petBreed.id}
-              onChange={(e) => setPetBreed({id : e.target.value})}
+              value={petBreed}
+              onChange={(e) => setPetBreed(e.target.value)}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Breed</option>
-              {breeds
-              .sort((a, b) => a.pet_breed.localeCompare(b.pet_breed))
-              .map((breed) => (
-                <option key={breed.id} value={breed.petBreed}>
-                  {breed.pet_breed}
-                </option>
-              ))}
+              {console.log()}
+              {filteredBreeds
+                .sort((a, b) => a.pet_breed.localeCompare(b.pet_breed))
+                .map((breed) => (
+                  <option key={breed.id} value={breed.id}>
+                    {breed.pet_breed}
+                  </option>
+                ))}
             </select>
               {console.log("PETBREED", petBreed)}
           </div>
