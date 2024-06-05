@@ -19,7 +19,7 @@ import CartScreen from './pages/Cart'
 import MyShoppingScreen from './pages/MyShopping'
 import OtherUserProfile from './pages/OtherUsers'
 import ShippingScreen from './pages/Shipping'
-
+import OrderDetail from './components/profilescreen/OrderDetail'
 
 const routers = createBrowserRouter([
   {
@@ -98,6 +98,10 @@ const routers = createBrowserRouter([
       {
         path:'/shipping',
         element: <ShippingScreen/>
+      },
+      {
+        path:'/order/detail/:id',
+        element: <OrderDetail/>
       },
       
 
