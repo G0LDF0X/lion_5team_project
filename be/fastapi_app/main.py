@@ -10,6 +10,8 @@ import logging
 from datetime import datetime, timedelta
 import asyncio
 
+# from starlette.middleware.cors import CORSMiddleware
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 load_dotenv()
@@ -24,11 +26,10 @@ connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{
 
 item_csv_file_path = os.path.join(os.path.dirname(__file__), 'items.csv')
 category_csv_file_path = os.path.join(os.path.dirname(__file__), 'category.csv')
-
 app = FastAPI()
-
 origins = [
     "http://localhost:5173",
+    "*"
 ]
 
 app.add_middleware(
@@ -92,21 +93,23 @@ async def search_items(query: str):
     if results:
         top_result_category = items[items['item_name'] == results[0].page_content]['category_name'].values[0]
         similar_category_items = items[items['category_name'] == top_result_category]
-        category_vector_store = Chroma.from_texts(
-            texts=similar_category_items['item_name'].tolist(),
-            embedding=sbert
-        )
-        category_results = category_vector_store.similarity_search(query=query, k=10)
+        
+        if not similar_category_items.empty:  # Add this check
+            category_vector_store = Chroma.from_texts(
+                texts=similar_category_items['item_name'].tolist(),
+                embedding=sbert
+            )
+            category_results = category_vector_store.similarity_search(query=query, k=10)
 
-        unique_results = []
-        seen = set()
-        for result in category_results:
-            if result.page_content not in seen:
-                seen.add(result.page_content)
-                unique_results.append(result)
-            if len(unique_results) == 4:
-                break
+            unique_results = []
+            seen = set()
+            for result in category_results:
+                if result.page_content not in seen:
+                    seen.add(result.page_content)
+                    unique_results.append(result)
+                if len(unique_results) == 4:
+                    break
 
-        return {"query": query, "results": unique_results}
+            return {"query": query, "results": unique_results}
     
     return {"query": query, "results": []}

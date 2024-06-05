@@ -3,6 +3,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const VITE_CHAT_API_BASE_URL = import.meta.env.VITE_CHAT_API_BASE_URL;
 const VITE_SEARCH_API_BASE_URL = import.meta.env.VITE_SEARCH_API_BASE_URL;
 const VITE_SEARCH_BY_CONSTANTS_API_BASE_URL = import.meta.env.VITE_SEARCH_BY_CONSTANTS_API_BASE_URL;
+const VITE_RECOMMENDATION_API_BASE_URL = import.meta.env.VITE_RECOMMENDATION_API_BASE_URL;
 export const mainAxiosInstance = axios.create({
   baseURL: VITE_API_BASE_URL,
 });
@@ -24,4 +25,8 @@ export const searchAxiosInstance = axios.create({
     });
 export const searchByConstantsAxiosInstance = axios.create({  
     baseURL: VITE_SEARCH_BY_CONSTANTS_API_BASE_URL,
+    });
+
+export const recommendationAxiosInstance = axios.create({
+    baseURL: VITE_RECOMMENDATION_API_BASE_URL,
     });

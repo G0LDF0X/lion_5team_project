@@ -1,4 +1,3 @@
-import requests
 import sys
 import django
 import pandas as pd
