@@ -1,5 +1,3 @@
-import sys
-import django
 import pandas as pd
 import os
 from fastapi import FastAPI, HTTPException
@@ -10,31 +8,75 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
+import psycopg2
+from psycopg2 import sql
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+import logging
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
-django.setup()
 
-from app.models import Review, User, Item
 
-async def fetch_reviews():
-    reviews = await sync_to_async(list)(Review.objects.all().values('user_id', 'item_id', 'rate'))
-    return pd.DataFrame(reviews)
+load_dotenv()
+db_host = os.getenv('DB_HOST')
+db_name = os.getenv('DB_NAME')
+db_user = os.getenv('DB_USER')
+db_password = os.getenv('DB_PASSWORD')
+db_port = os.getenv('DB_PORT')
 
-async def fetch_users():
-    users = await sync_to_async(list)(User.objects.all().values('id', 'username'))
-    return pd.DataFrame(users)
+connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 
-async def fetch_items():
-    items = await sync_to_async(list)(Item.objects.all().values('id', 'name'))
-    return pd.DataFrame(items)
+item_csv_file_path = os.path.join(os.path.dirname(__file__), 'csvs/item.csv')
+review_csv_file_path = os.path.join(os.path.dirname(__file__), 'csvs/review.csv')
+user_csv_file_path = os.path.join(os.path.dirname(__file__), 'csvs/user.csv')
+
+
+def export_data_to_csv():
+    if os.path.exists(csv_dir_path):
+        os.remove(csv_dir_path)
+        logging.info(f"Existing {csv_dir_path} file deleted.")
+    
+
+
+    query1 = "SELECT id, name FROM app_item;"
+    query2 = "SELECT id, username FROM app_user;"
+    query3 = "SELECT user_id_id, item_id_id, rate FROM app_review;"
+
+    try:
+        engine = create_engine(connection_string)
+        df_item = pd.read_sql_query(query1, engine)
+        logging.info(f"Columns in item DataFrame: {df_item.columns.tolist()}")
+        
+        df_user = pd.read_sql_query(query2, engine)
+        logging.info(f"Columns in user DataFrame: {df_user.columns.tolist()}")
+        
+        df_review = pd.read_sql_query(query3, engine)
+        df_review.rename(columns={'user_id_id':'user_id', 'item_id_id':'item_id'}, inplace=True)
+        logging.info(f"Columns in category DataFrame: {df_review.columns.tolist()}")
+
+
+        
+
+        df_item.to_csv(os.path.join(item_csv_file_path), index=False)
+        df_review.to_csv(os.path.join(review_csv_file_path), index=False)
+        df_user.to_csv(os.path.join(user_csv_file_path), index=False)
+        logging.info("Data exported to csv successfully")
+    except Exception as e:
+        logging.error(f"Error during data export: {e}")
+async def schedule_daily_task():
+    while True:
+        now = datetime.now()
+        next_run = (now + timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
+        wait_time = (next_run - now).total_seconds()
+        logging.info(f"Next data export scheduled at {next_run}")
+        await asyncio.sleep(wait_time)
+        export_data_to_csv()
+
 
 async def setup():
     global df_reviews, df_users, df_items, user_id_mapping, item_id_mapping, user_item_matrix, n_users, n_items
-    df_reviews = await fetch_reviews()
-    df_users = await fetch_users()
-    df_items = await fetch_items()
-
+    df_reviews = pd.read_csv(os.path.join(review_csv_file_path))
+    df_users = pd.read_csv(os.path.join(user_csv_file_path))
+    df_items = pd.read_csv(os.path.join(item_csv_file_path))
     user_id_mapping = {user_id: index for index, user_id in enumerate(df_users['id'].unique())}
     item_id_mapping = {item_id: index for index, item_id in enumerate(df_items['id'].unique())}
 
