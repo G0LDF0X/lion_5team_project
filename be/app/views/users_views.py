@@ -7,6 +7,7 @@ from django.contrib.auth.models import User as auth_user
 from django.contrib.auth import logout
 from rest_framework.permissions import AllowAny
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -38,3 +39,4 @@ def getUser(request, pk):
 def logoutUser(request):
     logout(request)
     return Response({"message": "Logged out"})
+

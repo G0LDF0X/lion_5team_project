@@ -109,11 +109,17 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# 내가 추가
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:5173",  # 클라이언트 도메인
+# 밑에 세 개 추가함
+CSRF_COOKIE_NAME = "csrftoken"
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',  # React 앱의 도메인
+    # 추가 도메인들...
 ]
 
+CSRF_COOKIE_HTTPONLY = False
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
