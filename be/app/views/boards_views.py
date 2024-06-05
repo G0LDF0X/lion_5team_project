@@ -6,6 +6,19 @@ from app.models import Board, User, Reply
 from app.serializer import BoardSerializer, ReplySerializer
 from django.db.models import F
 from datetime import datetime
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+
+
+MODEL_PATH = 'be/recommend/model.keras'
+model = load_model(MODEL_PATH)
+def predict_image(image_path):
+    test_image = image.load_img(image_path, target_size = (64, 64))
+    test_image = image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis = 0)
+    result = model.predict(test_image)
+    return result
+
 
 @api_view(['GET'])
 def get_Boards(request):
@@ -62,6 +75,7 @@ def create_Board(request):
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
         image_url=request.data.get('images'),
+        # type=predict_image(request.data.get('images'))[0][0],
         product_url=request.data.get('product_url', ''),
         tag=request.data.get('tag', ''),
         show=0,
