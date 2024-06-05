@@ -68,7 +68,8 @@ function ShippingScreen() {
   
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
-
+    
+    console.log(combinedCartItems);
     // console.log(combinedCartItems);
     // console.log(combinedCartItems.length);
     // console.log(realPrice);
@@ -103,18 +104,23 @@ function ShippingScreen() {
     // transactionType: "PAYMENT"
     // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
       // 결제 오류 없는경우
+    
 
     const paymentInfo = {
       paymentId: response.paymentId,
-      orderName: combinedCartItems[0].name,
+      orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
       payMethod: "CARD",
       userInfo: userInfo,
       address: address,
+      items: combinedCartItems,
       // ... 기타 필요한 정보 ...
     };
+
+    
     console.log(paymentInfo);
+    
 
       // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
     const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
@@ -131,7 +137,7 @@ function ShippingScreen() {
 
     // 결제 정보 저장에 성공한 경우
     alert('Payment information saved successfully.');
-    window.location.href = "http://localhost:5173";
+    // window.location.href = "http://localhost:5173";
     
   };
   

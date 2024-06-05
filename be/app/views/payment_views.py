@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse
-from app.models import Payment, User, Order
+from app.models import Payment, User, Order, OrderItem, Item
 import requests, datetime
 from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication
@@ -27,6 +27,19 @@ def save_payment(request):
         )
         order.save()
         
+        # OrderItem에도 저장
+        for item in data['items']:
+            item_instance = Item.objects.get(id=item['item_id'])
+            OrderItem.objects.create(
+                item_id=item_instance,
+                order_id=order,
+                name=item['name'],
+                qty=item['qty'],
+                price_multi_qty=item['price'],
+                image=item['image'],
+            )
+
+
         payment = Payment.objects.create(
             user_id=user,
             payment_method=data['payMethod'],
