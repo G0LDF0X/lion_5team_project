@@ -7,9 +7,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
+# @permission_classes([IsAuthenticated])
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def save_payment(request):
     if request.method == 'POST':
