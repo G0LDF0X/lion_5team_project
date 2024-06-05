@@ -60,6 +60,7 @@ function ShippingScreen() {
 
 
 
+  
 
 
 // 결제하기 버튼 누를시 requestPayment() 함수 실행
@@ -67,6 +68,7 @@ function ShippingScreen() {
   
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
+
     // console.log(combinedCartItems);
     // console.log(combinedCartItems.length);
     // console.log(realPrice);
@@ -112,7 +114,7 @@ function ShippingScreen() {
       address: address,
       // ... 기타 필요한 정보 ...
     };
-    
+    console.log(paymentInfo);
 
       // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
     const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
