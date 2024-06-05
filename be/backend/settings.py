@@ -109,6 +109,10 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# 내가 추가
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",  # 클라이언트 도메인
+]
 
 ROOT_URLCONF = 'backend.urls'
 

@@ -1,83 +1,57 @@
-import React, { useState, useEffect} from 'react';
-import Modal from 'react-modal';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { mainAxiosInstance } from "../api/axiosInstances";
 
 
-
-const ResetPasswordModal = ({ isOpen, onClose, onRequestClose}) => {
+const ResetPasswordModal = ({ isOpen, onClose, userInfo }) => {
   const [email, setEmail] = useState('');
-  const user = useSelector((state) => state.user);
+  const [resetStatus, setResetStatus] = useState(null);
 
-  const { userInfo, error } = user;
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
 
-    useEffect(() => {
-    if (userInfo) {
-      onRequestClose();
+    try {
+      const response = await mainAxiosInstance.post(`/users/password-reset/`, { email }, {
+    
+      });
+ 
+      setResetStatus('success');
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      setResetStatus('error');
     }
-  
-  
-    if(error){
-        alert("Invalid credentials")
-      }
-}, [userInfo]);
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
   };
 
- const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-                const response = await mainAxiosInstance.post(`/users/password-reset/`, { email} );
-        
-                if (response.status === 200) {
-                    console.log("비밀번호 변경 성공")
-                }
-            } catch (error) {
-                console.log("비번 변경 실패")
-            }
+  if (!isOpen) return null;
 
-};
-
-
-return (
-    
-    <Modal isOpen={isOpen} onRequestClose={onClose}>
-        <button onClick={onRequestClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-auto relative">
+        <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
           ✖
         </button>
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="bg-white p-6 rounded-lg shadow-lg z-10 w-full max-w-md overflow-y-auto" style={{ maxHeight: '80vh' }}>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl">Reset Password</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            &times;
-          </button>
-        </div>
-        <form onSubmit={handleEmailChange}>
-          <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-4">Reset Password</h2>
+        <form onSubmit={handleResetPassword} className="space-y-4">
+          <div>
             <label className="block text-gray-700">Email:</label>
             <input
               type="email"
               value={email}
-              onChange={handleSubmit}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700"
-          >
-            Submit
+          {resetStatus === 'success' && <p className="text-green-600">Password reset email sent successfully!</p>}
+          {resetStatus === 'error' && <p className="text-red-600">Error resetting password. Please try again later.</p>}
+          <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700">
+            Reset Password
           </button>
         </form>
       </div>
-    </div>
-    </Modal>
+    </div>,
+    document.body
   );
-}
+};
 
 export default ResetPasswordModal;
