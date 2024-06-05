@@ -290,7 +290,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                     age = pet_data['age'],
                     gender = Pet_Gender.objects.get(id=pet_data['gender']['pet_gender']),
                     species = Pet_Species.objects.get(id=pet_data['species']['pet_kind']),
-                    breed = Pet_Breed.objects.get(pet_breed=pet_data['breed']['pet_breed']),
+                    breed = Pet_Breed.objects.get(id=pet_data['breed']['pet_breed']),
                     )
                 # pet_data['user_id'] = user
                 # Pet.objects.create(**pet_data)

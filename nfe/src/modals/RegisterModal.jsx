@@ -59,7 +59,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const pet = petName ? { 'name': petName, 'gender':{'pet_gender':petGender}, 'age': petAge, 'species':{'pet_kind': petSpecies}, 'breed': {'pet_breed': petBreed.id, 'pet_kind_id':petSpecies.pet_kind}} : null;
+    const pet = petName ? { 'name': petName, 'gender':{'pet_gender':petGender}, 'age': petAge, 'species':{'pet_kind': petSpecies}, 'breed': {'pet_breed': petBreed, 'pet_kind_id':petSpecies}} : null;
     dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
