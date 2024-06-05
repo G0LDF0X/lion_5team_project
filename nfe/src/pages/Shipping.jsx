@@ -30,7 +30,6 @@ import {mainAxiosInstance} from "../api/axiosInstances";
 import AddressSearch from "../components/AddressSearch";
 
 
-
 function ShippingScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -55,30 +54,11 @@ function ShippingScreen() {
     }
   }, [dispatch]);
 
-
-
-
-
-
-  
-
-
 // 결제하기 버튼 누를시 requestPayment() 함수 실행
 // 결제요청 시작부분(react 방식, 포트원 V2)
   
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
-
-    // console.log(combinedCartItems);
-    // console.log(combinedCartItems.length);
-    // console.log(realPrice);
-    // console.log(address);
-    // console.log(payment);
-    // console.log(combinedCartItems[0].name, `외`, combinedCartItems.length,`건`);
-    // console.log(userInfo);
-    // console.log(userInfo.access);
-    // console.log(userInfo.username);
-    // console.log(userInfo.refresh);
     const response = await PortOne.requestPayment({
       // Store ID 설정
       storeId: "store-6744d212-553b-40b5-bd60-4fef72aa2093",
@@ -103,7 +83,6 @@ function ShippingScreen() {
     // transactionType: "PAYMENT"
     // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
       // 결제 오류 없는경우
-
     const paymentInfo = {
       paymentId: response.paymentId,
       orderName: combinedCartItems[0].name,
@@ -136,12 +115,6 @@ function ShippingScreen() {
   };
   
 
-
-
-
-
-
-
   const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = cartItems
     .reduce((acc, item) => acc + item.qty * item.price, 0)
@@ -160,9 +133,6 @@ function ShippingScreen() {
   };
 
   const combinedCartItems = combineCartItems(cartItems);
-
-
-
   
   return (
     <Container maxWidth="lg" className="py-8">
