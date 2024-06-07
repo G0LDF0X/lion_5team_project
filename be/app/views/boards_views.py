@@ -9,15 +9,31 @@ from datetime import datetime
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import os
-
+import numpy as np
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
 model = load_model(MODEL_PATH)
-def predict_image(image_path):
+@api_view(['POST'])
+def predict_image(request, pk):
+    image_path = "static" + Board.objects.get(id=pk).image_url.url
     test_image = image.load_img(image_path, target_size = (64, 64))
     test_image = image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis = 0)
+    # result = cnn.predict(test_image)
+# training_set.class_indices
+# if result[0][0] == 1:
+#     prediction = 'dog'
+# else:
+#     prediction = 'cat'
+# print(prediction)
     result = model.predict(test_image)
-    return result
+    print(result)
+    if result[0][0] == 1:
+        prediction = 'dog'
+    else:
+        prediction = 'cat'
+
+    return Response(prediction)
+
 
 
 @api_view(['GET'])
@@ -88,6 +104,7 @@ def create_Board(request):
 def add_show(request, pk):
     board = Board.objects.get(id=pk)
     board.show += 1
+    # Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
     board.save(update_fields=['show'])
     return Response('show added')    
 

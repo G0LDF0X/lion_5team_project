@@ -75,13 +75,6 @@ class Review(models.Model):
     def __str__(self):
         return self.title
 
-class Payment(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    payment_method = models.CharField(max_length=100)
-    payment_amount = models.IntegerField()
-    paymentId = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-
 class Order(models.Model):
     user_id =models.ForeignKey(User, on_delete=models.DO_NOTHING)
     payment_method = models.CharField(max_length=100)
@@ -100,8 +93,6 @@ class OrderItem(models.Model):
     qty = models.IntegerField()
     price_multi_qty = models.IntegerField()
     image = models.ImageField(blank=True, max_length=1000)
-    payment_id = models.ForeignKey(Payment, on_delete=models.DO_NOTHING, default=1)
-    is_refund = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -183,7 +174,8 @@ class Board(models.Model):
     image_url = models.ImageField(max_length=1000)
     show = models.IntegerField(default=0)
     like = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)    
+    board_type = models.CharField(max_length=50, choices=[('cat', 'Cat'), ('dog', 'Dog'), ('other', 'Other')], blank=True, null=True) 
 
     def __str__(self):
         return self.title
@@ -247,3 +239,37 @@ class Pet(models.Model):
     gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING, blank=True)
     species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING, blank=True)
     breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING, blank=True)
+
+
+class Payment(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    payment_method = models.CharField(max_length=100)
+    payment_amount = models.IntegerField()
+    paymentId = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+
+    # ############################################################################
+
+class Interaction(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    content_type = models.CharField(max_length=10, choices=[('board', 'Board'), ('item', 'Item')])
+    content_id = models.IntegerField()  
+    interaction_type = models.CharField(max_length=50, choices=[('view', 'View'), ('like', 'Like'), ('search', 'Search'), ('review', 'Review'), ('purchase', 'Purchase'), ('bookmark', 'Bookmark'), ('comment', 'Comment')])
+    timestamp = models.DateTimeField(auto_now_add=True)
+    stay_time = models.DurationField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user_id} {self.interaction_type} {self.content_type} {self.content_id}"
+
+class Recommendation(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    recommended_content_type = models.CharField(max_length=10, choices=[('board', 'Board'), ('item', 'Item')])
+    recommended_content_id = models.IntegerField() 
+    score = models.FloatField()
+    generated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id} recommendation {self.recommended_content_type} {self.recommended_content_id} with score {self.score}"
