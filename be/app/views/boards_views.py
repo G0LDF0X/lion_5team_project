@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from app.models import Board, User, Reply
+from app.models import Board, User, Reply, Interaction  
 from app.serializer import BoardSerializer, ReplySerializer
 from django.db.models import F
 from datetime import datetime
@@ -104,7 +104,7 @@ def create_Board(request):
 def add_show(request, pk):
     board = Board.objects.get(id=pk)
     board.show += 1
-    # Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
+    Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
     board.save(update_fields=['show'])
     return Response('show added')    
 
