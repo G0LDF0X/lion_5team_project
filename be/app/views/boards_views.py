@@ -104,7 +104,10 @@ def create_Board(request):
 def add_show(request, pk):
     board = Board.objects.get(id=pk)
     board.show += 1
-    Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
+    if request.user != board.user_id and request.user != "AnonymousUser":
+        user = User.objects.get(username=request.user)
+        Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='show')
+    # Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
     board.save(update_fields=['show'])
     return Response('show added')    
 

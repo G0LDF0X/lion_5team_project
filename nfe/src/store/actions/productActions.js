@@ -16,8 +16,9 @@ export const listProducts = createAsyncThunk(
       if (suggestions) {
         params.append('s', suggestions);
       }
-      const url = `/items?${params.toString()}`;
+      const url = `items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(

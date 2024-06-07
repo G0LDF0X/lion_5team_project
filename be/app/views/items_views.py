@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -11,13 +11,10 @@ from django.db.models import Q
 
 @api_view(['GET'])
 def get_items(request):
-    
     query = request.GET.get('query', '')
-    Interaction.objects.create(user_id=request.user, content_type='item', content_id=0, interaction_type='search', stay_time=request.data.get('stay_time', None))
     suggestions = request.query_params.get('s','')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
-
     if suggestions:
         suggestions_list = suggestions.split(',')
     
@@ -39,7 +36,7 @@ def get_items(request):
     if query:
         query_condition = Q(name__icontains=query) | Q(description__icontains=query)
         item_query |= query_condition
-    print(item_query)   
+    # print(item_query)   
     items = Item.objects.filter(item_query)
     # if categories and suggestions_list:
     #     items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))

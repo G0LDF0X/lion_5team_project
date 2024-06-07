@@ -1,8 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Interaction, Board, Item
-from .serializers import InteractionSerializer, BoardSerializer, ItemSerializer
+from app.models import Interaction, Board, Item, User
+from app.serializer import InteractionSerializer, BoardSerializer, ItemSerializer
 
 @api_view(['POST'])
 def track_interaction(request):
@@ -29,7 +29,14 @@ def view_board(request, board_id):
 @api_view(['POST'])
 def like_board(request, board_id):
     board = get_object_or_404(Board, pk=board_id)
-    Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')
+    user = User.objects.get(username=request.user)
+    Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='like')
     board.like += 1
     board.save()
     return Response({'status': 'liked'})
+@api_view(['POST'])
+def search_item(request):
+    print (request.user)
+    user = User.objects.get(username=request.user)
+    query = request.data.get('query')
+    Interaction.objects.create(user_id=user.id, content_type='item', interaction_type='search', search_query=query)
