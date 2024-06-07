@@ -4,15 +4,38 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createReply } from '../store/actions/boardActions';
 import CloseIcon from '@mui/icons-material/Close'; 
 import { Link } from 'react-router-dom';
+import { CardActions } from '@mui/material';
+import { IconButton } from '@mui/material';
+import { FavoriteBorder, Favorite, Share } from '@mui/icons-material';
+import { Checkbox } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const StyledCheckbox = styled(Checkbox)({
+  "&.Mui-checked": {
+    color: "#ff6d75",
+  },
+});
 function BoardDetailModal({ open, handleClose, boardId }) {
   const dispatch = useDispatch();
   const [reply, setReply] = useState('');
+
+  const [isLiked, setIsLiked] = useState(false);
   const [replyCreated, setReplyCreated] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const board = useSelector((state) => state.board);
   const { loading, error, replies, boardDetail } = board;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   
-  
+  const likeHandler = () => {
+    if (userInfo){
+      likeHandler()
+    if (isLiked) {
+      setIsLiked(false);
+    }
+    setIsLiked(!isLiked);
+  }
+  };
   useEffect(() => {
    
     if (replyCreated) {
@@ -83,11 +106,23 @@ function BoardDetailModal({ open, handleClose, boardId }) {
                   <Link to={`/users/${boardDetail.user_id}`}>
                   <p className="font-bold">{boardDetail.username}</p>
                   </Link>
-                  <p className="text-sm text-gray-500">{boardDetail.createdAt}</p>
+                  <p className="text-sm text-gray-500">{boardDetail.created_at}</p>
                 </div>
               </div>
               <div className="flex-grow overflow-y-auto">
                 <p dangerouslySetInnerHTML={{ __html: boardDetail.content }} className="text-2xl font-bold mb-2"></p>
+                <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" onClick={likeHandler}>
+          <StyledCheckbox
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite />}
+            checked={isLiked}
+          />
+        </IconButton>
+        <IconButton aria-label="share">
+          <Share />
+        </IconButton>
+      </CardActions>
                 <h2 className="text-xl font-bold mb-2">댓글</h2>
                 {replies.length === 0 && <p>No Comments</p>}
                 {replies.map((reply, index) => (

@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
@@ -10,6 +10,9 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import os
 import numpy as np
+from rest_framework.authentication import TokenAuthentication
+import logging
+logger = logging.getLogger(__name__)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
 model = load_model(MODEL_PATH)
 @api_view(['POST'])
@@ -101,16 +104,45 @@ def create_Board(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@authentication_classes([TokenAuthentication])
 def add_show(request, pk):
+    logger.info('Received request to add show')
+    logger.debug(f'Request user: {request.user}')
+    
+    
+    try:
+        user_id = request.user.id
+        if not user_id:
+            raise ValueError("User ID is missing")
+        
+        board = get_object_or_404(Board, id=pk)
+        board.show += 1
+        
+        Interaction.objects.create(
+            user_id=user_id,
+            content_type='board',
+            content_id=board.id,
+            interaction_type='show'
+        )
+        
+        board.save(update_fields=['show'])
+        
+        logger.info('Show added successfully')
+        return Response('Show added')
+    
+    except Exception as e:
+        logger.error(f'Error adding show: {str(e)}', exc_info=True)
+        return Response({'error': str(e)}, status=400)
+
+@api_view(['POST'])
+def add_like(request, pk):
     board = Board.objects.get(id=pk)
-    board.show += 1
+    board.like += 1
     if request.user != board.user_id and request.user != "AnonymousUser":
         user = User.objects.get(username=request.user)
-        Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='show')
-    # Interaction.objects.create(user_id=request.user, content_type='board', content_id=board.id, interaction_type='like')    
-    board.save(update_fields=['show'])
-    return Response('show added')    
-
+        Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='like')
+    board.save(update_fields=['like'])
+    return Response('like added')
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

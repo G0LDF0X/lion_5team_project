@@ -4,31 +4,23 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
-  CardActions,
+  
   Avatar,
   IconButton,
   Typography,
   Checkbox,
   Box,
 } from "@mui/material";
-import { Favorite, FavoriteBorder, Share, MoreVert } from "@mui/icons-material";
+import {  MoreVert } from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-
-const StyledCheckbox = styled(Checkbox)({
-  "&.Mui-checked": {
-    color: "#ff6d75",
-  },
-});
 
 export default function BoardForm({ board,handleOpenModal  }) {
   const [isLiked, setIsLiked] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const likeHandler = () => {
-    setIsLiked(!isLiked);
-  };
+  
   const tagHandler = () => {
     setShowTags(!showTags);
   };
@@ -108,18 +100,7 @@ export default function BoardForm({ board,handleOpenModal  }) {
           )}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={likeHandler}>
-          <StyledCheckbox
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite />}
-            checked={isLiked}
-          />
-        </IconButton>
-        <IconButton aria-label="share">
-          <Share />
-        </IconButton>
-      </CardActions>
+      
       <Box className="px-4 py-2">
         <Typography variant="caption" color="text.secondary">
           by{" "}
