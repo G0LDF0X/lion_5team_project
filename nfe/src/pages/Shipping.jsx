@@ -128,7 +128,7 @@ function ShippingScreen() {
 
     // 결제 정보 저장에 성공한 경우
     alert('Payment information saved successfully.');
-    // window.location.href = "http://localhost:5173";
+    window.location.href = "http://localhost:5173";
     
   };
   

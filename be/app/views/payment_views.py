@@ -107,6 +107,7 @@ def complete_payment(request):
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
 def payment_detail(request, pk):
     try:
         payment = Payment.objects.get(id=pk)
@@ -119,7 +120,7 @@ def payment_detail(request, pk):
 # @api_view(['POST'])
 # def payment_refund(request, pk):
 #     payment = Payment.objects.get(id=pk)
-#     user = User.objects.get(username=request.user)
+
 #     refund_data = {
 #         "user_id": user.id,
 #         "payment_id": pk,

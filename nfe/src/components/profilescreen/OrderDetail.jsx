@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux'; // Import useSelector
 import { mainAxiosInstance } from "../../api/axiosInstances";
 import { useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -6,20 +7,50 @@ import 'tailwindcss/tailwind.css';
 
 function OrderDetail() {
   const [orderItem, setOrder] = useState(null);
+  const [payment, setPayment] = useState(null);
   const { id } = useParams();
+
+  // Get userInfo from the state
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
 
   useEffect(() => {
     const fetchOrder = async () => {
-      const response = await mainAxiosInstance.get(`/order/detail/${id}`);
+      const response = await mainAxiosInstance.get(`/order/detail/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${userInfo.access}`
+        }
+      });
       setOrder(response.data);
+    };
+    
+    const fetchPayment = async (paymentId) => {
+      const response = await mainAxiosInstance.get(`/payment/detail/${paymentId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${userInfo.access}`
+        }
+      });
+      setPayment(prevPayments => ({
+        ...prevPayments,
+        [paymentId]: response.data,
+      }));
     };
 
     fetchOrder();
-  }, [id]);
+
+    if (orderItem) {
+      orderItem.forEach(item => {
+        fetchPayment(item.payment_id);
+      });
+    }
+  }, [id, userInfo.access, orderItem]);
+
 
   const handleRefund = () => {
     console.log('환불하기 버튼이 클릭되었습니다.');
-
+   // 포트원 환불 api 호출 시작!!
   };
 
   
@@ -44,7 +75,8 @@ function OrderDetail() {
           <Button variant="contained" color="primary" onClick={handleRefund}>
             환불하기
           </Button>
-
+          <p className="mb-1">Payment ID: {item.payment_id}</p>
+          <p className="mb-1">Payment Details: {payment?.[item.payment_id]?.paymentId}</p>
         </div>
       ))}
     </div>
