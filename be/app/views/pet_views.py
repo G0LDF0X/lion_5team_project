@@ -27,7 +27,7 @@ def get_pet_breed(request):
 
 @api_view(['GET'])
 def get_kind_breed(request, pk):
-    pet_breed = Pet_Breed.objects.filter(pet_kind_id__id=pk)
+    pet_breed = Pet_Breed.objects.filter(pet_kind_id_id=pk)
     serializer = PetBreedSerializer(pet_breed, many=True)
     return Response(serializer.data)
 

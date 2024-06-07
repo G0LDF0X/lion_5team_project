@@ -30,7 +30,6 @@ import {mainAxiosInstance} from "../api/axiosInstances";
 import AddressSearch from "../components/AddressSearch";
 
 
-
 function ShippingScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,14 +53,6 @@ function ShippingScreen() {
       dispatch(listCartItems());
     }
   }, [dispatch]);
-
-
-
-
-
-
-  
-
 
 // 결제하기 버튼 누를시 requestPayment() 함수 실행
 // 결제요청 시작부분(react 방식, 포트원 V2)
@@ -142,12 +133,6 @@ function ShippingScreen() {
   };
   
 
-
-
-
-
-
-
   const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = cartItems
     .reduce((acc, item) => acc + item.qty * item.price, 0)
@@ -166,9 +151,6 @@ function ShippingScreen() {
   };
 
   const combinedCartItems = combineCartItems(cartItems);
-
-
-
   
   return (
     <Container maxWidth="lg" className="py-8">

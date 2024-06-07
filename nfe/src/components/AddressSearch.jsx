@@ -7,11 +7,9 @@ const AddressSearch = ({ onAddressSelected }) => {
 
   useEffect(() => {
     // 상태가 변경될 때마다 상위 컴포넌트에 주소 정보를 전달합니다.
-    onAddressSelected({
-      zipCode,
-      addr,
-      addrDtl,
-    });
+    onAddressSelected(
+      addr + ', ' + addrDtl,
+    );
   }, [zipCode, addr, addrDtl, onAddressSelected]);
 
   const handleAddrDtlChange = (e) => {

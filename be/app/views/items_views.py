@@ -7,40 +7,7 @@ from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
-# from tensorflow.keras.models import load_model
 
-
-from django.shortcuts import render
-
-
-
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '') 
-#     if query:
-#         suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
-#         serializer = ItemSerializer(suggestions, many=True)
-#         return Response(serializer.data)
-#     return Response([])
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '')
-#     if query:
-#         print (query)
-#         suggestions = Item.objects.filter(name__contains=query).values_list('name', flat=True)[:10]
-#         # print (suggestions)
-#         # if not suggestions:
-#         #     suggestions = Item.objects.filter(name__in=query).values_list('name', flat=True)[:10]
-#         return Response(suggestions)
-    
-#     return Response([])
-
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '')
-#     items = Item.objects.filter(name__icontains=query)
-#     serializer = ItemSerializer(items, many=True)
-#     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_items(request):
