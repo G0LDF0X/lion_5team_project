@@ -8,7 +8,7 @@ from django.db.models import F
 from datetime import datetime
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-
+import numpy as np
 
 MODEL_PATH = 'be/recommend/model.keras'
 model = load_model(MODEL_PATH)

@@ -53,30 +53,30 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { Button, Card, List, ListItem, Typography } from "@material-ui/core";
-import Message from "../components/Message";
-import Loading from "../components/Loading";
-import { getOrderDetails, getShippingAddress, get_Order } from "../actions/orderActions";
+// import { Typography, Button, Grid, List, ListItem, Card, CardMedia, CardContent, CardActions } from "@material-ui/core";
+// import Message from "../components/Message";
+// import Loading from "../components/Loading";
+// import { getOrderDetails, getShippingAddress, get_Order } from "../actions/orderActions";
 
-function OrderDetailScreen() {
-  // ... existing code ...
+function OrderDetail() {
+  // ... (keep the existing code here)
 
   return loading ? (
     <Loading />
   ) : error ? (
     <Message variant="danger">{error}</Message>
   ) : (
-    <div className="flex flex-col items-center justify-center">
-      <Typography variant="h1">Order {order.id}</Typography>
-      <div className="flex flex-row">
-        <div className="w-2/3">
+    <div className="container mx-auto px-4">
+      <Typography variant="h4">Order {order.id}</Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={8}>
           <List>
             <ListItem>
-              <Typography variant="h2">Shipping</Typography>
-              <p>
+              <Typography variant="h6">Shipping</Typography>
+              <Typography variant="body1">
                 <strong>Address:</strong>
                 {address && address.address}
-              </p>
+              </Typography>
               {orderInfo.is_delivered ? (
                 <Message variant="success">
                   Delivered on {orderInfo.delivered_at.split("T")[0]}
@@ -85,38 +85,65 @@ function OrderDetailScreen() {
                 <Message variant="danger">Not Delivered</Message>
               )}
             </ListItem>
-            {/* ... other list items ... */}
+            {/* ... (keep the existing code here) */}
+            <ListItem>
+              <Typography variant="h6">Order Items</Typography>
+              <div className="flex flex-wrap justify-start">
+                {order ? order.map((item, index) => (
+                  <Link to={`/items/detail/${item.item_id}`} className="w-1/3 m-1 inline-block">
+                    <Card>
+                      <CardMedia
+                        component="img"
+                        alt={item.name}
+                        height="200"
+                        image={item.image}
+                        title={item.name}
+                      />
+                      <CardContent>
+                        <Typography variant="subtitle1">{item.name}</Typography>
+                        <Typography variant="body2">
+                          수량 : {item.qty}
+                          <br />
+                          합계 : {item.price_multi_qty}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                )) : null}
+              </div>
+              {/* ... (keep the existing code here) */}
+            </ListItem>
           </List>
-        </div>
-        <div className="w-1/3">
+        </Grid>
+        <Grid item xs={12} md={4}>
           <Card>
             <List>
               <ListItem>
-                <Typography variant="h2">Order Summary</Typography>
+                <Typography variant="h6">Order Summary</Typography>
               </ListItem>
-              {/* ... other list items ... */}
+              {/* ... (keep the existing code here) */}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListItem>
+                    {loadingDeliver && <Loading />}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListItem>
+                )}
             </List>
-            {userInfo &&
-              userInfo.isAdmin &&
-              order.isPaid &&
-              !order.isDelivered && (
-                <ListItem>
-                  {loadingDeliver && <Loading />}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={deliverHandler}
-                  >
-                    Mark As Delivered
-                  </Button>
-                </ListItem>
-              )}
           </Card>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
-export default OrderDetailScreen
+export default OrderDetail
