@@ -370,9 +370,12 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = '__all__'
 
-
-class PaymentSerializer(serializers.ModelSerializer):
+class InteractionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Payment
+        model = Interaction
         fields = '__all__'
-        
+
+class RecommendationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendation
+        fields = '__all__'
