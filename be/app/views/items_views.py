@@ -12,6 +12,7 @@ from django.db.models import Q
 @api_view(['GET'])
 def get_items(request):
     query = request.GET.get('query', '')
+
     suggestions = request.query_params.get('s','')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
