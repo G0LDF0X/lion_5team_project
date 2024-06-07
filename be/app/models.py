@@ -75,6 +75,13 @@ class Review(models.Model):
     def __str__(self):
         return self.title
 
+class Payment(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    payment_method = models.CharField(max_length=100)
+    payment_amount = models.IntegerField()
+    paymentId = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 class Order(models.Model):
     user_id =models.ForeignKey(User, on_delete=models.DO_NOTHING)
     payment_method = models.CharField(max_length=100)
@@ -93,6 +100,8 @@ class OrderItem(models.Model):
     qty = models.IntegerField()
     price_multi_qty = models.IntegerField()
     image = models.ImageField(blank=True, max_length=1000)
+    payment_id = models.ForeignKey(Payment, on_delete=models.DO_NOTHING, default=1)
+    is_refund = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -238,11 +247,3 @@ class Pet(models.Model):
     gender = models.ForeignKey(Pet_Gender, on_delete=models.DO_NOTHING, blank=True)
     species = models.ForeignKey(Pet_Species, on_delete=models.DO_NOTHING, blank=True)
     breed = models.ForeignKey(Pet_Breed, on_delete=models.DO_NOTHING, blank=True)
-
-
-class Payment(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    payment_method = models.CharField(max_length=100)
-    payment_amount = models.IntegerField()
-    paymentId = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
