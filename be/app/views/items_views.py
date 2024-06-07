@@ -1,53 +1,23 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
-# from tensorflow.keras.models import load_model
 
-
-from django.shortcuts import render
-
-
-
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '') 
-#     if query:
-#         suggestions = Item.objects.filter(name__icontains=query).values_list('name', flat=True)[:10]
-#         serializer = ItemSerializer(suggestions, many=True)
-#         return Response(serializer.data)
-#     return Response([])
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '')
-#     if query:
-#         print (query)
-#         suggestions = Item.objects.filter(name__contains=query).values_list('name', flat=True)[:10]
-#         # print (suggestions)
-#         # if not suggestions:
-#         #     suggestions = Item.objects.filter(name__in=query).values_list('name', flat=True)[:10]
-#         return Response(suggestions)
-    
-#     return Response([])
-
-# @api_view(['GET'])
-# def search_suggestions(request):
-#     query = request.GET.get('query', '')
-#     items = Item.objects.filter(name__icontains=query)
-#     serializer = ItemSerializer(items, many=True)
-#     return Response(serializer.data)
 
 @api_view(['GET'])
 def get_items(request):
+    
     query = request.GET.get('query', '')
+    Interaction.objects.create(user_id=request.user, content_type='item', content_id=0, interaction_type='search', stay_time=request.data.get('stay_time', None))
     suggestions = request.query_params.get('s','')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
+
     if suggestions:
         suggestions_list = suggestions.split(',')
     

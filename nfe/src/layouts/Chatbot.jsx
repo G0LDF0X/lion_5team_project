@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { chatbotAxiosInstance } from '../api/axiosInstances';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
@@ -8,24 +8,27 @@ const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [chatStarted, setChatStarted] = useState(false);
     const [messages, setMessages] = useState([]);
+    const endOfChatRef = useRef(null);
+    const messagesEndRef = useRef(null);
 
     const sendMessage = async () => {
         if (message.trim() === '') return;
 
         const newMessage = { sender: 'user', text: message };
-        setMessages([...messages, newMessage]);
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setMessage('');
 
         try {
             const res = await chatbotAxiosInstance.post('/chat/', { message });
             const botResponse = { sender: 'bot', text: res.data.reply };
-            setMessages([...messages, newMessage, botResponse]);
+            setMessages((prevMessages) => [...prevMessages, botResponse]);
             setResponse(res.data.reply);
+            
         } catch (error) {
             console.error('Error sending message:', error);
             const errorResponse = { sender: 'bot', text: 'Failed to get response from the chatbot.' };
-            setMessages([...messages, newMessage, errorResponse]);
+            setMessages((prevMessages) => [...prevMessages, errorResponse]);
         }
-        setMessage('');
     };
 
     const toggleChatWindow = () => {
@@ -39,6 +42,10 @@ const Chatbot = () => {
     const goBack = () => {
         setChatStarted(false);
     };
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     return (
         <div>
@@ -57,14 +64,14 @@ const Chatbot = () => {
                                 <ArrowBackIosIcon />
                             </button>
                         )}
-                        <h2 className="text-xl font-semibold">Chat with us</h2>
+                        <h2 className="text-xl font-semibold">Petpals 챗봇</h2>
                     </div>
                     <div className="flex-grow overflow-auto mb-2">
                         {!chatStarted && (
                             <>
-                                <p className="mb-4">Welcome! Click the button below to start the chat.</p>
+                                <p className="mb-4">Petpals 챗봇에 오신 것을 환영합니다. 아래 버튼을 눌러 대화를 시작해보세요.</p>
                                 <button onClick={startChat} className="bg-yellow-500 text-white p-2 rounded-lg w-full">
-                                    Start Chat
+                                    대화 시작하기
                                 </button>
                             </>
                         )}
@@ -81,6 +88,7 @@ const Chatbot = () => {
                                         </div>
                                     </div>
                                 ))}
+                                <div ref={messagesEndRef} />
                             </div>
                         )}
                     </div>
@@ -104,9 +112,11 @@ const Chatbot = () => {
                             </button>
                         </div>
                     )}
+                    <div ref={endOfChatRef} />    
                 </div>
             )}
         </div>
+        
     );
 };
 

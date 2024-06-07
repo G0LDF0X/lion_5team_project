@@ -270,7 +270,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                 username=auth_user.username,
                 email=auth_user.email,
                 nickname=validated_data['nickname'],
-                address=validated_data['address'].get('addr')+', '+validated_data['address'].get('addrDtl'),
+                address=validated_data['address'],
                 phone=validated_data['phone'],
                 is_seller=False,
                 date_joined=auth_user.date_joined,
@@ -290,7 +290,7 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
                     age = pet_data['age'],
                     gender = Pet_Gender.objects.get(id=pet_data['gender']['pet_gender']),
                     species = Pet_Species.objects.get(id=pet_data['species']['pet_kind']),
-                    breed = Pet_Breed.objects.get(pet_breed=pet_data['breed']['pet_breed']),
+                    breed = Pet_Breed.objects.get(id=pet_data['breed']['pet_breed']),
                     )
                 # pet_data['user_id'] = user
                 # Pet.objects.create(**pet_data)
@@ -368,4 +368,14 @@ class FollowSerializer(serializers.ModelSerializer):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'
+
+class InteractionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interaction
+        fields = '__all__'
+
+class RecommendationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recommendation
         fields = '__all__'
