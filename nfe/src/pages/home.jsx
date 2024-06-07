@@ -27,6 +27,8 @@ function HomeScreen() {
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
@@ -38,7 +40,14 @@ function HomeScreen() {
     setSelectedBoardId(id);
     dispatch(getBoardDetails(id));
     setModalOpen(true);
-    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
+    if(userInfo){
+    mainAxiosInstance.post(`/board/detail/${id}/add_show/`,
+      {},
+      {
+        headers: {Authorization: `Bearer ${userInfo.access}`}
+      }
+    );
+    }
   };
 
   const handleCloseModal = () => {

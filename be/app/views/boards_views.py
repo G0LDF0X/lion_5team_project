@@ -12,6 +12,7 @@ import os
 import numpy as np
 from rest_framework.authentication import TokenAuthentication
 import logging
+from django.contrib.auth.decorators import login_required
 logger = logging.getLogger(__name__)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
 model = load_model(MODEL_PATH)
@@ -35,7 +36,7 @@ def predict_image(request, pk):
     else:
         prediction = 'cat'
 
-    return Response(prediction)
+    return prediction
 
 
 
@@ -71,6 +72,7 @@ def board_detail_or_create_reply(request, pk):
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
+        Interaction.objects.create(user_id_id=user.id, content_tipe='board', content_id=board.id, interaction_type='comment')
         serializer = ReplySerializer(reply)
         return Response(serializer.data)
     
@@ -94,7 +96,7 @@ def create_Board(request):
         title=request.data.get('title', ''),
         content=request.data.get('content', ''),
         image_url=request.data.get('images'),
-        # type=predict_image(request.data.get('images'))[0][0],
+        type=predict_image(request.data.get('images')),
         product_url=request.data.get('product_url', ''),
         tag=request.data.get('tag', ''),
         show=0,
@@ -103,36 +105,41 @@ def create_Board(request):
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
+# @api_view(['POST'])
+# def add_show(request, pk):
+#     print(request.user)
+#     user = User.objects.get(username=request.user)
+#     board = get_object_or_404(Board, id=pk)
+#     board.show += 1
+    
+#     Interaction.objects.create(
+#         user_id=user.id,
+#         content_type='board',
+#         content_id=board.id,
+#         interaction_type='show'
+#     )
+    
+#     board.save(update_fields=['show'])
+    
+#     logger.info('Show added successfully')
+#     return Response('Show added')
 @api_view(['POST'])
-@authentication_classes([TokenAuthentication])
 def add_show(request, pk):
-    logger.info('Received request to add show')
-    logger.debug(f'Request user: {request.user}')
-    
-    
-    try:
-        user_id = request.user.id
-        if not user_id:
-            raise ValueError("User ID is missing")
-        
-        board = get_object_or_404(Board, id=pk)
-        board.show += 1
-        
-        Interaction.objects.create(
-            user_id=user_id,
-            content_type='board',
-            content_id=board.id,
-            interaction_type='show'
-        )
-        
-        board.save(update_fields=['show'])
-        
-        logger.info('Show added successfully')
-        return Response('Show added')
-    
-    except Exception as e:
-        logger.error(f'Error adding show: {str(e)}', exc_info=True)
-        return Response({'error': str(e)}, status=400)
+
+    user = User.objects.get(username=request.user)
+
+    board = get_object_or_404(Board, id=pk)
+    board.show += 1
+
+    Interaction.objects.create(
+        user_id_id=user.id,
+        content_type='board',
+        content_id=board.id,
+        interaction_type='show'
+    )
+
+    board.save(update_fields=['show'])
+    return Response('Show added')
 
 @api_view(['POST'])
 def add_like(request, pk):
