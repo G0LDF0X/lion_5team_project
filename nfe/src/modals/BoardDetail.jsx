@@ -55,15 +55,10 @@ function BoardDetailModal({ open, handleClose, boardId }) {
   // };
   const submitHandler = (e) => {
     e.preventDefault();
-    if (reply.trim()) {
-      dispatch(createReply({replied_id, reply, boardId}))
-        .then((success) => {
-          if (success) {
-            dispatch(fetchReplies(boardId));
-            setReply('');
-            setReplyCreated(true);
-          }
-        });
+    if (reply.length > 0) {
+      dispatch(createReply({ reply, boardId}))
+      setReply('');
+        ;
     } else {
       alert('Please enter a comment.');
     }
@@ -143,6 +138,7 @@ function BoardDetailModal({ open, handleClose, boardId }) {
                 <button
                   type="submit"
                   className="w-full bg-blue-500 text-white p-2 rounded"
+                  
                 >
                   Submit
                 </button>

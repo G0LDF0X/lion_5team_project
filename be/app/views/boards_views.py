@@ -72,7 +72,7 @@ def board_detail_or_create_reply(request, pk):
         content = request.data.get('content', '')
         replied_id = request.data.get('replied_id', 0)
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
-        Interaction.objects.create(user_id_id=user.id, content_tipe='board', content_id=board.id, interaction_type='comment')
+        Interaction.objects.create(user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='comment')
         serializer = ReplySerializer(reply)
         return Response(serializer.data)
     
@@ -105,24 +105,7 @@ def create_Board(request):
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
 
-# @api_view(['POST'])
-# def add_show(request, pk):
-#     print(request.user)
-#     user = User.objects.get(username=request.user)
-#     board = get_object_or_404(Board, id=pk)
-#     board.show += 1
-    
-#     Interaction.objects.create(
-#         user_id=user.id,
-#         content_type='board',
-#         content_id=board.id,
-#         interaction_type='show'
-#     )
-    
-#     board.save(update_fields=['show'])
-    
-#     logger.info('Show added successfully')
-#     return Response('Show added')
+
 @api_view(['POST'])
 def add_show(request, pk):
 
