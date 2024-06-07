@@ -25,6 +25,36 @@ SECRET_KEY = 'django-insecure-!p*v3!=0kgugwtv*at3!9z2$e5(hlvup%v&nnsny6@k1yw^um1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CSRF_COOKIE_SECURE = False
+
+CSRF_COOKIE_HTTPONLY = True
+
+SESSION_COOKIE_SECURE = None
+
+SESSION_COOKIE_HTTPONLY = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    
+    "X-CSRFToken",
+    "content-type",
+    
+]
+
+CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://127.0.0.1:8000"]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CSRF_COOKIE_DOMAIN = [
+    "http://localhost:5173",
+    # Add other cookie domain here if needed
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    # Add other CSRF trusted origins here if needed
+]
 
 ALLOWED_HOSTS = ["*"]
 
@@ -109,17 +139,14 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# 밑에 세 개 추가함
-CSRF_COOKIE_NAME = "csrftoken"
+# CSRF_COOKIE_SECURE = True
+# CSRF_USE_SESSIONS = True
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:5173',  # React 앱의 도메인
+#     'http://127.0.0.1:8000/',
+    
+# ]
 
-CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',  # React 앱의 도메인
-    # 추가 도메인들...
-]
-
-CSRF_COOKIE_HTTPONLY = False
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
