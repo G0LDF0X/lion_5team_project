@@ -8,9 +8,9 @@ from django.db.models import F
 from datetime import datetime
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-import numpy as np
+import os
 
-MODEL_PATH = 'be/recommend/model.keras'
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
 model = load_model(MODEL_PATH)
 def predict_image(image_path):
     test_image = image.load_img(image_path, target_size = (64, 64))
@@ -121,4 +121,3 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
-
