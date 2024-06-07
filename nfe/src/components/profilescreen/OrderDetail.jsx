@@ -1,55 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import {mainAxiosInstance} from "../../api/axiosInstances";
-// import { useParams } from 'react-router-dom';
-// import Button from '@mui/material/Button';
-
-// function OrderDetail() {
-//   const [order, setOrder] = useState(null);
-//   const { id } = useParams();
-
-//   useEffect(() => {
-//     const fetchOrder = async () => {
-//       const response = await mainAxiosInstance.get(`/order/detail/${id}`);
-//       setOrder(response.data);
-//     };
-
-//     fetchOrder();
-//   }, [id]);
-
-
-
-//   const handleRefund = () => {
-//     // 환불 로직을 여기에 작성하세요.
-//     console.log('환불하기 버튼이 클릭되었습니다.');
-//   };
-
-//   if (!order) {
-//     return <div>Loading...</div>;
-//   }
-
-//   // Render order details here
-//   return (
-//     <div>
-//       {order.map((item, index) => (
-//         <div key={index}>
-//           <h2>{item.name}</h2>
-//           <p>Quantity: {item.qty}</p>
-//           <p>Price Multi Quantity: {item.price_multi_qty}</p>
-//           <img src={item.image} alt={item.name} />
-//           <p>Item ID: {item.item_id}</p>
-//           <p>Order ID: {item.order_id}</p>
-//           <Button variant="contained" color="primary" onClick={handleRefund}>
-//             환불하기
-//           </Button>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
-
-// export default OrderDetail;
-
-
 import React, { useEffect, useState } from 'react';
 import { mainAxiosInstance } from "../../api/axiosInstances";
 import { useParams } from 'react-router-dom';
@@ -70,7 +18,8 @@ function OrderDetail() {
   }, [id]);
 
   const handleRefund = () => {
-    console.log('부분 환불하기 버튼이 클릭되었습니다.');
+    console.log('환불하기 버튼이 클릭되었습니다.');
+
   };
 
   

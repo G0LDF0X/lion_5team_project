@@ -6,7 +6,8 @@ from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-
+from app.serializer import PaymentSerializer
+from rest_framework.response import Response
 # @permission_classes([IsAuthenticated])
 
 @api_view(['POST'])
@@ -27,6 +28,15 @@ def save_payment(request):
         )
         order.save()
         
+        payment = Payment.objects.create(
+            user_id=user,
+            payment_method=data['payMethod'],
+            payment_amount=data['totalAmount'],
+            paymentId=data['paymentId'],
+        )
+        payment.save()
+
+
         # OrderItem에도 저장
         for item in data['items']:
             item_instance = Item.objects.get(id=item['item_id'])
@@ -37,16 +47,8 @@ def save_payment(request):
                 qty=item['qty'],
                 price_multi_qty=item['price'],
                 image=item['image'],
+                payment_id=payment, 
             )
-
-
-        payment = Payment.objects.create(
-            user_id=user,
-            payment_method=data['payMethod'],
-            payment_amount=data['totalAmount'],
-            paymentId=data['paymentId'],
-        )
-        payment.save()
 
         response = complete_payment(request)
         
@@ -102,3 +104,26 @@ def complete_payment(request):
         except Exception as e:
             # 결제 검증에 실패했습니다.
             return JsonResponse({'message': str(e)}, status=400)
+
+
+@api_view(['GET'])
+def payment_detail(request, pk):
+    try:
+        payment = Payment.objects.get(id=pk)
+        serializer = PaymentSerializer(payment)
+        return Response(serializer.data)
+    except Payment.DoesNotExist:
+        return Response({"error": "Payment does not exist"}, status=404)
+    
+
+# @api_view(['POST'])
+# def payment_refund(request, pk):
+#     payment = Payment.objects.get(id=pk)
+#     user = User.objects.get(username=request.user)
+#     refund_data = {
+#         "user_id": user.id,
+#         "payment_id": pk,
+#         "reason": request.data.get('reason'), 
+#     }
+
+#     pass
