@@ -34,10 +34,26 @@ export const listBoards = createAsyncThunk(
 
 export const getBoardDetails = createAsyncThunk(
   "boardDetails/getBoardDetails",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
+      const {
+        user: { userInfo },
+      } = getState();
+      if (!userInfo) {
+       const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
+        return res.data;
+      }
+      else{
+      const res = await mainAxiosInstance.get(`/board/detail/${id}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization  ": `Bearer ${userInfo.access}`,
+          },
+        }
+        );
       return res.data;
+    }
     } catch (error) {
       return rejectWithValue(handleError(error));
     }

@@ -31,33 +31,34 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
-      if (userInfo) {
-        mainAxiosInstance.post(
-          `/board/detail/${boardId}/add_show/`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.access}` },
-          }
-        );
-        // userInfo.liked_boards.forEach((likedBoard) => {
-        //   if (likedBoard.id === parseInt(boardId)) {
-        //     setIsLiked(true);
-        //   }
-        // }
-        // );
+      if (boardDetail.liked_by_user === true) {
+        setIsLiked(true);
+
       }
     }
   }, [dispatch, boardId]);
 
   const likeHandler = () => {
-    if (userInfo) {
-      mainAxiosInstance.post(
-        `/board/detail/${boardId}/add_like/`,
+    if (userInfo&& boardDetail.liked_by_user === false) {
+      mainAxiosInstance.put(
+        `/board/like/${boardId}/`,
         {},
         {
           headers: { Authorization: `Bearer ${userInfo.access}` },
         }
       );
+      dispatch(getBoardDetails(boardId));
+
+    }
+    if (userInfo&& boardDetail.liked_by_user === true) {
+      mainAxiosInstance.delete(
+        `/board/like/${boardId}/`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${userInfo.access}` },
+        }
+      );
+      dispatch(getBoardDetails(boardId));
     }
   };
   const shareHandler = () => {  

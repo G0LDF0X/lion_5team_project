@@ -10,9 +10,9 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import os
 import numpy as np
-from rest_framework.authentication import TokenAuthentication
 import logging
 from django.contrib.auth.decorators import login_required
+from rest_framework import status
 logger = logging.getLogger(__name__)
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
 model = load_model(MODEL_PATH)
@@ -52,8 +52,26 @@ def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':
         board = get_object_or_404(Board, id=pk)
         replies = Reply.objects.filter(board_id=board)
-
+        user = User.objects.get(username=request.user)
+        if request.user.is_authenticated:   #로그인한 사용자가 게시물을 조회했을 때, 조회수를 추가합니다.
+            board.show += 1
+            Interaction.objects.create(user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='view')
         board_serializer = BoardSerializer(board)
+        board_data = board_serializer.data
+        
+        board_data['liked_by_user'] = Interaction.objects.filter(
+            user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
+        ).exists() if request.user.is_authenticated else False
+        
+        reply_serializer = ReplySerializer(replies, many=True)
+        
+        return Response(
+            {
+                'board': board_data,
+                'replies': reply_serializer.data
+            }
+        )
+        board_serializer = BoardSerializer(board )
         reply_serializer = ReplySerializer(replies, many=True)
         
         return Response(
@@ -106,34 +124,70 @@ def create_Board(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-def add_show(request, pk):
+# @api_view(['POST'])
+# def add_show(request, pk):
 
+#     user = User.objects.get(username=request.user)
+
+#     board = get_object_or_404(Board, id=pk)
+#     board.show += 1
+
+#     Interaction.objects.create(
+#         user_id_id=user.id,
+#         content_type='board',
+#         content_id=board.id,
+#         interaction_type='view'
+#     )
+
+#     board.save(update_fields=['show'])
+#     return Response('Show added')
+
+
+# @api_view(['PUT'])
+# def add_like(request, pk):
+#     board = Board.objects.get(id=pk)
+#     board.like += 1
+#     user = User.objects.get(username=request.user)
+#     Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='like')
+#     board.save(update_fields=['like'])
+#     return Response('like added')
+
+# @api_view(['DELETE'])
+# def delete_like(request, pk):
+#     user = User.objects.get(username=request.user)
+#     board = Board.objects.get(id=pk)
+#     board.like -= 1
+#     board.save(update_fields=['like'])
+#     Interaction.objects.filter(user_id_id=user.id, content_id=board.id, interaction_type='like').delete()
+#     return Response('like deleted')
+@api_view(['PUT', 'DELETE'])
+def handle_like(request, pk):
+    print (request.user)    
     user = User.objects.get(username=request.user)
-
     board = get_object_or_404(Board, id=pk)
-    board.show += 1
 
-    Interaction.objects.create(
-        user_id_id=user.id,
-        content_type='board',
-        content_id=board.id,
-        interaction_type='view'
-    )
-
-    board.save(update_fields=['show'])
-    return Response('Show added')
-
-@api_view(['POST'])
-def add_like(request, pk):
-    board = Board.objects.get(id=pk)
-    board.like += 1
-    if request.user != board.user_id and request.user != "AnonymousUser":
-        user = User.objects.get(username=request.user)
-        Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='like')
-    board.save(update_fields=['like'])
-    return Response('like added')
-
+    if request.method == 'PUT':
+        interaction, created = Interaction.objects.get_or_create(
+            user_id=user, content_type='board', content_id=board.id, interaction_type='like'
+        )
+        if created:
+            board.like += 1
+            board.save(update_fields=['like'])
+            return Response('like added', status=status.HTTP_201_CREATED)
+        else:
+            return Response('user already liked this post', status=status.HTTP_200_OK)
+    
+    if request.method == 'DELETE':
+        interaction = Interaction.objects.filter(
+            user_id=user, content_type='board', content_id=board.id, interaction_type='like'
+        ).first()
+        if interaction:
+            board.like -= 1
+            board.save(update_fields=['like'])
+            interaction.delete()
+            return Response('like deleted', status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response('like not found', status=status.HTTP_404_NOT_FOUND)
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_Board(request, detail_pk, update_pk):
