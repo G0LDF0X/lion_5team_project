@@ -88,7 +88,9 @@ function SearchBox() {
       navigate(location.pathname);
     }
     if (userInfo) {
-     mainAxiosInstance.post("interaction/search/item/", { query: keyword });
+     mainAxiosInstance.post("/items/search/", { query: keyword }, {
+        headers: { Authorization: `Bearer ${userInfo.access}` },
+     });
     }
   };
 

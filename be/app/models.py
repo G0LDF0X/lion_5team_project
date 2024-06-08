@@ -254,7 +254,7 @@ class Pet(models.Model):
 class Interaction(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     content_type = models.CharField(max_length=10, choices=[('board', 'Board'), ('item', 'Item')])
-    content_id = models.IntegerField()  
+    content_id = models.IntegerField(null=True, blank=True)  
     interaction_type = models.CharField(max_length=50, choices=[('view', 'View'), ('like', 'Like'), ('search', 'Search'), ('review', 'Review'), ('purchase', 'Purchase'), ('bookmark', 'Bookmark'), ('comment', 'Comment')])
     timestamp = models.DateTimeField(auto_now_add=True)
     stay_time = models.DurationField(null=True, blank=True)

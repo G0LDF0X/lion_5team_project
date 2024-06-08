@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -90,6 +90,20 @@ def create_item(request):
     serializer = ItemSerializer(item, many=False)
 
     return Response(serializer.data)
+
+@api_view(['POST'])
+def search_Interaction(request):
+    query = request.data['query']
+    user = User.objects.get(username=request.user)
+    
+    Interaction.objects.create(
+        user_id_id = user.id,
+        content_type='item',
+        interaction_type = 'search',
+        search_query=query
+    )
+    return Response('Interaction created')
+
 
 
 @api_view(['PUT'])

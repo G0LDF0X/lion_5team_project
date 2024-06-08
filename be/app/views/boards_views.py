@@ -118,7 +118,7 @@ def add_show(request, pk):
         user_id_id=user.id,
         content_type='board',
         content_id=board.id,
-        interaction_type='show'
+        interaction_type='view'
     )
 
     board.save(update_fields=['show'])
