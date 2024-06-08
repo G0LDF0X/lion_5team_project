@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Chatbot from './Chatbot';
@@ -12,6 +13,8 @@ function RootLayout() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [postModalIsOpen, setPostModalIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const id = useParams().id;
+  const navigate = useNavigate();
 
   const location = useLocation();
   const state = location.state;
@@ -26,8 +29,9 @@ function RootLayout() {
   const openPostModal = () => setPostModalIsOpen(true);
   const closePostModal = () => setPostModalIsOpen(false);
 
-  const isBoardDetailModalOpen = location.pathname.startsWith('/board/'); 
-  const boardId = isBoardDetailModalOpen ? location.pathname.split('/').pop() : null;
+  const isBoardDetailModalOpen = (location.pathname.startsWith('/board/') && id) || (location.pathname.startsWith('/') && id);
+
+  
 
   return (
     <>
@@ -38,9 +42,9 @@ function RootLayout() {
       <Login isOpen={modalIsOpen} onRequestClose={closeModal} />
       <PostModal isOpen={postModalIsOpen} onRequestClose={closePostModal} />
       <SideBar toggleDrawer={toggleDrawer} open={open} />
-       <BoardDetailModal open= {isBoardDetailModalOpen} handleClose={()=>window.history.back()} />
+      {isBoardDetailModalOpen && <BoardDetailModal open={true} handleClose={() => window.history.back()} />}
     </>
   );
 }
-
+      
 export default RootLayout;

@@ -50,7 +50,7 @@ function BoardDetailModal({ open, handleClose }) {
     }
   };
   const shareHandler = () => {  
-    navigator.clipboard.writeText("localhost:5173"+location.pathname);
+    navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
     alert("Copied the link to clipboard: " + location.pathname);
   };
 
