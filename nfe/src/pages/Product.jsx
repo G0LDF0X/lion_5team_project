@@ -54,12 +54,6 @@ function ProductDetail() {
   const { success: successReviewDelete } = reviewDelete;
   const cart = useSelector((state) => state.cart);
   const { successAdd } = cart;
-  // useEffect(() => {
-  //   dispatch(listCartItems());
-  //   dispatch(listProductDetails(id));
-  //   dispatch(listBookMark());
-  // }, [navigate, dispatch]);
-
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
@@ -68,14 +62,13 @@ function ProductDetail() {
   }, [dispatch, id]);
 
 useEffect(() => {
-  setStartTime(Date.now()); // Capture start time when component mounts
+  setStartTime(Date.now()); 
 
   return () => {
-    // Capture end time when component unmounts
-    const endTime = Date.now();
-    const stayTime = (endTime - startTime) / 1000; // Convert to seconds
 
-    // Send interaction data to the backend
+    const endTime = Date.now();
+    const stayTime = (endTime - startTime) / 1000;
+
     if (userInfo) {
       mainAxiosInstance.post(`/interaction/view/item/${id}/`, {
         stayTime
@@ -85,13 +78,7 @@ useEffect(() => {
 
     }
   }
-    )
-      .then(response => {
-        console.log('Interaction tracked successfully:', response.data);
-      })
-      .catch(error => {
-        console.error('There was an error tracking the interaction!', error);
-      });
+    )      
     }
   };
 }, []);

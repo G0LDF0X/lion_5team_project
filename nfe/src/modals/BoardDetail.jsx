@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createReply, getBoardDetails } from "../store/actions/boardActions";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { CardActions, IconButton, Checkbox } from "@mui/material";
+import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
 import { FavoriteBorder, Favorite, Share } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
@@ -31,7 +31,6 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
-      console.log(location)
       if (userInfo) {
         mainAxiosInstance.post(
           `/board/detail/${boardId}/add_show/`,
@@ -40,13 +39,25 @@ function BoardDetailModal({ open, handleClose }) {
             headers: { Authorization: `Bearer ${userInfo.access}` },
           }
         );
+        // userInfo.liked_boards.forEach((likedBoard) => {
+        //   if (likedBoard.id === parseInt(boardId)) {
+        //     setIsLiked(true);
+        //   }
+        // }
+        // );
       }
     }
   }, [dispatch, boardId]);
 
   const likeHandler = () => {
     if (userInfo) {
-      setIsLiked(!isLiked);
+      mainAxiosInstance.post(
+        `/board/detail/${boardId}/add_like/`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${userInfo.access}` },
+        }
+      );
     }
   };
   const shareHandler = () => {  
@@ -130,6 +141,8 @@ function BoardDetailModal({ open, handleClose }) {
                       checked={isLiked}
                     />
                   </IconButton>
+                  {boardDetail.like}
+                  <Box sx={{ mx: 5 }} />
                   <IconButton 
                   aria-label="share"
                   onClick={shareHandler}
@@ -137,6 +150,8 @@ function BoardDetailModal({ open, handleClose }) {
                     <Share />
                   </IconButton>
                 </CardActions>
+                {/* <CardActions> */}
+                {/* </CardActions> */}
                 <h2 className="text-xl font-bold mb-2">Comments</h2>
                 {replies.length === 0 && <p>No Comments</p>}
                 {replies.map((reply, index) => (
