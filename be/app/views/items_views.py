@@ -174,6 +174,12 @@ def create_review(request, item_id):
         rate=5,
         image_url=''
     )
+    # Interaction.objects.create(
+    #     user_id_id = user.id,
+    #     content_type='item',
+    #     interaction_type = 'review',
+    #     item_id_id = item_id
+    # )
 
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data, status=status.HTTP_201_CREATED)

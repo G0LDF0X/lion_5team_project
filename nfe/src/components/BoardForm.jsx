@@ -50,7 +50,7 @@ export default function BoardForm({ board  }) {
         title={board.title}
         subheader={new Date(board.created_at).toLocaleDateString()}
       />
-        <Link key = {board.id} to={`/${board.id}`} state = {{background:location}}>
+        <Link key = {board.id} to={`/board/${board.id}`} state = {{background:location}}>
       <div style={{ position: "relative" }} >
         <CardMedia
           component="img"

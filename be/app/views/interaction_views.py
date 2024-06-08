@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from app.models import Interaction, Board, Item, User
 from app.serializer import InteractionSerializer, BoardSerializer, ItemSerializer
+from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 def track_interaction(request):
@@ -12,10 +13,14 @@ def track_interaction(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-def view_item(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    Interaction.objects.create(user_id=request.user, content_type='item', content_id=item.id, interaction_type='view', stay_time=request.data.get('stay_time', None))
+@api_view(['Post'])
+def view_item(request, pk):
+    item = get_object_or_404(Item, id=pk)
+    user = User.objects.get(username=request.user)  
+    staytime = request.data.get('stayTime', None)
+    stay_time_interval = f'{staytime} seconds'
+
+    Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
     serializer = ItemSerializer(item)
     return Response(serializer.data)
 

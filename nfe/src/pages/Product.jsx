@@ -31,6 +31,8 @@ function ProductDetail() {
   const [marked, setMarked] = useState(false);
   const [state, setState] = useState({ open: false });
   const [replyCreated, setReplyCreated] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+
   const [answer, setAnswer] = useState("");
   const [showTextField, setShowTextField] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -52,12 +54,47 @@ function ProductDetail() {
   const { success: successReviewDelete } = reviewDelete;
   const cart = useSelector((state) => state.cart);
   const { successAdd } = cart;
+  // useEffect(() => {
+  //   dispatch(listCartItems());
+  //   dispatch(listProductDetails(id));
+  //   dispatch(listBookMark());
+  // }, [navigate, dispatch]);
+
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  }, [navigate, dispatch]);
+  
+  }, [dispatch, id]);
 
+useEffect(() => {
+  setStartTime(Date.now()); // Capture start time when component mounts
+
+  return () => {
+    // Capture end time when component unmounts
+    const endTime = Date.now();
+    const stayTime = (endTime - startTime) / 1000; // Convert to seconds
+
+    // Send interaction data to the backend
+    if (userInfo) {
+      mainAxiosInstance.post(`/interaction/view/item/${id}/`, {
+        stayTime
+      },
+    {headers: {
+      Authorization: `Bearer ${userInfo.access}`,
+
+    }
+  }
+    )
+      .then(response => {
+        console.log('Interaction tracked successfully:', response.data);
+      })
+      .catch(error => {
+        console.error('There was an error tracking the interaction!', error);
+      });
+    }
+  };
+}, []);
   useEffect(() => {
     if (successProductReview) {
       navigate(`/items/review/update/${createdReview.id}`);
