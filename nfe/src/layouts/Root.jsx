@@ -14,7 +14,7 @@ function RootLayout() {
   const [open, setOpen] = useState(false);
 
   const location = useLocation();
-  const state = location.state && location.state.background;
+  const state = location.state;
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -26,8 +26,8 @@ function RootLayout() {
   const openPostModal = () => setPostModalIsOpen(true);
   const closePostModal = () => setPostModalIsOpen(false);
 
-  // const isBoardDetailModalOpen = location.pathname.startsWith('/board/');
-  // const boardId = isBoardDetailModalOpen ? location.pathname.split('/').pop() : null;
+  const isBoardDetailModalOpen = location.pathname.startsWith('/board/'); 
+  const boardId = isBoardDetailModalOpen ? location.pathname.split('/').pop() : null;
 
   return (
     <>
@@ -38,7 +38,7 @@ function RootLayout() {
       <Login isOpen={modalIsOpen} onRequestClose={closeModal} />
       <PostModal isOpen={postModalIsOpen} onRequestClose={closePostModal} />
       <SideBar toggleDrawer={toggleDrawer} open={open} />
-      {state && <BoardDetailModal open = {true}handleClose={()=>window.history.back()} />}
+       <BoardDetailModal open= {isBoardDetailModalOpen} handleClose={()=>window.history.back()} />
     </>
   );
 }

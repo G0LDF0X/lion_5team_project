@@ -49,6 +49,10 @@ function BoardDetailModal({ open, handleClose }) {
       setIsLiked(!isLiked);
     }
   };
+  const shareHandler = () => {  
+    navigator.clipboard.writeText("localhost:5173"+location.pathname);
+    alert("Copied the link to clipboard: " + location.pathname);
+  };
 
   useEffect(() => {
     if (replyCreated) {
@@ -126,7 +130,10 @@ function BoardDetailModal({ open, handleClose }) {
                       checked={isLiked}
                     />
                   </IconButton>
-                  <IconButton aria-label="share">
+                  <IconButton 
+                  aria-label="share"
+                  onClick={shareHandler}
+                  >
                     <Share />
                   </IconButton>
                 </CardActions>
