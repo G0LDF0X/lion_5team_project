@@ -1,37 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { listBoards, getBoardDetails } from '../store/actions/boardActions';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { listBoards } from '../store/actions/boardActions';
 import { Grid, Box, Skeleton } from '@mui/material';
-import  BoardDetailModal  from '../modals/BoardDetail';
-import { mainAxiosInstance } from '../api/axiosInstances';
 
 
 
 function StandardImageList() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBoardId, setSelectedBoardId] = useState(null);
   const dispatch = useDispatch();
   const board = useSelector((state) => state.board);
   const { boards, loading } = board;
-  const useShow = (id) => {
-    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
-  };
+  
   useEffect(() => {
     dispatch(listBoards());
+    console.log(location)
   }, [navigate]);
-  const handleOpenModal = (id) => {
-    setSelectedBoardId(id);
-    dispatch(getBoardDetails(id));
-    setModalOpen(true);
-    useShow(id);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
 
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
@@ -45,7 +32,8 @@ function StandardImageList() {
        </Grid>
       ) : (
         boards.map((board) => (
-          <div key={board.id} className="relative w-full h-full cursor-pointer" onClick={() => handleOpenModal(board.id)}>
+          <Link key={board.id} to={`/board/${board.id}`} state={{ background: location }}>
+          <div key={board.id} className="relative w-full h-full cursor-pointer" >
             <img
               src={`${VITE_API_BASE_URL}${board.image_url}`}
               alt={board.title}
@@ -56,9 +44,10 @@ function StandardImageList() {
               <p className="text-white text-lg font-bold">{board.title}</p>
             </div>
           </div>
+          </Link>
         ))
       )}
-       <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
+
     </div>
   );
 }
