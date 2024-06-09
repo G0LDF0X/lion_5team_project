@@ -62,14 +62,25 @@ export const getBoardDetails = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
   "boardCreate/createBoard",
-  async ({ board }, { getState, rejectWithValue }) => {
+  async (formData, { getState, rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders(getState);
-      const res = await mainAxiosInstance.post(`/board/create/`, board, {
-        headers,
-      });
+      const {
+        user: { userInfo },
+      } = getState();
+
+      // Debugging logs to verify token and headers
+      console.log('User Info:', userInfo);
+      console.log('Access Token:', userInfo?.access);
+
+      const res = await mainAxiosInstance.post(`/board/create/`, formData, {
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    });
       return res.data;
     } catch (error) {
+      console.error('Error:', error);
       return rejectWithValue(handleError(error));
     }
   }

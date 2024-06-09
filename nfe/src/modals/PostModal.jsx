@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDropzone } from 'react-dropzone';
 import TagInput from '../components/TagInput';
 import { mainAxiosInstance } from '../api/axiosInstances';
 import { resetSuccess } from '../store/slices/boardSlices';
+import { createBoard } from '../store/actions/boardActions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const PostModal = ({ isOpen, onRequestClose }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     title: '',
     content: '',
   });
+  const dispatch = useDispatch();
+  const success = useSelector((state) => state.board.success);
   const [tagName, setTagName] = useState('');
   const selectTag = (tag) => {
     setFormData({
@@ -77,23 +81,31 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     data.append('tags', JSON.stringify(formData.tags));
     data.append('title', formData.title);
     data.append('content', formData.content);
-    mainAxiosInstance.post('/board/create/', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    .then(response => {
-      console.log('Success:', response);
-      dispatch(resetSuccess());
-      onRequestClose();
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+    dispatch(createBoard(data));
+
+    // mainAxiosInstance.post('/board/create/', data, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',
+    //     Authorization: `Bearer ${localStorage.getItem('access')}`,
+    //   },
+    // })
+    // .then(response => {
+    //   console.log('Success:', response);
+    //   dispatch(resetSuccess());
+    //   onRequestClose();
+    // })
+    // .catch((error) => {
+    //   console.error('Error:', error);
+    // });
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  useEffect(() => {
+    if (success)
+      onRequestClose();
+    dispatch(resetSuccess());
+  }, [success, onRequestClose]);
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(

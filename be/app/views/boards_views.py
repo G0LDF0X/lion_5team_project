@@ -13,30 +13,33 @@ import numpy as np
 import logging
 from django.contrib.auth.decorators import login_required
 from rest_framework import status
+from io import BytesIO
+from PIL import Image
+# from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
 logger = logging.getLogger(__name__)
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
-model = load_model(MODEL_PATH)
-@api_view(['POST'])
-def predict_image(request, pk):
-    image_path = "static" + Board.objects.get(id=pk).image_url.url
-    test_image = image.load_img(image_path, target_size = (64, 64))
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis = 0)
-    # result = cnn.predict(test_image)
-# training_set.class_indices
-# if result[0][0] == 1:
-#     prediction = 'dog'
-# else:
-#     prediction = 'cat'
-# print(prediction)
-    result = model.predict(test_image)
-    print(result)
-    if result[0][0] == 1:
-        prediction = 'dog'
-    else:
-        prediction = 'cat'
 
-    return prediction
+# @api_view(['POST'])
+
+
+
+
+# def filter_reply(sententce):
+#     model_name = 'sgunderscore/hatescore-korean-hate-speech'
+#     model = BertForSequenceClassification.from_pretrained(model_name)
+#     tokenizer = AutoTokenizer.from_pretrained(model_name)
+#     pipe = TextClassificationPipeline(
+#             model=model,
+#             tokenizer=tokenizer,
+#             device=0,
+#             return_all_scores=True,
+#             function_to_apply='sigmoid'
+#     )
+#     results = pipe(sentence)[0]
+#     threshold = 0.3
+#     excluded_label = 'None'
+#     for result in results:
+#         if result['score'] > threshold and result['label'] != excluded_label:
+#             print(result)
 
 
 
@@ -102,64 +105,74 @@ def get_TopBoards(request):                  #like엔 5배의 가중치 부여.
     return Response(serializer.data)
 
 
+def predict_image(board_image):
+    MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.keras')
+    model = load_model(MODEL_PATH)
+    
+    # Load the image from BytesIO
+    img = Image.open(board_image)
+    img = img.resize((64, 64))  # Resize the image to the target size
+    img = image.img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    result = model.predict(img)
+    
+    print(result)
+    if result[0][0] == 1:
+        prediction = 'dog'
+    else:
+        prediction = 'cat'
 
-@api_view(['POST'])
-def create_Board(request):
-    print(request.user)
-    user = User.objects.get(username=request.user)
-
-    current_time = datetime.now()
-    board = Board.objects.create(
-        user_id=user,
-        title=request.data.get('title', ''),
-        content=request.data.get('content', ''),
-        image_url=request.data.get('images'),
-        type=predict_image(request.data.get('images')),
-        product_url=request.data.get('product_url', ''),
-        tag=request.data.get('tag', ''),
-        show=0,
-        like=0,
-    )
-    serializer = BoardSerializer(board, many=False)
-    return Response(serializer.data)
-
-
+    return prediction
 # @api_view(['POST'])
-# def add_show(request, pk):
+# @permission_classes([IsAuthenticated])
+# def create_Board(request):
+#     try:
+#         user = request.user
 
-#     user = User.objects.get(username=request.user)
-
-#     board = get_object_or_404(Board, id=pk)
-#     board.show += 1
-
-#     Interaction.objects.create(
-#         user_id_id=user.id,
-#         content_type='board',
-#         content_id=board.id,
-#         interaction_type='view'
-#     )
-
-#     board.save(update_fields=['show'])
-#     return Response('Show added')
-
-
-# @api_view(['PUT'])
-# def add_like(request, pk):
-#     board = Board.objects.get(id=pk)
-#     board.like += 1
-#     user = User.objects.get(username=request.user)
-#     Interaction.objects.create(user_id=user.id, content_type='board', content_id=board.id, interaction_type='like')
-#     board.save(update_fields=['like'])
-#     return Response('like added')
-
-# @api_view(['DELETE'])
-# def delete_like(request, pk):
-#     user = User.objects.get(username=request.user)
-#     board = Board.objects.get(id=pk)
-#     board.like -= 1
-#     board.save(update_fields=['like'])
-#     Interaction.objects.filter(user_id_id=user.id, content_id=board.id, interaction_type='like').delete()
-#     return Response('like deleted')
+#         current_time = datetime.now()
+#         board = Board.objects.create(
+#             user_id=user.id,
+#             title=request.data.get('title', ''),
+#             content=request.data.get('content', ''),
+#             image_url=request.data.get('images'),
+#             type=predict_image(request.data.get('images')),
+#             tag=request.data.get('tag', ''),
+#             created_at=current_time
+#         )
+#         serializer = BoardSerializer(board, many=False)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     except Exception as e:
+#         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_Board(request):
+    try:
+        user = User.objects.get(username=request.user)
+        current_time = datetime.now()
+        
+        # Handle image file conversion
+        image_file = request.FILES.get('images')
+        if image_file:
+            image_data = BytesIO(image_file.read())
+            image_data.seek(0)  # Make sure the file pointer is at the start
+            prediction = predict_image(image_data)
+        else:
+            image_data = None
+            prediction = None
+        
+        board = Board.objects.create(
+            user_id_id=user.id,
+            title=request.data.get('title', ''),
+            content=request.data.get('content', ''),
+            image_url=image_file,
+            board_type=prediction,
+            tag=request.data.get('tag', ''),
+            created_at=current_time
+        )
+        serializer = BoardSerializer(board, many=False)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 @api_view(['PUT', 'DELETE'])
 def handle_like(request, pk):
     print (request.user)    
@@ -188,6 +201,7 @@ def handle_like(request, pk):
             return Response('like deleted', status=status.HTTP_204_NO_CONTENT)
         else:
             return Response('like not found', status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_Board(request, detail_pk, update_pk):
