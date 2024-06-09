@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
 from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, RefundSerializer, ItemAnswerSerializer
 from rest_framework import status
+from django.utils import timezone
+from calendar import monthrange
+from django.db.models import F, Sum
+from datetime import timedelta
 
 @api_view(['GET'])
 def index(request):
@@ -46,7 +50,7 @@ def SellerRevenueView(request):
             total_revenue += order_item.price_multi_qty
     return Response({'total_revenue': total_revenue})
 
-
+@api_view(['G'])
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def SellerSettingsView(request):
@@ -128,3 +132,37 @@ def Seller_Apply_Save(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'User is not a seller'}, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET'])
+def MonthlySellerRevenueView(request, pk):
+    try:
+        seller = Seller.objects.get(user_id_id=pk)
+    except Seller.DoesNotExist:
+        return Response({'error': 'Seller not found'}, status=404)
+
+    items = Item.objects.filter(seller_id=seller)
+    now = timezone.now()
+    current_year = now.year
+
+    monthly_revenue = []
+    for month in range(1, 13):
+        first_day_of_month = timezone.datetime(current_year, month, 1)
+        last_day_of_month = timezone.datetime(current_year, month, monthrange(current_year, month)[1])
+        
+        monthly_sum = 0
+        for item in items:
+            order_items = OrderItem.objects.filter(
+                item_id=item,
+                order_id__created_at__year=current_year,
+                order_id__created_at__month=month
+            )
+            monthly_sum += order_items.aggregate(
+                total=Sum(F('qty') * item.price)
+            )['total'] or 0
+        
+        monthly_revenue.append({
+            'month': month,
+            'revenue': monthly_sum
+        })
+
+    return Response({'monthly_revenue': monthly_revenue})
