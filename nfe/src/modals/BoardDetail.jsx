@@ -8,6 +8,7 @@ import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
 import { FavoriteBorder, Favorite, Share } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledCheckbox = styled(Checkbox)({
   "&.Mui-checked": {
