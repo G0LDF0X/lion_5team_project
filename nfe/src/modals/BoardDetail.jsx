@@ -183,7 +183,9 @@ function BoardDetailModal({ open, handleClose }) {
                 {replies.map((reply, index) => (
                   <div key={index} className="border-b pb-2 mb-2">
                     <p className="font-bold">
+                      <Link to={`/users/${reply.user_id}`}>
                       {reply.username || reply.nickname}
+                      </Link>
                     </p>
                     <p>{reply.content}</p>
                   </div>
