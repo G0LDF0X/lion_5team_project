@@ -10,11 +10,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer, Interaction
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
 from django.contrib.auth.views import PasswordResetView
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import csrf_exempt
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -374,21 +374,23 @@ from django.urls import reverse
     
 
 from django.middleware.csrf import get_token
-from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 from django.http import JsonResponse
 
 
-@ensure_csrf_cookie
 @api_view(['GET'])
 def get_csrf_token(request):
     csrftoken = get_token(request)
     return JsonResponse({'csrftoken': csrftoken})
+    # return JsonResponse({'csrftoken': request.COOKIES.get('csrftoken')})
+
 
 class CustomPasswordResetView(PasswordResetView):
-    @method_decorator(ensure_csrf_cookie, name='dispatch')
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 302:  # 이메일이 성공적으로 보내졌다면
             return HttpResponseRedirect(reverse('password_reset_done'))  # password-reset/done/ URL로 리디렉션
         return response
-    
+
+    # @method_decorator(csrf_protect)
+    # def dispatch(self, request, args, **kwargs):
+    #     return super().dispatch(request,args, **kwargs)

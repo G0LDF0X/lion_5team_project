@@ -25,36 +25,33 @@ SECRET_KEY = 'django-insecure-!p*v3!=0kgugwtv*at3!9z2$e5(hlvup%v&nnsny6@k1yw^um1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 CSRF_COOKIE_SECURE = False
 
 CSRF_COOKIE_HTTPONLY = False
 
-SESSION_COOKIE_SECURE = None
+SESSION_COOKIE_SECURE = False
 
 SESSION_COOKIE_HTTPONLY = False
 
-CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = [
-    
-    "X-CSRFToken",
-    "content-type",
-    
-]
+# CSRF_COOKIE_DOMAIN = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:8000",
+# ]
+   
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:5173", "http://127.0.0.1:8000"]
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-CSRF_COOKIE_DOMAIN = [
-    "http://localhost:5173",
     # Add other cookie domain here if needed
-]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    # Add other CSRF trusted origins here if needed
+    "http://127.0.0.1:8000",
+ 
+
 ]
+
+CSRF_COOKIE_NAME = 'csrftoken'
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -138,17 +135,31 @@ SIMPLE_JWT = {
 }
 
 
-# CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOW_ALL_ORIGINS = True
 
-# CSRF_COOKIE_SECURE = True
-# CSRF_USE_SESSIONS = True
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://localhost:5173',  # React 앱의 도메인
-#     'http://127.0.0.1:8000/',
-    
-# ]
+# CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = [
+    "X-CSRFToken",
+    "X-CSRF-Token",
+    "Content-Type",
+    "Authorization",
+    "Accept",
+    "Origin",
+    "User-Agent",
+    "DNT",
+    "Cache-Control",
+    "X-Requested-With",
+]
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",
+    "http://127.0.0.1:8000"
+]
+
+
+
 
 ROOT_URLCONF = 'backend.urls'
 
