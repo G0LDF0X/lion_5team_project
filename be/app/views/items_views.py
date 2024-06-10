@@ -1,4 +1,6 @@
-from rest_framework.decorators import api_view
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
@@ -8,6 +10,17 @@ import json
 from rest_framework import status
 from django.db.models import Q
 
+@api_view(['Post'])
+@permission_classes([IsAuthenticated])
+def view_item(request, pk):
+    item = get_object_or_404(Item, id=pk)
+    user = request.user
+    staytime = request.data.get('stayTime', None)
+    stay_time_interval = f'{staytime} seconds'
+
+    Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
+    serializer = ItemSerializer(item)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def get_items(request):
