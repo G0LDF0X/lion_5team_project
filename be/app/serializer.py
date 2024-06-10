@@ -159,7 +159,6 @@ class UserSerializerWithToken(UserSerializer):
 class User_Serializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField()
     follower = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = '__all__'
@@ -391,4 +390,9 @@ class InteractionSerializer(serializers.ModelSerializer):
 class RecommendationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recommendation
+        fields = '__all__'
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
         fields = '__all__'

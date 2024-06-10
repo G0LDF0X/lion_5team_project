@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from "../../api/axiosInstances";
 const MyBoard = ({ userInfo }) => {
   const [MyBoards, setMyBoards] = useState([]);
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     mainAxiosInstance.get('/users/profile/myboard/', {
@@ -22,9 +23,9 @@ const MyBoard = ({ userInfo }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {MyBoards.map((board) => (
           <div key={board.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <img className="w-full h-48 object-cover" src={board.image_url} alt={board.title} />
+            <img className="w-full h-48 object-cover" src={VITE_API_BASE_URL + board.image_url} alt={board.title} />
             <div className="p-4">
-              <Link to={`/board/detail/${board.id}`}>
+              <Link to={`/board/${board.id}`}>
                 <h5 className="text-lg font-semibold mb-2">
                   {board.title.length > 20
                     ? `${board.title.substring(0, 20)}...`

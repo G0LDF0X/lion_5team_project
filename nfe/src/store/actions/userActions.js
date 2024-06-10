@@ -160,3 +160,20 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
+
+export const deleteUserAccount = createAsyncThunk(
+  "user/deleteAccount",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { userInfo } = getState().user;
+      const response = await mainAxiosInstance.delete("/users/delete_account/", {
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,  
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

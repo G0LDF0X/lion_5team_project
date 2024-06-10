@@ -19,6 +19,7 @@ const StyledCheckbox = styled(Checkbox)({
 function BoardDetailModal({ open, handleClose }) {
   const dispatch = useDispatch();
   const boardId = useParams().id;
+  const [likeSuccess, setLikeSuccess] = useState(false);
   const [reply, setReply] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const [replyCreated, setReplyCreated] = useState(false);
@@ -33,6 +34,7 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
+      setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
       }
@@ -40,28 +42,32 @@ function BoardDetailModal({ open, handleClose }) {
         setIsLiked(false);  
       }
     }
-  }, [dispatch, boardId, boardDetail?.liked_by_user]);
+  }, [dispatch, boardId, boardDetail?.liked_by_user, likeSuccess]);
 
   const likeHandler = () => {
     if (userInfo) {
       if (!boardDetail.liked_by_user) {
-        mainAxiosInstance.put(
+        const res = mainAxiosInstance.put(
           `/board/like/${boardId}/`,
           {},
           {
             headers: { Authorization: `Bearer ${userInfo.access}` },
           }
         );
+        if (res) {
+          setLikeSuccess(true);
+        }
       } else {
-        mainAxiosInstance.delete(
+        const res = mainAxiosInstance.delete(
           `/board/like/${boardId}/`,
-          {},
           {
             headers: { Authorization: `Bearer ${userInfo.access}` },
           }
         );
+        if (res) {
+          setLikeSuccess(true);
+        }
       }
-      dispatch(getBoardDetails(boardId));
     }
   };
 

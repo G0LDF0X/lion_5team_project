@@ -162,27 +162,23 @@ def handle_like(request, pk):
     board = get_object_or_404(Board, id=pk)
 
     if request.method == 'PUT':
-        interaction, created = Interaction.objects.get_or_create(
-            user_id=user, content_type='board', content_id=board.id, interaction_type='like'
+        created = Interaction.objects.create(
+            user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
         )
         if created:
             board.like += 1
             board.save(update_fields=['like'])
-            return Response('like added', status=status.HTTP_201_CREATED)
-        else:
-            return Response('user already liked this post', status=status.HTTP_200_OK)
+            return Response('like added')
     
     if request.method == 'DELETE':
         interaction = Interaction.objects.filter(
-            user_id=user, content_type='board', content_id=board.id, interaction_type='like'
+            user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
         ).first()
         if interaction:
             board.like -= 1
             board.save(update_fields=['like'])
             interaction.delete()
-            return Response('like deleted', status=status.HTTP_204_NO_CONTENT)
-        else:
-            return Response('like not found', status=status.HTTP_404_NOT_FOUND)
+            return Response('like deleted')
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -213,4 +209,3 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
-

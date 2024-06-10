@@ -9,6 +9,7 @@ import MyBoard from "../components/profilescreen/MyBoard";
 import Follow from "../components/profilescreen/Follow";
 import UserQnA from "../components/profilescreen/UserQnA";
 import Bookmark from "../components/profilescreen/Bookmark";
+import Like from "../components/profilescreen/Like";
 import { Tab, Tabs, Box } from "@mui/material";
 
 
@@ -99,7 +100,7 @@ function UserProfileScreen() {
             <Bookmark bookMarkItems={bookMarkItems} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={5}>
-            Item Seven
+            <Like userInfo={userInfo} />
           </CustomTabPanel>
         </Box>
          
