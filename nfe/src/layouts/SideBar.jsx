@@ -31,18 +31,18 @@ export default function SideBar({ toggleDrawer, open }) {
         <List>
           <Link to="/users/profile">
             <ListItem disablePadding>
+                  {userInfo && userInfo.image_url ? (
               <ListItemButton>
                 <ListItemIcon>
-                  {userInfo && userInfo.image_url ? (
                 <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+                </ListItemIcon>
+                <ListItemText className="text-gray-700" primary={`${userInfo.nickname}`} />
+              </ListItemButton>
               ) : (
                 <Avatar />
 
               )}
 
-                </ListItemIcon>
-                <ListItemText className="text-gray-700" primary={`${userInfo.nickname}`} />
-              </ListItemButton>
             </ListItem>
           </Link>
           <Link to="/users/myshopping">
