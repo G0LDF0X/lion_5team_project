@@ -46,6 +46,7 @@ function HomeScreen() {
           height: '400px', // Ensure the height is fixed to avoid layout shifts
         }}
       >
+        {userInfo? null : (
         <div className="container mx-auto px-4 flex flex-col items-end text-right">
           <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-pink-800">
             Welcome to PetPals
@@ -61,6 +62,7 @@ function HomeScreen() {
             Sign In
           </Button>
         </div>
+        )}
       </section>
 
       <motion.section

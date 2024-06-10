@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { mainAxiosInstance } from "../../api/axiosInstances";
+import { Link } from "react-router-dom";
 
 
 const Like = ({ userId }) => {
@@ -32,6 +33,7 @@ const Like = ({ userId }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             
             {likes&&likes.map((like) => (
+                <Link to={`/board/${like.id}`}>
             <div key={like.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <img className="w-full h-48 object-cover" src={VITE_API_BASE_URL + like.image_url} alt={like.title} />
                 <div className="p-4">
@@ -49,6 +51,7 @@ const Like = ({ userId }) => {
                 </p>
                 </div>
             </div>
+            </Link>
             ))} 
             
         </div>
