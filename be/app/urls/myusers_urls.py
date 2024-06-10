@@ -30,4 +30,5 @@ urlpatterns = [
     path('profile/myboard/', get_MyBoard, name='get_myboard'),
     path('profile/myuserqna/', getMyUserQnA, name='my_user_qna'),
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
+    path('delete_account/', delete_account, name='delete-account'),
 ]
