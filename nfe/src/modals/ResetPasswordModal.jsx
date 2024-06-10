@@ -86,59 +86,67 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 //   if (!isOpen) return null;
 
 
-async function getCsrfToken() {
-  try {
-    // 토큰 가져오기
-    const response = await mainAxiosInstance.get('/users/get-csrf-token/');
-    console.log(response.data.csrftoken);
-    return response.data.csrftoken;
+// async function getCsrfToken() {
+//   try {
+//     // 토큰 가져오기
+//     const response = await mainAxiosInstance.get('/users/get-csrf-token/');
+//     console.log(response.data.csrftoken);
+//     return response.data.csrftoken;
   
 
-  } catch (error) {
-    console.error('CSRF 토큰을 가져오는 중 오류가 발생했습니다:', error);
-    throw error;
-  }
+//   } catch (error) {
+//     console.error('CSRF 토큰을 가져오는 중 오류가 발생했습니다:', error);
+//     throw error;
+//   }
   
-}
-getCsrfToken()
+// }
+// getCsrfToken()
 
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          // Does this cookie string begin with the name we want?
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-          }
-      }
-  }
-  return cookieValue;
 
-}
-const csrfToken = getCookie('csrftoken');
 
-console.log(document.cookie); // 쿠키 전체를 출력합니다.
-console.log(csrfToken); // 'csrftoken' 쿠키의 값을 출력합니다.
+// function getCookie(name) {
+//   let cookieValue = null;
+//   if (document.cookie && document.cookie !== '') {
+//       const cookies = document.cookie.split(';');
+//       for (let i = 0; i < cookies.length; i++) {
+//           const cookie = cookies[i].trim();
+//           // Does this cookie string begin with the name we want?
+//           if (cookie.substring(0, name.length + 1) === (name + '=')) {
+//               cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+//               break;
+//           }
+//       }
+//   }
+//   return cookieValue;
 
+// }
+// const csrfToken = getCookie('csrftoken');
+// console.log(csrfToken);
+
+// console.log(document.cookie); // 쿠키 전체를 출력합니다.
+// console.log(csrfToken); // 'csrftoken' 쿠키의 값을 출력합니다.
+
+import Cookies from 'js-cookie';
 
 function ResetPasswordModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
   const [resetStatus, setResetStatus] = useState('');
-  // const [csrfToken, setCsrfToken] = useState('');
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    const response = await mainAxiosInstance.get('/users/get-csrf-token/');
+    const csrfToken = response.data.csrftoken;
+    console.log(csrfToken);
+
 
     try {
+      
       if (!csrfToken) {
         throw new Error('CSRF 토큰을 찾을 수 없습니다');
     
       }
 
-      const response = await mainAxiosInstance.post(
+      const postresponse = await mainAxiosInstance.post(
         `/users/password-reset/`, {
           email: email
         }, {
@@ -147,7 +155,7 @@ function ResetPasswordModal({ isOpen, onClose }) {
           }
         }
       );
-      if (response.status >= 200 && response.status < 300) {
+      if (postresponse.status >= 200 && postresponse.status < 300) {
         console.log('CSRF 토큰이 유효합니다');
       } else {
         console.log('CSRF 토큰이 유효하지 않습니다');

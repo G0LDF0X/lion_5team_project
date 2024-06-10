@@ -13,7 +13,6 @@ from django.db.models import Q
 def get_items(request):
     
     query = request.GET.get('query', '')
-    Interaction.objects.create(user_id=request.user, content_type='item', content_id=0, interaction_type='search', stay_time=request.data.get('stay_time', None))
     suggestions = request.query_params.get('s','')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
