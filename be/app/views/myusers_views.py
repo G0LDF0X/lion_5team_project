@@ -383,7 +383,6 @@ def follow_save(request, pk):
         return Response({'follow_exists': follow_exists,  'followers_count': followers_count, 'following_count': following_count}, status=201)
     
 
-<<<<<<< HEAD
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
