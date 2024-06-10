@@ -175,6 +175,21 @@ def my_bookmarks(request):
     serializer = BookmarkSerializer(bookmarks, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_likes(request, pk):
+    user = User.objects.get(id=pk)
+    likes = Interaction.objects.filter(user_id_id=user, interaction_type='like')
+    boards = []
+    if likes.exists():
+        for like in likes:
+            boards.append(Board.objects.get(id=like.content_id))
+        serializer = BoardSerializer(boards, many=True)
+        return Response(serializer.data)    
+    else:
+        return Response("No likes")
+
+    
+    
 
 @api_view(['PUT'])
 def add_bookmark(request, pk):
@@ -213,9 +228,17 @@ def delete_bookmark(request, pk):
 @api_view(['GET'])
 def getUserById(request, pk):
     user = User.objects.get(id=pk)
+    # like = Interaction.objects.filter(user_id_id=user, interaction_type='like')
     serializer = User_Serializer(user, many=False)
+    # return Response({**serializer.data, 'like': like})
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_user_like(request, pk):
+    user = User.objects.get(id=pk)
+    like = Interaction.objects.filter(user_id_id=user, interaction_type='like')
+    serializer = User_Serializer(user, many=False)
+    return Response({**serializer.data, 'like': like})
 
 @api_view(['GET'])
 def get_userprofile(request, pk):
@@ -360,6 +383,7 @@ def follow_save(request, pk):
         return Response({'follow_exists': follow_exists,  'followers_count': followers_count, 'following_count': following_count}, status=201)
     
 
+<<<<<<< HEAD
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -394,3 +418,33 @@ class CustomPasswordResetView(PasswordResetView):
     # @method_decorator(csrf_protect)
     # def dispatch(self, request, args, **kwargs):
     #     return super().dispatch(request,args, **kwargs)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    try:
+        user = User.objects.get(username=request.user)
+        auth_user_instance = auth_user.objects.get(username=request.user)
+
+        # 사용자와 관련된 데이터 삭제
+        Follow.objects.filter(follower_id=user).delete()
+        Follow.objects.filter(followed_id=user).delete()
+        Review.objects.filter(user_id=user).delete()
+        Bookmark.objects.filter(user_id=user).delete()
+        Board.objects.filter(user_id=user).delete()
+        Item_QnA.objects.filter(user_id=user).delete()
+        User_Answer.objects.filter(user_id=user).delete()
+
+        # 사용자와 관련된 모든 주문 삭제
+        Order.objects.filter(user_id=user).delete()
+        OrderItem.objects.filter(order_id__user_id=user).delete()
+        
+        user.delete()
+        auth_user_instance.delete()
+
+        return Response({"message": "Account deleted successfully"}, status=204)
+    except User.DoesNotExist:
+
+        return Response({"error": "User not found"}, status=404)
+

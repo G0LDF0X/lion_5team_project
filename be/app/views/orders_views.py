@@ -2,13 +2,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime, timedelta
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
+from rest_framework.decorators import permission_classes, authentication_classes
 from app.models import OrderItem, User, Cart, Order, Item, Shipping_Address
 from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
 
 
 @api_view(['GET'])
+@authentication_classes([TokenAuthentication])
 def order_item_detail(request, pk):
     try:
         order_item = OrderItem.objects.filter(order_id=pk)

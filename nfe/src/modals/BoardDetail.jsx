@@ -8,6 +8,7 @@ import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
 import { FavoriteBorder, Favorite, Share } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import AddIcon from '@mui/icons-material/Add';
 
 const StyledCheckbox = styled(Checkbox)({
   "&.Mui-checked": {
@@ -18,6 +19,7 @@ const StyledCheckbox = styled(Checkbox)({
 function BoardDetailModal({ open, handleClose }) {
   const dispatch = useDispatch();
   const boardId = useParams().id;
+  const [likeSuccess, setLikeSuccess] = useState(false);
   const [reply, setReply] = useState("");
   const [isLiked, setIsLiked] = useState(false);
   const [replyCreated, setReplyCreated] = useState(false);
@@ -32,32 +34,40 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
+      setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
       }
+      else {
+        setIsLiked(false);  
+      }
     }
-  }, [dispatch, boardId, boardDetail?.liked_by_user]);
+  }, [dispatch, boardId, boardDetail?.liked_by_user, likeSuccess]);
 
   const likeHandler = () => {
     if (userInfo) {
       if (!boardDetail.liked_by_user) {
-        mainAxiosInstance.put(
+        const res = mainAxiosInstance.put(
           `/board/like/${boardId}/`,
           {},
           {
             headers: { Authorization: `Bearer ${userInfo.access}` },
           }
         );
+        if (res) {
+          setLikeSuccess(true);
+        }
       } else {
-        mainAxiosInstance.delete(
+        const res = mainAxiosInstance.delete(
           `/board/like/${boardId}/`,
-          {},
           {
             headers: { Authorization: `Bearer ${userInfo.access}` },
           }
         );
+        if (res) {
+          setLikeSuccess(true);
+        }
       }
-      dispatch(getBoardDetails(boardId));
     }
   };
 
@@ -179,7 +189,9 @@ function BoardDetailModal({ open, handleClose }) {
                 {replies.map((reply, index) => (
                   <div key={index} className="border-b pb-2 mb-2">
                     <p className="font-bold">
+                      <Link to={`/users/${reply.user_id}`}>
                       {reply.username || reply.nickname}
+                      </Link>
                     </p>
                     <p>{reply.content}</p>
                   </div>

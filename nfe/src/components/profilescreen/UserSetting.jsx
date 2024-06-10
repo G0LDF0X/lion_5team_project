@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { updateUserProfile, getUserDetail, logout } from "../../store/actions/userActions";
+import { updateUserProfile, getUserDetail, logout, deleteUserAccount } from "../../store/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
 function UserSetting() {
@@ -9,19 +9,28 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
   const user = useSelector((state) => state.user);
-  const { userInfo, userDetail, success } = user;
+  const { userInfo, userDetail, updateSuccess, deleteSuccess } = user;
   const [message, setMessage] = useState("");
   const nicknameRef = useRef();
   const emailRef = useRef();
-``
+
   useEffect(() => {
-    if (success===true) {
+    if (deleteSuccess) {
+      alert('회원 탈퇴가 완료되었습니다.');
+      dispatch(logout());
+      navigate("/");
+    }
+  }, [deleteSuccess, navigate, dispatch]);
+
+
+  useEffect(() => {
+    if (updateSuccess) {
       alert('수정이 완료되었습니다.');
       // window.location.reload();
         dispatch(logout());
         navigate("/");
     }
-  }, [success, dispatch]);
+  }, [updateSuccess, dispatch, navigate]);
 
   useEffect(() => {
     if (userInfo) {
@@ -71,6 +80,16 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
       })
     );
   };
+
+  const handleDeleteAccount = () => {
+    if (window.confirm('정말로 탈퇴하시겠습니까?')) {
+      dispatch(deleteUserAccount())
+        .catch((error) => {
+          console.error('회원 탈퇴 실패:', error);
+        });
+    }
+  };
+
 
   return (
     <div className="container mx-auto p-4">
@@ -134,6 +153,12 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700"
               >
                 Update
+              </button>
+              <button 
+                type = "button"
+                onClick={handleDeleteAccount} 
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700">
+                Delete Account
               </button>
             </div>
           </form>

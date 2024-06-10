@@ -1,7 +1,5 @@
 from django.urls import path
 from app.views.myusers_views import *
-from django.contrib.auth import views as auth_views
-
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -18,6 +16,7 @@ urlpatterns = [
     path('<int:pk>/', get_userprofile, name='user_profile'),
     path('updateImage/', update_User_Profile_Image, name='update_user_image'),
     path('<int:pk>/bookmark/', get_other_boomark, name='other_bookmark'),
+    path('<int:pk>/likes/', get_likes, name='user_likes'),
     path('<int:pk>/myqna/', get_other_qna, name='other_item_qna'),
     path('<int:pk>/myanswer/', get_other_answer, name='other_item_answer'),
     path('<int:pk>/review/', get_other_review, name='other_review'),
@@ -32,11 +31,5 @@ urlpatterns = [
     path('profile/myboard/', get_MyBoard, name='get_myboard'),
     path('profile/myuserqna/', getMyUserQnA, name='my_user_qna'),
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
-    # 비밀번호 재설정
-    path('password-reset/', CustomPasswordResetView.as_view(), name='custom_password_reset'), # 이메일 입력
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'), # 이메일 발송 완료
-    path('password-reset-confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'), #
-    path('password-reset-complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
-    path('get-csrf-token/', get_csrf_token, name='get_csrf_token'),
-
+    path('delete_account/', delete_account, name='delete-account'),
 ]

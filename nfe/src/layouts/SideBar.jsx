@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, ListItemIcon } from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, ListItemIcon, Avatar } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -13,7 +13,8 @@ export default function SideBar({ toggleDrawer, open }) {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
   const handleLogout = () => {
     dispatch(logout());
@@ -32,9 +33,12 @@ export default function SideBar({ toggleDrawer, open }) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon className="text-gray-700" />
+                  
+                <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+
+
                 </ListItemIcon>
-                <ListItemText className="text-gray-700" primary="프로필" />
+                <ListItemText className="text-gray-700" primary={`${userInfo.nickname}`} />
               </ListItemButton>
             </ListItem>
           </Link>
