@@ -53,6 +53,11 @@ function Orderlist({ orders }) {
                               Details
                             </Button>
                           </Link>
+                          {/* <a href={`http://127.0.0.1:8000/order/detail/${order.id}`}>
+                            <Button variant="outlined" color="primary" size="small">
+                              Details
+                            </Button>
+                          </a> */}
                         </TableCell>
                       </TableRow>
                     ))}

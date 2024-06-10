@@ -209,4 +209,3 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
-
