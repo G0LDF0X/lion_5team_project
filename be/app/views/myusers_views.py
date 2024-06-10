@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
-from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer
+from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer, Interaction
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
 
 
@@ -181,6 +181,13 @@ def add_bookmark(request, pk):
           item_id=item,
           created_at=datetime.datetime.now()
           )
+    Interaction.objects.create(
+        user_id_id = user.id,
+        content_type = 'item'  ,
+        content_id = item.id,
+        interaction_type = 'bookmark',
+        
+    )
     # serializer = BookmarkSerializer(bookmark)
     return Response("Bookmark added", status=201)   
 
@@ -191,8 +198,11 @@ def delete_bookmark(request, pk):
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=pk)
     bookmarks = Bookmark.objects.filter(user_id_id=user.id, item_id=item)
+    bookmark_interactions = Interaction.objects.filter(user_id_id= user.id, content_id =pk, interaction_type = 'bookmark')
     for bookmark in bookmarks:  
         bookmark.delete()
+    for bookmark_interaction in bookmark_interactions:
+        bookmark_interaction.delete()
     return Response("Bookmark deleted", status=201)
 
 @api_view(['GET'])

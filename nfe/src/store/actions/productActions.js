@@ -12,11 +12,10 @@ export const listProducts = createAsyncThunk(
       if (category.length) {
         category.forEach((cat) => params.append('category', cat));
       }
-      console.log(suggestions);
       if (suggestions) {
         params.append('s', suggestions);
       }
-      const url = `/items?${params.toString()}`;
+      const url = `items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
       return response.data;
     } catch (error) {

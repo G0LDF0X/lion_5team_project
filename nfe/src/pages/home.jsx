@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
-import { listBoards, getBoardDetails } from "../store/actions/boardActions";
+import { listBoards } from "../store/actions/boardActions";
 import { listQNA } from "../store/actions/qnaActions";
 import ProductCarousel from "../components/homescreen/ProductCarousel";
 import BoardCarousel from "../components/homescreen/BoardCarousel";
 import QnASection from "../components/homescreen/QnASection";
 import { motion } from "framer-motion";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useLocation } from "react-router-dom";
 import "../animations.css";
-import BoardDetailModal from "../modals/BoardDetail";
-import { mainAxiosInstance } from "../api/axiosInstances";
 
 function HomeScreen() {
   const dispatch = useDispatch();
   const { openModal } = useOutletContext();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedBoardId, setSelectedBoardId] = useState(null);
+  const location = useLocation(); 
+
 
   const productList = useSelector((state) => state.productList);
   const { loading: productLoading, error: productError, products } = productList;
@@ -27,23 +25,16 @@ function HomeScreen() {
 
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
+    console.log(location)
   }, [dispatch]);
 
-  const handleOpenModal = (id) => {
-    setSelectedBoardId(id);
-    dispatch(getBoardDetails(id));
-    setModalOpen(true);
-    mainAxiosInstance.post(`/board/detail/${id}/add_show/`);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
 
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
@@ -92,18 +83,12 @@ function HomeScreen() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <BoardCarousel
+        
           loading={boardLoading}
           error={boardError}
           boards={boards}
-          handleOpenModal={handleOpenModal}
         />
       </motion.section>
-
-      <BoardDetailModal
-        open={modalOpen}
-        handleClose={handleCloseModal}
-        boardId={selectedBoardId}
-      />
 
       <motion.section
         className="my-16"

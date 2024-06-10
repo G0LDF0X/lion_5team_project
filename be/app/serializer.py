@@ -18,15 +18,28 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Reply
         fields = '__all__'
 
+class ImageTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image_Tag
+        fields = ['x', 'y', 'tag']
+
 class BoardSerializer(serializers.ModelSerializer):
     reply_set = ReplySerializer(many=True, read_only=True)
     username = serializers.ReadOnlyField(source='user_id.username')
     user_image = serializers.ImageField(source='user_id.image_url')
     nickname = serializers.ReadOnlyField(source='user_id.nickname')
+    tags = ImageTagSerializer(many=True, required=False)
 
     class Meta:
         model = Board
-        fields =  '__all__'
+        fields = '__all__'
+
+    def create(self, validated_data):
+        tags_data = validated_data.pop('tags', [])
+        board = Board.objects.create(**validated_data)
+        for tag_data in tags_data:
+            Image_Tag.objects.create(board=board, **tag_data)
+        return board
 
 class ReviewSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source='user_id.username')

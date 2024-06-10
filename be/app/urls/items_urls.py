@@ -1,10 +1,10 @@
 from django.urls import path
-from app.views.items_views import get_items, get_category, item_details, create_item, delete_item, update_item, create_review, update_review, delete_review, create_qna, update_qna, delete_qna, get_reviews, get_tag, uploadImage, get_review, upload_image, get_my_reviews, get_my_items, get_qna
+from app.views.items_views import get_items, get_category, item_details, create_item, delete_item, update_item, create_review, update_review, delete_review, create_qna, update_qna, delete_qna, get_reviews, get_tag, uploadImage, get_review, upload_image, get_my_reviews, get_my_items, get_qna, search_Interaction
 
 urlpatterns = [
     path('', get_items, name="item_index"),
     path('myitems/', get_my_items, name="get_my_items"),
-    # path('search/suggestions/', search_suggestions, name='search-suggestions'),
+    path('search/', search_Interaction, name="search_Interaction"),
     path('category/', get_category, name="get_category"),
     path('detail/<int:pk>/', item_details, name="item_details"),
     path('create/', create_item, name="create_item"),

@@ -9,7 +9,7 @@ import {
   Box,
   Paper,
 } from "@mui/material";
-import { searchAxiosInstance } from "../api/axiosInstances";
+import { mainAxiosInstance, searchAxiosInstance } from "../api/axiosInstances";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { chosungIncludes } from "es-hangul";
@@ -21,6 +21,8 @@ function SearchBox() {
   const location = useLocation();
   const productList = useSelector((state) => state.productList);
   const { products } = productList;
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
 
   const fetchSuggestions = async (query) => {
     try {
@@ -84,6 +86,11 @@ function SearchBox() {
       setSuggestions([]);
     } else {
       navigate(location.pathname);
+    }
+    if (userInfo) {
+     mainAxiosInstance.post("/items/search/", { query: keyword }, {
+        headers: { Authorization: `Bearer ${userInfo.access}` },
+     });
     }
   };
 

@@ -11,13 +11,11 @@ from django.db.models import Q
 
 @api_view(['GET'])
 def get_items(request):
-    
     query = request.GET.get('query', '')
-    # Interaction.objects.create(user_id=request.user, content_type='item', content_id=0, interaction_type='search', stay_time=request.data.get('stay_time', None))
+
     suggestions = request.query_params.get('s','')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
-
     if suggestions:
         suggestions_list = suggestions.split(',')
     
@@ -39,7 +37,7 @@ def get_items(request):
     if query:
         query_condition = Q(name__icontains=query) | Q(description__icontains=query)
         item_query |= query_condition
-    print(item_query)   
+    # print(item_query)   
     items = Item.objects.filter(item_query)
     # if categories and suggestions_list:
     #     items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
@@ -92,6 +90,20 @@ def create_item(request):
     serializer = ItemSerializer(item, many=False)
 
     return Response(serializer.data)
+
+@api_view(['POST'])
+def search_Interaction(request):
+    query = request.data['query']
+    user = User.objects.get(username=request.user)
+    
+    Interaction.objects.create(
+        user_id_id = user.id,
+        content_type='item',
+        interaction_type = 'search',
+        search_query=query
+    )
+    return Response('Interaction created')
+
 
 
 @api_view(['PUT'])
@@ -162,6 +174,12 @@ def create_review(request, item_id):
         rate=5,
         image_url=''
     )
+    # Interaction.objects.create(
+    #     user_id_id = user.id,
+    #     content_type='item',
+    #     interaction_type = 'review',
+    #     item_id_id = item_id
+    # )
 
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data, status=status.HTTP_201_CREATED)

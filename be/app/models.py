@@ -194,12 +194,13 @@ class Image(models.Model):
     image_url = models.ImageField(max_length=1000)
 
 class Image_Tag(models.Model):
-    board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
-    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
     x = models.IntegerField()
     y = models.IntegerField()
     tag = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"Tag: {self.tag} on board {self.board.title} at ({self.x}, {self.y})"
 class Reply(models.Model):
     # 외래키
     board_id = models.ForeignKey(Board, on_delete=models.CASCADE)
@@ -254,7 +255,7 @@ class Pet(models.Model):
 class Interaction(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     content_type = models.CharField(max_length=10, choices=[('board', 'Board'), ('item', 'Item')])
-    content_id = models.IntegerField()  
+    content_id = models.IntegerField(null=True, blank=True)  
     interaction_type = models.CharField(max_length=50, choices=[('view', 'View'), ('like', 'Like'), ('search', 'Search'), ('review', 'Review'), ('purchase', 'Purchase'), ('bookmark', 'Bookmark'), ('comment', 'Comment')])
     timestamp = models.DateTimeField(auto_now_add=True)
     stay_time = models.DurationField(null=True, blank=True)

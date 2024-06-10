@@ -8,6 +8,7 @@ const useShow = (id) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${userInfo.access}`,
                 },
             }
         )

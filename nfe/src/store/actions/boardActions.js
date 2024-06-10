@@ -16,7 +16,7 @@ const getAuthHeaders = (getState) => {
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${userInfo.access}`,
-    ㄴ,
+    
   };
 };
 
@@ -34,10 +34,26 @@ export const listBoards = createAsyncThunk(
 
 export const getBoardDetails = createAsyncThunk(
   "boardDetails/getBoardDetails",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
+      const {
+        user: { userInfo },
+      } = getState();
+      if (!userInfo) {
+       const res = await mainAxiosInstance.get(`/board/detail/${id}/`);
+        return res.data;
+      }
+      else{
+      const res = await mainAxiosInstance.get(`/board/detail/${id}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization  ": `Bearer ${userInfo.access}`,
+          },
+        }
+        );
       return res.data;
+    }
     } catch (error) {
       return rejectWithValue(handleError(error));
     }
@@ -46,14 +62,25 @@ export const getBoardDetails = createAsyncThunk(
 
 export const createBoard = createAsyncThunk(
   "boardCreate/createBoard",
-  async ({ board }, { getState, rejectWithValue }) => {
+  async (formData, { getState, rejectWithValue }) => {
     try {
-      const headers = getAuthHeaders(getState);
-      const res = await mainAxiosInstance.post(`/board/create/`, board, {
-        headers,
-      });
+      const {
+        user: { userInfo },
+      } = getState();
+
+      // Debugging logs to verify token and headers
+      console.log('User Info:', userInfo);
+      console.log('Access Token:', userInfo?.access);
+
+      const res = await mainAxiosInstance.post(`/board/create/`, formData, {
+        headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    });
       return res.data;
     } catch (error) {
+      console.error('Error:', error);
       return rejectWithValue(handleError(error));
     }
   }
