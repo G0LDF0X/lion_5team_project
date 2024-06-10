@@ -9,6 +9,12 @@ const Like = ({ userInfo }) => {
     useEffect(() => {
         mainAxiosInstance.get(`/users/${userInfo.id}/likes/`)
         .then(response => {
+            if(response.data === "No likes")
+            {
+                setLikes([]);
+            }
+            else
+            
             setLikes(response.data);
         })
         .catch(error => console.error('Error:', error));

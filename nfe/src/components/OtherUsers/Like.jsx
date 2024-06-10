@@ -9,17 +9,29 @@ const Like = ({ userId }) => {
     useEffect(() => {
         mainAxiosInstance.get(`/users/${userId}/likes/`)
         .then(response => {
+            if(response.data === "No likes")
+            {
+                setLikes([]);
+            }
+            else
             setLikes(response.data);
         })
         .catch(error => console.error('Error:', error));
         
-    }, []);
+    }, [userId]);
     
+    if (likes&&likes.length === 0) {
+        return (
+            <h1>좋아요한 게시물이 없습니다.</h1>
+        );
+    }
+    else {
+
     return (
         <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {likes.length === 0 && <h1>좋아요한 게시물이 없습니다.</h1>}    
-            {likes?.map((like) => (
+            
+            {likes&&likes.map((like) => (
             <div key={like.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <img className="w-full h-48 object-cover" src={VITE_API_BASE_URL + like.image_url} alt={like.title} />
                 <div className="p-4">
@@ -37,10 +49,12 @@ const Like = ({ userId }) => {
                 </p>
                 </div>
             </div>
-            ))}
+            ))} 
+            
         </div>
         </div>
     );
     }
+};
 
 export default Like;

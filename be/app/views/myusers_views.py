@@ -175,10 +175,14 @@ def get_likes(request, pk):
     user = User.objects.get(id=pk)
     likes = Interaction.objects.filter(user_id_id=user, interaction_type='like')
     boards = []
-    for like in likes:
-        boards.append(Board.objects.get(id=like.content_id))
-    serializer = BoardSerializer(boards, many=True)
-    return Response(serializer.data)    
+    if likes.exists():
+        for like in likes:
+            boards.append(Board.objects.get(id=like.content_id))
+        serializer = BoardSerializer(boards, many=True)
+        return Response(serializer.data)    
+    else:
+        return Response("No likes")
+
     
     
 

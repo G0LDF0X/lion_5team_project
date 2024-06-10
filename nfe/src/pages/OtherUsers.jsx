@@ -89,7 +89,7 @@ function OtherUserProfile() {
             {/* <Bookmark bookMarkItems={bookMarkItems} /> */}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={5}>
-            <Like UserId={id} />
+            <Like userId={id} />
           </CustomTabPanel>
         </Box>
          
