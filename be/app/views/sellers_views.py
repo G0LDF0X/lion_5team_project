@@ -133,6 +133,7 @@ def Seller_Apply_Save(request):
         else:
             return Response({'error': 'User is not a seller'}, status=status.HTTP_400_BAD_REQUEST)
         
+
 @api_view(['GET'])
 def MonthlySellerRevenueView(request, pk):
     try:

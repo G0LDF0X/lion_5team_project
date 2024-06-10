@@ -27,7 +27,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
-  
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
   };
@@ -97,7 +97,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             <div className="flex items-center">
               <IconButton onClick={openSideBar} color="inherit">
                 {userInfo.image_url ? (
-                  <Avatar src={userInfo.image_url} />
+                  <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
                 ) : (
                   <Avatar>{userInfo.username[0]}</Avatar>
                 )}
