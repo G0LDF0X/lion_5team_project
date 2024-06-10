@@ -102,7 +102,7 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 // }
 // getCsrfToken()
 
-
+ import Cookies from 'js-cookie';
 
 // function getCookie(name) {
 //   let cookieValue = null;
@@ -120,13 +120,10 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 //   return cookieValue;
 
 // }
-// const csrfToken = getCookie('csrftoken');
-// console.log(csrfToken);
 
-// console.log(document.cookie); // 쿠키 전체를 출력합니다.
-// console.log(csrfToken); // 'csrftoken' 쿠키의 값을 출력합니다.
 
-import Cookies from 'js-cookie';
+// 'csrftoken' 쿠키의 값을 출력합니다.
+
 
 function ResetPasswordModal({ isOpen, onClose }) {
   const [email, setEmail] = useState('');
@@ -134,28 +131,34 @@ function ResetPasswordModal({ isOpen, onClose }) {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+ 
     const response = await mainAxiosInstance.get('/users/get-csrf-token/');
     const csrfToken = response.data.csrftoken;
-    console.log(csrfToken);
 
+    // 받아온 CSRF 토큰을 쿠키에 저장합니다.
+    Cookies.set('X-CSRF-Token', csrfToken);
+
+    // 쿠키에서 CSRF 토큰을 읽어옵니다.
+    const csrfTokenFromCookie = Cookies.get('X-CSRF-Token');
+    console.log("csrfTokenFromCookie :", csrfTokenFromCookie);
 
     try {
       
-      if (!csrfToken) {
+      if (!csrfTokenFromCookie) {
         throw new Error('CSRF 토큰을 찾을 수 없습니다');
     
       }
 
-      const postresponse = await mainAxiosInstance.post(
+      const postResponse = await mainAxiosInstance.post(
         `/users/password-reset/`, {
           email: email
         }, {
           headers: {
-            'X-CSRFToken': csrfToken
+            'X-CSRF-Token': csrfTokenFromCookie
           }
         }
       );
-      if (postresponse.status >= 200 && postresponse.status < 300) {
+      if (postResponse.status >= 200 && postResponse.status < 300) {
         console.log('CSRF 토큰이 유효합니다');
       } else {
         console.log('CSRF 토큰이 유효하지 않습니다');
