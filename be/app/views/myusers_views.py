@@ -208,9 +208,17 @@ def delete_bookmark(request, pk):
 @api_view(['GET'])
 def getUserById(request, pk):
     user = User.objects.get(id=pk)
+    # like = Interaction.objects.filter(user_id_id=user, interaction_type='like')
     serializer = User_Serializer(user, many=False)
+    # return Response({**serializer.data, 'like': like})
     return Response(serializer.data)
 
+@api_view(['GET'])
+def get_user_like(request, pk):
+    user = User.objects.get(id=pk)
+    like = Interaction.objects.filter(user_id_id=user, interaction_type='like')
+    serializer = User_Serializer(user, many=False)
+    return Response({**serializer.data, 'like': like})
 
 @api_view(['GET'])
 def get_userprofile(request, pk):

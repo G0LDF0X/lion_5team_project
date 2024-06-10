@@ -159,7 +159,6 @@ class UserSerializerWithToken(UserSerializer):
 class User_Serializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField()
     follower = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = '__all__'
