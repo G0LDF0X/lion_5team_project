@@ -52,9 +52,9 @@ function OrderDetail() {
     // Define the parameters
     const payment_id = item.payment_id; // Use item.payment_id
 
-    console.log("payment id 입니다 ~!");
+    console.log("payment id는");
     console.log(payment_id);
-    console.log(userInfo.access);
+    // console.log(userInfo.access);
     // Define the body
     const body = {
       // Add the data you want to send in the request body
@@ -63,7 +63,7 @@ function OrderDetail() {
   
     // Send the POST request
     try {
-      const response = await mainAxiosInstance.post(`/payment/refund/${payment_id}`,  {
+      const response = await mainAxiosInstance.post(`/payment/refund/${payment_id}`, body, {
         headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${userInfo.access}`
@@ -71,6 +71,9 @@ function OrderDetail() {
       });
   
       console.log(response.data);
+      // If the request is successful, show an alert and refresh the page
+      window.alert("환불요청이 처리되었습니다.");
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -95,9 +98,15 @@ function OrderDetail() {
           <img src={item.image}  className="w-64 h-64 object-cover mb-2" />
           <p className="mb-1">Item ID: {item.item_id}</p>
           <p className="mb-2">Order ID: {item.order_id}</p>
-          <Button variant="contained" color="primary" onClick={() => handleRefund(item)}>
-           환불하기
+          {item.is_refund ? (
+            <Button variant="contained" disabled style={{backgroundColor: 'yellow'}}>
+              환불완료
             </Button>
+          ) : (
+            <Button variant="contained" color="primary" onClick={() => handleRefund(item)}>
+              환불하기
+            </Button>
+          )}
           <p className="mb-1">Payment ID: {item.payment_id}</p>
           <p className="mb-1">Payment Details: {payment?.[item.payment_id]?.paymentId}</p>
         </div>
