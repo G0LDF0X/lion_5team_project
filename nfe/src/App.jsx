@@ -20,6 +20,7 @@ import MyShoppingScreen from './pages/MyShopping';
 import OtherUserProfile from './pages/OtherUsers';
 import ShippingScreen from './pages/Shipping';
 import BoardDetailModal from './modals/BoardDetail';
+import OrderDetail from './components/profilescreen/OrderDetail';
 
 const routers = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const routers = createBrowserRouter([
       { path: '/users/myshopping', element: <MyShoppingScreen /> },
       { path: '/users/:id', element: <OtherUserProfile /> },
       { path: '/shipping', element: <ShippingScreen /> },
+      { path: '/order/detail/:id', element: <OrderDetail /> },
     ]
   }
 ]);

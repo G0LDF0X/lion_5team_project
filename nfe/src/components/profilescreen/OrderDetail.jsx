@@ -22,35 +22,58 @@ function OrderDetail() {
           'Authorization': `Bearer ${userInfo.access}`
         }
       });
-      setOrder(response.data);
+  
+      const orderData = response.data;
+      setOrder(orderData);
+  
+      // Fetch payment details for each order item
+      orderData.forEach(async item => {
+        const paymentResponse = await mainAxiosInstance.get(`/payment/detail/${item.payment_id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${userInfo.access}`
+          }
+        });
+  
+        setPayment(prevPayments => ({
+          ...prevPayments,
+          [item.payment_id]: paymentResponse.data,
+        }));
+      });
     };
-    
-    const fetchPayment = async (paymentId) => {
-      const response = await mainAxiosInstance.get(`/payment/detail/${paymentId}`, {
+  
+    fetchOrder();
+  }, [id, userInfo.access]); // Removed orderItem from the dependency array
+
+
+  //백엔드로 환불요청 post 요청보낸다. 
+
+  const handleRefund = async (item) => {
+    // Define the parameters
+    const payment_id = item.payment_id; // Use item.payment_id
+
+    console.log("payment id 입니다 ~!");
+    console.log(payment_id);
+    console.log(userInfo.access);
+    // Define the body
+    const body = {
+      // Add the data you want to send in the request body
+
+    };
+  
+    // Send the POST request
+    try {
+      const response = await mainAxiosInstance.post(`/payment/refund/${payment_id}`,  {
         headers: {
           "Content-Type": "application/json",
           'Authorization': `Bearer ${userInfo.access}`
         }
       });
-      setPayment(prevPayments => ({
-        ...prevPayments,
-        [paymentId]: response.data,
-      }));
-    };
-
-    fetchOrder();
-
-    if (orderItem) {
-      orderItem.forEach(item => {
-        fetchPayment(item.payment_id);
-      });
+  
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
     }
-  }, [id, userInfo.access, orderItem]);
-
-
-  const handleRefund = () => {
-    console.log('환불하기 버튼이 클릭되었습니다.');
-   // 포트원 환불 api 호출 시작!!
   };
 
   
@@ -72,9 +95,9 @@ function OrderDetail() {
           <img src={item.image}  className="w-64 h-64 object-cover mb-2" />
           <p className="mb-1">Item ID: {item.item_id}</p>
           <p className="mb-2">Order ID: {item.order_id}</p>
-          <Button variant="contained" color="primary" onClick={handleRefund}>
-            환불하기
-          </Button>
+          <Button variant="contained" color="primary" onClick={() => handleRefund(item)}>
+           환불하기
+            </Button>
           <p className="mb-1">Payment ID: {item.payment_id}</p>
           <p className="mb-1">Payment Details: {payment?.[item.payment_id]?.paymentId}</p>
         </div>
