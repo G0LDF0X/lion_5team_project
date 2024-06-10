@@ -5,6 +5,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from .schemas import ChatRequest, ChatResponse
+import json
 
 load_dotenv('./chatbot/.env')
 
@@ -29,6 +30,12 @@ app.add_middleware(
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+def get_training_data():
+    with open('chatbot/train.jsonl', 'r', encoding='utf-8') as f:
+        for line in f:
+            data = json.loads(line)
+            yield data
+
 @app.post("/api/chat/", response_model=ChatResponse)
 async def chat_with_gpt(request: ChatRequest):
     headers = {
@@ -36,11 +43,20 @@ async def chat_with_gpt(request: ChatRequest):
         'Authorization': f'Bearer {OPENAI_API_KEY}',
     }
 
+    training_data = get_training_data()
+    data = next(training_data)
+    system_message = ""
+    for message in data["messages"]:
+        if message["role"] == "system":
+            system_message += message["content"]
+            break
+    user_message = request.message
+
     payload = {
         "model": "gpt-3.5-turbo",
         "messages": [
-            {"role": "system", "content": "너는 Petpals의 도우미 봇이야. Petpals는 반려동물 커뮤니케이션 및 이커머스 샵으로, 이커머스의 역할과 소셜 커뮤니티의 역할을 동시에 제공하고 있어. 127.0.0.1:5173/items 에서는 상품을 볼 수 있고, 127.0.0.1:5173/board에서는 다른 사용자와 교류할 수 있어. 127.0.0.1:5173/qna에서는 반려동물을 키우며 생기는 궁금증들을 다른 사용자와 주고 받을 수 있어. 만약 사용자가 관련 기능에 대해 물어본다면 질문을 요약하고, 이에 맞게 대답해줘."},
-            {"role": "user", "content": request.message}
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_message}
         ]
     }
 
