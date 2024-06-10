@@ -99,7 +99,7 @@ export const updateUserProfile = createAsyncThunk(
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.put(
         `/users/update_profile/`,
-        { user },
+        user ,
         {
           headers,
         }

@@ -31,6 +31,8 @@ function ProductDetail() {
   const [marked, setMarked] = useState(false);
   const [state, setState] = useState({ open: false });
   const [replyCreated, setReplyCreated] = useState(false);
+  const [startTime, setStartTime] = useState(0);
+
   const [answer, setAnswer] = useState("");
   const [showTextField, setShowTextField] = useState(false);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -56,8 +58,30 @@ function ProductDetail() {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  }, [navigate, dispatch]);
+  
+  }, [dispatch, id]);
 
+useEffect(() => {
+  setStartTime(Date.now()); 
+
+  return () => {
+
+    const endTime = Date.now();
+    const stayTime = (endTime - startTime) / 1000;
+
+    if (userInfo) {
+      mainAxiosInstance.post(`/interaction/view/item/${id}/`, {
+        stayTime
+      },
+    {headers: {
+      Authorization: `Bearer ${userInfo.access}`,
+
+    }
+  }
+    )      
+    }
+  };
+}, []);
   useEffect(() => {
     if (successProductReview) {
       navigate(`/items/review/update/${createdReview.id}`);

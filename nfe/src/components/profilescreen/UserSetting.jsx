@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { updateUserProfile, getUserDetail, logout } from "../../store/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
 
-function UserSetting({ userInfo, userDetail, reset }) {
+function UserSetting() {
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate(); 
   const user = useSelector((state) => state.user);
-  const { success } = user;
+  const { userInfo, userDetail, success } = user;
   const [message, setMessage] = useState("");
   const nicknameRef = useRef();
   const emailRef = useRef();
@@ -18,10 +18,23 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     if (success===true) {
       alert('수정이 완료되었습니다.');
       // window.location.reload();
-      dispatch(logout());
-      navigate("/");
+        dispatch(logout());
+        navigate("/");
     }
-  }, [success]);
+  }, [success, dispatch]);
+
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(getUserDetail(userInfo.id));
+    }
+  }, [dispatch, userInfo]);
+
+  useEffect(() => {
+    if (userDetail && userDetail.user) {
+      nicknameRef.current.value = userDetail.nickname; 
+      emailRef.current.value = userDetail.email; 
+    }
+  }, [userDetail]);
 
   const handleImageChange = async (e) => {
     console.log("handleImageChange activated");
@@ -96,8 +109,8 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               <input
                 type="text"
                 id="nickname"
-                placeholder={userDetail.user&& userDetail.user.nickname}
                 ref={nicknameRef}
+                defaultValue={userDetail&& userDetail.nickname}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 required
               />
@@ -109,8 +122,8 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               <input
                 type="email"
                 id="email"
-                placeholder={userDetail.user && userDetail.user.email}
                 ref={emailRef}
+                defaultValue={userDetail && userDetail.email}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 required
               />

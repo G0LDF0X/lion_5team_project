@@ -66,7 +66,7 @@ function Loading2() {
   );
 }
 
-function BoardCarousel({ loading, error, boards, handleOpenModal}) {
+function BoardCarousel({ loading, error, boards}) {
   
   return (
     <>
@@ -83,7 +83,7 @@ function BoardCarousel({ loading, error, boards, handleOpenModal}) {
         <Carousel  responsive={responsive} infinite>
           {boards.map((board) => (
             <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-              <BoardForm board={board}  handleOpenModal={handleOpenModal}  />
+              <BoardForm board={board}  />
             </Card>
           ))}
         </Carousel>
