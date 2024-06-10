@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
 
-const Like = ({ userInfo }) => {
+const Like = ({ userId }) => {
     const [likes, setLikes] = useState([]);
     const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     
     useEffect(() => {
-        mainAxiosInstance.get(`/users/${userInfo.id}/likes/`)
+        mainAxiosInstance.get(`/users/${userId}/likes/`)
         .then(response => {
             setLikes(response.data);
         })
