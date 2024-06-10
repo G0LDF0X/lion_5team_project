@@ -353,3 +353,31 @@ def follow_save(request, pk):
         follow_exists = Follow.objects.filter(follower_id=follower, followed_id=followed).exists()
 
         return Response({'follow_exists': follow_exists,  'followers_count': followers_count, 'following_count': following_count}, status=201)
+    
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    try:
+        user = User.objects.get(username=request.user)
+        auth_user_instance = auth_user.objects.get(username=request.user)
+
+        # 사용자와 관련된 데이터 삭제
+        Follow.objects.filter(follower_id=user).delete()
+        Follow.objects.filter(followed_id=user).delete()
+        Review.objects.filter(user_id=user).delete()
+        Bookmark.objects.filter(user_id=user).delete()
+        Board.objects.filter(user_id=user).delete()
+        Item_QnA.objects.filter(user_id=user).delete()
+        User_Answer.objects.filter(user_id=user).delete()
+
+        # 사용자와 관련된 모든 주문 삭제
+        Order.objects.filter(user_id=user).delete()
+        OrderItem.objects.filter(order_id__user_id=user).delete()
+        
+        user.delete()
+        auth_user_instance.delete()
+
+        return Response({"message": "Account deleted successfully"}, status=204)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=404)
