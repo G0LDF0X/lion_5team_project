@@ -33,9 +33,12 @@ export default function SideBar({ toggleDrawer, open }) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  
+                  {userInfo && userInfo.image_url ? (
                 <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+              ) : (
+                <Avatar />
 
+              )}
 
                 </ListItemIcon>
                 <ListItemText className="text-gray-700" primary={`${userInfo.nickname}`} />
