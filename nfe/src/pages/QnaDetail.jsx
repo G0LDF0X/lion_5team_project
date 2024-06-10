@@ -67,7 +67,7 @@ function QADetailScreen() {
           </div>
 
           <div className="text-right mb-4">
-            {userInfo && userInfo.is_staff && (
+            {userInfo  && (
               <Button variant="contained" color="primary" onClick={answerCreateHandler}>
                 Create Q&A Answer
               </Button>
