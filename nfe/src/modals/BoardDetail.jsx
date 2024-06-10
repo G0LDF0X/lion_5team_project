@@ -35,6 +35,9 @@ function BoardDetailModal({ open, handleClose }) {
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
       }
+      else {
+        setIsLiked(false);  
+      }
     }
   }, [dispatch, boardId, boardDetail?.liked_by_user]);
 
