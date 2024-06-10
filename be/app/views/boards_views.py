@@ -118,29 +118,26 @@ def create_Board(request):
         user = User.objects.get(username=request.user)
         current_time = datetime.now()
 
-        # Handle image file
         image_file = request.FILES.get('images')
         if image_file:
             print(f"Image file received: {image_file.name}")
             image_data = BytesIO(image_file.read())
-            image_data.seek(0)  # Make sure the file pointer is at the start
+            image_data.seek(0)
             prediction = predict_image(image_data)
         else:
             print("No image file received.")
             prediction = None
 
-        # Create the board
         print(f"Creating board for user: {user.username}")
         board = Board.objects.create(
             user_id=user,
             title=request.data.get('title', ''),
             content=request.data.get('content', ''),
-            image_url=image_file,  # Use the actual uploaded file
+            image_url=image_file,
             board_type=prediction,
             created_at=current_time
         )
 
-        # Handle tags
         tags_data = json.loads(request.data.get('tags', '[]'))
         print(f"Tags received: {tags_data}")
         for tag in tags_data:
