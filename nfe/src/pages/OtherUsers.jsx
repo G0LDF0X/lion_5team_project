@@ -7,6 +7,7 @@ import { Tab, Tabs, Box } from "@mui/material";
 import UserProfileMain from "../components/OtherUsers/UserProfileMain";
 import MyBoard from "../components/OtherUsers/MyBoard";
 import Follow from "../components/OtherUsers/Follow";
+import Like from "../components/OtherUsers/Like";
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -88,7 +89,7 @@ function OtherUserProfile() {
             {/* <Bookmark bookMarkItems={bookMarkItems} /> */}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={5}>
-            Item Seven
+            <Like userId={id} />
           </CustomTabPanel>
         </Box>
          

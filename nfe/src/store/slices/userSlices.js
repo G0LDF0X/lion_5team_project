@@ -8,6 +8,7 @@ import {
   updateUserPassword,
   listUsers,
   deleteUser,
+  deleteUserAccount,
 } from "../actions/userActions";
 
 const initialState = {
@@ -16,7 +17,8 @@ const initialState = {
   users: [],
   loading: false,
   error: null,
-  success: false,
+  updateSuccess: false,
+  deleteSuccess: false,
 };
 
 export const userSlice = createSlice({
@@ -27,7 +29,8 @@ export const userSlice = createSlice({
       state.error = null;
     },
     clearSuccess: (state) => {
-      state.success = false;
+      state.updateSuccess = false;
+      state.deleteSuccess = false;
     },
     logout: (state) => {
       state.userInfo = null;
@@ -87,12 +90,12 @@ export const userSlice = createSlice({
       })
       .addCase(updateUserProfile.pending, (state) => {
         state.loading = true;
-        state.success = false;
+        state.updateSuccess = false;
         state.error = null;
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.success = true;
+        state.updateSuccess = true;
         state.userDetail = action.payload;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
@@ -135,6 +138,20 @@ export const userSlice = createSlice({
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        deleteSuccess = false;
+      })
+      .addCase(deleteUserAccount.pending, (state) => { 
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUserAccount.fulfilled, (state) => { 
+        state.loading = false;
+        state.deleteSuccess = true;
+        state.userInfo = null;
+        localStorage.removeItem('userInfo');
+      })
+      .addCase(deleteUserAccount.rejected, (state, action) => { 
+        state.error = action.payload; 
       });
   },
 });
