@@ -22,13 +22,17 @@ function StandardImageList() {
 
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
-      {loading ? (
-        <Grid container wrap="nowrap">
-          {Array.from(new Array(3)).map((_, index) => (
-            <Box key={index} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
-              <Skeleton variant="rectangular" width={490} height={490} />
-            </Box>
-          ))}
+     {loading ? (
+  <Grid container wrap="nowrap" direction="column">
+    {Array.from(new Array(3)).map((_, rowIndex) => (
+      <Grid container key={rowIndex} wrap="nowrap">
+        {Array.from(new Array(3)).map((_, colIndex) => (
+          <Box key={colIndex} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
+            <Skeleton variant="rectangular" width={490} height={490} />
+          </Box>
+        ))}
+      </Grid>
+    ))}
         </Grid>
       ) : (
         boards.map((board) => (
