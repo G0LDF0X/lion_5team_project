@@ -4,6 +4,7 @@ from django.contrib.auth.models import User as auth_user
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import check_password, make_password
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
@@ -405,3 +406,20 @@ def delete_account(request):
     except User.DoesNotExist:
 
         return Response({"error": "User not found"}, status=404)
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updatePassword(request):
+    user = request.user
+    data = request.data
+
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+
+    if not check_password(current_password, user.password):
+        return Response({"detail": "현재 비밀번호가 일치하지 않습니다."}, status=400)
+
+    user.password = make_password(new_password)
+    user.save()
+
+    return Response({"detail": "비밀번호가 성공적으로 변경되었습니다."}, status=200)

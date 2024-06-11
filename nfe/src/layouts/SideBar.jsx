@@ -44,7 +44,7 @@ export default function SideBar({ toggleDrawer, open }) {
                     <Avatar /> // 이미지가 없는 경우 기본 아바타 표시
                   )}
                 </ListItemIcon>
-                <ListItemText className="text-gray-700" primary={userInfo && userInfo.nickname} />
+                <ListItemText className="text-gray-700" primary={userInfo && userInfo.nickname ? userInfo.nickname : '닉네임 없음'} />
               </ListItemButton>
             </ListItem>
           </Link>
