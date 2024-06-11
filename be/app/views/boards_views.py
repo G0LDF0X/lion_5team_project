@@ -33,7 +33,7 @@ def filter_reply(sentence):
     pipe = TextClassificationPipeline(
         model=model,
         tokenizer=tokenizer,
-        device=0,
+        device=-1,
         return_all_scores=True,
         function_to_apply='sigmoid'
     )
@@ -78,7 +78,7 @@ def board_detail_or_create_reply(request, pk):
         user = User.objects.get(username=request.user)
         board = Board.objects.get(id=pk)
         content = request.data.get('content', '')
-        replied_id = request.data.get('replied_id', 0)
+        replied_id = int(request.data.get('replied_id', 0))
         reply = Reply.objects.create(user_id=user, board_id=board, content=content, replied_id=replied_id)
         if filter_reply(content):
             Interaction.objects.create(user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='comment')
@@ -209,3 +209,11 @@ def delete_Board(request, pk):
     board = Board.objects.get(id=pk)
     board.delete()
     return Response('Board Deleted')
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_Reply(request, pk):
+    reply = Reply.objects.get(id=pk)
+    reply.delete()
+    return Response('Reply Deleted')
