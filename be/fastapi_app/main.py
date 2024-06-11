@@ -48,7 +48,7 @@ def export_data_to_csv():
         logging.info(f"Existing {item_csv_file_path} file deleted.")
 
     query = "SELECT * FROM app_item;"
-
+    engine = None
     try:
         engine = create_engine(connection_string)
         df_item = pd.read_sql_query(query, engine)
@@ -65,7 +65,8 @@ def export_data_to_csv():
     except Exception as e:
         logging.error(f"Error: {e}")
     finally:
-        engine.dispose()
+        if engine is not None:
+            engine.dispose()
 export_data_to_csv()
 
 async def schedule_daily_task():
