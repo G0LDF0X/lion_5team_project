@@ -405,3 +405,13 @@ def delete_account(request):
     except User.DoesNotExist:
 
         return Response({"error": "User not found"}, status=404)
+
+
+
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+@api_view(['GET'])
+def get_csrf_token(request):
+    csrftoken = get_token(request)
+    return JsonResponse({'csrftoken': csrftoken})
