@@ -14,11 +14,12 @@ import django
 from asgiref.sync import sync_to_async
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-# Setup Django
+
 django.setup()
+
 from app.models import Interaction
-# Database setup
 from dotenv import load_dotenv
+
 load_dotenv()
 
 db_host = os.getenv('DB_HOST')
@@ -30,16 +31,6 @@ db_port = os.getenv('DB_PORT')
 connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 engine = create_engine(connection_string)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# Define the half-life for the decay function
-T = 7  # days
-
-def apply_time_decay(df, T):
-    t_now = datetime.now()
-    # Ensure both timestamps are timezone-naive
-    df['timestamp'] = df['timestamp'].apply(lambda x: x.tz_localize(None))
-    t_now = t_now.replace(tzinfo=None)
-    df['decayed_weight'] = df.apply(lambda row: row['interaction_weight'] * 0.5 ** ((t_now - row['timestamp']).days / T), axis=1)
-    return df
 
 @sync_to_async
 def fetch_interactions():
@@ -56,18 +47,25 @@ def fetch_interactions():
     """
     return pd.read_sql(query, engine)
 
+T = 7  
+def apply_time_decay(df, T):
+    t_now = datetime.now()
+    df['timestamp'] = df['timestamp'].apply(lambda x: x.tz_localize(None))
+    t_now = t_now.replace(tzinfo=None)
+    df['decayed_weight'] = df.apply(lambda row: row['interaction_weight'] * 0.5 ** ((t_now - row['timestamp']).days / T), axis=1)
+    return df
+
+
 async def load_and_preprocess_data():
     df = await fetch_interactions()
 
-    # Convert stay_time to seconds
     df['stay_time_seconds'] = df['stay_time'].apply(lambda x: x.total_seconds() if pd.notnull(x) else 0)
-    # Normalize stay_time_seconds
+
     df['stay_time_normalized'] = (df['stay_time_seconds'] - df['stay_time_seconds'].min()) / (df['stay_time_seconds'].max() - df['stay_time_seconds'].min())
 
-    # Assign weights to interactions
     average_stay_time = df['stay_time_seconds'].mean()
     interaction_weights = {
-        'view': 3 if average_stay_time > 30 else 1,
+        'view': 3 if average_stay_time > 90 else(2 if average_stay_time > 60 else 1) ,
         'like': 2,
         'bookmark': 3,
         'purchase': 5,
@@ -76,7 +74,6 @@ async def load_and_preprocess_data():
     }
     df['interaction_weight'] = df['interaction_type'].apply(lambda x: interaction_weights.get(x, 1))
 
-    # Apply time decay
     df['timestamp'] = pd.to_datetime(df['timestamp'])
     df = apply_time_decay(df, T)
 
@@ -101,10 +98,8 @@ async def train_svd_model():
     svd = SVD()
     svd.fit(trainset)
     
-    # Save the trained model
     await save_svd_model(svd, 'svd_model.pkl')
 
-    # Evaluate the model
     predictions = svd.test(testset)
     print(f"RMSE for SVD: {accuracy.rmse(predictions)}")
 
@@ -138,7 +133,7 @@ def save_rbm_model(rbm, path):
 async def train_rbm_model():
     df_agg = await load_and_preprocess_data()
     user_item_matrix = df_agg.pivot(index='user_id', columns='content_id', values='rating').fillna(0).values
-    device = torch.device("cpu")  # Use "cpu" if no GPU is available
+    device = torch.device('cuda' if torch.cuda.is_available() else ('mds' if torch.cuda.is_available() else 'cpu'))  
     train_data = torch.FloatTensor(user_item_matrix).to(device)
     n_vis = train_data.shape[1]
     n_hid = 100
@@ -163,5 +158,4 @@ async def train_rbm_model():
             optimizer.step()
         print(f'Epoch {epoch + 1}/{epochs}, Loss: {epoch_loss / len(train_data)}')
 
-    # Save the trained model
     await save_rbm_model(rbm, 'rbm_model.pkl')

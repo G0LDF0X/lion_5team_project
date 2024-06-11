@@ -40,12 +40,7 @@ function HomeScreen() {
       >
         {userInfo? null : (
         <div className="container mx-auto px-4 flex flex-col items-end text-right">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-pink-800">
-            Welcome to PetPals
-          </h2>
-          <p className="text-gray-700 mb-8">
-            Connect with other pet lovers and share your experiences!
-          </p>
+          
           <Button
             variant="contained"
             className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
@@ -53,6 +48,17 @@ function HomeScreen() {
           >
             Sign In
           </Button>
+          <Button class="bg-purple-700 text-white py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-white text-black py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-gray-100 text-black py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-pink-700 text-white py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-blue-200 text-black py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-teal-500 text-white py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-orange-500 text-white py-2 px-4 rounded">SIGN IN</Button>
+          <Button class="bg-green-500 text-white py-2 px-4 rounded">SIGN IN</Button>
+
+
+
         </div>
         )}
       </section>
