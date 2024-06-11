@@ -14,6 +14,7 @@ import numpy as np
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
+from app.models import Item  # Ensure you import the Item model
 
 app = FastAPI()
 
@@ -28,7 +29,7 @@ async def train_models(background_tasks: BackgroundTasks):
     background_tasks.add_task(sync_to_async(train_rbm_model))
     return {"message": "Training started in background"}
 
-@app.get("/recommendations/{user_id}", response_model=List[schemas.SimpleRecommendationResponse])
+@app.get("/recommendations/{user_id}", response_model=List[schemas.DetailedRecommendationResponse])
 async def get_recommendations(user_id: int):
     svd_model_path = 'svd_model.pkl'
     rbm_model_path = 'rbm_model.pkl'
@@ -61,12 +62,27 @@ async def get_recommendations(user_id: int):
                 user_interaction_values = user_interaction_matrix.values.flatten()
                 user_vector[:len(user_interaction_values)] = torch.FloatTensor(user_interaction_values)
                 user_vector = user_vector.to(rbm_model.W.device)
-                print(user_vector)
+                
             rbm_score = rbm_model(user_vector.unsqueeze(0)).mean().item()  # Take the mean of the output tensor
 
         combined_score = svd_score + rbm_score
         recommendations.append((item, combined_score))
 
     recommendations.sort(key=lambda x: x[1], reverse=True)
-    response_data = [{'recommended_content_id': rec[0], 'score': rec[1]} for rec in recommendations[:10]]
+
+    # Fetch additional item details from the database
+    response_data = []
+    for rec in recommendations[:10]:
+        print(rec)
+        item = await sync_to_async(Item.objects.get)(id=rec[0])
+        print(item.id)
+        await sync_to_async(response_data.append)({
+            'item_id': item.id,
+            'name': item.name,
+            'image_url': item.image_url.url if item.image_url else '',
+            'price': item.price,
+            'score': rec[1]
+        })
+        print("resonse:",response_data)
+
     return response_data

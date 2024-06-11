@@ -12,15 +12,11 @@ import os
 import sys
 import django
 from asgiref.sync import sync_to_async
-
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
-
 # Setup Django
 django.setup()
-
 from app.models import Interaction
-
 # Database setup
 from dotenv import load_dotenv
 load_dotenv()
@@ -34,7 +30,6 @@ db_port = os.getenv('DB_PORT')
 connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
 engine = create_engine(connection_string)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 # Define the half-life for the decay function
 T = 7  # days
 
