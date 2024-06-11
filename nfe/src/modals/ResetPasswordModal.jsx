@@ -90,8 +90,10 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 //   try {
 //     // 토큰 가져오기
 //     const response = await mainAxiosInstance.get('/users/get-csrf-token/');
-//     console.log(response.data.csrftoken);
-//     return response.data.csrftoken;
+//     const csrfToken = response.data.csrftoken;
+
+//     console.log(csrfToken);
+   
   
 
 //   } catch (error) {
@@ -100,7 +102,6 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 //   }
   
 // }
-// getCsrfToken()
 
  import Cookies from 'js-cookie';
 
@@ -134,6 +135,7 @@ function ResetPasswordModal({ isOpen, onClose }) {
  
     const response = await mainAxiosInstance.get('/users/get-csrf-token/');
     const csrfToken = response.data.csrftoken;
+  
 
     // 받아온 CSRF 토큰을 쿠키에 저장합니다.
     Cookies.set('X-CSRF-Token', csrfToken);
