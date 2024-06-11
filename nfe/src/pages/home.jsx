@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
@@ -28,13 +28,20 @@ function HomeScreen() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  // useEffect(() => {
+  //   dispatch(listProducts({ query: "", page: 1, category: [] }));
+  //   dispatch(listBoards());
+  //   dispatch(listQNA());
+  //   console.log(location)
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(listProducts({ query: "", page: 1, category: [] }));
-    dispatch(listBoards());
-    dispatch(listQNA());
-    console.log(location)
+    Promise.all([
+      dispatch(listProducts({ query: "", page: 1, category: [] })),
+      dispatch(listBoards()),
+      dispatch(listQNA())
+    ]).then(() => console.log(location));
   }, [dispatch]);
-
+  
 
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
