@@ -34,7 +34,7 @@ function HomeScreen() {
         className="relative bg-cover bg-center py-20"
         style={{
           backgroundImage:
-            `url(${VITE_API_BASE_URL}/images/puppies.jpg)`,
+            `url(${VITE_API_BASE_URL}/images/puppies2.png)`,
           height: '400px',
         }}
       >
