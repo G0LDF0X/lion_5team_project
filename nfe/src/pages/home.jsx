@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
@@ -8,21 +8,16 @@ import ProductCarousel from "../components/homescreen/ProductCarousel";
 import BoardCarousel from "../components/homescreen/BoardCarousel";
 import QnASection from "../components/homescreen/QnASection";
 import { motion } from "framer-motion";
-import { useOutletContext, useLocation } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import "../animations.css";
 
 function HomeScreen() {
   const dispatch = useDispatch();
   const { openModal } = useOutletContext();
-  const location = useLocation(); 
-
-
   const productList = useSelector((state) => state.productList);
   const { loading: productLoading, error: productError, products } = productList;
-
   const board = useSelector((state) => state.board);
   const { loading: boardLoading, error: boardError, boards } = board;
-
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
   const user = useSelector((state) => state.user);
@@ -32,10 +27,7 @@ function HomeScreen() {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
-    console.log(location)
   }, [dispatch]);
-
-
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
       <section
@@ -43,7 +35,7 @@ function HomeScreen() {
         style={{
           backgroundImage:
             `url(${VITE_API_BASE_URL}/images/puppies.jpg)`,
-          height: '400px', // Ensure the height is fixed to avoid layout shifts
+          height: '400px',
         }}
       >
         {userInfo? null : (
@@ -64,7 +56,6 @@ function HomeScreen() {
         </div>
         )}
       </section>
-
       <motion.section
         className="my-16"
         initial={{ opacity: 0, y: -50 }}
@@ -77,7 +68,6 @@ function HomeScreen() {
           products={products}
         />
       </motion.section>
-
       <motion.section
         className="my-16"
         initial={{ opacity: 0, y: -50 }}
@@ -85,13 +75,11 @@ function HomeScreen() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <BoardCarousel
-        
           loading={boardLoading}
           error={boardError}
           boards={boards}
         />
       </motion.section>
-
       <motion.section
         className="my-16"
         initial={{ opacity: 0, y: -50 }}
@@ -100,7 +88,6 @@ function HomeScreen() {
       >
         <QnASection loading={qnaLoading} error={qnaError} qnas={qnas} />
       </motion.section>
-
       <motion.section
         className="my-16 fade-in"
         initial={{ opacity: 0, y: -50 }}
