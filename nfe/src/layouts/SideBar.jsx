@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, ListItemIcon, Avatar } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -20,6 +20,11 @@ export default function SideBar({ toggleDrawer, open }) {
     dispatch(logout());
     navigate('/');
   };
+  
+  useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
+  
   const DrawerList = (
     <Box
       className="w-64 h-full bg-cover bg-center text-white flex flex-col justify-between"
@@ -30,19 +35,17 @@ export default function SideBar({ toggleDrawer, open }) {
       <div>
         <List>
           <Link to="/users/profile">
-            <ListItem disablePadding>
-                  {userInfo && userInfo.image_url ? (
+          <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+                  {userInfo && userInfo.image_url ? (
+                    <Avatar src={VITE_API_BASE_URL + userInfo.image_url} /> // 이미지가 있는 경우 아바타 표시
+                  ) : (
+                    <Avatar /> // 이미지가 없는 경우 기본 아바타 표시
+                  )}
                 </ListItemIcon>
-                <ListItemText className="text-gray-700" primary={`${userInfo.nickname}`} />
+                <ListItemText className="text-gray-700" primary={userInfo && userInfo.nickname ? userInfo.nickname : '닉네임 없음'} />
               </ListItemButton>
-              ) : (
-                <Avatar />
-
-              )}
-
             </ListItem>
           </Link>
           <Link to="/users/myshopping">

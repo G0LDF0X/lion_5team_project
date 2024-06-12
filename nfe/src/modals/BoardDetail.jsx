@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { createReply, getBoardDetails } from "../store/actions/boardActions";
+import { createReply, getBoardDetails, createApply } from "../store/actions/boardActions";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
@@ -29,7 +29,20 @@ function BoardDetailModal({ open, handleClose }) {
   const { loading, error, replies, boardDetail } = board;
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
-  const [showTag, setShowTag] = useState(false);  
+  const [showTag, setShowTag] = useState(false);
+  const [applied_id, setAppliedId] = useState(0);
+  const [apply, setApply] = useState("");
+  const [replyToUser, setReplyToUser] = useState(null);
+
+
+  const sortedReplies = [];
+  const repliesWithZero = replies.filter(reply => reply.replied_id === 0).sort((a, b) => a.id - b.id);
+  const repliesWithNonZero = replies.filter(reply => reply.replied_id !== 0);
+
+  repliesWithZero.forEach(replyWithZero => {
+    sortedReplies.push(replyWithZero);
+    repliesWithNonZero.filter(reply => reply.replied_id === replyWithZero.id).forEach(reply => sortedReplies.push(reply));
+  });
 
   useEffect(() => {
     if (boardId) {
@@ -71,6 +84,20 @@ function BoardDetailModal({ open, handleClose }) {
     }
   };
 
+  const deleteReply = async (replyId) => {
+    try {
+      const response = await mainAxiosInstance.delete(`/board/reply/${replyId}/delete/`,
+        {
+          headers: { Authorization: `Bearer ${userInfo.access}` },
+        }
+      );
+      console.log(response.data);
+      dispatch(getBoardDetails(boardId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
     alert("Copied the link to clipboard: " + location.pathname);
@@ -85,9 +112,22 @@ function BoardDetailModal({ open, handleClose }) {
   const submitHandler = (e) => {
     e.preventDefault();
     if (reply.trim()) {
-      dispatch(createReply({ reply, boardId }));
+      dispatch(createReply({ reply, boardId, applied_id }));
       setReply("");
       setReplyCreated(true);
+      setAppliedId(0);
+    } else {
+      alert("Please enter a comment.");
+    }
+  };
+
+  const submitApplyHandler = (e) => {
+    e.preventDefault();
+    if (apply) {
+      dispatch(createApply({ apply, boardId, applied_id }));
+      setApply("");
+      setReplyCreated(true);
+      setAppliedId(0);
     } else {
       alert("Please enter a comment.");
     }
@@ -97,6 +137,14 @@ function BoardDetailModal({ open, handleClose }) {
     setShowTag(!showTag);
   }
 
+  const handleReplyClick = (id, username) => {
+    setAppliedId(id);
+    setReplyToUser(username);
+    setApply(`@${username} `);
+  }
+
+  
+  
   return (
     <Modal
       open={open}
@@ -186,14 +234,47 @@ function BoardDetailModal({ open, handleClose }) {
                 </CardActions>
                 <h2 className="text-xl font-bold mb-2">Comments</h2>
                 {replies.length === 0 && <p>No Comments</p>}
-                {replies.map((reply, index) => (
+                {sortedReplies.map((reply, index) => (
                   <div key={index} className="border-b pb-2 mb-2">
+                    <div style={{display:"flex", justifyContent:"space-between", 
+                      paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>
                     <p className="font-bold">
                       <Link to={`/users/${reply.user_id}`}>
                       {reply.username || reply.nickname}
                       </Link>
                     </p>
-                    <p>{reply.content}</p>
+                    {userInfo && userInfo.id === reply.user_id && (
+                        <button onClick={() => deleteReply(reply.id)}
+                        style = {{color: 'red', fontSize: 'small',
+                          marginLeft: 'auto'}}
+                        >Delete</button>
+                      )}
+                    </div>
+                    <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
+                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                      <button onClick={() => handleReplyClick(reply.id, reply.username)}
+                      style={{color: 'gray', fontSize: 'small', 
+                       marginLeft: reply.replied_id !== 0 ? '30px': '0px',
+                      marginTop: '5px'}}
+                      >답글 작성</button>
+                    </div>
+                    {applied_id === reply.id && (
+                      <form onSubmit={submitApplyHandler} className="mt-4">
+                        <textarea
+                          className="w-full p-2 border rounded mb-2"
+                          rows="3"
+                          value={apply}
+                          onChange={(e) => setApply(e.target.value)}
+                          placeholder="Add a reply..."
+                        ></textarea>
+                        <button
+                          type="submit"
+                          className="w-full bg-blue-500 text-white p-2 rounded"
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    )}
                   </div>
                 ))}
               </div>
