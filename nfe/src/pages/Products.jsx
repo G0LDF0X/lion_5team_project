@@ -7,6 +7,9 @@ import Message from "../components/Message";
 import Product from "../components/Product";
 import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 import useCategory from "../hook/useCategory";
+import { mainAxiosInstance } from "../api/axiosInstances";
+import Button from '@mui/material/Button';
+
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -14,6 +17,9 @@ function ProductsScreen() {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages } = productList;
+
+  const [tags, setTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState(null);
 
   const params = new URLSearchParams(location.search);
   const query = params.get('query') || '';
@@ -26,6 +32,12 @@ function ProductsScreen() {
 
 useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
+
+    if (selectedCategory.length === 1) {
+      fetchTags(selectedCategory[0]);
+    } else {
+      setTags([]);
+    }
 }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
 useCategory(setCategories);
@@ -36,6 +48,15 @@ useCategory(setCategories);
       setSelectedCategory((prev) => prev.filter((cat) => cat !== e.target.value));
     }
   };
+
+const fetchTags = async (categoryId) => {
+  try {
+    const response = await mainAxiosInstance.get(`/items/tags/${categoryId}`);
+    setTags(response.data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
   return (
     <div className="container mx-auto py-8">
@@ -68,9 +89,27 @@ useCategory(setCategories);
           ) : (
             <>
               {query && <h6 className="text-xl mb-4">{query}에 관한 검색결과</h6>}
+
+              <div>
+                {tags.map(tag => (
+                  <Button 
+                    key={tag.id} 
+                    variant="outlined" 
+                    color="primary" 
+                    onClick={() => setSelectedTag(tag)}
+                    style={{ margin: '10px' }}
+                  >
+                    {tag.name}
+                  </Button>
+                ))}
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products.map((product) => (
+                {products
+                  .filter(product => !selectedTag || (product.tag_id ===selectedTag.id))
+                  .map((product) => (
                   <Product key={product.id} product={product} id={product.id} />
+                  
                 ))}
               </div>
             </>
