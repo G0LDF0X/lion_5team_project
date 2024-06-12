@@ -121,10 +121,18 @@ useEffect(() => {
   };
 
   const deleteReviewHandler = (review) => {
+    console.log(review);
     if (userInfo && userInfo.id === review.user_id) {
       if (window.confirm("Are you sure you want to delete this review?")) {
-        dispatch(deleteReview(review.id));
-      }
+        dispatch(deleteReview(review.id))
+        .then(() => {
+        alert("Review deleted successfully.");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
     } else {
       alert("You can only delete your own reviews.");
     }
@@ -306,7 +314,7 @@ useEffect(() => {
                     text={review.rate}
                     color={"#f8e825"}
                   />
-                  <p className="my-4">{review.comment}</p>
+                  <p className="my-4">{review.content.replace(/<\/?p>/g, '')}</p>
                   {review.image && (
                     <img
                       src={review.image}

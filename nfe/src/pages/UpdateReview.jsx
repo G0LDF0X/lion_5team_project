@@ -52,7 +52,7 @@ function UpdateReviewScreen() {
       setEditorData(review[0].content);
 
       setTitle(review[0].title);
-      // setContent(review[0].content);
+      setContent(review[0].content);
       setRate(review[0].rate);
     }
   }, [review]);
