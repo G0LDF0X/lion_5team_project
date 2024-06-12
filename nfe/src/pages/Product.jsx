@@ -27,7 +27,8 @@ import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
 import { reviewCreateReset } from "../store/slices/reviewSlices";
-
+import { createProductQnA } from "../store/actions/productActions";
+import { productQnaReset } from "../store/slices/productSlices";
 function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [marked, setMarked] = useState(false);
@@ -49,44 +50,46 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview, review:createdReview } = reviewCreate;
+  const { success: successProductReview, review: createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
   const cart = useSelector((state) => state.cart);
   const { successAdd } = cart;
+  const productQnA = useSelector((state) => state.productQnA);
+  const { success: successQNA, productQnA: productQ } = productQnA;
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  
   }, [dispatch, id]);
 
-useEffect(() => {
-  setStartTime(Date.now()); 
+  useEffect(() => {
+    setStartTime(Date.now());
 
-  return () => {
+    return () => {
+      const endTime = Date.now();
+      const stayTime = (endTime - startTime) / 1000;
 
-    const endTime = Date.now();
-    const stayTime = (endTime - startTime) / 1000;
-
-    if (userInfo) {
-      mainAxiosInstance.post(`/interaction/view/item/${id}/`, {
-        stayTime
-      },
-    {headers: {
-      Authorization: `Bearer ${userInfo.access}`,
-
-    }
-  }
-    )      
-    }
-  };
-}, []);
+      if (userInfo) {
+        mainAxiosInstance.post(
+          `/interaction/view/item/${id}/`,
+          {
+            stayTime,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.access}`,
+            },
+          }
+        );
+      }
+    };
+  }, []);
   useEffect(() => {
     if (successProductReview) {
-      dispatch(reviewCreateReset())
+      dispatch(reviewCreateReset());
       console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
@@ -111,7 +114,9 @@ useEffect(() => {
   };
 
   const editReviewHandler = (review) => {
-    {console.log(userInfo)}
+    {
+      console.log(userInfo);
+    }
     if (userInfo && userInfo.id === review.user_id) {
       dispatch(listReviewDetails(review.id));
       navigate(`/items/review/update/${review.id}`);
@@ -125,22 +130,17 @@ useEffect(() => {
     if (userInfo && userInfo.id === review.user_id) {
       if (window.confirm("Are you sure you want to delete this review?")) {
         dispatch(deleteReview(review.id))
-        .then(() => {
-        alert("Review deleted successfully.");
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    }
+          .then(() => {
+            alert("Review deleted successfully.");
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     } else {
       alert("You can only delete your own reviews.");
     }
-  };
-
-  const createQnAHandler = () => {
-    navigate(`/items/qna/create/${id}`);
-    // dispatch(createQNA(id));
   };
 
   const handleButtonClick = () => {
@@ -172,14 +172,23 @@ useEffect(() => {
       console.error("답변 등록 중 오류가 발생하였습니다:", error);
     }
   };
+  const createQnAHandler = () => {
+    dispatch(createProductQnA(id));
+    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
+  };
+  useEffect(() => {
+    if (successQNA) {
+      navigate(`/items/qna/update/${productQ.id}`);
+    }
+  }, [successQNA]);
   const createReviewHandler = () => {
     if (userInfo) {
-      dispatch(createReview({id}));
+      dispatch(createReview({ id }));
     } else {
       window.alert("로그인 후 이용해주세요.");
     }
   };
-useEffect(() => {
+  useEffect(() => {
     if (successAdd) {
       setState({ open: true });
       dispatch(resetSuccess());
@@ -187,12 +196,13 @@ useEffect(() => {
   }, [successAdd]);
   const handleClose = () => {
     setState({ open: false });
-
   };
   const avgRate =
     product.reviews &&
-    (product.reviews.reduce((acc, item) => item.rate + acc, 0) /
-      product.reviews.length).toFixed(2);
+    (
+      product.reviews.reduce((acc, item) => item.rate + acc, 0) /
+      product.reviews.length
+    ).toFixed(2);
 
   return (
     <div className="container mx-auto py-8">
@@ -225,7 +235,15 @@ useEffect(() => {
             <div className="col-span-1">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <h3 className="text-2xl font-bold mb-4">{product.name}</h3>
-                <p style={{ fontSize: 'small', color: 'gray', paddingBottom: '10px' }}>{product.category} 〉 {product.tag}</p>
+                <p
+                  style={{
+                    fontSize: "small",
+                    color: "gray",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  {product.category} 〉 {product.tag}
+                </p>
                 <Rating value={avgRate} text={avgRate} color={"#f8e825"} />
                 <p className="text-xl font-semibold my-4">{product.price}₩</p>
                 <p>{product.description}</p>
@@ -314,7 +332,9 @@ useEffect(() => {
                     text={review.rate}
                     color={"#f8e825"}
                   />
-                  <p className="my-4">{review.content.replace(/<\/?p>/g, '')}</p>
+                  <p className="my-4">
+                    {review.content.replace(/<\/?p>/g, "")}
+                  </p>
                   {review.image && (
                     <img
                       src={review.image}
@@ -325,20 +345,21 @@ useEffect(() => {
                   <div className="flex justify-end space-x-2">
                     {userInfo && userInfo.id === review.user_id && (
                       <>
-                    <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                      onClick={() => editReviewHandler(review)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                      onClick={() => deleteReviewHandler(review)}
-                    >
-                      Delete
-                    </button>
-                    </>
-                    )}</div>
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                          onClick={() => editReviewHandler(review)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                          onClick={() => deleteReviewHandler(review)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))
             ) : (
@@ -355,7 +376,7 @@ useEffect(() => {
                 Create a Q&A
               </button>
             </div>
-            <Accordion>
+            <div>
               {product.item_qna_set && product.item_qna_set.length > 0 ? (
                 product.item_qna_set.map((item_qna, index) => (
                   <Accordion key={index}>
@@ -433,7 +454,7 @@ useEffect(() => {
               ) : (
                 <p>No Q&A</p>
               )}
-            </Accordion>
+            </div>
           </div>
         </div>
       )}

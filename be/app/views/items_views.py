@@ -255,16 +255,14 @@ def get_category(request):
 @api_view(['POST'])
 def create_qna(request,item_id):
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=item_id)
-  
-    title = request.data.get('title')
-    content = request.data.get('content')
-    image_url = request.data.get('image_url')
-
+    item = Item.objects.get(id=item_id)
+    title = ''
+    content = ''
+    image_url = ''
     current_time = datetime.now()
     qna_board = Item_QnA.objects.create(
-        user_id=user,
-        item_id=item,
+        user_id_id=user.id,
+        item_id_id=item.id,
         title=title,
         content=content,
         image_url=image_url,
@@ -277,33 +275,29 @@ def create_qna(request,item_id):
 
 @api_view(['PUT'])
 def update_qna(request,pk):
-    try:
-        qna = Item_QnA.objects.get(pk=pk)
-    except Item_QnA.DoesNotExist:
-        return Response({"error": "QnA not found"})
     
+    qna = Item_QnA.objects.get(id=pk)
     user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != qna.user_id.id:
         if user_auth.is_superuser == False:
             return Response({"error": "You are not allowed to edit this QnA"})
+    data = request.data
+    qna.title = data['title']
+    qna.content = data['content']
+    if 'image_url' in data:
+        if data['image_url'] == null:
+            qna.image_url = ''
+        qna.image_url = data['image_url']
+    qna.save()
     
-    data = request.data.copy()
-    data['item_id'] = qna.item_id.id
-    data['user_id'] = user.id
-    
-    serializer = ItemQnASerializer(qna, data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
-
-
+    serializer = ItemQnASerializer(qna, many=False)
+    return Response(serializer.data)
 @api_view(['DELETE'])
 def delete_qna (request, pk):
     try:
-        item_qna = Item_QnA.objects.get(pk=pk)
+        item_qna = Item_QnA.objects.get(id=pk)
     except Item_QnA.DoesNotExist:
         return Response({"error": "Item Q&A not found"}, status=404)
     
