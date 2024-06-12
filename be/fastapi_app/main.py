@@ -72,13 +72,18 @@ export_data_to_csv()
 async def schedule_daily_task():
     while True:
         now = datetime.now()
+        print("now")
         next_run = (now + timedelta(days=1)).replace(hour=2, minute=0, second=0, microsecond=0)
         wait_time = (next_run - now).total_seconds()
         logging.info(f"Next data export scheduled at {next_run}")
         await asyncio.sleep(wait_time)
         export_data_to_csv()
 
-@app.on_event("startup")
+# @app.on_event("startup")
+# async def startup_event():
+#     asyncio.create_task(schedule_daily_task())
+
+@app.router.on_startup
 async def startup_event():
     asyncio.create_task(schedule_daily_task())
 
