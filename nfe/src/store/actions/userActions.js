@@ -113,12 +113,12 @@ export const updateUserProfile = createAsyncThunk(
 
 export const updateUserPassword = createAsyncThunk(
   "passwordUpdate/update",
-  async (password, { getState, rejectWithValue }) => {
+  async ({ current_password, new_password }, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.put(
-        `/users/update_password/`,
-        { password },
+        `/users/updatePassword/`,
+        { current_password, new_password },
         {
           headers,
         }

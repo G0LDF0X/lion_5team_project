@@ -322,6 +322,12 @@ def get_tag(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def get_tag_with_category(request, pk):
+    tags = Tag.objects.filter(category_id=pk)
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def get_qna(request):
     qna = Item_QnA.objects.all()
     serializer = ItemQnASerializer(qna, many=True)
