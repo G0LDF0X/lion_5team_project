@@ -84,7 +84,7 @@ useEffect(() => {
 }, []);
   useEffect(() => {
     if (successProductReview) {
-      dispatch(resetSuccess());
+      
       console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
@@ -111,7 +111,7 @@ useEffect(() => {
   const editReviewHandler = (review) => {
     {console.log(userInfo)}
     if (userInfo && userInfo.id === review.user_id) {
-      navigate(`/items/review/${review.id}`);
+      navigate(`/items/review/update/${review.id}`);
     } else {
       alert("You can only edit your own reviews.");
     }
