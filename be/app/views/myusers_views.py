@@ -405,6 +405,7 @@ def delete_account(request):
         return Response({"message": "Account deleted successfully"}, status=204)
     except User.DoesNotExist:
 
+        return Response({"error": "User not found"}, status=404)
     
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
