@@ -175,6 +175,7 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
+    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
@@ -200,6 +201,7 @@ def create_review(request, item_id):
 def update_review(request, pk):
     # try:
     review = Review.objects.get(id=pk)
+    
     # except Review.DoesNotExist:
         # return Response({"error": "Review not found"})
     

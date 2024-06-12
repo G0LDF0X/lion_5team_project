@@ -21,9 +21,6 @@ export default function SideBar({ toggleDrawer, open }) {
     navigate('/');
   };
   
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
   
   const DrawerList = (
     <Box

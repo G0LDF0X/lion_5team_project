@@ -23,8 +23,10 @@ import Rating from "../components/Rating";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
+import { reviewCreateReset } from "../store/slices/reviewSlices";
 
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -47,7 +49,7 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview, createdReview } = reviewCreate;
+  const { success: successProductReview, review:createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
   const reviewDelete = useSelector((state) => state.reviewDelete);
@@ -84,11 +86,12 @@ useEffect(() => {
 }, []);
   useEffect(() => {
     if (successProductReview) {
+      dispatch(reviewCreateReset())
+      console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
-  }, [successProductReview, successReviewDelete, dispatch]);
+  }, [successProductReview]);
   useEffect(() => {
-    console.log("PRODUCT", product);
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);
     }
@@ -108,18 +111,28 @@ useEffect(() => {
   };
 
   const editReviewHandler = (review) => {
+    {console.log(userInfo)}
     if (userInfo && userInfo.id === review.user_id) {
-      navigate(`/items/review/${review.id}`);
+      dispatch(listReviewDetails(review.id));
+      navigate(`/items/review/update/${review.id}`);
     } else {
       alert("You can only edit your own reviews.");
     }
   };
 
   const deleteReviewHandler = (review) => {
+    console.log(review);
     if (userInfo && userInfo.id === review.user_id) {
       if (window.confirm("Are you sure you want to delete this review?")) {
-        dispatch(deleteReview(review.id));
-      }
+        dispatch(deleteReview(review.id))
+        .then(() => {
+        alert("Review deleted successfully.");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
     } else {
       alert("You can only delete your own reviews.");
     }
@@ -301,7 +314,7 @@ useEffect(() => {
                     text={review.rate}
                     color={"#f8e825"}
                   />
-                  <p className="my-4">{review.comment}</p>
+                  <p className="my-4">{review.content.replace(/<\/?p>/g, '')}</p>
                   {review.image && (
                     <img
                       src={review.image}
@@ -310,6 +323,8 @@ useEffect(() => {
                     />
                   )}
                   <div className="flex justify-end space-x-2">
+                    {userInfo && userInfo.id === review.user_id && (
+                      <>
                     <button
                       className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                       onClick={() => editReviewHandler(review)}
@@ -322,7 +337,8 @@ useEffect(() => {
                     >
                       Delete
                     </button>
-                  </div>
+                    </>
+                    )}</div>
                 </div>
               ))
             ) : (

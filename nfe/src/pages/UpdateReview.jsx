@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Button, Snackbar, Typography, Rating } from "@mui/material";
-import { createReview } from "../store/actions/reviewActions";
+import { createReview, updateReview, listReviewDetails} from "../store/actions/reviewActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-import { reviewCreateReset } from "../store/slices/reviewSlices";
+// import { reviewCreateReset } from "../store/slices/reviewSlices";
+import { reviewUpdateReset } from "../store/slices/reviewSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
+
 
 function UpdateReviewScreen() {
   const [title, setTitle] = useState("");
@@ -28,22 +30,32 @@ function UpdateReviewScreen() {
     setState({ open: false });
   };
 
+
   const { open } = state;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { loading, error, success } = reviewCreate;
-
-
-  
-
+  const reviewUpdate = useSelector((state) => state.reviewUpdate);
+  const { loading, error, success } = reviewUpdate
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
 
   const [uploading, setUploading] = useState(false);  
+  const reviewDetails = useSelector((state) => state.reviewDetails);
+  const {review} = reviewDetails;
+
+  useEffect(() => {
+    
+    if (review[0]) {
+      console.log(review);
       
+      setEditorData(review[0].content);
+
+      setTitle(review[0].title);
+      setContent(review[0].content);
+      setRate(review[0].rate);
+    }
+  }, [review]);
   class CustomUploadAdapter {
     constructor(loader) {
       this.loader = loader;
@@ -109,7 +121,7 @@ function UpdateReviewScreen() {
     };
   }
   function submitHandler() {
-    dispatch(createReview({title: title, content: editorData, rate: rate, id: id }));
+    dispatch(updateReview({ id, title, content: editorData, rate}));
   
   
   }
@@ -117,16 +129,23 @@ function UpdateReviewScreen() {
 
   useEffect(() => {
     if (success) {
-      navigate(`/items/detail/${id}`);
+      // dispatch (reviewUpdateReset());
+      window.history.back()
       setState({ open: true });
-        dispatch(reviewCreateReset());
+        dispatch(reviewUpdateReset());
     }
     if (error) {
         window.alert(error);
-        dispatch(reviewCreateReset());
+        dispatch(reviewUpdateReset());
     }
   }, [error, success, navigate, id]);
-
+  
+  useEffect(() => {
+    return () => {
+      dispatch(reviewUpdateReset());
+    };
+  }
+  , []);
   return (
     <div className="container mx-auto px-4 py-8">
       <Snackbar
@@ -146,7 +165,7 @@ function UpdateReviewScreen() {
       ) : (
         <div className="bg-white p-8 rounded-lg shadow-md">
           <Typography variant="h4" className="text-center mb-8">
-            Create Review
+            Review
           </Typography>
           <form onSubmit={submitHandler}>
             <div className="mb-4">
