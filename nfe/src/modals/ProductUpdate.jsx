@@ -6,7 +6,8 @@ import Loading from "../components/Loading";
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { updateProduct } from "../store/actions/productActions";
+import useCategory from "../hook/useCategory";
 function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price);
@@ -14,7 +15,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [category, setCategory] = useState(product.category);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
-
+  const  categories  = useCategory(); 
   const dispatch = useDispatch();
     const productUpdate = useSelector((state) => state.productUpdate);
     const { loading, error, success } = productUpdate;
@@ -71,6 +72,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             onChange={(e) => setName(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <TextField
             fullWidth
             label="Price"
@@ -80,6 +82,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             onChange={(e) => setPrice(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <Button
             variant="contained"
             component="label"
@@ -93,6 +96,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             />
           </Button>
           {uploading && <Loading />}
+          <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
             <Select
@@ -100,10 +104,15 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
               onChange={(e) => setCategory(e.target.value)}
               label="Category"
             >
-              <MenuItem value="1">산책용품</MenuItem>
-              <MenuItem value="2">간식</MenuItem>
+              {categories.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+              
             </Select>
           </FormControl>
+          <div className="mb-4"/>
           <TextField
             fullWidth
             multiline
@@ -114,6 +123,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             onChange={(e) => setDescription(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <Stack direction="row" spacing={1}>
               <Chip
@@ -136,6 +146,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
               />
             </Stack>
           </FormControl>
+          <div className="mb-4"/>
           <Button type="submit" variant="contained" color="primary" className="w-full">
             Create
           </Button>

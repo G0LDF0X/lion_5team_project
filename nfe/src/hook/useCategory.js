@@ -1,12 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { mainAxiosInstance } from '../api/axiosInstances';
-const useCategory = (setCategories) => {
+const useCategory = () => {
+    const [categories, setCategories] = useState([]);
     useEffect(() => {
         const getCategories = async () => {
             const response = await mainAxiosInstance('/items/category');
             setCategories(response.data);
-        }
-        getCategories()
-    }, []);
+            }
+            getCategories()
+            }, []);
+        return categories
 }
+
+
 export default useCategory;

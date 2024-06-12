@@ -13,7 +13,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from dotenv import load_dotenv
-from pytz import utc
 load_dotenv()
 
 db_host = os.getenv('DB_HOST')

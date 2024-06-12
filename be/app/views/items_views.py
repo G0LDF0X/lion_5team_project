@@ -88,14 +88,15 @@ def create_item(request):
     seller = Seller.objects.get(user_id=user)
     tag_id= Tag.objects.get(id=1)
     category = Category.objects.get(id=1)
+    data = request.data
     item = Item.objects.create(
         seller_id = seller,
         category_id = category, 
         tag_id = tag_id,
-        name = "",
-        price = 0,
-        description = "",
-        image_url = "",
+        name = data['name'],
+        price = data['price'],
+        description = data['description'],
+        image_url = data['image'],
         rate = 0,
         created_at = datetime.now()
         

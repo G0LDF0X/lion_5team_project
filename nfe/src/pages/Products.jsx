@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const [categories, setCategories] = useState([]);
+  
   const [selectedCategory, setSelectedCategory] = useState([]);
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages } = productList;
@@ -26,9 +26,6 @@ function ProductsScreen() {
   const page = params.get('page') || 1;
   const tag = params.get('tag');
   const suggestions = params.get('s') || ''; 
-  console.log(params)
-  console.log(suggestions);
-
 
 useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
@@ -40,7 +37,8 @@ useEffect(() => {
     }
 }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
-useCategory(setCategories);
+const  categories  = useCategory(); 
+
   const handleCategoryChange = (e) => {
     if (e.target.checked) {
       setSelectedCategory((prev) => [...prev, e.target.value]);
