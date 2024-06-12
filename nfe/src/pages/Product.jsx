@@ -88,7 +88,6 @@ useEffect(() => {
     }
   }, [successProductReview, successReviewDelete, dispatch]);
   useEffect(() => {
-    console.log("PRODUCT", product);
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);
     }
@@ -108,6 +107,7 @@ useEffect(() => {
   };
 
   const editReviewHandler = (review) => {
+    {console.log(userInfo)}
     if (userInfo && userInfo.id === review.user_id) {
       navigate(`/items/review/${review.id}`);
     } else {
@@ -310,6 +310,8 @@ useEffect(() => {
                     />
                   )}
                   <div className="flex justify-end space-x-2">
+                    {userInfo && userInfo.id === review.user_id && (
+                      <>
                     <button
                       className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                       onClick={() => editReviewHandler(review)}
@@ -322,7 +324,8 @@ useEffect(() => {
                     >
                       Delete
                     </button>
-                  </div>
+                    </>
+                    )}</div>
                 </div>
               ))
             ) : (

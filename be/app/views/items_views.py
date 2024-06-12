@@ -175,6 +175,7 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
+    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
