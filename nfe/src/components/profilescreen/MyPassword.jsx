@@ -7,7 +7,7 @@ import { mainAxiosInstance } from "../../api/axiosInstances";
 
 function MyPassword({ userInfo, reset }) {
   const [message, setMessage] = useState(null);
-  const [loginPassword, setPassword] = useState("");
+  // const [loginPassword, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -21,9 +21,7 @@ function MyPassword({ userInfo, reset }) {
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
-    } else {
-      setPassword(userInfo.password);
-    }
+    } 
 
     if (success) {
       dispatch(logout());
@@ -36,11 +34,14 @@ function MyPassword({ userInfo, reset }) {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmNewPassword) {
+    if (!newPassword || !confirmNewPassword) {
+      setMessage("새 비밀번호를 입력하세요.");
+    } else if (newPassword.length < 8) {
+      setMessage("비밀번호는 8자 이상이어야 합니다.");
+    } else if (newPassword !== confirmNewPassword) {
       setMessage("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-    } else if (loginPassword !== currentPassword) {
-      setMessage("현재 비밀번호가 일치하지 않습니다.");
-    } else {
+    } 
+    else {
       try {
        
         // 서버에 비밀번호 변경 요청을 보냅니다.

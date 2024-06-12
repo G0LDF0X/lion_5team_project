@@ -416,6 +416,12 @@ def updatePassword(request):
     current_password = data.get('current_password')
     new_password = data.get('new_password')
 
+    if not current_password or not new_password:
+        return Response({"detail": "모든 필드를 입력해주세요."}, status=400)
+
+    if len(new_password) < 8:
+        return Response({"detail": "새 비밀번호는 8자 이상이어야 합니다."}, status=400)
+
     if not check_password(current_password, user.password):
         return Response({"detail": "현재 비밀번호가 일치하지 않습니다."}, status=400)
 
