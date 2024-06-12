@@ -432,9 +432,6 @@ def updatePassword(request):
     return Response({"detail": "비밀번호가 성공적으로 변경되었습니다."}, status=200)
 
 
-
-
-
 # from django.middleware.csrf import get_token
 # from django.http import JsonResponse
 
