@@ -8,7 +8,8 @@ from rest_framework import status
 from django.utils import timezone
 from calendar import monthrange
 from django.db.models import F, Sum
-from datetime import timedelta
+from datetime import timedelta,datetime
+from dateutil.relativedelta import relativedelta
 
 @api_view(['GET'])
 def index(request):
@@ -167,3 +168,81 @@ def MonthlySellerRevenueView(request, pk):
         })
 
     return Response({'monthly_revenue': monthly_revenue})
+
+
+
+@api_view(['GET'])
+def ItemSalesStatsView(request,pk):
+    try:
+        seller = Seller.objects.get(user_id_id=pk)
+    except Seller.DoesNotExist:
+        return Response({'item_stats': []}, status=status.HTTP_200_OK)
+        
+    # 현재 로그인한 사용자의 아이템들에 대한 판매통계 데이터 계산
+    order_items = OrderItem.objects.filter(item_id__seller_id=seller)
+
+    item_stats = []
+    for order_item in order_items:
+        item_stat = {
+            'item_id': order_item.item_id.id,
+            'item_name': order_item.item_id.name,
+            'total_sales': order_item.qty,
+            'total_revenue': order_item.price_multi_qty
+        }
+        item_stats.append(item_stat)
+
+    return Response({'item_stats': item_stats}, status=status.HTTP_200_OK)@api_view(['GET'])
+
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+from datetime import datetime
+
+from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+
+from django.db.models import Sum
+
+@api_view(['GET'])
+def ItemSalesStatsView(request, pk):
+    try:
+        seller = Seller.objects.get(user_id_id=pk)
+    except Seller.DoesNotExist:
+        return Response({'error': 'Seller not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+    # 'filter' 값에 따라 다른 쿼리를 실행
+    filter_value = request.GET.get('filter')
+    if filter_value == 'week':
+        # 현재 주의 시작일과 종료일 계산
+        start_of_week = datetime.now() - timedelta(days=datetime.now().weekday())
+        end_of_week = start_of_week + timedelta(days=6)
+        
+        # 해당 판매자의 주간 판매 통계 데이터 가져오기
+        order_items = OrderItem.objects.filter(
+            order_id__user_id=seller.user_id,
+            order_id__created_at__range=[start_of_week, end_of_week]
+        )
+        date_range = {'start_date': start_of_week, 'end_date': end_of_week}
+    elif filter_value == 'month':
+        # 현재 월의 시작일과 종료일 계산
+        start_of_month = datetime.now().replace(day=1)
+        end_of_month = start_of_month + relativedelta(months=1, days=-1)
+        
+        # 해당 판매자의 월간 판매 통계 데이터 가져오기
+        order_items = OrderItem.objects.filter(
+            order_id__user_id=seller.user_id,
+            order_id__created_at__range=[start_of_month, end_of_month]
+        )
+        date_range = {'start_date': start_of_month, 'end_date': end_of_month}
+    else:
+        # 전체 데이터를 가져오는 쿼리
+        order_items = OrderItem.objects.filter(order_id__user_id=seller.user_id)
+
+    # 주문 항목들을 통해 판매 통계를 계산합니다.
+    item_stats = []
+    for order_item in order_items:
+        item_name = order_item.item_id.name  # 아이템 이름 가져오기
+        total_sales = order_item.qty
+        total_revenue = order_item.price_multi_qty
+        item_stats.append({'item_name': item_name, 'total_sales': total_sales, 'total_revenue': total_revenue})
+
+    return Response({'item_stats': item_stats}, status=status.HTTP_200_OK)
