@@ -21,3 +21,12 @@ class DetailedRecommendationResponse(BaseModel):
 
     class Config:
         orm_mode = True
+class DetailedRecommendationResponse(BaseModel):
+    board_id: int
+    title: str
+    image_url: str
+    
+    score: float
+
+    class Config:
+        orm_mode = True
