@@ -1,56 +1,40 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { mainAxiosInstance } from "../api/axiosInstances"; 
 
-async function getCsrfToken() {
-  try {
-    // 토큰 가져오기
-    const response = await mainAxiosInstance.get('/users/get_csrf_token/');
-    console.log(response.data.csrftoken);
-    return response.data.csrftoken;
+// async function getCsrfToken() {
+//   try {
+//     // 토큰 가져오기
+//     const response = await mainAxiosInstance.get('/users/get_csrf_token/');
+//     console.log(response.data.csrftoken);
+//     return response.data.csrftoken;
   
-
-  } catch (error) {
-    console.error('CSRF 토큰을 가져오는 중 오류가 발생했습니다:', error);
-    throw error;
-  }
-}
-
-
+//   } catch (error) {
+//     console.error('CSRF 토큰을 가져오는 중 오류가 발생했습니다:', error);
+//     throw error;
+//   }
+// }
 
 function ResetPasswordModal({ isOpen, onClose }) {
     const [email, setEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
-    const [message, setMessage] = useState('');
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
+        
+    
         try {
-            const csrfToken = await getCsrfToken();
+            // const csrfToken = await getCsrfToken();
             const response = await mainAxiosInstance.post(
-                `/users/password_reset/`, { 
-                    email 
-                }, {
-                    headers: {
-                    'X-CSRFToken': csrfToken,
-                    }
-            }
+                `/users/password_reset/`, {email: email}
             );
-            if (response.status === 200) {
-                // 이메일 전송 성공
-                setMessage('이메일이 전송되었습니다.');
-              } else {
-                // 이메일 전송 실패
-                setMessage('이메일 전송에 실패했습니다.');
-              }
-            setResetStatus('success');
-
-        } catch (error) {
-              // API 호출 중 에러 발생
-            setMessage('이메일 전송에 실패했습니다.');
-            setResetStatus('error');
-        }
-    };
+          console.log(response);  // response 객체를 콘솔에 출력
+          setResetStatus("success");
+          } catch (error) {
+            console.error(error);
+            setResetStatus("error");
+          }
+        };
     const handleClose = () => {
         setEmail('');
         setResetStatus('');
@@ -92,7 +76,6 @@ return ReactDOM.createPortal(
           className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700">
             비밀번호 재설정
           </button>
-          {message && <p>{message}</p>}
         </form>
       </div>
     </div>,
