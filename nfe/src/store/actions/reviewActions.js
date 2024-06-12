@@ -47,7 +47,8 @@ export const createReview = createAsyncThunk(
       const headers = getAuthHeaders(getState);
       
       const res = await mainAxiosInstance.post(
-        `/items/review/create/${id}/`,
+        `/items/review/create/${id}/`,{}
+        ,
         { headers }
       );
 
