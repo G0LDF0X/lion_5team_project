@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Button, Snackbar, Typography, Rating } from "@mui/material";
-import { createReview } from "../store/actions/reviewActions";
+import { createReview, updateReview } from "../store/actions/reviewActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import { reviewCreateReset } from "../store/slices/reviewSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
+
 
 function UpdateReviewScreen() {
   const [title, setTitle] = useState("");
@@ -33,8 +34,8 @@ function UpdateReviewScreen() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { loading, error, success } = reviewCreate;
+  const reviewUpdate = useSelector((state) => state.reviewUpdate);
+  const { loading, error, success } = reviewUpdate
 
 
   
@@ -109,7 +110,7 @@ function UpdateReviewScreen() {
     };
   }
   function submitHandler() {
-    dispatch(createReview({title: title, content: editorData, rate: rate, id: id }));
+    dispatch(updateReview({ id, title, content: editorData, rate}));
   
   
   }
@@ -117,7 +118,8 @@ function UpdateReviewScreen() {
 
   useEffect(() => {
     if (success) {
-      navigate(`/items/detail/${id}`);
+      // dispatch (reviewUpdateReset());
+      window.history.back()
       setState({ open: true });
         dispatch(reviewCreateReset());
     }
