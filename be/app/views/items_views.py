@@ -175,6 +175,7 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
+    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
@@ -318,6 +319,12 @@ def delete_qna (request, pk):
 @api_view(['GET'])
 def get_tag(request):
     tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_tag_with_category(request, pk):
+    tags = Tag.objects.filter(category_id=pk)
     serializer = TagSerializer(tags, many=True)
     return Response(serializer.data)
 
