@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateUserProfile, getUserDetail, logout, deleteUserAccount } from "../../store/actions/userActions";
 import {mainAxiosInstance} from "../../api/axiosInstances";
+import { clearSuccess } from "../../store/slices/userSlices";
 
 function UserSetting() {
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -27,7 +28,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     if (updateSuccess) {
       alert('수정이 완료되었습니다.');
       // window.location.reload();
-        dispatch(logout());
+        dispatch(clearSuccess());
         navigate("/");
     }
   }, [updateSuccess, dispatch, navigate]);

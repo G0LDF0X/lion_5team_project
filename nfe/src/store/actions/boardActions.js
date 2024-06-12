@@ -120,12 +120,29 @@ export const deleteBoard = createAsyncThunk(
 
 export const createReply = createAsyncThunk(
   "boardCreateReply/createBoardReply",
-  async ({ reply, boardId }, { getState, rejectWithValue }) => {
+  async ({ reply, boardId, applied_id }, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.post(
         `/board/detail/${boardId}/`,
-        { content: reply },
+        { content: reply, applied_id },
+        { headers }
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+
+export const createApply = createAsyncThunk(
+  "boardCreateReply/createBoardReply",
+  async ({ apply, boardId, applied_id }, { getState, rejectWithValue }) => {
+    try {
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.post(
+        `/board/detail/${boardId}/`,
+        { content: apply, replied_id: applied_id },
         { headers }
       );
       return res.data;
