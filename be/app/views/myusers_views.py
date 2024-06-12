@@ -4,7 +4,8 @@ from django.contrib.auth.models import User as auth_user
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from django.contrib.auth.hashers import check_password, make_password
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer, Interaction
@@ -404,4 +405,26 @@ def delete_account(request):
         return Response({"message": "Account deleted successfully"}, status=204)
     except User.DoesNotExist:
 
-        return Response({"error": "User not found"}, status=404)
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updatePassword(request):
+    user = request.user
+    data = request.data
+
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+
+    if not current_password or not new_password:
+        return Response({"detail": "모든 필드를 입력해주세요."}, status=400)
+
+    if len(new_password) < 8:
+        return Response({"detail": "새 비밀번호는 8자 이상이어야 합니다."}, status=400)
+
+    if not check_password(current_password, user.password):
+        return Response({"detail": "현재 비밀번호가 일치하지 않습니다."}, status=400)
+
+    user.password = make_password(new_password)
+    user.save()
+
+    return Response({"detail": "비밀번호가 성공적으로 변경되었습니다."}, status=200)

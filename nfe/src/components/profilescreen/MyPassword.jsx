@@ -7,7 +7,7 @@ import { mainAxiosInstance } from "../../api/axiosInstances";
 
 function MyPassword({ userInfo, reset }) {
   const [message, setMessage] = useState(null);
-  const [loginPassword, setPassword] = useState("");
+  // const [loginPassword, setPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -16,13 +16,12 @@ function MyPassword({ userInfo, reset }) {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const { success } = user;
+  
 
   useEffect(() => {
     if (!userInfo) {
       navigate("/login");
-    } else {
-      setPassword(userInfo.password);
-    }
+    } 
 
     if (success) {
       dispatch(logout());
@@ -30,25 +29,40 @@ function MyPassword({ userInfo, reset }) {
       navigate("/password-change-confirm");
     }
   }, [userInfo, success]);
+  
+  console.log("Current Token:", userInfo.access); // 액세스 토큰 확인
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    if (loginPassword !== currentPassword) {
-      setMessage("현재 비밀번호가 일치하지 않습니다.");
+    if (!newPassword || !confirmNewPassword) {
+      setMessage("새 비밀번호를 입력하세요.");
+    } else if (newPassword.length < 8) {
+      setMessage("비밀번호는 8자 이상이어야 합니다.");
     } else if (newPassword !== confirmNewPassword) {
       setMessage("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-    } else {
+    } 
+    else {
       try {
-        await mainAxiosInstance.put(
+       
+        // 서버에 비밀번호 변경 요청을 보냅니다.
+        const response = await mainAxiosInstance.put(
           "/users/updatePassword/",
-          { password: newPassword },
+          { current_password: currentPassword, new_password: newPassword },
           {
             headers: {
               Authorization: `Bearer ${userInfo.access}`,
             },
           }
         );
-        dispatch(updateUserPassword({ password: newPassword }));
+  
+        // 서버에서 응답을 받습니다.
+        if (response.status === 200) {
+          dispatch(updateUserPassword({ password: newPassword }));
+          dispatch(logout());
+          navigate("/password-change-confirm");
+        } else {
+          setMessage(response.data.detail);
+        }
       } catch (error) {
         console.error("Error:", error);
         setMessage("An error occurred while updating the password.");

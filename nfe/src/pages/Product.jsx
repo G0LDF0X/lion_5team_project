@@ -88,6 +88,7 @@ useEffect(() => {
     }
   }, [successProductReview, successReviewDelete, dispatch]);
   useEffect(() => {
+    console.log("PRODUCT", product);
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);
     }
@@ -211,6 +212,7 @@ useEffect(() => {
             <div className="col-span-1">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <h3 className="text-2xl font-bold mb-4">{product.name}</h3>
+                <p style={{ fontSize: 'small', color: 'gray', paddingBottom: '10px' }}>{product.category} 〉 {product.tag}</p>
                 <Rating value={avgRate} text={avgRate} color={"#f8e825"} />
                 <p className="text-xl font-semibold my-4">{product.price}₩</p>
                 <p>{product.description}</p>
