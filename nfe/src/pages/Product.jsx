@@ -23,8 +23,10 @@ import Rating from "../components/Rating";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
+import { reviewCreateReset } from "../store/slices/reviewSlices";
 
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -84,7 +86,7 @@ useEffect(() => {
 }, []);
   useEffect(() => {
     if (successProductReview) {
-      
+      dispatch(reviewCreateReset())
       console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
@@ -111,6 +113,7 @@ useEffect(() => {
   const editReviewHandler = (review) => {
     {console.log(userInfo)}
     if (userInfo && userInfo.id === review.user_id) {
+      dispatch(listReviewDetails(review.id));
       navigate(`/items/review/update/${review.id}`);
     } else {
       alert("You can only edit your own reviews.");

@@ -81,7 +81,9 @@ export default reviewCreateSlice.reducer;
 export const reviewUpdateSlice = createSlice({
   name: "reviewUpdate",
   initialState: { loading: false, success: false, review: {} },
-  reducers: {},
+  reducers: {
+    reset: () => initialState,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(updateReview.pending, (state) => {
@@ -98,7 +100,7 @@ export const reviewUpdateSlice = createSlice({
       });
   },
 });
-
+export const { reset: reviewUpdateReset } = reviewUpdateSlice.actions;
 export const reviewDeleteSlice = createSlice({
   name: "reviewDelete",
   initialState: { loading: false, success: false },
