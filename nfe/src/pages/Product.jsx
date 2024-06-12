@@ -47,7 +47,7 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview, createdReview } = reviewCreate;
+  const { success: successProductReview, review:createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
   const reviewDelete = useSelector((state) => state.reviewDelete);
@@ -84,9 +84,11 @@ useEffect(() => {
 }, []);
   useEffect(() => {
     if (successProductReview) {
+      dispatch(resetSuccess());
+      console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
-  }, [successProductReview, successReviewDelete, dispatch]);
+  }, [successProductReview]);
   useEffect(() => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);

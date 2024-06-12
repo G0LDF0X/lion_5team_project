@@ -201,6 +201,7 @@ def create_review(request, item_id):
 def update_review(request, pk):
     # try:
     review = Review.objects.get(id=pk)
+    
     # except Review.DoesNotExist:
         # return Response({"error": "Review not found"})
     
