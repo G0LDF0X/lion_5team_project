@@ -408,10 +408,55 @@ def delete_account(request):
 
 
 
-from django.middleware.csrf import get_token
-from django.http import JsonResponse
+# from django.middleware.csrf import get_token
+# from django.http import JsonResponse
 
 # @api_view(['GET'])
 # def get_csrf_token(request):
 #     csrftoken = get_token(request)
 #     return JsonResponse({'csrftoken': csrftoken})
+
+# from django.contrib.auth.forms import PasswordResetForm
+# from django.contrib.auth.tokens import default_token_generator
+# from django.contrib.sites.shortcuts import get_current_site
+# from django.utils.http import urlsafe_base64_encode
+# from django.utils.encoding import force_bytes
+# from django.core.mail import send_mail
+# from django.contrib.auth.views import PasswordResetView
+
+# class CustomPasswordResetForm(PasswordResetForm):
+#     def save(self, domain_override=None,
+#              subject_template_name='registration/password_reset_subject.txt',
+#              email_template_name='registration/password_reset_email.html',
+#              use_https=False, token_generator=default_token_generator,
+#              from_email=None, request=None, html_email_template_name=None,
+#              extra_email_context=None):
+#         """
+#         Generates a one-use only link for resetting password and sends to the
+#         user.
+#         """
+#         email = self.cleaned_data["email"]
+#         for user in self.get_users(email):
+#             if not domain_override:
+#                 current_site = get_current_site(request)
+#                 site_name = current_site.name
+#                 domain = current_site.domain
+#             else:
+#                 site_name = domain = domain_override
+#             uid = urlsafe_base64_encode(force_bytes(user.pk))
+#             token = token_generator.make_token(user)
+#             password_reset_link = f"http://{domain}/users/password_reset_confirm/{uid}/{token}/?code={token}"
+
+#             send_mail(
+#                 "Your password reset request",
+#                 # f"Your password reset code is: {token} You're receiving this email because you requested a password reset for your user account at {domain}.\n\n"
+#                 f"Please go to the following page and choose a new password:\n\n"
+#                 f"{password_reset_link}\n\n"
+#                 f"Your username, in case you’ve forgotten: {user.username}\n\n"
+#                 "Thanks for using our site!\n\n"
+#                 f"The {site_name} team",
+#                 from_email,
+#                 [email],
+#             )
+# class CustomPasswordResetView(PasswordResetView):
+#     form_class = CustomPasswordResetForm

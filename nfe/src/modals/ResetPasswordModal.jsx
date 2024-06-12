@@ -2,18 +2,6 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { mainAxiosInstance } from "../api/axiosInstances"; 
 
-// async function getCsrfToken() {
-//   try {
-//     // 토큰 가져오기
-//     const response = await mainAxiosInstance.get('/users/get_csrf_token/');
-//     console.log(response.data.csrftoken);
-//     return response.data.csrftoken;
-  
-//   } catch (error) {
-//     console.error('CSRF 토큰을 가져오는 중 오류가 발생했습니다:', error);
-//     throw error;
-//   }
-// }
 
 function ResetPasswordModal({ isOpen, onClose }) {
     const [email, setEmail] = useState('');
@@ -24,14 +12,18 @@ function ResetPasswordModal({ isOpen, onClose }) {
         
     
         try {
-            // const csrfToken = await getCsrfToken();
+
             const response = await mainAxiosInstance.post(
-                `/users/password_reset/`, {email: email}
+                `/users/password_reset/`,
+                 {email: email},
+               { headers: { 'Content-Type': 'application/json' } }
             );
-          console.log(response);  // response 객체를 콘솔에 출력
+
+          console.log('Response from server:', response);
           setResetStatus("success");
           } catch (error) {
             console.error(error);
+            console.log('Error from server:', error); 
             setResetStatus("error");
           }
         };

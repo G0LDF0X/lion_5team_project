@@ -34,7 +34,11 @@ urlpatterns = [
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
     path('delete_account/', delete_account, name='delete-account'),
 
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'), # 이메일 입력 화면
+
+
+     # 이메일 입력 화면
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    # path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
     path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'), # 이메일 발송 완료 화면
     path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'), # 이메일 클릭 > 비밀번호 입력 화면
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),  # 비밀번호 초기화 완료 화면
