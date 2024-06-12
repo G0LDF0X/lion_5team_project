@@ -33,4 +33,5 @@ urlpatterns = [
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
     path('delete_account/', delete_account, name='delete-account'),
     path('updatePassword/', updatePassword, name='update-password'),
+    path('check_review/<int:pk>/', check_user_review, name='check_user_review'),
 ]
