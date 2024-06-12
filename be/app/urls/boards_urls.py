@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.boards_views import get_Boards, board_detail_or_create_reply, get_TopBoards, create_Board, update_Board, delete_Board,  predict_image, handle_like
+from app.views.boards_views import *
 # from app.views.boards_views import create_Reply
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete/<str:pk>/', delete_Board, name='board_delete'),  
     path('predict/<str:pk>/', predict_image, name='predict_image'),
     # path('detail/<str:pk>/', create_Reply, name='reply_create'),
+    path('reply/<str:pk>/delete/', delete_Reply, name='reply_delete'),
 ]
