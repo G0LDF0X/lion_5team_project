@@ -6,6 +6,7 @@ import {
     productCreateSlice,
     productUpdateSlice,
     productDeleteSlice,
+    productQnASlice
     } from "./store/slices/productSlices";
 import {
     reviewListSlice,
@@ -55,6 +56,7 @@ const sotre = configureStore({
     productCreate: productCreateSlice.reducer,
     productUpdate: productUpdateSlice.reducer,
     productDelete: productDeleteSlice.reducer,
+    productQnA: productQnASlice.reducer,
 
 
     reviewList: reviewListSlice.reducer,

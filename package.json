@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@portone/browser-sdk": "^0.0.7"
+  }
+}

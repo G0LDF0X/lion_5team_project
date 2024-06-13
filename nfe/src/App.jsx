@@ -22,6 +22,7 @@ import ShippingScreen from './pages/Shipping';
 import BoardDetailModal from './modals/BoardDetail';
 import OrderDetail from './components/profilescreen/OrderDetail';
 import Test from './pages/test';
+import ProductQnAUpdate from './pages/ProductQnAUpdate';
 
 const routers = createBrowserRouter([
   {
@@ -55,7 +56,8 @@ const routers = createBrowserRouter([
       { path: '/users/:id', element: <OtherUserProfile /> },
       { path: '/shipping', element: <ShippingScreen /> },
       { path: '/order/detail/:id', element: <OrderDetail /> },
-      { path: '/test', element: <Test /> }
+      { path: '/test', element: <Test /> },
+      {path: '/items/qna/update/:id', element: <ProductQnAUpdate />}
     ]
   }
 ]);

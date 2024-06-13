@@ -34,8 +34,8 @@ urlpatterns = [
     path('profile/myuseranswer/', getMyUserAnswer, name='my_user_answer'),
     path('delete_account/', delete_account, name='delete-account'),
     path('updatePassword/', updatePassword, name='update-password'),
-    
-     # 이메일 입력 화면
+    path('check_review/<int:pk>/', check_user_review, name='check_user_review'),
+    # 이메일 입력 화면
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     # path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
     path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'), # 이메일 발송 완료 화면
@@ -43,3 +43,4 @@ urlpatterns = [
     path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),  # 비밀번호 초기화 완료 화면
     # path('get_csrf_token/', get_csrf_token, name = 'get_csrf_token')
 ]
+

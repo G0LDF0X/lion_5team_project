@@ -1,22 +1,20 @@
+
 import React, { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useDispatch, useSelector } from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Button, Snackbar, Typography, Rating } from "@mui/material";
-import { createReview, updateReview, listReviewDetails} from "../store/actions/reviewActions";
-
+import { Button, Snackbar, Typography } from "@mui/material";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-// import { reviewCreateReset } from "../store/slices/reviewSlices";
-import { reviewUpdateReset } from "../store/slices/reviewSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { productQnaReset } from "../store/slices/productSlices";
+import { updateProductQnA } from "../store/actions/productActions";
 
 
-function UpdateReviewScreen() {
+function ProductQnAUpdate() {
   const [title, setTitle] = useState("");
   
-  const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [state, setState] = useState({ open: false });
@@ -24,7 +22,6 @@ function UpdateReviewScreen() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    rate: 0,
     image_url: "",
   });
   const handleClose = () => {
@@ -36,29 +33,13 @@ function UpdateReviewScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const reviewUpdate = useSelector((state) => state.reviewUpdate);
-  const { loading, error, success } = reviewUpdate
-
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
-
   const [uploading, setUploading] = useState(false);  
-  const reviewDetails = useSelector((state) => state.reviewDetails);
-  const {review} = reviewDetails;
+  const productQnA = useSelector((state) => state.productQnA);
+    const {loading, error, successUpdate} = productQnA;
+  
 
-  useEffect(() => {
-    
-    if (review[0]) {
-      console.log(review);
-      
-      setEditorData(review[0].content);
-
-      setTitle(review[0].title);
-      setContent(review[0].content);
-      setRate(review[0].rate);
-    }
-  }, [review]);
   class CustomUploadAdapter {
     constructor(loader) {
       this.loader = loader;
@@ -74,7 +55,7 @@ function UpdateReviewScreen() {
           // data.append("name", file.name);
           data.append("file", file);
           setUploading(true);
-          mainAxiosInstance.post(`/items/review/uploadImage/${id}/`,   
+          mainAxiosInstance.post(`/items/qna/uploadImage/${id}/`,   
              data,
           )
             .then((response) => response.data)
@@ -96,14 +77,7 @@ function UpdateReviewScreen() {
       });
     }
   }
-  // useEffect(() => {
-  //   dispatch(listReviewDetails(id) );
-  //   if (successUpdate) {
-  //     navigate(`/items/detail/${updatedReview.item_id}`);}
-  //     dispatch({type:REVIEW_UPDATE_RESET})
-    
-  // }, [dispatch, id, successUpdate ]);
-
+  
   useEffect(() => {
     
     const parser = new DOMParser();
@@ -124,28 +98,27 @@ function UpdateReviewScreen() {
     };
   }
   function submitHandler() {
-    dispatch(updateReview({ id, title, content: editorData, rate}));
+    dispatch(updateProductQnA({ id, title, content: editorData, image_url: fileName}));
   
   
   }
 
 
   useEffect(() => {
-    if (success) {
-      // dispatch (reviewUpdateReset());
+    if (successUpdate) {
       window.history.back()
       setState({ open: true });
-        dispatch(reviewUpdateReset());
+        dispatch(productQnaReset());
     }
     if (error) {
         window.alert(error);
-        dispatch(reviewUpdateReset());
+        dispatch(productQnaReset());
     }
-  }, [error, success, navigate, id]);
+  }, [error, navigate, id, successUpdate    ]);
   
   useEffect(() => {
     return () => {
-      dispatch(reviewUpdateReset());
+      dispatch(productQnaReset());
     };
   }
   , []);
@@ -193,18 +166,6 @@ function UpdateReviewScreen() {
         }}
       />
             </div>
-            <div className="mb-4">
-              <Typography id="rate-slider" gutterBottom>
-                Rating
-              </Typography>
-              <Rating
-                name="simple-controlled"
-                value={Number(rate)} 
-                onChange={(e) => {
-                  setRate(e.target.value);
-                }}
-              />
-            </div>
 
             <div className="text-center">
               <Button
@@ -223,4 +184,4 @@ function UpdateReviewScreen() {
   );
 }
 
-export default UpdateReviewScreen;
+export default ProductQnAUpdate;

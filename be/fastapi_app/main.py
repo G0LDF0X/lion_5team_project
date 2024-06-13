@@ -84,6 +84,7 @@ async def startup_event():
 
 @app.post("/search/")
 async def search_items(query: str):
+    
     items = pd.read_csv(item_csv_file_path)
     vector_store = Chroma.from_texts(
         texts=items['item_name'].tolist(),

@@ -1,6 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
+const getAuthHeaders = (getState) => {
+  const {
+    user: { userInfo },
+  } = getState();
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${userInfo.access}`,
+  };
+};
+
 export const listProducts = createAsyncThunk(
   'products/listProducts',
   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue }) => {
@@ -45,8 +55,13 @@ export const listProductDetails = createAsyncThunk(
 );
 export const createProduct = createAsyncThunk(
   "productCreate/createProduct",
-  async (product, { rejectWithValue }) => {
+  async (product, { rejectWithValue, getState }) => {
     try {
+      const {
+        user: { userInfo },
+      } = getState();
+
+      
       const formData = new FormData();
       for (const key in product) {
         formData.append(key, product[key]);
@@ -58,6 +73,7 @@ export const createProduct = createAsyncThunk(
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${userInfo.access}`,
           },
         }
       );
@@ -110,6 +126,48 @@ export const deleteProduct = createAsyncThunk(
           ? error.response.data.detail
           : error.message
       );
+    }
+  }
+);
+export const createProductQnA = createAsyncThunk(
+  "productQnACreate/createProductQnA",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.post(`/items/qna/create/${id}/`,
+        {},
+         {headers});
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+export const updateProductQnA = createAsyncThunk(
+  "productQnAUpdate/updateProductQnA",
+  async ({id, title, content}, { rejectWithValue, getState }) => {
+
+    try {
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.put(`/items/qna/update/${id}/`, {
+         title, content },
+        { headers });
+      return res.data;
+      
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+export const deleteProductQnA = createAsyncThunk(
+  "productQnADelete/deleteProductQnA",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await mainAxiosInstance.delete(`/items/qna/delete/${id}`);
+
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
     }
   }
 );

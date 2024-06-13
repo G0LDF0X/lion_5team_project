@@ -5,6 +5,9 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  createProductQnA,
+  updateProductQnA,
+  deleteProductQnA,
 } from "../actions/productActions";
 
 export const productListSlice = createSlice({
@@ -111,3 +114,54 @@ export const productDeleteSlice = createSlice({
       });
   },
 });
+const initialState = { loading: false, success: false, productQnA: [], error: null, successUpdate: false,}; 
+export const productQnASlice = createSlice({  
+  name: "productQnA",
+  initialState: initialState,
+  reducers: {reset : () => initialState,},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createProductQnA.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createProductQnA.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.productQnA = action.payload;
+      })
+      .addCase(createProductQnA.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateProductQnA.pending, (state) => {
+        state.loading = true;
+      }
+      )
+      .addCase(updateProductQnA.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successUpdate = true;
+        state.productQnA = action.payload;
+      }
+      )
+      .addCase(updateProductQnA.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      }
+      )
+      .addCase(deleteProductQnA.pending, (state) => {
+        state.loading = true;
+      }
+      )
+      .addCase(deleteProductQnA.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+      }
+      )
+      .addCase(deleteProductQnA.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+
+      });
+  },
+});
+export const { reset: productQnaReset } = productQnASlice.actions;
