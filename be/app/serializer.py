@@ -257,6 +257,12 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         fields = ('username', 'email', 'password', 'nickname', 'address', 'phone', 'pet')
         extra_kwargs = {'password': {'write_only': True}}
 
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("This ID is already taken.")
+        return value
+    
     def validate(self, attrs):
         # if attrs['password'] != attrs['password2']:
         #     raise serializers.ValidationError(
