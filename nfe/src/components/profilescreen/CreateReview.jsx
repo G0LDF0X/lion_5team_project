@@ -52,7 +52,7 @@ function CreateReview() {
                 <p style={{fontSize: "small", color: "gray"}}>{item.created_at}</p>
               </Box>
             </Box>
-            <Link to={`/items/detail/${item.id}`}>
+            <Link to={`/items/detail/${item.item_id}`}>
               <Button variant="outlined">Go to Review</Button>
             </Link>
           </Box>
