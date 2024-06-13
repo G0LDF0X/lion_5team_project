@@ -1,7 +1,7 @@
 // RegisterModal.jsx
 import React, { useEffect, useState } from 'react';
 import { register } from '../store/actions/userActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { useFetch } from '../hook/useFetch';
 import AddressSearch from '../components/AddressSearch';
@@ -16,6 +16,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const [nickname, setNickname] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  const [error, setError] = useState('');
   
 
   // Pet details
@@ -33,6 +34,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
   const dispatch = useDispatch();
   const {genders, species, breeds}=useFetch();
+  const { loading, registerError } = useSelector((state) => state.user); // 리덕스 상태에서 에러 가져오기
  
   const [filteredBreeds, setFilteredBreeds] = useState([]); 
   
@@ -60,11 +62,18 @@ const RegisterModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const pet = petName ? { 'name': petName, 'gender':{'pet_gender':petGender}, 'age': petAge, 'species':{'pet_kind': petSpecies}, 'breed': {'pet_breed': petBreed, 'pet_kind_id':petSpecies}} : null;
-    dispatch(register({ username, email, password, nickname, address, phone, pet}));
     // Handle registration logic here
     console.log('User registered:', { username, email, password, nickname, address, phone, pet});
-    onClose();
-  };
+
+    dispatch(register({ username, email, password, nickname, address, phone, pet}))
+      .unwrap()
+      .then(() => {
+        onClose();
+      })
+      .catch((error) => {
+        setError(error);
+      });
+    };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -77,6 +86,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
           </button>
         </div>
         <form onSubmit={handleSubmit}>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <div className="mb-4">
             <label className="block text-gray-700">ID:</label>
             <input

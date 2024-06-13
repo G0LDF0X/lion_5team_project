@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { createReply, getBoardDetails, createApply } from "../store/actions/boardActions";
+import { createReply, getBoardDetails, createApply, updateBoard } from "../store/actions/boardActions";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
@@ -33,11 +33,12 @@ function BoardDetailModal({ open, handleClose }) {
   const [applied_id, setAppliedId] = useState(0);
   const [apply, setApply] = useState("");
   const [replyToUser, setReplyToUser] = useState(null);
+
   const [updatedReplyContent, setUpdatedReplyContent] = useState(""); 
   const [editingReplyId, setEditingReplyId] = useState(null);
-
-
-    
+  const [editMode, setEditMode] = useState(false); 
+  const [editTitle, setEditTitle] = useState(""); 
+  const [editContent, setEditContent] = useState(""); 
 
 
   const sortedReplies = [];
@@ -61,6 +62,26 @@ function BoardDetailModal({ open, handleClose }) {
       }
     }
   }, [dispatch, boardId, boardDetail?.liked_by_user, likeSuccess]);
+
+  const editHandler = () => {
+    setEditMode(true);
+    setEditTitle(boardDetail.title);
+    setEditContent(boardDetail.content);
+  };
+
+  const submitEditHandler = async (e) => {
+    e.preventDefault();
+    if (!editTitle || !editContent) {
+      alert("Title and content must not be empty.");
+      return;
+    }
+    dispatch(updateBoard({ id: boardId, board:{ title: editTitle, content: editContent }}));
+    setEditMode(false);
+  };
+
+  const cancelEditHandler = () => {
+    setEditMode(false);
+  };
 
   const likeHandler = () => {
     if (userInfo) {
@@ -252,12 +273,56 @@ const handleUpdateReply = async (replyId) => {
                     {boardDetail.created_at}
                   </p>
                 </div>
+                {userInfo && userInfo.id === boardDetail.user_id && (
+                  // 수정 버튼 추가
+                  <button
+                    onClick={editHandler}
+                    className="ml-auto bg-blue-500 text-white p-1 rounded"
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
               <div className="flex-grow overflow-y-auto">
-                <p
-                  dangerouslySetInnerHTML={{ __html: boardDetail.content }}
-                  className="text-2xl font-bold mb-2"
-                ></p>
+              {editMode ? (
+                  <form onSubmit={submitEditHandler}>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full p-2 border rounded mb-2"
+                    />
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full p-2 border rounded mb-2"
+                      rows="5"
+                    />
+                    <div className="flex justify-between">
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white p-2 rounded"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEditHandler}
+                        className="bg-red-500 text-white p-2 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-bold mb-2">{boardDetail.title}</h2>
+                    <p
+                      dangerouslySetInnerHTML={{ __html: boardDetail.content }}
+                      className="mb-4"
+                    ></p>
+                  </>
+                )}
                 <CardActions disableSpacing>
                   <IconButton
                     aria-label="add to favorites"
@@ -357,9 +422,7 @@ const handleUpdateReply = async (replyId) => {
   );
 }
 
+
 export default BoardDetailModal;
-
-
-
 
 

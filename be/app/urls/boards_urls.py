@@ -17,4 +17,6 @@ urlpatterns = [
     # path('detail/<str:pk>/', create_Reply, name='reply_create'),
     path('reply/<str:pk>/delete/', delete_Reply, name='reply_delete'),
     path('reply/<str:pk>/update/', update_Reply, name='reply_update'),
+    path('update_board/<str:pk>/', update_Board, name='update_board'),
+
 ]
