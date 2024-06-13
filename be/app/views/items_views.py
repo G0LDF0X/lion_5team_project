@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, Board, User_QnA
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, Board_Serializer, UserQnASerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
