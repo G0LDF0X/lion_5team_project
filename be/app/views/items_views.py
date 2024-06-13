@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, OrderItem
 from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
@@ -217,7 +217,10 @@ def update_review(request, pk):
     review.title = data['title']
     review.content = data['content']
     review.rate = data['rate']
-
+    # Get the OrderItem instance with the ID from the request data
+    orderitem = get_object_or_404(OrderItem, id=data['orderitem_id'])
+    review.orderitem_id = orderitem
+    
     review.save()
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)

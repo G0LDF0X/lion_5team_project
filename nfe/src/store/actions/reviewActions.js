@@ -61,12 +61,12 @@ export const createReview = createAsyncThunk(
 
 export const updateReview = createAsyncThunk(
   "reviewUpdate/updateReview",
-  async ({id, title, content, rate}, { getState, rejectWithValue }) => {
+  async ({id, title, content, rate, orderitem_id}, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.put(
         `/items/review/update/${id}/`,
-        { 'title': title, 'content': content, 'rate': rate  },
+        { 'title': title, 'content': content, 'rate': rate, 'orderitem_id': orderitem_id },
         { headers }
       );
 

@@ -167,12 +167,10 @@ from django.db.models import Q
 def check_user_review(request, pk):
     user = User.objects.get(id=pk)
     orders = Order.objects.filter(user_id=user)
-    order_items = OrderItem.objects.filter(order_id__in=orders)
-    item_ids = order_items.values_list('item_id', flat=True)
-    reviewed_items = Review.objects.filter(Q(user_id=user) & Q(item_id__in=item_ids)).values_list('item_id', flat=True)
-    unreviewed_item_ids = [item_id for item_id in item_ids if item_id not in reviewed_items]
-    unreviewed_items = OrderItem.objects.filter(item_id__in=unreviewed_item_ids)
-    serializer = OrderItemSerializer(unreviewed_items, many=True)
+    order_items = OrderItem.objects.filter(order_id__in=orders, is_refund=False)
+    reviewed_orderitem_ids = Review.objects.filter(user_id=user).values_list('orderitem_id', flat=True)
+    unreviewed_orderitems = order_items.exclude(id__in=reviewed_orderitem_ids)
+    serializer = OrderItemSerializer(unreviewed_orderitems, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
