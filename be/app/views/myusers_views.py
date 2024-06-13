@@ -452,48 +452,124 @@ def updatePassword(request):
 #     csrftoken = get_token(request)
 #     return JsonResponse({'csrftoken': csrftoken})
 
-# from django.contrib.auth.forms import PasswordResetForm
 # from django.contrib.auth.tokens import default_token_generator
-# from django.contrib.sites.shortcuts import get_current_site
 # from django.utils.http import urlsafe_base64_encode
 # from django.utils.encoding import force_bytes
-# from django.core.mail import send_mail
 # from django.contrib.auth.views import PasswordResetView
+# from django.contrib.auth.forms import PasswordResetForm
 
-# class CustomPasswordResetForm(PasswordResetForm):
-#     def save(self, domain_override=None,
-#              subject_template_name='registration/password_reset_subject.txt',
-#              email_template_name='registration/password_reset_email.html',
-#              use_https=False, token_generator=default_token_generator,
-#              from_email=None, request=None, html_email_template_name=None,
-#              extra_email_context=None):
-#         """
-#         Generates a one-use only link for resetting password and sends to the
-#         user.
-#         """
-#         email = self.cleaned_data["email"]
-#         for user in self.get_users(email):
-#             if not domain_override:
-#                 current_site = get_current_site(request)
-#                 site_name = current_site.name
-#                 domain = current_site.domain
-#             else:
-#                 site_name = domain = domain_override
-#             uid = urlsafe_base64_encode(force_bytes(user.pk))
-#             token = token_generator.make_token(user)
-#             password_reset_link = f"http://{domain}/users/password_reset_confirm/{uid}/{token}/?code={token}"
+# from django.core.mail import send_mail
+# from django.http import HttpResponse
+# from django.contrib.auth import get_user_model
 
-#             send_mail(
-#                 "Your password reset request",
-#                 # f"Your password reset code is: {token} You're receiving this email because you requested a password reset for your user account at {domain}.\n\n"
-#                 f"Please go to the following page and choose a new password:\n\n"
-#                 f"{password_reset_link}\n\n"
-#                 f"Your username, in case you’ve forgotten: {user.username}\n\n"
-#                 "Thanks for using our site!\n\n"
-#                 f"The {site_name} team",
-#                 from_email,
-#                 [email],
-#             )
+
 # class CustomPasswordResetView(PasswordResetView):
-#     form_class = CustomPasswordResetForm
+#     form_class = PasswordResetForm
+#     def form_valid(self, form):
+#         User = get_user_model()
+#         try:
+#             user = User.objects.get(email=form.cleaned_data['email'])
+#         except User.DoesNotExist:
+#             return HttpResponse("User does not exist")
+        
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+#         token = default_token_generator.make_token(user)
 
+#         # Construct the password reset link with token
+#         reset_url = f"Here is your password reset link: http://127.0.0.1:8000/users/password_reset_confirm/{uid}/{token}/"
+#         # Send the email with the custom password reset link
+#         try:
+#             sent_count = send_mail(
+#                 'Password Reset',
+#                 f'Here is your password reset link: {reset_url}',
+#                 'from@example.com',
+#                 [form.cleaned_data['email']],
+#                 fail_silently=False,
+#             )
+#             print(f"Number of emails sent: {sent_count}")
+#         except Exception as e:
+#             # 오류 메시지를 출력하거나 로깅하고 적절한 응답을 반환합니다.
+#             print(f"Error occurred: {e}")
+#             return HttpResponse("Error occurred while sending the email")
+#         return super().form_valid(form)
+#         # Redirect to the success URL after sending the email
+#         # return HttpResponseRedirect(self.get_success_url())
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import PasswordResetView
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordResetForm
+
+
+# class CustomPasswordResetView(PasswordResetView):
+#     form_class = PasswordResetForm
+#     success_url = reverse_lazy('password_reset_done')  # 비밀번호 재설정 이메일이 성공적으로 보내진 후 리디렉션할 URL
+
+#     def form_valid(self, form):
+#         User = get_user_model()
+#         try:
+#             user = User.objects.get(email=form.cleaned_data['email'])
+#         except User.DoesNotExist:
+#             return HttpResponse("User does not exist")
+
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+#         token = default_token_generator.make_token(user)
+
+#         # 비밀번호 재설정 URL 생성
+#         reset_url = self.request.build_absolute_uri(reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
+
+#         # 비밀번호 재설정 이메일 보내기
+#         try:
+#             send_mail(
+#                 'Password Reset',
+#                 f'Here is your password reset link: {reset_url}',
+#                 'from@example.com',
+#                 [form.cleaned_data['email']],
+#                 fail_silently=False,
+#             )
+#         except Exception as e:
+#             print(f"Error occurred: {e}")
+#             return HttpResponse("Error occurred while sending the email")
+
+#         return super().form_valid(form)
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views import View
+from django.urls import reverse
+
+@csrf_exempt
+class CustomPasswordResetView(View):
+
+    def post(self, request):
+        email = request.POST.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "User does not exist"}, status=400)
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+
+        # 비밀번호 재설정 URL 생성
+        reset_url = self.request.build_absolute_uri(reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
+
+        # 비밀번호 재설정 이메일 보내기
+        try:
+            send_mail(
+                'Password Reset',
+                f'Here is your password reset link: {reset_url}',
+                'from@example.com',
+                [email],
+            )
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+        return JsonResponse({"message": "Password reset email sent."}, status=200)

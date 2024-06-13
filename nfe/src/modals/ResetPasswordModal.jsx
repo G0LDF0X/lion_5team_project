@@ -7,26 +7,26 @@ function ResetPasswordModal({ isOpen, onClose }) {
     const [email, setEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
 
-    const handleResetPassword = async (e) => {
+    const handleResetPassword = async(e) => {
         e.preventDefault();
-        
-    
         try {
 
             const response = await mainAxiosInstance.post(
                 `/users/password_reset/`,
                  {email: email},
-               { headers: { 'Content-Type': 'application/json' } }
+                { headers: {
+                  'Content-Type': 'application/json',
+                }}
             );
-
+          
           console.log('Response from server:', response);
           setResetStatus("success");
-          } catch (error) {
+        } catch (error) {
             console.error(error);
-            console.log('Error from server:', error); 
-            setResetStatus("error");
+            setResetStatus('An error occurred.');
           }
-        };
+        }
+        
     const handleClose = () => {
         setEmail('');
         setResetStatus('');
@@ -73,6 +73,6 @@ return ReactDOM.createPortal(
     </div>,
     document.body
   );
-}
 
+};
 export default ResetPasswordModal;
