@@ -217,3 +217,18 @@ def delete_Reply(request, pk):
     reply = Reply.objects.get(id=pk)
     reply.delete()
     return Response('Reply Deleted')
+
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_Reply(request, pk):
+    reply = Reply.objects.get(id=pk)
+    serializer = ReplySerializer(instance=reply, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors, status=400)
+

@@ -33,6 +33,10 @@ function BoardDetailModal({ open, handleClose }) {
   const [applied_id, setAppliedId] = useState(0);
   const [apply, setApply] = useState("");
   const [replyToUser, setReplyToUser] = useState(null);
+  const [updatedReplyContent, setUpdatedReplyContent] = useState(""); // 수정된 답글 내용을 저장할 상태 변수 추가
+
+
+    
 
 
   const sortedReplies = [];
@@ -98,6 +102,31 @@ function BoardDetailModal({ open, handleClose }) {
     }
   };
 
+  
+  const updateReply = async (replyId, updatedReplyContent) => {
+    try {
+      if (Array.isArray(updatedReplyContent)) {
+        updatedReplyContent = updatedReplyContent[0];
+      }
+      
+      const updatedReply = {
+        content: updatedReplyContent ,
+        board_id: boardId,
+        user_id: userInfo.id,
+      };
+      const response = await mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
+        {
+          headers: { Authorization: `Bearer ${userInfo.access}` }, 
+        }
+      );
+      // console.log(updatedReplyContent)
+      console.log(response.data);
+      dispatch(getBoardDetails(boardId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
     alert("Copied the link to clipboard: " + location.pathname);
@@ -143,7 +172,20 @@ function BoardDetailModal({ open, handleClose }) {
     setApply(`@${username} `);
   }
 
-  
+
+// 핸들러 함수 작성
+const handleUpdateReply = async (replyId) => {
+  try {
+    if (updatedReplyContent.trim() !== "") { // 수정된 답글이 비어 있지 않은 경우에만 업데이트 수행
+      await updateReply(replyId, updatedReplyContent); // 수정된 답글 내용을 updateReply 함수로 전달
+      setUpdatedReplyContent(""); // 수정된 답글 입력란 초기화
+    } else {
+      alert("Please enter a reply."); // 수정된 답글이 비어 있는 경우 알림 표시
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
   
   return (
     <Modal
@@ -244,11 +286,17 @@ function BoardDetailModal({ open, handleClose }) {
                       </Link>
                     </p>
                     {userInfo && userInfo.id === reply.user_id && (
-                        <button onClick={() => deleteReply(reply.id)}
-                        style = {{color: 'red', fontSize: 'small',
-                          marginLeft: 'auto'}}
-                        >Delete</button>
-                      )}
+                      <div style={{display: 'flex', marginLeft: 'auto'}}>
+                          <button onClick={() => handleUpdateReply(reply.id)}
+                          style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
+                          >Edit Reply</button>
+                          <button onClick={() => deleteReply(reply.id)}
+                          style = {{color: 'red', fontSize: 'small'}}
+                          >Delete</button>
+                      </div>
+                  )}
+                                
+          
                     </div>
                     <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
