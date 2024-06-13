@@ -167,7 +167,7 @@ from django.db.models import Q
 def check_user_review(request, pk):
     user = User.objects.get(id=pk)
     orders = Order.objects.filter(user_id=user)
-    order_items = OrderItem.objects.filter(order_id__in=orders)
+    order_items = OrderItem.objects.filter(order_id__in=orders, is_refund=False)
     reviewed_orderitem_ids = Review.objects.filter(user_id=user).values_list('orderitem_id', flat=True)
     unreviewed_orderitems = order_items.exclude(id__in=reviewed_orderitem_ids)
     serializer = OrderItemSerializer(unreviewed_orderitems, many=True)

@@ -28,6 +28,9 @@ function CreateReview() {
   return (
     <div className="flex justify-center py-4">
       <div className="w-full max-w-2xl">
+      <Box style={{backgroundColor: '#FFCCCC', borderRadius: '10px', padding: '15px', margin: '5px'}}>
+          <p style={{fontSize: 'medium'}}>❗️ 환불한 제품은 리뷰 작성이 불가능합니다.</p>
+      </Box>
         {/* <form className="flex">
           <input
             type="search"

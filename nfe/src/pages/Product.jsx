@@ -59,11 +59,20 @@ function ProductDetail() {
   const { successAdd } = cart;
   const productQnA = useSelector((state) => state.productQnA);
   const { success: successQNA, productQnA: productQ } = productQnA;
+  const [canReview, setCanReview] = useState(false);
+
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  }, [dispatch, id]);
+
+    mainAxiosInstance.get(`/users/check_review/${userInfo.id}/`)
+    .then((response) => {
+      const orderItems = response.data;
+      const canReview = orderItems.some((orderItem) => orderItem.item_id == id && !orderItem.is_refund);
+      setCanReview(canReview);
+    });
+  }, [dispatch, id, userInfo.id]);
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -310,12 +319,14 @@ function ProductDetail() {
           <div className="mt-8">
             <h2 className="text-3xl font-bold mb-4">Reviews</h2>
             <div className="flex justify-end mb-4">
+              {canReview && (
               <button
                 className="bg-blue-500 text-white py-2 px-4 rounded"
                 onClick={createReviewHandler}
               >
                 Create a Review
               </button>
+              )}
             </div>
             {product.reviews && product.reviews.length > 0 ? (
               product.reviews.map((review) => (
