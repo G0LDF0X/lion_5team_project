@@ -26,7 +26,8 @@ function UpdateReviewScreen() {
     rate: 0,
     image_url: "",
   });
-  const handleClose = () => {
+  const handleClose = (event) => {
+    event.preventDefault();
     setState({ open: false });
   };
 
@@ -44,8 +45,26 @@ function UpdateReviewScreen() {
   const reviewDetails = useSelector((state) => state.reviewDetails);
   const {review} = reviewDetails;
 
+  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
+  const [filteredOrderItems, setFilteredOrderItems] = useState([]);
+
   useEffect(() => {
-    
+    mainAxiosInstance.get(`/items/review/detail/${id}/`)
+    .then((response) => {
+      const reviewData = response.data[0];
+  
+      mainAxiosInstance.get(`/users/check_review/${userInfo.id}`)
+      .then((response) => {
+        const orderItems = response.data;
+        const filteredItems = orderItems.filter((orderItem) => orderItem.item_id === reviewData.item_id);
+        setFilteredOrderItems(filteredItems);
+        setSelectedOrderItem(filteredItems[0].id);
+      });
+    });
+
+    // 기존 리뷰를 수정하는 경우
     if (review[0]) {
       console.log(review);
       
@@ -56,6 +75,7 @@ function UpdateReviewScreen() {
       setRate(review[0].rate);
     }
   }, [review]);
+
   class CustomUploadAdapter {
     constructor(loader) {
       this.loader = loader;
@@ -115,15 +135,16 @@ function UpdateReviewScreen() {
     const serializer = new XMLSerializer();
     const updatedData = serializer.serializeToString(parsedHtml);
   }, [fileName, editorData]);
+
   function uploadPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
       return new CustomUploadAdapter(loader);
     };
   }
-  function submitHandler() {
-    dispatch(updateReview({ id, title, content: editorData, rate}));
-  
-  
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+    dispatch(updateReview({ id, title, content: editorData, rate, orderitem_id: selectedOrderItem}));
   }
 
 
@@ -146,6 +167,15 @@ function UpdateReviewScreen() {
     };
   }
   , []);
+
+
+  const formattedOrderItems = filteredOrderItems.map(item => {
+    const date = new Date(item.created_at);
+    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    return { ...item, created_at: `${formattedDate} ${formattedTime}` };
+  });
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Snackbar
@@ -155,9 +185,9 @@ function UpdateReviewScreen() {
         onClose={handleClose}
         message="Review created successfully."
       />
-      <Link to={`/items/detail/${id}`} className="btn btn-light my-2">
+      {/* <Link to={`/items/detail/${review[0].item_id}`} className="btn btn-light my-2">
         Go Back
-      </Link>
+      </Link> */}
       {loading ? (
         <Loading />
       ) : error ? (
@@ -169,6 +199,18 @@ function UpdateReviewScreen() {
           </Typography>
           <form onSubmit={submitHandler}>
             <div className="mb-4">
+              <select
+                value={selectedOrderItem}
+                onChange={(e) => setSelectedOrderItem(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded"
+              >
+                {formattedOrderItems.map((filterItem) => (
+                  <option key={filterItem.id} value={filterItem.id}>
+                    {filterItem.name} - {filterItem.qty}개 | {filterItem.total_price}원 ({filterItem.created_at} 주문)
+                  </option>
+                ))}
+              </select>
+
               <input
                 type="text"
                 placeholder="Title"
