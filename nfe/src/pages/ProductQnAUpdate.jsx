@@ -97,7 +97,8 @@ function ProductQnAUpdate() {
       return new CustomUploadAdapter(loader);
     };
   }
-  function submitHandler() {
+  function submitHandler(e) {
+    e.preventDefault();
     dispatch(updateProductQnA({ id, title, content: editorData, image_url: fileName}));
   
   
@@ -141,7 +142,7 @@ function ProductQnAUpdate() {
       ) : (
         <div className="bg-white p-8 rounded-lg shadow-md">
           <Typography variant="h4" className="text-center mb-8">
-            Review
+            Product Q&A
           </Typography>
           <form onSubmit={submitHandler}>
             <div className="mb-4">
