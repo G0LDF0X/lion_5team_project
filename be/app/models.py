@@ -63,18 +63,6 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-class Review(models.Model):
-    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='reviews_made')
-
-    title = models.CharField(max_length=100)
-    content = models.TextField(blank=True)
-    rate = models.FloatField()
-    image_url = models.ImageField(blank=True, max_length=1000)
-
-    def __str__(self):
-        return self.title
-
 class Payment(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     payment_method = models.CharField(max_length=100)
@@ -105,6 +93,19 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return self.name
+
+class Review(models.Model):
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='reviews')
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='reviews_made')
+    orderitem_id = models.ForeignKey(OrderItem, on_delete=models.CASCADE, related_name='orderitem_reviews', default=1)
+
+    title = models.CharField(max_length=100)
+    content = models.TextField(blank=True)
+    rate = models.FloatField()
+    image_url = models.ImageField(blank=True, max_length=1000)
+
+    def __str__(self):
+        return self.title
 
 class Refund(models.Model):
     order_item_id = models.ForeignKey(OrderItem, on_delete = models.DO_NOTHING)

@@ -94,8 +94,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             />
           </Button>
           {uploading && <Loading />}
-          <div className="mb-4">
-            </div>
+          <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
             <Select
