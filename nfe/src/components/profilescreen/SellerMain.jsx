@@ -92,7 +92,7 @@ function SellerMain() {
             </TableHead>
             <TableBody>
               {salesStats.map((row) => (
-                <TableRow key={row.item_name}>
+                <TableRow key={row.item_id}>
                   <TableCell component="th" scope="row">
                     {row.item_name}
                   </TableCell>

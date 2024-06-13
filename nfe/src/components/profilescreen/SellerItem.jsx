@@ -23,7 +23,6 @@ function SellerItem({ fetchProducts, products, isLoading}) {
   const { success: successUpdate } = productUpdate;
   const productDetails = useSelector((state) => state.productDetails);
   const { product } = productDetails;
-
   const createProductHandler = () => {
     setOpenModal(true); 
   };
@@ -81,6 +80,7 @@ function SellerItem({ fetchProducts, products, isLoading}) {
             </TableHead>
             <TableBody>
               {products.map((product) => (
+                
                 <TableRow key={product.id}>
                   <TableCell>{product.id}</TableCell>
                   <TableCell>

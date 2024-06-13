@@ -242,7 +242,18 @@ def ItemSalesStatsView(request, pk):
     for order_item in order_items:
         item_name = order_item.item_id.name  # 아이템 이름 가져오기
         total_sales = order_item.qty
+        item_id = order_item.item_id.id
         total_revenue = order_item.price_multi_qty
-        item_stats.append({'item_name': item_name, 'total_sales': total_sales, 'total_revenue': total_revenue})
+        if len(item_stats) == 0:
+            item_stats.append({'item_name': item_name, 'total_sales': total_sales, 'total_revenue': total_revenue, 'item_id': item_id})
+        else:
+            for item_stat in item_stats:
+                if item_stat['item_name'] == item_name:
+                    item_stat['total_sales'] += total_sales
+                    item_stat['total_revenue'] += total_revenue
+                    break
+            else:
+                item_stats.append({'item_name': item_name, 'total_sales': total_sales, 'total_revenue': total_revenue, 'item_id': item_id})
+        
 
     return Response({'item_stats': item_stats}, status=status.HTTP_200_OK)
