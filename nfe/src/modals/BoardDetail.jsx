@@ -174,22 +174,20 @@ function BoardDetailModal({ open, handleClose }) {
   }
 
 
-// 핸들러 함수 작성
-const handleUpdateClick = async (replyId) => {
-  setEditingReplyId(replyId);
-}
 
-// 댓글 수정 폼 제출 핸들러
-const submitUpdateReplyHandler = async (e, replyId) => {
-  e.preventDefault();
-  if (updatedReplyContent.trim() !== "") { // 수정된 답글이 비어 있지 않은 경우에만 업데이트 수행
-    await updateReply(replyId, updatedReplyContent); // 수정된 답글 내용을 updateReply 함수로 전달
-    setUpdatedReplyContent(""); // 수정된 답글 입력란 초기화
-    setEditingReplyId(null); // 댓글 수정 상태 종료
-  } else {
-    alert("Please enter a reply."); // 수정된 답글이 비어 있는 경우 알림 표시
+
+// 핸들러 함수 작성
+const handleUpdateReply = async (replyId) => {
+  try {
+    if (updatedReplyContent.trim() !== "") { // 수정된 답글이 비어 있지 않은 경우에만 업데이트 수행
+      await updateReply(replyId, updatedReplyContent); // 수정된 답글 내용을 updateReply 함수로 전달
+      setUpdatedReplyContent(""); // 수정된 답글 입력란 초기화
+    } else {
+      alert("Please enter a reply."); // 수정된 답글이 비어 있는 경우 알림 표시
+    }
+  } catch (error) {
+    console.error(error);
   }
- 
 };
 
   
@@ -293,7 +291,7 @@ const submitUpdateReplyHandler = async (e, replyId) => {
                     </p>
                     {userInfo && userInfo.id === reply.user_id && (
                       <div style={{display: 'flex', marginLeft: 'auto'}}>
-                          <button onClick={() => handleUpdateClick(reply.id)}
+                          <button onClick={() => handleUpdateReply(reply.id)}
                           style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
                           >Edit Reply</button>
                           <button onClick={() => deleteReply(reply.id)}
@@ -360,3 +358,8 @@ const submitUpdateReplyHandler = async (e, replyId) => {
 }
 
 export default BoardDetailModal;
+
+
+
+
+
