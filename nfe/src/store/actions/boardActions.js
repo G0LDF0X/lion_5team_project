@@ -88,14 +88,23 @@ export const createBoard = createAsyncThunk(
 
 export const updateBoard = createAsyncThunk(
   "boardUpdate/updateBoard",
-  async (board, { rejectWithValue }) => {
+  async ({ id, board }, { getState, rejectWithValue }) => {
+    console.log(id);
     try {
+      const {
+        user: { userInfo },
+      } = getState();
+
+      console.log('Access Token:', userInfo.access);  // 토큰 확인
+      console.log('Request Data:', board);
+
       const res = await mainAxiosInstance.put(
-        `/board/update/${board.id}`,
+        `/board/update_board/${id}/`,
         board,
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.access}`,
           },
         }
       );

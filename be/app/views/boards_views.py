@@ -182,12 +182,19 @@ def handle_like(request, pk):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_Board(request, detail_pk, update_pk):
+def update_Board(request, pk):
     data = request.data
     try:
-        board = Board.objects.get(id=update_pk)
+        board = Board.objects.get(id=pk)
     except Board.DoesNotExist:
         return Response({'detail': 'Board not found'}, status=404)
+    
+
+    print("Board User ID:", board.user_id)
+    print("Request User ID:", request.user)
+    
+    if board.user_id.username != request.user.username:
+        return Response({'detail': 'You do not have permission to edit this board'}, status=403)
 
     update_fields = []
     for field in ['title', 'content', 'product_url', 'image_url']:
