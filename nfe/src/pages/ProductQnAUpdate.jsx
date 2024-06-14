@@ -37,7 +37,7 @@ function ProductQnAUpdate() {
   const [fileName, setFileName] = useState(null);
   const [uploading, setUploading] = useState(false);  
   const productQnA = useSelector((state) => state.productQnA);
-    const {loading, error, productQnA:QnA} = productQnA;
+    const {loading, error, productQnA:QnA, successUpdate} = productQnA;
   
 
   class CustomUploadAdapter {
@@ -109,7 +109,7 @@ useEffect(() => {
       setContent(QnA.content);
     }
   }, [QnA]);
-  
+
 
   useEffect(() => {
     if (successUpdate) {
