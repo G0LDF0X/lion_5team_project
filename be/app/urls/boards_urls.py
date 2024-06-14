@@ -16,4 +16,5 @@ urlpatterns = [
     path('predict/<str:pk>/', predict_image, name='predict_image'),
     # path('detail/<str:pk>/', create_Reply, name='reply_create'),
     path('reply/<str:pk>/delete/', delete_Reply, name='reply_delete'),
+    path('update_board/<str:pk>/', update_Board, name='update_board'),
 ]

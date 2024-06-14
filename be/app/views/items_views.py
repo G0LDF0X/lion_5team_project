@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, Board, User_QnA
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, Board_Serializer, UserQnASerializer
+from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, OrderItem
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
@@ -88,14 +88,15 @@ def create_item(request):
     seller = Seller.objects.get(user_id=user)
     tag_id= Tag.objects.get(id=1)
     category = Category.objects.get(id=1)
+    data = request.data
     item = Item.objects.create(
         seller_id = seller,
         category_id = category, 
         tag_id = tag_id,
-        name = "",
-        price = 0,
-        description = "",
-        image_url = "",
+        name = data['name'],
+        price = data['price'],
+        description = data['description'],
+        image_url = data['image'],
         rate = 0,
         created_at = datetime.now()
         
@@ -175,6 +176,7 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
+    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
@@ -200,6 +202,7 @@ def create_review(request, item_id):
 def update_review(request, pk):
     # try:
     review = Review.objects.get(id=pk)
+    
     # except Review.DoesNotExist:
         # return Response({"error": "Review not found"})
     
@@ -214,7 +217,10 @@ def update_review(request, pk):
     review.title = data['title']
     review.content = data['content']
     review.rate = data['rate']
-
+    # Get the OrderItem instance with the ID from the request data
+    orderitem = get_object_or_404(OrderItem, id=data['orderitem_id'])
+    review.orderitem_id = orderitem
+    
     review.save()
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)
@@ -249,20 +255,17 @@ def get_category(request):
     serializer = CategorySerializer(category, many=True)
     return Response(serializer.data)
 
-
 @api_view(['POST'])
 def create_qna(request,item_id):
     user = User.objects.get(username=request.user)
-    item = Item.objects.get(pk=item_id)
-  
-    title = request.data.get('title')
-    content = request.data.get('content')
-    image_url = request.data.get('image_url')
-
+    item = Item.objects.get(id=item_id)
+    title = ''
+    content = ''
+    image_url = ''
     current_time = datetime.now()
     qna_board = Item_QnA.objects.create(
-        user_id=user,
-        item_id=item,
+        user_id_id=user.id,
+        item_id_id=item.id,
         title=title,
         content=content,
         image_url=image_url,
@@ -275,33 +278,30 @@ def create_qna(request,item_id):
 
 @api_view(['PUT'])
 def update_qna(request,pk):
-    try:
-        qna = Item_QnA.objects.get(pk=pk)
-    except Item_QnA.DoesNotExist:
-        return Response({"error": "QnA not found"})
     
+    qna = Item_QnA.objects.get(id=pk)
     user = User.objects.get(username=request.user)
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != qna.user_id.id:
         if user_auth.is_superuser == False:
             return Response({"error": "You are not allowed to edit this QnA"})
+    data = request.data
+    qna.title = data['title']
+    qna.content = data['content']
+    if 'image_url' in data:
+        if data['image_url'] == null:
+            qna.image_url = ''
+        qna.image_url = data['image_url']
+    qna.save()
     
-    data = request.data.copy()
-    data['item_id'] = qna.item_id.id
-    data['user_id'] = user.id
-    
-    serializer = ItemQnASerializer(qna, data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=400)
-
+    serializer = ItemQnASerializer(qna, many=False)
+    return Response(serializer.data)
 
 @api_view(['DELETE'])
 def delete_qna (request, pk):
     try:
-        item_qna = Item_QnA.objects.get(pk=pk)
+        item_qna = Item_QnA.objects.get(id=pk)
     except Item_QnA.DoesNotExist:
         return Response({"error": "Item Q&A not found"}, status=404)
     
@@ -309,7 +309,7 @@ def delete_qna (request, pk):
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != item_qna.user_id.id:
-        if  user_auth.is_superuser == False:
+        if user_auth.is_superuser == False:
             return Response({"error": "You are not allowed to delete this item Q&A"})
     
     item_qna.delete()

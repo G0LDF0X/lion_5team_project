@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer, Interaction
-from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer
+from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer, ItemSerializer
 
 
 
@@ -162,6 +162,16 @@ def getMyReview(request):
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
 
+from django.db.models import Q
+@api_view(['GET'])
+def check_user_review(request, pk):
+    user = User.objects.get(id=pk)
+    orders = Order.objects.filter(user_id=user)
+    order_items = OrderItem.objects.filter(order_id__in=orders, is_refund=False)
+    reviewed_orderitem_ids = Review.objects.filter(user_id=user).values_list('orderitem_id', flat=True)
+    unreviewed_orderitems = order_items.exclude(id__in=reviewed_orderitem_ids)
+    serializer = OrderItemSerializer(unreviewed_orderitems, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def my_bookmarks(request):

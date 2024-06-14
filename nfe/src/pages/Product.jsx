@@ -23,9 +23,12 @@ import Rating from "../components/Rating";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
-
+import { reviewCreateReset } from "../store/slices/reviewSlices";
+import { createProductQnA, deleteProductQnA, updateProductQnA } from "../store/actions/productActions";
+import { productQnaReset } from "../store/slices/productSlices";
 function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [marked, setMarked] = useState(false);
@@ -47,48 +50,62 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
-  const { success: successProductReview, createdReview } = reviewCreate;
+  const { success: successProductReview, review: createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
   const reviewDelete = useSelector((state) => state.reviewDelete);
   const { success: successReviewDelete } = reviewDelete;
   const cart = useSelector((state) => state.cart);
   const { successAdd } = cart;
+  const productQnA = useSelector((state) => state.productQnA);
+  const { successUpdate: successQNA,successCreate,  productQnA: productQ } = productQnA;
+  const [canReview, setCanReview] = useState(false);
+
   useEffect(() => {
     dispatch(listCartItems());
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
-  
-  }, [dispatch, id]);
 
-useEffect(() => {
-  setStartTime(Date.now()); 
+    mainAxiosInstance.get(`/users/check_review/${userInfo.id}/`)
+    .then((response) => {
+      const orderItems = response.data;
+      const canReview = orderItems.some((orderItem) => orderItem.item_id == id && !orderItem.is_refund);
+      setCanReview(canReview);
+    });
+  }, [dispatch, id, userInfo.id]);
 
-  return () => {
+  useEffect(() => {
+    setStartTime(Date.now());
 
-    const endTime = Date.now();
-    const stayTime = (endTime - startTime) / 1000;
+    return () => {
+      const endTime = Date.now();
+      const stayTime = (endTime - startTime) / 1000;
 
-    if (userInfo) {
-      mainAxiosInstance.post(`/interaction/view/item/${id}/`, {
-        stayTime
-      },
-    {headers: {
-      Authorization: `Bearer ${userInfo.access}`,
+      if (userInfo) {
+        mainAxiosInstance.post(
+          `/interaction/view/item/${id}/`,
+          {
+            stayTime,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userInfo.access}`,
+            },
+          }
+        );
+      }
+    };
+  }, []);
 
-    }
-  }
-    )      
-    }
-  };
-}, []);
   useEffect(() => {
     if (successProductReview) {
+      dispatch(reviewCreateReset());
+      console.log("createdReview", createdReview);
       navigate(`/items/review/update/${createdReview.id}`);
     }
-  }, [successProductReview, successReviewDelete, dispatch]);
+  }, [successProductReview]);
+
   useEffect(() => {
-    console.log("PRODUCT", product);
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);
     }
@@ -102,32 +119,40 @@ useEffect(() => {
       dispatch(addToBookMark(id));
       setMarked(true);
     }
-  };
+  }
+  
   const addToCartHandler = () => {
     dispatch(addToCart({ id, qty }));
   };
 
   const editReviewHandler = (review) => {
+    {
+      console.log(userInfo);
+    }
     if (userInfo && userInfo.id === review.user_id) {
-      navigate(`/items/review/${review.id}`);
+      dispatch(listReviewDetails(review.id));
+      navigate(`/items/review/update/${review.id}`);
     } else {
       alert("You can only edit your own reviews.");
     }
   };
 
   const deleteReviewHandler = (review) => {
+    console.log(review);
     if (userInfo && userInfo.id === review.user_id) {
       if (window.confirm("Are you sure you want to delete this review?")) {
-        dispatch(deleteReview(review.id));
+        dispatch(deleteReview(review.id))
+          .then(() => {
+            alert("Review deleted successfully.");
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     } else {
       alert("You can only delete your own reviews.");
     }
-  };
-
-  const createQnAHandler = () => {
-    navigate(`/items/qna/create/${id}`);
-    // dispatch(createQNA(id));
   };
 
   const handleButtonClick = () => {
@@ -159,27 +184,73 @@ useEffect(() => {
       console.error("답변 등록 중 오류가 발생하였습니다:", error);
     }
   };
+  const createQnAHandler = () => {
+    dispatch(createProductQnA(id));
+    console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
+  };
+
+  const updateQnAHandler = (item_qna) => {
+    console.log("버튼 클릭");
+    {
+      console.log(userInfo);
+    }
+    console.log(item_qna);
+    if (userInfo && userInfo.id === item_qna.user_id) {
+      dispatch(updateProductQnA({id: item_qna.id, title: item_qna.title, content: item_qna.content}));
+      navigate(`/items/qna/update/${item_qna.id}`);
+    } else {
+      alert("You can only edit your own qna.");
+    }
+  }
+
+  const deleteQnAHandler = (item_qna) => {
+    if (userInfo && userInfo.id === item_qna.user_id) {
+      if (window.confirm("Are you sure you want to delete this Q&A?")) {
+        dispatch(deleteProductQnA(item_qna.id))
+        .then(() => {
+          alert("Q&A deleted successfully.");
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      } else {
+        alert("You can only delete your own Q&A.");
+      }
+  }};
+
+  useEffect(() => {
+    if (successCreate) {
+      dispatch(productQnaReset());
+      console.log("createdQnA", productQ);
+      navigate(`/items/qna/update/${productQ.id}`);
+    }
+  }, [successCreate]);
+
   const createReviewHandler = () => {
     if (userInfo) {
-      dispatch(createReview({id}));
+      dispatch(createReview({ id }));
     } else {
       window.alert("로그인 후 이용해주세요.");
     }
   };
-useEffect(() => {
+
+  useEffect(() => {
     if (successAdd) {
       setState({ open: true });
       dispatch(resetSuccess());
     }
   }, [successAdd]);
+
   const handleClose = () => {
     setState({ open: false });
-
   };
   const avgRate =
     product.reviews &&
-    (product.reviews.reduce((acc, item) => item.rate + acc, 0) /
-      product.reviews.length).toFixed(2);
+    (
+      product.reviews.reduce((acc, item) => item.rate + acc, 0) /
+      product.reviews.length
+    ).toFixed(2);
 
   return (
     <div className="container mx-auto py-8">
@@ -212,7 +283,15 @@ useEffect(() => {
             <div className="col-span-1">
               <div className="bg-white shadow-lg rounded-lg p-6">
                 <h3 className="text-2xl font-bold mb-4">{product.name}</h3>
-                <p style={{ fontSize: 'small', color: 'gray', paddingBottom: '10px' }}>{product.category} 〉 {product.tag}</p>
+                <p
+                  style={{
+                    fontSize: "small",
+                    color: "gray",
+                    paddingBottom: "10px",
+                  }}
+                >
+                  {product.category} 〉 {product.tag}
+                </p>
                 <Rating value={avgRate} text={avgRate} color={"#f8e825"} />
                 <p className="text-xl font-semibold my-4">{product.price}₩</p>
                 <p>{product.description}</p>
@@ -279,12 +358,14 @@ useEffect(() => {
           <div className="mt-8">
             <h2 className="text-3xl font-bold mb-4">Reviews</h2>
             <div className="flex justify-end mb-4">
+              {canReview && (
               <button
                 className="bg-blue-500 text-white py-2 px-4 rounded"
                 onClick={createReviewHandler}
               >
                 Create a Review
               </button>
+              )}
             </div>
             {product.reviews && product.reviews.length > 0 ? (
               product.reviews.map((review) => (
@@ -301,7 +382,9 @@ useEffect(() => {
                     text={review.rate}
                     color={"#f8e825"}
                   />
-                  <p className="my-4">{review.comment}</p>
+                  <p className="my-4">
+                    {review.content.replace(/<\/?p>/g, "")}
+                  </p>
                   {review.image && (
                     <img
                       src={review.image}
@@ -310,18 +393,22 @@ useEffect(() => {
                     />
                   )}
                   <div className="flex justify-end space-x-2">
-                    <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                      onClick={() => editReviewHandler(review)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                      onClick={() => deleteReviewHandler(review)}
-                    >
-                      Delete
-                    </button>
+                    {userInfo && userInfo.id === review.user_id && (
+                      <>
+                        <button
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                          onClick={() => editReviewHandler(review)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                          onClick={() => deleteReviewHandler(review)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))
@@ -339,28 +426,32 @@ useEffect(() => {
                 Create a Q&A
               </button>
             </div>
-            <Accordion>
+            <div>
               {product.item_qna_set && product.item_qna_set.length > 0 ? (
                 product.item_qna_set.map((item_qna, index) => (
                   <Accordion key={index}>
                     <AccordionSummary
-                      expandIcon={<i className="fa-solid fa-chevron-down"></i>}
+                        expandIcon={<i className="fa-solid fa-chevron-down"></i>}
                     >
-                      <div>
-                        <h5 className="text-lg font-bold">
-                          Q. {item_qna.title}
-                        </h5>
-                        <p className="text-sm text-gray-500">
-                          ID: {item_qna.username}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {item_qna.created_at.split("T")[0]}
-                        </p>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item_qna.content }}
-                          className="mt-2"
-                        ></div>
-                      </div>
+                      
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                            <div>
+                                <h5 className="text-lg font-bold">
+                                    Q. {item_qna.title}
+                                </h5>
+                                <p className="text-sm text-gray-500">
+                                    ID: {item_qna.username}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {item_qna.created_at.split("T")[0]}
+                                </p>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: item_qna.content }}
+                                    className="mt-2"
+                                ></div>
+                            </div>
+                            
+                        </div>
                     </AccordionSummary>
                     <AccordionDetails>
                       {item_qna.item_answer_set &&
@@ -383,33 +474,43 @@ useEffect(() => {
                         ))
                       ) : (
                         <>
+                        <div className="flex items-center">
+                          {item_qna.user_id === userInfo.id && (
+                            <div className="flex">
+                              <button className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                              onClick={() => updateQnAHandler(item_qna)}>수정</button>
+                              <button className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+                              onClick={() => deleteQnAHandler(item_qna)}>삭제</button>
+                            </div>
+                          )}
                           {!showTextField && (
                             <button
-                              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                              className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                               onClick={handleButtonClick}
                             >
                               답변 작성하기
                             </button>
                           )}
-                          <br />
-                          {showTextField && (
-                            <>
-                              <textarea
-                                className="w-full p-2 border rounded-lg mb-2"
-                                rows="3"
-                                value={answer}
-                                onChange={handleAnswerChange}
-                                placeholder="답변을 작성해주세요."
-                              ></textarea>
-                              <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleAnswerSubmit(answer)}
-                              >
-                                제출하기
-                              </button>
-                            </>
-                          )}
-                        </>
+                        </div>
+                        <br />
+                        {showTextField && (
+                          <>
+                            <textarea
+                              className="w-full p-2 border rounded-lg mb-2"
+                              rows="3"
+                              value={answer}
+                              onChange={handleAnswerChange}
+                              placeholder="답변을 작성해주세요."
+                            ></textarea>
+                            <button
+                              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                              onClick={() => handleAnswerSubmit(answer)}
+                            >
+                              제출하기
+                            </button>
+                          </>
+                        )}
+                      </>
                       )}
                     </AccordionDetails>
                   </Accordion>
@@ -417,7 +518,7 @@ useEffect(() => {
               ) : (
                 <p>No Q&A</p>
               )}
-            </Accordion>
+            </div>
           </div>
         </div>
       )}

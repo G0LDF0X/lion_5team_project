@@ -6,6 +6,8 @@ import Loading from "../components/Loading";
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import { createProduct } from "../store/actions/productActions";
+import useCategory from "../hook/useCategory";
 
 function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [name, setName] = useState("");
@@ -14,7 +16,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [category, setCategory] = useState(1);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
-
+  const  categories  = useCategory(); 
   const dispatch = useDispatch();
   const productCreate = useSelector((state) => state.productCreate);
   const { loading, error } = productCreate;
@@ -68,6 +70,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             onChange={(e) => setName(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <TextField
             fullWidth
             label="Price"
@@ -77,6 +80,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             onChange={(e) => setPrice(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <Button
             variant="contained"
             component="label"
@@ -90,6 +94,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             />
           </Button>
           {uploading && <Loading />}
+          <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
             <Select
@@ -97,10 +102,14 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
               onChange={(e) => setCategory(e.target.value)}
               label="Category"
             >
-              <MenuItem value="1">산책용품</MenuItem>
-              <MenuItem value="2">간식</MenuItem>
+              {categories.map((category) => ( 
+                <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+              ))}
+              {/* <MenuItem value="1">산책용품</MenuItem>
+              <MenuItem value="2">간식</MenuItem> */}
             </Select>
           </FormControl>
+          <div className="mb-4"/>
           <TextField
             fullWidth
             multiline
@@ -111,6 +120,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             onChange={(e) => setDescription(e.target.value)}
             className="mb-4"
           />
+          <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <Stack direction="row" spacing={1}>
               <Chip
@@ -132,7 +142,9 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
                 deleteIcon={chipData.includes("3") ? <DeleteIcon /> : <DoneIcon />}
               />
             </Stack>
+
           </FormControl>
+          <div className="mb-4"/>
           <Button type="submit" variant="contained" color="primary" className="w-full">
             Create
           </Button>

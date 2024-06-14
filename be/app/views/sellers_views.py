@@ -2,9 +2,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from app.models import Seller, OrderItem, User, Item, User_Answer, Refund
+from app.models import Seller, OrderItem, User, Item, User_Answer, Refund, Order
 from app.serializer import SellerSerializer, OrderItemSerializer, ItemSerializer, RefundSerializer, ItemAnswerSerializer
 from rest_framework import status
+from django.utils import timezone
+from calendar import monthrange
+from django.db.models import F, Sum
+from datetime import timedelta,datetime
+from dateutil.relativedelta import relativedelta
+import pytz
+
 
 @api_view(['GET'])
 def index(request):
@@ -46,7 +53,7 @@ def SellerRevenueView(request):
             total_revenue += order_item.price_multi_qty
     return Response({'total_revenue': total_revenue})
 
-
+@api_view(['G'])
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def SellerSettingsView(request):
@@ -128,3 +135,80 @@ def Seller_Apply_Save(request):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'User is not a seller'}, status=status.HTTP_400_BAD_REQUEST)
+        
+from django.utils import timezone
+
+@api_view(['GET'])
+def MonthlySellerRevenueView(request, pk):
+    try:
+        seller = Seller.objects.get(user_id_id=pk)
+    except Seller.DoesNotExist:
+        return Response({'error': 'Seller not found'}, status=404)
+
+    items = Item.objects.filter(seller_id=seller)
+    now = timezone.now()
+    current_year = now.year
+
+    monthly_revenue = []
+    for month in range(1, 13):
+        first_day_of_month = timezone.datetime(current_year, month, 1)
+        last_day_of_month = timezone.datetime(current_year, month, monthrange(current_year, month)[1])
+        
+        monthly_sum = 0
+        for item in items:
+            order_items = OrderItem.objects.filter(
+                item_id=item,
+                order_id__created_at__year=current_year,
+                order_id__created_at__month=month
+            )
+            monthly_sum += order_items.aggregate(
+                total=Sum(F('qty') * item.price)
+            )['total'] or 0
+        
+        monthly_revenue.append({
+            'month': month,
+            'revenue': monthly_sum
+        })
+
+    return Response({'monthly_revenue': monthly_revenue})
+
+from django.utils import timezone
+from django.db.models import Sum
+
+@api_view(['GET'])
+def ItemSalesStatsView(request, pk):
+    try:
+        seller = Seller.objects.get(user_id_id=pk)
+    except Seller.DoesNotExist:
+        return Response({'error': 'Seller not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    filter_value = request.GET.get('filter')
+    order_items = OrderItem.objects.filter(item_id__seller_id=seller.id)
+
+    if filter_value == 'week':
+        start_of_week = datetime.now() - timedelta(days=datetime.now().weekday())
+        end_of_week = start_of_week + timedelta(days=6)
+        order_items = order_items.filter(order_id__created_at__range=[start_of_week, end_of_week])
+        date_range = {'start_date': start_of_week, 'end_date': end_of_week}
+    elif filter_value == 'month':
+        start_of_month = datetime.now().replace(day=1)
+        end_of_month = start_of_month + relativedelta(months=1, days=-1)
+        order_items = order_items.filter(order_id__created_at__range=[start_of_month, end_of_month])
+        date_range = {'start_date': start_of_month, 'end_date': end_of_month}
+    else:
+        date_range = {}
+
+    item_stats = order_items.values('item_id__name').annotate(
+        total_sales=Sum('qty'),
+        total_revenue=Sum('price_multi_qty')
+    ).order_by('-total_sales')
+
+    item_stats_list = []
+    for stat in item_stats:
+        item_stats_list.append({
+            'item_name': stat['item_id__name'],
+            'total_sales': stat['total_sales'],
+            'total_revenue': stat['total_revenue']
+        })
+
+    return Response({'item_stats': item_stats_list, 'date_range': date_range}, status=status.HTTP_200_OK)

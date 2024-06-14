@@ -1,21 +1,20 @@
+
 import React, { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useDispatch, useSelector } from "react-redux";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Button, Snackbar, Typography, Rating } from "@mui/material";
-import { createReview, updateReview, listReviewDetails} from "../store/actions/reviewActions";
+import { Button, Snackbar, Typography } from "@mui/material";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
-// import { reviewCreateReset } from "../store/slices/reviewSlices";
-import { reviewUpdateReset } from "../store/slices/reviewSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
+import { productQnaReset } from "../store/slices/productSlices";
+import { updateProductQnA } from "../store/actions/productActions";
 
 
-function UpdateReviewScreen() {
+function ProductQnAUpdate() {
   const [title, setTitle] = useState("");
   
-  const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [state, setState] = useState({ open: false });
@@ -23,11 +22,9 @@ function UpdateReviewScreen() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    rate: 0,
     image_url: "",
   });
-  const handleClose = (event) => {
-    event.preventDefault();
+  const handleClose = () => {
     setState({ open: false });
   };
 
@@ -36,45 +33,12 @@ function UpdateReviewScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const reviewUpdate = useSelector((state) => state.reviewUpdate);
-  const { loading, error, success } = reviewUpdate
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
-
   const [uploading, setUploading] = useState(false);  
-  const reviewDetails = useSelector((state) => state.reviewDetails);
-  const {review} = reviewDetails;
-
-  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
-  const user = useSelector((state) => state.user);
-  const { userInfo } = user;
-  const [filteredOrderItems, setFilteredOrderItems] = useState([]);
-
-  useEffect(() => {
-    mainAxiosInstance.get(`/items/review/detail/${id}/`)
-    .then((response) => {
-      const reviewData = response.data[0];
+  const productQnA = useSelector((state) => state.productQnA);
+    const {loading, error, successUpdate} = productQnA;
   
-      mainAxiosInstance.get(`/users/check_review/${userInfo.id}`)
-      .then((response) => {
-        const orderItems = response.data;
-        const filteredItems = orderItems.filter((orderItem) => orderItem.item_id === reviewData.item_id);
-        setFilteredOrderItems(filteredItems);
-        setSelectedOrderItem(filteredItems[0].id);
-      });
-    });
-
-    // 기존 리뷰를 수정하는 경우
-    if (review[0]) {
-      console.log(review);
-      
-      setEditorData(review[0].content);
-
-      setTitle(review[0].title);
-      setContent(review[0].content);
-      setRate(review[0].rate);
-    }
-  }, [review]);
 
   class CustomUploadAdapter {
     constructor(loader) {
@@ -91,7 +55,7 @@ function UpdateReviewScreen() {
           // data.append("name", file.name);
           data.append("file", file);
           setUploading(true);
-          mainAxiosInstance.post(`/items/review/uploadImage/${id}/`,   
+          mainAxiosInstance.post(`/items/qna/uploadImage/${id}/`,   
              data,
           )
             .then((response) => response.data)
@@ -113,14 +77,7 @@ function UpdateReviewScreen() {
       });
     }
   }
-  // useEffect(() => {
-  //   dispatch(listReviewDetails(id) );
-  //   if (successUpdate) {
-  //     navigate(`/items/detail/${updatedReview.item_id}`);}
-  //     dispatch({type:REVIEW_UPDATE_RESET})
-    
-  // }, [dispatch, id, successUpdate ]);
-
+  
   useEffect(() => {
     
     const parser = new DOMParser();
@@ -135,47 +92,37 @@ function UpdateReviewScreen() {
     const serializer = new XMLSerializer();
     const updatedData = serializer.serializeToString(parsedHtml);
   }, [fileName, editorData]);
-
   function uploadPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
       return new CustomUploadAdapter(loader);
     };
   }
-
-  const submitHandler = (event) => {
-    event.preventDefault();
-    dispatch(updateReview({ id, title, content: editorData, rate, orderitem_id: selectedOrderItem}));
+  function submitHandler(e) {
+    e.preventDefault();
+    dispatch(updateProductQnA({ id, title, content: editorData, image_url: fileName}));
+  
+  
   }
 
 
   useEffect(() => {
-    if (success) {
-      // dispatch (reviewUpdateReset());
+    if (successUpdate) {
       window.history.back()
       setState({ open: true });
-        dispatch(reviewUpdateReset());
+        dispatch(productQnaReset());
     }
     if (error) {
         window.alert(error);
-        dispatch(reviewUpdateReset());
+        dispatch(productQnaReset());
     }
-  }, [error, success, navigate, id]);
+  }, [error, navigate, id, successUpdate    ]);
   
   useEffect(() => {
     return () => {
-      dispatch(reviewUpdateReset());
+      dispatch(productQnaReset());
     };
   }
   , []);
-
-
-  const formattedOrderItems = filteredOrderItems.map(item => {
-    const date = new Date(item.created_at);
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const formattedTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    return { ...item, created_at: `${formattedDate} ${formattedTime}` };
-  });
-
   return (
     <div className="container mx-auto px-4 py-8">
       <Snackbar
@@ -185,9 +132,9 @@ function UpdateReviewScreen() {
         onClose={handleClose}
         message="Review created successfully."
       />
-      {/* <Link to={`/items/detail/${review[0].item_id}`} className="btn btn-light my-2">
+      <Link to={`/items/detail/${id}`} className="btn btn-light my-2">
         Go Back
-      </Link> */}
+      </Link>
       {loading ? (
         <Loading />
       ) : error ? (
@@ -195,22 +142,10 @@ function UpdateReviewScreen() {
       ) : (
         <div className="bg-white p-8 rounded-lg shadow-md">
           <Typography variant="h4" className="text-center mb-8">
-            Review
+            Product Q&A
           </Typography>
           <form onSubmit={submitHandler}>
             <div className="mb-4">
-              <select
-                value={selectedOrderItem}
-                onChange={(e) => setSelectedOrderItem(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                {formattedOrderItems.map((filterItem) => (
-                  <option key={filterItem.id} value={filterItem.id}>
-                    {filterItem.name} - {filterItem.qty}개 | {filterItem.total_price}원 ({filterItem.created_at} 주문)
-                  </option>
-                ))}
-              </select>
-
               <input
                 type="text"
                 placeholder="Title"
@@ -232,18 +167,6 @@ function UpdateReviewScreen() {
         }}
       />
             </div>
-            <div className="mb-4">
-              <Typography id="rate-slider" gutterBottom>
-                Rating
-              </Typography>
-              <Rating
-                name="simple-controlled"
-                value={Number(rate)} 
-                onChange={(e) => {
-                  setRate(e.target.value);
-                }}
-              />
-            </div>
 
             <div className="text-center">
               <Button
@@ -262,4 +185,4 @@ function UpdateReviewScreen() {
   );
 }
 
-export default UpdateReviewScreen;
+export default ProductQnAUpdate;
