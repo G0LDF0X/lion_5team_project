@@ -50,6 +50,7 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
+
   const { success: successProductReview, review: createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;

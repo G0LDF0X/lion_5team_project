@@ -30,3 +30,4 @@ export const searchByConstantsAxiosInstance = axios.create({
 export const recommendationAxiosInstance = axios.create({
     baseURL: VITE_RECOMMENDATION_API_BASE_URL,
     });
+

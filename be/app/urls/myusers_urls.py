@@ -1,5 +1,6 @@
 from django.urls import path
 from app.views.myusers_views import *
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -34,4 +35,13 @@ urlpatterns = [
     path('delete_account/', delete_account, name='delete-account'),
     path('updatePassword/', updatePassword, name='update-password'),
     path('check_review/<int:pk>/', check_user_review, name='check_user_review'),
+    # 이메일 입력 화면
+    # path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'), # 이메일 발송 완료 화면
+    path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'), # 이메일 클릭 > 비밀번호 입력 화면
+    # path('password_reset_confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),  # 비밀번호 초기화 완료 화면
+
 ]
+
