@@ -43,6 +43,7 @@ function ResetPasswordModal({ isOpen, onClose }) {
           );
           // handle response
       } catch (error) {
+        console.error(error);
           // handle error
       }
   };

@@ -1,6 +1,15 @@
 from django.urls import path
 from app.views.myusers_views import *
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import PasswordResetView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+class CustomPasswordResetView(PasswordResetView):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 urlpatterns = [
     path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -36,7 +45,7 @@ urlpatterns = [
     path('updatePassword/', updatePassword, name='update-password'),
     path('check_review/<int:pk>/', check_user_review, name='check_user_review'),
     # 이메일 입력 화면
-    path('accounts/password_reset/form/', auth_views.PasswordResetView.as_view(), name="password_reset"), # 이메일 입력 화면
+    path('accounts/password_reset/form/', csrf_exempt(CustomPasswordResetView.as_view()), name="password_reset"), # 이메일 입력 화면
     # path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
     path('accounts/password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name="password_reset_done"), # 이메일 발송 완료 화면
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'), # 이메일 클릭 > 비밀번호 입력 화면
