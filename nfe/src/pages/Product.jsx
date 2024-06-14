@@ -116,9 +116,11 @@ function ProductDetail() {
     if (marked) {
       dispatch(removeFromBookMark(id));
       setMarked(false);
+      window.alert("북마크에서 삭제되었습니다.");
     } else {
       dispatch(addToBookMark(id));
       setMarked(true);
+      window.alert("북마크에 추가되었습니다.");
     }
   }
   
