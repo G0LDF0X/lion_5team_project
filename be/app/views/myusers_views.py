@@ -488,9 +488,16 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.core.mail import send_mail
 from django.contrib.auth.forms import PasswordResetForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class CustomPasswordResetView(PasswordResetView):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
     form_class = PasswordResetForm
     success_url = reverse_lazy('password_reset_done')  # 비밀번호 재설정 이메일이 성공적으로 보내진 후 리디렉션할 URL
 

@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'app.middleware.DisableCSRFMiddleware',
 ]
 
 
@@ -133,7 +134,7 @@ CSRF_COOKIE_SECURE = False
 
 SESSION_COOKIE_HTTPONLY = False
 
-CSRF_COOKIE_DOMAIN = ['http://localhost:5173']
+CSRF_COOKIE_DOMAIN = ['http://localhost:5173', "http://127.0.0.1:5173",]
 
 CSRF_COOKIE_SAMESITE= None
 

@@ -4,6 +4,7 @@ import { login } from '../store/actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 import RegisterModal from './RegisterModal';
 import ResetPasswordModal from './ResetPasswordModal';
+import { listCartItems } from '../store/actions/cartActions';
 
 const Login = ({ isOpen, onRequestClose }) => {
   const [id, setId] = useState('');
@@ -22,6 +23,7 @@ const Login = ({ isOpen, onRequestClose }) => {
   useEffect(() => {
     if (userInfo) {
       onRequestClose();
+      dispatch(listCartItems());
     }
   
   if(error){
