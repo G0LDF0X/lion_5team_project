@@ -25,15 +25,15 @@ function ResetPasswordModal({ isOpen, onClose }) {
     const [resetStatus, setResetStatus] = useState('');
     const csrftoken = getCookie('csrftoken');
     
-    console.log(csrftoken);
-    console.log(email);
+    // console.log(csrftoken);
+    // console.log(email);
 
     const handleResetPassword = async(e) => {
       e.preventDefault();
       try {
           const formData = new FormData();
           formData.append('email', email);
-  
+    
           const response = await mainAxiosInstance.post(`/users/accounts/password_reset/form/`,
               formData,
               { headers: {
@@ -41,12 +41,18 @@ function ResetPasswordModal({ isOpen, onClose }) {
                 // 'X-CSRFToken': csrftoken,  // Add this line
               }}
           );
+          // If the request is successful, show an alert
+          if (response.status === 200) {
+              window.alert("메일을 확인해주세요");
+              window.location.reload();
+          }
           // handle response
       } catch (error) {
         console.error(error);
           // handle error
       }
-  };
+      
+    };
   
     // const handleResetPassword = async(e) => {
     //     e.preventDefault();
