@@ -68,8 +68,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
     shipping_price = serializers.ReadOnlyField(source='order_id.shipping_price')
     total_price = serializers.ReadOnlyField(source='order_id.total_price')
     payment_method = serializers.ReadOnlyField(source='order_id.payment_method')
-    image_url = serializers.ImageField(source='item_id.image_url')
-    created_at = serializers.ReadOnlyField(source='order_id.created_at')
     class Meta:
         model = OrderItem
         fields = '__all__'
@@ -91,7 +89,6 @@ class ItemSerializer(serializers.ModelSerializer):
     item_qna_set = ItemQnASerializer(many=True, read_only=True)
     image_url = serializers.ImageField(use_url=True)
     category = serializers.ReadOnlyField(source='category_id.name')
-    tag = serializers.ReadOnlyField(source='tag_id.name')
     class Meta:
         model = Item
         fields = '__all__'
@@ -266,12 +263,6 @@ class RegisterSerializer(serializers.ModelSerializer):  #사용자 등록처리
         fields = ('username', 'email', 'password', 'nickname', 'address', 'phone', 'pet')
         extra_kwargs = {'password': {'write_only': True}}
 
-
-    def validate_username(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("This ID is already taken.")
-        return value
-    
     def validate(self, attrs):
         # if attrs['password'] != attrs['password2']:
         #     raise serializers.ValidationError(

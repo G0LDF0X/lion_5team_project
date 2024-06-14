@@ -81,7 +81,10 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     data.append('tags', JSON.stringify(formData.tags));
     data.append('title', formData.title);
     data.append('content', formData.content);
-    dispatch(createBoard(data));
+    dispatch(createBoard(data)).then(() => {
+      window.location.href = '/board';
+    });
+    
 
     // mainAxiosInstance.post('/board/create/', data, {
     //   headers: {
