@@ -359,7 +359,11 @@ function BoardDetailModal({ open, handleClose }) {
                           <button onClick={() => handleUpdateReply(reply.id)}
                           style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
                           >Edit</button>
-                          <button onClick={() => deleteReply(reply.id)}
+                          <button onClick={() =>{ 
+                            if (window.confirm('삭제하시겠습니까?')) {
+                              deleteReply(reply.id);
+                           }
+                          }}
                           style = {{color: 'red', fontSize: 'small'}}
                           >Delete</button>
                       </div>

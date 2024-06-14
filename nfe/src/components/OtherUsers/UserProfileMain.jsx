@@ -2,58 +2,56 @@ import React, { useState, useEffect } from 'react';
 import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
-
+import { Link, useAsyncError } from 'react-router-dom';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);
     const [followerCount, setFollowerCount] = useState(0);
-    const [followingCount, setFollowingCount] = useState(0);
+    const [FollowingCount, setFollowingCount] = useState(0);
     const [isFollowing, setIsFollowing] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [followings, setFollowings] = useState([]);
     const [showFollowers, setShowFollowers] = useState(false);
     const [showFollowings, setShowFollowings] = useState(false);
 
- 
     const fetchFollowers = async () => {
-        try {
-            const response = await mainAxiosInstance.get(`/users/follower/${userDetail.id}/`, {
-            
-                headers: {
-                    'Authorization': `Bearer ${userInfo.access}`
+                try {
+                    const response = await mainAxiosInstance.get(`/users/follower/${userDetail.id}/`, {
+                    
+                        headers: {
+                            'Authorization': `Bearer ${userInfo.access}`
+                        }
+                    });
+                    // const data = await response.json();
+                    // 팔로워 목록을 state 변수에 저장
+                    setFollowers(response.data);
+                    console.log(response.data);
+                    setShowFollowers(true);
+                    setShowFollowings(false);
+                } catch (error) {
+                    console.error(`An error occurred: ${error}`);
                 }
-            });
-            // const data = await response.json();
-            // 팔로워 목록을 state 변수에 저장
-            setFollowers(response.data);
-
-            console.log(response.data);
-            setShowFollowers(true);
-            setShowFollowings(false);
-        } catch (error) {
-            console.error(`An error occurred: ${error}`);
-        }
-    };
-    
+            };
+            
     const fetchFollowings = async () => {
-        try {
-            const response = await mainAxiosInstance.get(`/users/following/${userDetail.id}/`, {
-            
-                headers: {
-                    'Authorization': `Bearer ${userInfo.access}`
+            try {
+                const response = await mainAxiosInstance.get(`/users/following/${userDetail.id}/`, {
+                    
+                        headers: {
+                            'Authorization': `Bearer ${userInfo.access}`
+                        }
+                    });
+
+                    setFollowings(response.data);
+                    console.log(response.data);
+                    setShowFollowers(false);
+                    setShowFollowings(true);
+                } catch (error) {
+                    console.error(`An error occurred: ${error}`);
                 }
-            });
-            // const data = await response.json();
-            // 팔로워 목록을 state 변수에 저장
-            setFollowings(response.data);
-            console.log(response.data);
-            setShowFollowers(false);
-            setShowFollowings(true);
-        } catch (error) {
-            console.error(`An error occurred: ${error}`);
-        }
-    };
-  
+            };
+           
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -69,12 +67,10 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 console.error(`An error occurred: ${error}`);
             }
         };
-
         if (userDetail.id && userInfo.access) {
             fetchData();
-            // console.log(followerCount)
-            // console.log(followingCount)
-    
+            console.log(followerCount)
+            console.log(FollowingCount)
     
         }
       
@@ -105,14 +101,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             checkFollowStatus();
         }
     }, [userDetail.id, userInfo.access]);
-
-    // // 추가
-    // useEffect(() => {
-    //     if (showFollowers) {
-    //         fetchFollowers();
-    //     }
-    // }, [showFollowers])
-
 
     const handleFollow = async () => {
         try {
@@ -158,8 +146,8 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             console.error('언팔로우 실패:', error);
         }
     };
-  
-  
+
+    
     return (
         <div className="flex justify-center mt-6">
             <div className="bg-white shadow-md rounded-lg w-full max-w-2xl">
@@ -171,9 +159,9 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
                         )}
                         <h4 className="mt-4">{userDetail?.nickname || userDetail?.username}</h4>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '140px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '140px', marginBottom: '20px' }}>
                             <h6 onClick={fetchFollowers}>팔로워 {followerCount}</h6>
-                            <h6 onClick={fetchFollowings}> | 팔로잉 {followingCount}</h6>
+                            <h6 onClick={fetchFollowings}> | 팔로잉 {FollowingCount}</h6>
                         </div>
                         <Button 
                         variant="contained" 
@@ -185,7 +173,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             color: isFollowing ? 'white': 'black'
                         }}
                     >
-                        {isFollowing ? "언팔로우" : "팔로우"}
+                        {isFollowing ? "unfollow" : "follow"}
                         </Button>
                     </div>
                 </div>
@@ -213,17 +201,30 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             textAlign: 'center',
                             fontWeight: 'bold', 
                             fontSize: '24px',
-                            }}>팔로워 목록</h3>
-                        
-                            {followers.map((follower) => (
+                            marginBottom: '20px',
+                            }}>팔로워 List</h3>
+                         {followers && followers.length > 0 ? (
+                            followers.map((follower) => (
                                 <li key={follower.id} style={{ display: 'flex', alignItems: 'center', margin: '10px 0' }}>
-                                    {follower.follower_image_url ? (
-                                    <img src={url + follower.follower_image_url} alt="Profile" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
-                                ) : (
-                                    <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
-                                )}
-                                <span style={{ marginLeft: '10px', fontSize: '18px' }}>{follower.follower_nickname}</span></li>
-                            ))}
+                                   
+                                        {follower.follower_image_url ? (
+                                        <img src={url + follower.follower_image_url} alt="Profile" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                    ) : (
+                                        <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                    )}
+                                     <Link to={`/users/${follower.follower_id}`}
+                                     onClick={() => setShowFollowers(false)}>
+                                    <span style={{ marginLeft: '10px', fontSize: '18px' }}>{follower.follower_nickname}</span>
+                                    </Link></li>
+                                    
+                            ))
+                        ) : (
+                            <p style={{ 
+                                textAlign: 'center',
+                                marginBottom: '20px',
+                             }}>팔로워가 없습니다.</p>
+                        )
+                        }
                         </ul>
                     </div>
                  
@@ -233,13 +234,36 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         <div className="followings-list">
                             <ul style={{ paddingLeft: '20px' }}>
 
-                            <h3>팔로잉 목록</h3>
-                                {followings.map((following) => (
-                                    <li key={following.id}>{following.followed_nickname}</li>
-                                ))}
+                            <h3 style={{ 
+                            textAlign: 'center',
+                            fontWeight: 'bold', 
+                            fontSize: '24px',
+                            marginBottom: '20px',
+                            }}>팔로잉 List</h3>
+                            {followings && followings.length > 0 ? (
+                                followings.map((following) => (
+                                    <li key={following.id} style={{ display: 'flex', alignItems: 'center', margin: '10px 0' }}>
+
+                                    {following.following_image_url ? (
+                                        <img src={url + following.followed_image_url} alt="Profile" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                    ) : (
+                                        <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                    )}
+                                     <Link to={`/users/${following.followed_id}`}
+                                     onClick={() => setShowFollowings(false)}>
+                                    <span style={{ marginLeft: '10px', fontSize: '18px' }}>{following.followed_nickname}</span>
+                                    </Link></li>
+                                ))
+                            ) : (
+                                <p style={{ 
+                                    textAlign: 'center',
+                                    marginBottom: '20px',
+                                 }}>팔로잉 하고 있는 사람이 없습니다.</p>
+                            )
+                        }
                             </ul>
                         </div>
-                    )}
+                    )};
             </div>
           
     </div>
