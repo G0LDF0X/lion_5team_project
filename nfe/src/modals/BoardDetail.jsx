@@ -39,10 +39,6 @@ function BoardDetailModal({ open, handleClose }) {
   const [editContent, setEditContent] = useState(""); 
   const [editImage, setEditImage] = useState(null);
 
-  const [editReplyId, setEditReplyId] = useState(null);
-  const [editReply, setEditReply] = useState('');
-
-
 
   const sortedReplies = [];
   const repliesWithZero = replies.filter(reply => reply.replied_id === 0).sort((a, b) => a.id - b.id);
@@ -154,31 +150,6 @@ function BoardDetailModal({ open, handleClose }) {
       console.error(error);
     }
   };
-  
-  const updateReply = async (replyId, updatedReplyContent) => {
-    try {
-      if (Array.isArray(updatedReplyContent)) {
-        updatedReplyContent = updatedReplyContent[0];
-      }
-      
-      const updatedReply = {
-        content: updatedReplyContent ,
-        board_id: boardId,
-        user_id: userInfo.id,
-      };
-      const response = await mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
-        {
-          headers: { Authorization: `Bearer ${userInfo.access}` }, 
-        }
-      );
-      // console.log(updatedReplyContent)
-      console.log(response.data);
-      dispatch(getBoardDetails(boardId));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
 
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
@@ -224,23 +195,8 @@ function BoardDetailModal({ open, handleClose }) {
     setReplyToUser(username);
     setApply(`@${username} `);
   }
+
   
-  const handleUpdateReply = (id, text) => {
-    setEditReplyId(id);
-    setEditReply(text);
-  };
-
-  const submitUpdateReplyHandler = async (e) => {
-    e.preventDefault();
-    try {
-      await updateReply(editReplyId, editReply);
-      setEditReplyId(null);
-      setEditReply('');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   
   return (
     <Modal
@@ -412,94 +368,6 @@ function BoardDetailModal({ open, handleClose }) {
                         )}
                       </div>
                     ))}
-                  </>
-                )}
-                <CardActions disableSpacing>
-                  <IconButton
-                    aria-label="add to favorites"
-                    onClick={likeHandler}
-                  >
-                    <StyledCheckbox
-                      icon={<FavoriteBorder />}
-                      checkedIcon={<Favorite />}
-                      checked={isLiked}
-                    />
-                  </IconButton>
-                  {boardDetail.like}
-                  <Box sx={{ mx: 5 }} />
-                  <IconButton 
-                    aria-label="share"
-                    onClick={shareHandler}
-                  >
-                    <Share />
-                  </IconButton>
-                </CardActions>
-                <h2 className="text-xl font-bold mb-2">Comments</h2>
-                {replies.length === 0 && <p>No Comments</p>}
-                {sortedReplies.map((reply, index) => (
-                  <div key={index} className="border-b pb-2 mb-2">
-                    <div style={{display:"flex", justifyContent:"space-between", 
-                      paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>
-                    <p className="font-bold">
-                      <Link to={`/users/${reply.user_id}`}>
-                      {reply.username || reply.nickname}
-                      </Link>
-                    </p>
-                    {userInfo && userInfo.id === reply.user_id && (
-                      <div style={{display: 'flex', marginLeft: 'auto'}}>
-                          <button onClick={() => handleUpdateReply(reply.id)}
-                          style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
-                          >Edit</button>
-                          <button onClick={() => deleteReply(reply.id)}
-                          style = {{color: 'red', fontSize: 'small'}}
-                          >Delete</button>
-                      </div>
-                    )}      
-
-                    </div>
-                    <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <button onClick={() => handleReplyClick(reply.id, reply.username)}
-                      style={{color: 'gray', fontSize: 'small', 
-                       marginLeft: reply.replied_id !== 0 ? '30px': '0px',
-                      marginTop: '5px'}}
-                      >답글 작성</button>
-                    </div>
-                    {applied_id === reply.id && (
-                      <form onSubmit={submitApplyHandler} className="mt-4">
-                        <textarea
-                          className="w-full p-2 border rounded mb-2"
-                          rows="3"
-                          value={apply}
-                          onChange={(e) => setApply(e.target.value)}
-                          placeholder="Add a reply..."
-                        ></textarea>
-                        <button
-                          type="submit"
-                          className="w-full bg-blue-500 text-white p-2 rounded"
-                        >
-                          Submit
-                        </button>
-                      </form>
-                    )}
-                    {editReplyId === reply.id && (
-                    <form onSubmit={submitUpdateReplyHandler} className="mt-4">
-                      <textarea
-                        className="w-full p-2 border rounded mb-2"
-                        rows="3"
-                        value={editReply}
-                        onChange={(e) => setEditReply(e.target.value)}
-                        placeholder="Edit a reply..."
-                      ></textarea>
-                      <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white p-2 rounded"
-                      >
-                        Edit
-                      </button>
-                    </form>
-                  )}
-      
                   </div>
                   <form onSubmit={submitHandler} className="mt-4">
                     <textarea
