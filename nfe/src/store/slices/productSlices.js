@@ -114,7 +114,7 @@ export const productDeleteSlice = createSlice({
       });
   },
 });
-const initialState = { loading: false, success: false, productQnA: [], error: null, successUpdate: false,}; 
+const initialState = { loading: false, success: false, productQnA: [], error: null, successUpdate: false,successCreate:false}; 
 export const productQnASlice = createSlice({  
   name: "productQnA",
   initialState: initialState,
@@ -126,7 +126,7 @@ export const productQnASlice = createSlice({
       })
       .addCase(createProductQnA.fulfilled, (state, action) => {
         state.loading = false;
-        state.success = true;
+        state.successCreate = true;
         state.productQnA = action.payload;
       })
       .addCase(createProductQnA.rejected, (state, action) => {

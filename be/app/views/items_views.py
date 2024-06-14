@@ -255,7 +255,6 @@ def get_category(request):
     serializer = CategorySerializer(category, many=True)
     return Response(serializer.data)
 
-
 @api_view(['POST'])
 def create_qna(request,item_id):
     user = User.objects.get(username=request.user)
@@ -298,6 +297,7 @@ def update_qna(request,pk):
     
     serializer = ItemQnASerializer(qna, many=False)
     return Response(serializer.data)
+
 @api_view(['DELETE'])
 def delete_qna (request, pk):
     try:
@@ -309,7 +309,7 @@ def delete_qna (request, pk):
     user_auth = auth_user.objects.get(username=request.user)
 
     if user.id != item_qna.user_id.id:
-        if  user_auth.is_superuser == False:
+        if user_auth.is_superuser == False:
             return Response({"error": "You are not allowed to delete this item Q&A"})
     
     item_qna.delete()
