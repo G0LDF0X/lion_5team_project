@@ -23,5 +23,6 @@ urlpatterns = [
     path('qna/delete/<int:pk>/', delete_qna, name="delete_qna"),
     path('tags/', get_tag, name='get_tags'),
     path('tags/<int:pk>/', get_tag_with_category, name='get_tag_with_category'),
-    path('items/qna/', get_qna, name='get_qna')
+    path('items/qna/', get_qna, name='get_qna'),
+    path('all/', get_all_items, name='get_all_items'),
 ]

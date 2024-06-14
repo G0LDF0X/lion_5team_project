@@ -146,11 +146,11 @@ export const createProductQnA = createAsyncThunk(
 export const updateProductQnA = createAsyncThunk(
   "productQnAUpdate/updateProductQnA",
   async ({id, title, content}, { rejectWithValue, getState }) => {
-
+    console.log("id:", id)
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.put(`/items/qna/update/${id}/`, {
-         title, content },
+         'title': title, 'content': content },
         { headers });
       return res.data;
       
@@ -161,12 +161,23 @@ export const updateProductQnA = createAsyncThunk(
 );
 export const deleteProductQnA = createAsyncThunk(
   "productQnADelete/deleteProductQnA",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
+    const {
+      user: { userInfo },
+    } = getState();
+    console.log("id:", id)
     try {
-      const res = await mainAxiosInstance.delete(`/items/qna/delete/${id}`);
-
+      const res = await mainAxiosInstance.delete(`/items/qna/delete/${id}/`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userInfo.access}`,
+        },}
+      );
+      console.log("DATA:", res.data);
       return res.data;
     } catch (error) {
+      console.error(error);
       return rejectWithValue(handleError(error));
     }
   }

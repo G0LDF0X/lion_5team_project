@@ -16,7 +16,7 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-
+import { getQnA } from "../store/slices/productSlices";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
@@ -27,7 +27,7 @@ import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
 import { reviewCreateReset } from "../store/slices/reviewSlices";
-import { createProductQnA } from "../store/actions/productActions";
+import { createProductQnA, deleteProductQnA, updateProductQnA } from "../store/actions/productActions";
 import { productQnaReset } from "../store/slices/productSlices";
 function ProductDetail() {
   const [qty, setQty] = useState(1);
@@ -50,6 +50,7 @@ function ProductDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const reviewCreate = useSelector((state) => state.reviewCreate);
+
   const { success: successProductReview, review: createdReview } = reviewCreate;
   const bookMarkList = useSelector((state) => state.bookMarkList);
   const { bookMarkItems } = bookMarkList;
@@ -58,7 +59,7 @@ function ProductDetail() {
   const cart = useSelector((state) => state.cart);
   const { successAdd } = cart;
   const productQnA = useSelector((state) => state.productQnA);
-  const { success: successQNA, productQnA: productQ } = productQnA;
+  const { successUpdate: successQNA,successCreate,  productQnA: productQ } = productQnA;
   const [canReview, setCanReview] = useState(false);
 
   useEffect(() => {
@@ -96,6 +97,7 @@ function ProductDetail() {
       }
     };
   }, []);
+
   useEffect(() => {
     if (successProductReview) {
       dispatch(reviewCreateReset());
@@ -103,6 +105,7 @@ function ProductDetail() {
       navigate(`/items/review/update/${createdReview.id}`);
     }
   }, [successProductReview]);
+
   useEffect(() => {
     if (bookMarkList && bookMarkItems.find((x) => x.item_id === product.id)) {
       setMarked(true);
@@ -113,11 +116,14 @@ function ProductDetail() {
     if (marked) {
       dispatch(removeFromBookMark(id));
       setMarked(false);
+      window.alert("북마크에서 삭제되었습니다.");
     } else {
       dispatch(addToBookMark(id));
       setMarked(true);
+      window.alert("북마크에 추가되었습니다.");
     }
-  };
+  }
+  
   const addToCartHandler = () => {
     dispatch(addToCart({ id, qty }));
   };
@@ -185,11 +191,46 @@ function ProductDetail() {
     dispatch(createProductQnA(id));
     console.log(`Q&A 생성 버튼이 클릭되었습니다: ${id}`);
   };
+
+  const updateQnAHandler = (item_qna) => {
+    console.log("버튼 클릭");
+    {
+      console.log(userInfo);
+    }
+    console.log(item_qna);
+    if (userInfo && userInfo.id === item_qna.user_id) {
+      dispatch(getQnA(item_qna))
+      // dispatch(updateProductQnA({id: item_qna.id, title: item_qna.title, content: item_qna.content}));
+      navigate(`/items/qna/update/${item_qna.id}`);
+    } else {
+      alert("You can only edit your own qna.");
+    }
+  }
+
+  const deleteQnAHandler = (item_qna) => {
+    if (userInfo && userInfo.id === item_qna.user_id) {
+      if (window.confirm("Are you sure you want to delete this Q&A?")) {
+        dispatch(deleteProductQnA(item_qna.id))
+        .then(() => {
+          alert("Q&A deleted successfully.");
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      } else {
+        alert("You can only delete your own Q&A.");
+      }
+  }};
+
   useEffect(() => {
-    if (successQNA) {
+    if (successCreate) {
+      dispatch(productQnaReset());
+      console.log("createdQnA", productQ);
       navigate(`/items/qna/update/${productQ.id}`);
     }
-  }, [successQNA]);
+  }, [successCreate]);
+
   const createReviewHandler = () => {
     if (userInfo) {
       dispatch(createReview({ id }));
@@ -197,12 +238,14 @@ function ProductDetail() {
       window.alert("로그인 후 이용해주세요.");
     }
   };
+
   useEffect(() => {
     if (successAdd) {
       setState({ open: true });
       dispatch(resetSuccess());
     }
   }, [successAdd]);
+
   const handleClose = () => {
     setState({ open: false });
   };
@@ -392,23 +435,27 @@ function ProductDetail() {
                 product.item_qna_set.map((item_qna, index) => (
                   <Accordion key={index}>
                     <AccordionSummary
-                      expandIcon={<i className="fa-solid fa-chevron-down"></i>}
+                        expandIcon={<i className="fa-solid fa-chevron-down"></i>}
                     >
-                      <div>
-                        <h5 className="text-lg font-bold">
-                          Q. {item_qna.title}
-                        </h5>
-                        <p className="text-sm text-gray-500">
-                          ID: {item_qna.username}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {item_qna.created_at.split("T")[0]}
-                        </p>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item_qna.content }}
-                          className="mt-2"
-                        ></div>
-                      </div>
+                      
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+                            <div>
+                                <h5 className="text-lg font-bold">
+                                    Q. {item_qna.title}
+                                </h5>
+                                <p className="text-sm text-gray-500">
+                                    ID: {item_qna.username}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {item_qna.created_at.split("T")[0]}
+                                </p>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: item_qna.content }}
+                                    className="mt-2"
+                                ></div>
+                            </div>
+                            
+                        </div>
                     </AccordionSummary>
                     <AccordionDetails>
                       {item_qna.item_answer_set &&
@@ -431,33 +478,43 @@ function ProductDetail() {
                         ))
                       ) : (
                         <>
-                          {!showTextField && (
+                        <div className="flex items-center">
+                          {item_qna.user_id === userInfo.id && (
+                            <div className="flex">
+                              <button className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                              onClick={() => updateQnAHandler(item_qna)}>수정</button>
+                              <button className="bg-red-500 text-white px-4 py-2 rounded-lg ml-2"
+                              onClick={() => deleteQnAHandler(item_qna)}>삭제</button>
+                            </div>
+                          )}
+                          {!showTextField && userInfo.is_seller && (
                             <button
-                              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                              className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                               onClick={handleButtonClick}
                             >
                               답변 작성하기
                             </button>
                           )}
-                          <br />
-                          {showTextField && (
-                            <>
-                              <textarea
-                                className="w-full p-2 border rounded-lg mb-2"
-                                rows="3"
-                                value={answer}
-                                onChange={handleAnswerChange}
-                                placeholder="답변을 작성해주세요."
-                              ></textarea>
-                              <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                                onClick={() => handleAnswerSubmit(answer)}
-                              >
-                                제출하기
-                              </button>
-                            </>
-                          )}
-                        </>
+                        </div>
+                        <br />
+                        {showTextField && (
+                          <>
+                            <textarea
+                              className="w-full p-2 border rounded-lg mb-2"
+                              rows="3"
+                              value={answer}
+                              onChange={handleAnswerChange}
+                              placeholder="답변을 작성해주세요."
+                            ></textarea>
+                            <button
+                              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                              onClick={() => handleAnswerSubmit(answer)}
+                            >
+                              제출하기
+                            </button>
+                          </>
+                        )}
+                      </>
                       )}
                     </AccordionDetails>
                   </Accordion>
