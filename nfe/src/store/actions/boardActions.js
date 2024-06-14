@@ -97,13 +97,14 @@ export const updateBoard = createAsyncThunk(
 
       console.log('Access Token:', userInfo.access);  // 토큰 확인
       console.log('Request Data:', board);
+      console.log('Image File:', board.get('image'));
 
       const res = await mainAxiosInstance.put(
         `/board/update_board/${id}/`,
         board,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${userInfo.access}`,
           },
         }
@@ -117,9 +118,17 @@ export const updateBoard = createAsyncThunk(
 
 export const deleteBoard = createAsyncThunk(
   "boardDelete/deleteBoard",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.delete(`/board/delete/${id}`);
+      const {
+        user: { userInfo },
+      } = getState();
+
+      const res = await mainAxiosInstance.delete(`/board/delete/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+      });
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));

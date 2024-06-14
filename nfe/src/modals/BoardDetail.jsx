@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { createReply, getBoardDetails, createApply, updateBoard } from "../store/actions/boardActions";
+import { createReply, getBoardDetails, createApply, updateBoard, deleteBoard } from "../store/actions/boardActions";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
@@ -37,6 +37,7 @@ function BoardDetailModal({ open, handleClose }) {
   const [editMode, setEditMode] = useState(false); 
   const [editTitle, setEditTitle] = useState(""); 
   const [editContent, setEditContent] = useState(""); 
+  const [editImage, setEditImage] = useState(null);
 
 
   const sortedReplies = [];
@@ -61,10 +62,22 @@ function BoardDetailModal({ open, handleClose }) {
     }
   }, [dispatch, boardId, boardDetail?.liked_by_user, likeSuccess]);
 
+  useEffect(() => {
+    if (editMode && boardDetail?.image_url) {
+      setEditImage(`${VITE_API_BASE_URL}${boardDetail.image_url}?${new Date().getTime()}`); // 캐시 방지
+    }
+  }, [editMode, boardDetail?.image_url]);
+
   const editHandler = () => {
     setEditMode(true);
     setEditTitle(boardDetail.title);
     setEditContent(boardDetail.content);
+    setEditImage(boardDetail.image_url);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setEditImage(file);
   };
 
   const submitEditHandler = async (e) => {
@@ -73,13 +86,29 @@ function BoardDetailModal({ open, handleClose }) {
       alert("Title and content must not be empty.");
       return;
     }
-    dispatch(updateBoard({ id: boardId, board:{ title: editTitle, content: editContent }}));
+
+    const formData = new FormData();
+    formData.append('title', editTitle);
+    formData.append('content', editContent);
+    if (editImage) {
+      formData.append('image', editImage);
+    }
+    formData.append('userInfo', JSON.stringify(userInfo));
+
+    dispatch(updateBoard({ id: boardId, board: formData }));
     setEditMode(false);
+    dispatch(getBoardDetails(boardId)); 
+
+    console.log("Edit Image:" ,editImage);
   };
 
-  const cancelEditHandler = () => {
-    setEditMode(false);
+  const deleteBoardHandler = async () => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      dispatch(deleteBoard(boardId));
+      window.location.href = '/board';
+    }
   };
+
 
   const likeHandler = () => {
     if (userInfo) {
@@ -192,176 +221,181 @@ function BoardDetailModal({ open, handleClose }) {
           </div>
         ) : boardDetail ? (
           <>
-            <div className="w-2/3 relative" onClick={tagHandler}>
-              {boardDetail.image_url && (
-                <>
-                  <img
-                    src={`${VITE_API_BASE_URL}${boardDetail.image_url}`}
-                    alt={boardDetail.title}
-                    className="w-full h-full object-cover"
-                  />
-                  {showTag && boardDetail.tags && boardDetail.tags.map((tag, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        position: 'absolute',
-                        top: `${tag.y}px`,
-                        left: `${tag.x}px`,
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        color: 'white',
-                        padding: '2px 5px',
-                        borderRadius: '4px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {tag.tag}
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-            <div className="w-1/3 p-4 flex flex-col">
-              <div className="flex items-center border-b pb-2 mb-4">
-                <div>
-                  <Link to={`/users/${boardDetail.user_id}`}>
-                    <p className="font-bold">{boardDetail.username}</p>
-                  </Link>
-                  <p className="text-sm text-gray-500">
-                    {boardDetail.created_at}
-                  </p>
-                </div>
-                {userInfo && userInfo.id === boardDetail.user_id && (
-                  // 수정 버튼 추가
+            {editMode ? (
+              <form onSubmit={submitEditHandler} className="w-full p-4">
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full p-2 border rounded mb-2"
+                />
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  className="w-full p-2 border rounded mb-2"
+                  rows="5"
+                />
+                <input 
+                  type="file" 
+                  onChange={handleImageChange} 
+                  className="w-full p-2 border rounded mb-2"
+                />
+                <div className="flex justify-between">
                   <button
-                    onClick={editHandler}
-                    className="ml-auto bg-blue-500 text-white p-1 rounded"
+                    type="submit"
+                    className="bg-blue-500 text-white p-2 rounded"
                   >
-                    Edit
+                    Save
                   </button>
-                )}
-              </div>
-              <div className="flex-grow overflow-y-auto">
-              {editMode ? (
-                  <form onSubmit={submitEditHandler}>
-                    <input
-                      type="text"
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                      className="w-full p-2 border rounded mb-2"
-                    />
-                    <textarea
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      className="w-full p-2 border rounded mb-2"
-                      rows="5"
-                    />
-                    <div className="flex justify-between">
-                      <button
-                        type="submit"
-                        className="bg-blue-500 text-white p-2 rounded"
-                      >
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={cancelEditHandler}
-                        className="bg-red-500 text-white p-2 rounded"
-                      >
-                        Cancel
-                      </button>
+                  <button
+                    type="button"
+                    onClick={deleteBoardHandler}
+                    className="bg-red-500 text-white p-2 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <div className="w-2/3 relative" onClick={tagHandler}>
+                  {boardDetail.image_url && (
+                    <>
+                      <img
+                        src={`${VITE_API_BASE_URL}${boardDetail.image_url}?${new Date().getTime()}`}
+                        alt={boardDetail.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {showTag && boardDetail.tags && boardDetail.tags.map((tag, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            position: 'absolute',
+                            top: `${tag.y}px`,
+                            left: `${tag.x}px`,
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            color: 'white',
+                            padding: '2px 5px',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {tag.tag}
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+                <div className="w-1/3 p-4 flex flex-col">
+                  <div className="flex items-center border-b pb-2 mb-4">
+                    <div>
+                      <Link to={`/users/${boardDetail.user_id}`}>
+                        <p className="font-bold">{boardDetail.username}</p>
+                      </Link>
+                      <p className="text-sm text-gray-500">
+                        {boardDetail.created_at}
+                      </p>
                     </div>
-                  </form>
-                ) : (
-                  <>
+                  </div>
+                  <div className="flex-grow overflow-y-auto">
                     <h2 className="text-2xl font-bold mb-2">{boardDetail.title}</h2>
                     <p
                       dangerouslySetInnerHTML={{ __html: boardDetail.content }}
                       className="mb-4"
                     ></p>
-                  </>
-                )}
-                <CardActions disableSpacing>
-                  <IconButton
-                    aria-label="add to favorites"
-                    onClick={likeHandler}
-                  >
-                    <StyledCheckbox
-                      icon={<FavoriteBorder />}
-                      checkedIcon={<Favorite />}
-                      checked={isLiked}
-                    />
-                  </IconButton>
-                  {boardDetail.like}
-                  <Box sx={{ mx: 5 }} />
-                  <IconButton 
-                    aria-label="share"
-                    onClick={shareHandler}
-                  >
-                    <Share />
-                  </IconButton>
-                </CardActions>
-                <h2 className="text-xl font-bold mb-2">Comments</h2>
-                {replies.length === 0 && <p>No Comments</p>}
-                {sortedReplies.map((reply, index) => (
-                  <div key={index} className="border-b pb-2 mb-2">
-                    <div style={{display:"flex", justifyContent:"space-between", 
-                      paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>
-                    <p className="font-bold">
-                      <Link to={`/users/${reply.user_id}`}>
-                      {reply.username || reply.nickname}
-                      </Link>
-                    </p>
-                    {userInfo && userInfo.id === reply.user_id && (
-                        <button onClick={() => deleteReply(reply.id)}
-                        style = {{color: 'red', fontSize: 'small',
-                          marginLeft: 'auto'}}
-                        >Delete</button>
-                      )}
-                    </div>
-                    <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
-                    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                      <button onClick={() => handleReplyClick(reply.id, reply.username)}
-                      style={{color: 'gray', fontSize: 'small', 
-                       marginLeft: reply.replied_id !== 0 ? '30px': '0px',
-                      marginTop: '5px'}}
-                      >답글 작성</button>
-                    </div>
-                    {applied_id === reply.id && (
-                      <form onSubmit={submitApplyHandler} className="mt-4">
-                        <textarea
-                          className="w-full p-2 border rounded mb-2"
-                          rows="3"
-                          value={apply}
-                          onChange={(e) => setApply(e.target.value)}
-                          placeholder="Add a reply..."
-                        ></textarea>
-                        <button
-                          type="submit"
-                          className="w-full bg-blue-500 text-white p-2 rounded"
-                        >
-                          Submit
-                        </button>
-                      </form>
-                    )}
+                    <CardActions disableSpacing>
+                      <IconButton
+                        aria-label="add to favorites"
+                        onClick={likeHandler}
+                      >
+                        <StyledCheckbox
+                          icon={<FavoriteBorder />}
+                          checkedIcon={<Favorite />}
+                          checked={isLiked}
+                        />
+                      </IconButton>
+                      {boardDetail.like}
+                      <Box sx={{ mx: 5 }} />
+                      <IconButton 
+                        aria-label="share"
+                        onClick={shareHandler}
+                      >
+                        <Share />
+                      </IconButton>
+                    </CardActions>
+                    <h2 className="text-xl font-bold mb-2">Comments</h2>
+                    {replies.length === 0 && <p>No Comments</p>}
+                    {sortedReplies.map((reply, index) => (
+                      <div key={index} className="border-b pb-2 mb-2">
+                        <div style={{display:"flex", justifyContent:"space-between", 
+                          paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>
+                        <p className="font-bold">
+                          <Link to={`/users/${reply.user_id}`}>
+                          {reply.username || reply.nickname}
+                          </Link>
+                        </p>
+                        {userInfo && userInfo.id === reply.user_id && (
+                            <button onClick={() => deleteReply(reply.id)}
+                            style = {{color: 'red', fontSize: 'small',
+                              marginLeft: 'auto'}}
+                            >Delete</button>
+                          )}
+                        </div>
+                        <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                          <button onClick={() => handleReplyClick(reply.id, reply.username)}
+                          style={{color: 'gray', fontSize: 'small', 
+                          marginLeft: reply.replied_id !== 0 ? '30px': '0px',
+                          marginTop: '5px'}}
+                          >답글 작성</button>
+                        </div>
+                        {applied_id === reply.id && (
+                          <form onSubmit={submitApplyHandler} className="mt-4">
+                            <textarea
+                              className="w-full p-2 border rounded mb-2"
+                              rows="3"
+                              value={apply}
+                              onChange={(e) => setApply(e.target.value)}
+                              placeholder="Add a reply..."
+                            ></textarea>
+                            <button
+                              type="submit"
+                              className="w-full bg-blue-500 text-white p-2 rounded"
+                            >
+                              Submit
+                            </button>
+                          </form>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <form onSubmit={submitHandler} className="mt-4">
-                <textarea
-                  className="w-full p-2 border rounded mb-2"
-                  rows="3"
-                  value={reply}
-                  onChange={(e) => setReply(e.target.value)}
-                  placeholder="Add a comment..."
-                ></textarea>
-                <button
-                  type="submit"
-                  className="w-full bg-blue-500 text-white p-2 rounded"
-                >
-                  Submit
-                </button>
-              </form>
-            </div>
+                  <form onSubmit={submitHandler} className="mt-4">
+                    <textarea
+                      className="w-full p-2 border rounded mb-2"
+                      rows="3"
+                      value={reply}
+                      onChange={(e) => setReply(e.target.value)}
+                      placeholder="Add a comment..."
+                    ></textarea>
+                    <button
+                      type="submit"
+                      className="w-full bg-blue-500 text-white p-2 rounded"
+                    >
+                      Submit
+                    </button>
+                    {userInfo && userInfo.id === boardDetail.user_id && (
+                      <button
+                        type="button"
+                        onClick={editHandler}
+                        className="w-full bg-blue-500 text-white p-2 rounded mt-2"
+                      >
+                        Edit
+                      </button>
+                    )}
+                  </form>
+                </div>
+              </>
+            )}
           </>
         ) : (
           <div className="w-full flex justify-center items-center p-8">

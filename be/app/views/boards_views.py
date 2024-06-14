@@ -183,27 +183,49 @@ def handle_like(request, pk):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_Board(request, pk):
-    data = request.data
+
+    # JSON 문자열로 전달된 userInfo를 로드
+    user_info = json.loads(request.data.get('userInfo', '{}'))
+    # board_data 초기화
+    board_data = request.data.dict()
+    image = request.FILES.get('image')
+
+    print("Request Data:", request.data)
     try:
         board = Board.objects.get(id=pk)
     except Board.DoesNotExist:
         return Response({'detail': 'Board not found'}, status=404)
     
 
-    print("Board User ID:", board.user_id)
-    print("Request User ID:", request.user)
+    print("Board User ID:", board.user_id.id)
+    print("Request User ID:", user_info['id'])
     
-    if board.user_id.username != request.user.username:
+    if board.user_id.id != user_info.get('id'):
         return Response({'detail': 'You do not have permission to edit this board'}, status=403)
 
     update_fields = []
-    for field in ['title', 'content', 'product_url', 'image_url']:
-        if field in data:
-            setattr(board, field, data[field])
+
+     # 제목, 내용, 이미지 처리
+    if 'title' in board_data:
+        board.title = board_data['title']
+        update_fields.append('title')
+    if 'content' in board_data:
+        board.content = board_data['content']
+        update_fields.append('content')
+    if image:
+        board.image_url = image
+        update_fields.append('image_url')
+
+    # 기타 필드 처리
+    for field in ['product_url', 'image_url']:
+        if field in board_data:
+            setattr(board, field, board_data[field])
             update_fields.append(field)
 
     if update_fields:
         board.save(update_fields=update_fields)
+    else:
+        board.save()
 
     serializer = BoardSerializer(board, many=False)
     return Response(serializer.data)
