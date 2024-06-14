@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom';
 import { login } from '../store/actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
 import RegisterModal from './RegisterModal';
+import ResetPasswordModal from './ResetPasswordModal';
+
 const Login = ({ isOpen, onRequestClose }) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isPasswordResetModalOpen, setIsPasswordResetModalOpen] = useState(false);
+
   const user = useSelector((state) => state.user);
   const { userInfo, error } = user;
   const dispatch = useDispatch();
@@ -32,6 +36,13 @@ const Login = ({ isOpen, onRequestClose }) => {
     setIsRegisterModalOpen(false);
   };
 
+  const handleOpenPasswordResetModal = () => {
+    setIsPasswordResetModalOpen(true);
+  };
+  
+  const handleClosePasswordResetModal = () => {
+    setIsPasswordResetModalOpen(false);
+  };
 
   if (!isOpen) return null;
 
@@ -77,8 +88,19 @@ const Login = ({ isOpen, onRequestClose }) => {
             Register
           </button>
         </label>
+        <label className="block text-gray-700 text-center mt-4">
+          Forgot your password?{' '}
+          <button
+            type="button"
+            onClick={handleOpenPasswordResetModal}
+            className="text-blue-500"
+          >
+            Reset Password
+          </button>
+        </label>
         </form>
         <RegisterModal isOpen={isRegisterModalOpen} onClose={handleCloseRegisterModal} />
+        <ResetPasswordModal isOpen={isPasswordResetModalOpen} onClose={handleClosePasswordResetModal} />
       </div>
     </div>,
     document.body

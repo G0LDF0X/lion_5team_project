@@ -95,6 +95,12 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
+
+class SimpleItemSerializer(serializers.ModelSerializer):
+    Category = serializers.ReadOnlyField(source='category_id.name')
+    class Meta:
+        model = Item
+        fields = [ 'name', 'Category', 'description']
     
 class UserQnASerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user_id.username')

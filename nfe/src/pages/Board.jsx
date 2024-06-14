@@ -17,7 +17,6 @@ function StandardImageList() {
 
   useEffect(() => {
     dispatch(listBoards());
-    console.log(location);
   }, [navigate]);
 
   return (

@@ -110,8 +110,29 @@ SIMPLE_JWT = {
 
 # CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # 프론트엔드 서버의 URL
+    "http://127.0.0.1:5173",
+]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', "http://127.0.0.1:5173",]
+
+CSRF_COOKIE_HTTPONLY = False
+
+CSRF_COOKIE_SECURE = False
+
+SESSION_COOKIE_HTTPONLY = False
+
+CSRF_COOKIE_DOMAIN = ['http://localhost:5173']
+
+CSRF_COOKIE_SAMESITE= None
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -202,5 +223,12 @@ LOGIN_REDIRECT_URL = '/login/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER ='sinhyeonseo1026@gmail.com'
+EMAIL_HOST_PASSWORD ='sfhi fisl jdvi bjiy'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
