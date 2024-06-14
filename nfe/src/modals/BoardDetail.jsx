@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -225,23 +226,28 @@ function BoardDetailModal({ open, handleClose }) {
     setReplyToUser(username);
     setApply(`@${username} `);
   }
-  const handleUpdateReply = (id, text) => {
+  const handleUpdateReply = (id, content) => {
     setEditReplyId(id);
-    setEditReply(text);
+    setEditReply(content);
   };
 
-  const submitUpdateReplyHandler = async (e) => {
-    e.preventDefault();
-    try {
-      await updateReply(editReplyId, editReply);
-      setEditReplyId(null);
-      setEditReply('');
-    } catch (error) {
-      console.error(error);
-    }
+
+  const cancelEditHandler = () => {
+    setEditMode(false);
   };
 
+
+  const submitUpdateReplyHandler = async (replyId) => {
+    // Get the updated reply content
+    const updatedReplyContent = editReply;
   
+    // Call the updateReply function with the replyId and updated content
+    await updateReply(replyId, updatedReplyContent);
+  
+    // Reset the editReply and editReplyId state
+    setEditReply('');
+    setEditReplyId(null);
+  };
   
   return (
     <Modal
@@ -370,36 +376,63 @@ function BoardDetailModal({ open, handleClose }) {
                     </CardActions>
                     <h2 className="text-xl font-bold mb-2">Comments</h2>
                     {replies.length === 0 && <p>No Comments</p>}
+                   
                     {sortedReplies.map((reply, index) => (
                       <div key={index} className="border-b pb-2 mb-2">
-                        <div style={{display:"flex", justifyContent:"space-between", 
-                          paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>
-                        <p className="font-bold">
-                          <Link to={`/users/${reply.user_id}`}>
-                          {reply.username || reply.nickname}
-                          </Link>
-                        </p>
-                        {userInfo && userInfo.id === reply.user_id && (
-                            <div style={{display: 'flex', marginLeft: 'auto'}}>
-                            <button onClick={() => handleUpdateReply(reply.id)}
-                            style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
-                            >Edit</button>
-                            <button onClick={() =>{ 
-                              if (window.confirm('삭제하시겠습니까?')) {
-                                deleteReply(reply.id);
-                             }
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                          <p className="font-bold">
+                            <Link to={`/users/${reply.user_id}`}>
+                              {reply.username || reply.nickname}
+                            </Link>
+                          </p>
+                          {userInfo && userInfo.id === reply.user_id && (
+                            <div style={{ display: 'flex', marginLeft: 'auto' }}>
+                      
+                              {editReplyId !== reply.id && userInfo && userInfo.id === reply.user_id && (
+                                <button
+                                  onClick={() => handleUpdateReply(reply.id, reply.content)}
+                                  style={{ color: 'blue', fontSize: 'small', marginRight: '10px' }}
+                                >Edit</button>
+                          )}
+                              <button
+                                onClick={() => {
+                                  if (window.confirm('삭제하시겠습니까?')) {
+                                    deleteReply(reply.id);
+                                  }
+                                }}
+                                style={{ color: 'red', fontSize: 'small' }}
+                              >Delete</button>
+                              
+                            </div>
+                          )}
+                        </div>
+                        {editReplyId === reply.id ? (
+                          <form onSubmit={submitUpdateReplyHandler} className="mt-4">
+                            <textarea
+                              className="w-full p-2 border rounded mb-2"
+                              rows="3"
+                              value={editReply}
+                              onChange={(e) => setEditReply(e.target.value)}
+                              placeholder="Edit a reply..."
+                            ></textarea>
+
+                          <button
+                          onClick={() => submitUpdateReplyHandler(reply.id)}
+                          className="w-full bg-blue-500 text-white p-2 rounded"
+                        >
+                          Save
+                        </button>
+                          </form>
+                        ) : (
+                          <p>{reply.content}</p>
+                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between'}}>
+                          <button
+                            onClick={() => handleReplyClick(reply.id, reply.username)}
+                            style={{
+                              color: 'gray', fontSize: 'small',
+                              marginTop: '5px'
                             }}
-                            style = {{color: 'red', fontSize: 'small'}}
-                            >Delete</button>
-                        </div>
-                      )}      
-                        </div>
-                        <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
-                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                          <button onClick={() => handleReplyClick(reply.id, reply.username)}
-                          style={{color: 'gray', fontSize: 'small', 
-                          marginLeft: reply.replied_id !== 0 ? '30px': '0px',
-                          marginTop: '5px'}}
                           >답글 작성</button>
                         </div>
                         {applied_id === reply.id && (
@@ -409,7 +442,7 @@ function BoardDetailModal({ open, handleClose }) {
                               rows="3"
                               value={apply}
                               onChange={(e) => setApply(e.target.value)}
-                              placeholder="Add a reply..."
+                              placeholder=" Add a reply..."
                             ></textarea>
                             <button
                               type="submit"
@@ -419,25 +452,12 @@ function BoardDetailModal({ open, handleClose }) {
                             </button>
                           </form>
                         )}
-                        {editReplyId === reply.id && (
-                    <form onSubmit={submitUpdateReplyHandler} className="mt-4">
-                      <textarea
-                        className="w-full p-2 border rounded mb-2"
-                        rows="3"
-                        value={editReply}
-                        onChange={(e) => setEditReply(e.target.value)}
-                        placeholder="Edit a reply..."
-                      ></textarea>
-                      <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white p-2 rounded"
-                      >
-                        Edit
-                      </button>
-                    </form>
-                  )}
                       </div>
+                      
+
                     ))}
+
+
                   </div>
                   <form onSubmit={submitHandler} className="mt-4">
                     <textarea
