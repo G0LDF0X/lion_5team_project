@@ -33,12 +33,13 @@ function BoardDetailModal({ open, handleClose }) {
   const [applied_id, setAppliedId] = useState(0);
   const [apply, setApply] = useState("");
   const [replyToUser, setReplyToUser] = useState(null);
-
-  const [updatedReplyContent, setUpdatedReplyContent] = useState(""); 
-  const [editingReplyId, setEditingReplyId] = useState(null);
+  
   const [editMode, setEditMode] = useState(false); 
   const [editTitle, setEditTitle] = useState(""); 
   const [editContent, setEditContent] = useState(""); 
+  const [editReplyId, setEditReplyId] = useState(null);
+  const [editReply, setEditReply] = useState('');
+
 
 
   const sortedReplies = [];
@@ -123,7 +124,6 @@ function BoardDetailModal({ open, handleClose }) {
       console.error(error);
     }
   };
-
   
   const updateReply = async (replyId, updatedReplyContent) => {
     try {
@@ -148,6 +148,7 @@ function BoardDetailModal({ open, handleClose }) {
       console.error(error);
     }
   };
+
 
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
@@ -193,23 +194,22 @@ function BoardDetailModal({ open, handleClose }) {
     setReplyToUser(username);
     setApply(`@${username} `);
   }
+  
+  const handleUpdateReply = (id, text) => {
+    setEditReplyId(id);
+    setEditReply(text);
+  };
 
-
-
-
-// 핸들러 함수 작성
-const handleUpdateReply = async (replyId) => {
-  try {
-    if (updatedReplyContent.trim() !== "") { // 수정된 답글이 비어 있지 않은 경우에만 업데이트 수행
-      await updateReply(replyId, updatedReplyContent); // 수정된 답글 내용을 updateReply 함수로 전달
-      setUpdatedReplyContent(""); // 수정된 답글 입력란 초기화
-    } else {
-      alert("Please enter a reply."); // 수정된 답글이 비어 있는 경우 알림 표시
+  const submitUpdateReplyHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await updateReply(editReplyId, editReply);
+      setEditReplyId(null);
+      setEditReply('');
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
 
   
   return (
@@ -358,14 +358,13 @@ const handleUpdateReply = async (replyId) => {
                       <div style={{display: 'flex', marginLeft: 'auto'}}>
                           <button onClick={() => handleUpdateReply(reply.id)}
                           style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
-                          >Edit Reply</button>
+                          >Edit</button>
                           <button onClick={() => deleteReply(reply.id)}
                           style = {{color: 'red', fontSize: 'small'}}
                           >Delete</button>
                       </div>
-                  )}
-                                
-          
+                    )}      
+
                     </div>
                     <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -392,6 +391,24 @@ const handleUpdateReply = async (replyId) => {
                         </button>
                       </form>
                     )}
+                    {editReplyId === reply.id && (
+                    <form onSubmit={submitUpdateReplyHandler} className="mt-4">
+                      <textarea
+                        className="w-full p-2 border rounded mb-2"
+                        rows="3"
+                        value={editReply}
+                        onChange={(e) => setEditReply(e.target.value)}
+                        placeholder="Edit a reply..."
+                      ></textarea>
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white p-2 rounded"
+                      >
+                        Edit
+                      </button>
+                    </form>
+                  )}
+      
                   </div>
                 ))}
               </div>
@@ -422,7 +439,4 @@ const handleUpdateReply = async (replyId) => {
   );
 }
 
-
 export default BoardDetailModal;
-
-

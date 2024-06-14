@@ -119,10 +119,6 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:5173",
 ]
-CORS_ALLOW_HEADERS = [
-    'email',
-    'content-type',
-]
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 

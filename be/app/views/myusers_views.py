@@ -442,24 +442,6 @@ def updatePassword(request):
     return Response({"detail": "비밀번호가 성공적으로 변경되었습니다."}, status=200)
 
 
-# from django.middleware.csrf import get_token
-# from django.http import JsonResponse
-
-# @api_view(['GET'])
-# def get_csrf_token(request):
-#     csrftoken = get_token(request)
-#     return JsonResponse({'csrftoken': csrftoken})
-
-# from django.contrib.auth.tokens import default_token_generator
-# from django.utils.http import urlsafe_base64_encode
-# from django.utils.encoding import force_bytes
-# from django.contrib.auth.views import PasswordResetView
-# from django.contrib.auth.forms import PasswordResetForm
-
-# from django.core.mail import send_mail
-# from django.http import HttpResponse
-# from django.contrib.auth import get_user_model
-
 
 # class CustomPasswordResetView(PasswordResetView):
 #     form_class = PasswordResetForm
@@ -504,60 +486,22 @@ from django.core.mail import send_mail
 from django.contrib.auth.forms import PasswordResetForm
 
 
-# class CustomPasswordResetView(PasswordResetView):
-#     form_class = PasswordResetForm
-#     success_url = reverse_lazy('password_reset_done')  # 비밀번호 재설정 이메일이 성공적으로 보내진 후 리디렉션할 URL
+class CustomPasswordResetView(PasswordResetView):
+    form_class = PasswordResetForm
+    success_url = reverse_lazy('password_reset_done')  # 비밀번호 재설정 이메일이 성공적으로 보내진 후 리디렉션할 URL
 
-#     def form_valid(self, form):
-#         User = get_user_model()
-#         try:
-#             user = User.objects.get(email=form.cleaned_data['email'])
-#         except User.DoesNotExist:
-#             return HttpResponse("User does not exist")
-
-#         uid = urlsafe_base64_encode(force_bytes(user.pk))
-#         token = default_token_generator.make_token(user)
-
-#         # 비밀번호 재설정 URL 생성
-#         reset_url = self.request.build_absolute_uri(reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
-
-#         # 비밀번호 재설정 이메일 보내기
-#         try:
-#             send_mail(
-#                 'Password Reset',
-#                 f'Here is your password reset link: {reset_url}',
-#                 'from@example.com',
-#                 [form.cleaned_data['email']],
-#                 fail_silently=False,
-#             )
-#         except Exception as e:
-#             print(f"Error occurred: {e}")
-#             return HttpResponse("Error occurred while sending the email")
-
-#         return super().form_valid(form)
-
-
-
-from django.views.decorators.csrf import csrf_exempt
-from django.views import View
-from django.urls import reverse
-
-@csrf_exempt
-class CustomPasswordResetView(View):
-
-    def post(self, request):
-        email = request.POST.get('email')
-
+    def form_valid(self, form):
+        User = get_user_model()
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=form.cleaned_data['email'])
         except User.DoesNotExist:
-            return JsonResponse({"error": "User does not exist"}, status=400)
+            return HttpResponse("User does not exist")
 
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
 
         # 비밀번호 재설정 URL 생성
-        reset_url = self.request.build_absolute_uri(reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
+        reset_url = self.request.build_absolute_uri(reverse_lazy('password_reset_confirm', kwargs={'uidb64': uid, 'token': token}))
 
         # 비밀번호 재설정 이메일 보내기
         try:
@@ -565,9 +509,13 @@ class CustomPasswordResetView(View):
                 'Password Reset',
                 f'Here is your password reset link: {reset_url}',
                 'from@example.com',
-                [email],
+                [form.cleaned_data['email']],
+                fail_silently=False,
             )
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+            print(f"Error occurred: {e}")
+            return HttpResponse("Error occurred while sending the email")
 
-        return JsonResponse({"message": "Password reset email sent."}, status=200)
+        return super().form_valid(form)
+
+
