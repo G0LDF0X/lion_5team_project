@@ -21,6 +21,23 @@ def view_item(request, pk):
     Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
     serializer = ItemSerializer(item)
     return Response(serializer.data)
+@api_view(['GET'])
+def get_all_items(request):
+    items = Item.objects.all()
+
+    itemnames = items.values_list('name', flat=True)
+    return Response(itemnames)
+
+
+
+
+
+
+
+
+
+
+
 
 @api_view(['GET'])
 def get_items(request):
