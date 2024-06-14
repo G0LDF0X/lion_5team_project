@@ -14,6 +14,38 @@ function OrderDetail() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
 
+  // useEffect(() => {
+  //   const fetchOrder = async () => {
+  //     const response = await mainAxiosInstance.get(`/order/detail/${id}`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         'Authorization': `Bearer ${userInfo.access}`
+  //       }
+  //     });
+  
+  //     const orderData = response.data;
+  //     setOrder(orderData);
+  
+  //     // Fetch payment details for each order item
+  //     orderData.forEach(async item => {
+  //       const paymentResponse = await mainAxiosInstance.get(`/payment/detail/${item.payment_id}`, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           'Authorization': `Bearer ${userInfo.access}`
+  //         }
+  //       });
+  
+  //       setPayment(prevPayments => ({
+  //         ...prevPayments,
+  //         [item.payment_id]: paymentResponse.data,
+  //       }));
+  //     });
+  //   };
+  
+  //   fetchOrder();
+  // }, [id, userInfo.access]); // Removed orderItem from the dependency array
+
+// 개선 후 코드
   useEffect(() => {
     const fetchOrder = async () => {
       const response = await mainAxiosInstance.get(`/order/detail/${id}`, {
@@ -27,24 +59,29 @@ function OrderDetail() {
       setOrder(orderData);
   
       // Fetch payment details for each order item
-      orderData.forEach(async item => {
-        const paymentResponse = await mainAxiosInstance.get(`/payment/detail/${item.payment_id}`, {
+      const paymentPromises = orderData.map(item => 
+        mainAxiosInstance.get(`/payment/detail/${item.payment_id}`, {
           headers: {
             "Content-Type": "application/json",
             'Authorization': `Bearer ${userInfo.access}`
           }
-        });
+        })
+      );
   
-        setPayment(prevPayments => ({
-          ...prevPayments,
-          [item.payment_id]: paymentResponse.data,
-        }));
-      });
+      const paymentResponses = await Promise.all(paymentPromises);
+  
+      const payments = paymentResponses.reduce((acc, paymentResponse, index) => {
+        return {
+          ...acc,
+          [orderData[index].payment_id]: paymentResponse.data,
+        };
+      }, {});
+  
+      setPayment(payments);
     };
   
     fetchOrder();
-  }, [id, userInfo.access]); // Removed orderItem from the dependency array
-
+  }, [id, userInfo.access]);
 
   //백엔드로 환불요청 post 요청보낸다. 
 
@@ -52,9 +89,8 @@ function OrderDetail() {
     // Define the parameters
     const payment_id = item.payment_id; // Use item.payment_id
 
-    console.log("payment id는");
-    console.log(payment_id);
-    // console.log(userInfo.access);
+    
+    
     // Define the body
     const body = {
       // Add the data you want to send in the request body

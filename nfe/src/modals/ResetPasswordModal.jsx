@@ -3,29 +3,69 @@ import ReactDOM from 'react-dom';
 import { mainAxiosInstance } from "../api/axiosInstances"; 
 
 
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+
+
 function ResetPasswordModal({ isOpen, onClose }) {
     const [email, setEmail] = useState('');
     const [resetStatus, setResetStatus] = useState('');
+    const csrftoken = getCookie('csrftoken');
+    
+    console.log(csrftoken);
+    console.log(email);
 
     const handleResetPassword = async(e) => {
-        e.preventDefault();
-        try {
+      e.preventDefault();
+      try {
+          const formData = new FormData();
+          formData.append('email', email);
+  
+          const response = await mainAxiosInstance.post(`/users/accounts/password_reset/form/`,
+              formData,
+              { headers: {
+                'Content-Type': 'multipart/form-data',
+                // 'X-CSRFToken': csrftoken,  // Add this line
+              }}
+          );
+          // handle response
+      } catch (error) {
+          // handle error
+      }
+  };
+  
+    // const handleResetPassword = async(e) => {
+    //     e.preventDefault();
+    //     try {
 
-            const response = await mainAxiosInstance.post(
-                `/users/password_reset/`,
-                 {email: email},
-                { headers: {
-                  'Content-Type': 'application/json',
-                }}
-            );
+    //         const response = await mainAxiosInstance.post(`/users/accounts/password_reset/form/`,
+    //         JSON.stringify({'email': email}),
+    //             { headers: {
+    //               'Content-Type': 'application/json',
+    //               // 'X-CSRFToken': csrftoken,  // Add this line
+    //             }}
+    //         );
           
-          console.log('Response from server:', response);
-          setResetStatus("success");
-        } catch (error) {
-            console.error(error);
-            setResetStatus('An error occurred.');
-          }
-        }
+    //       console.log('Response from server:', response);
+    //       setResetStatus("success");
+    //     } catch (error) {
+    //         console.error(error);
+    //         setResetStatus('An error occurred.');
+    //       }
+    //     }
         
     const handleClose = () => {
         setEmail('');

@@ -20,10 +20,7 @@ class User(models.Model):
     image_url = models.ImageField('image_url', null=True, blank=True, max_length=1000)
     description = models.TextField('description', blank=True)
     is_seller = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.username
-
+    
 class Seller(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     bs_number = models.IntegerField()
