@@ -38,6 +38,8 @@ function BoardDetailModal({ open, handleClose }) {
   const [editTitle, setEditTitle] = useState(""); 
   const [editContent, setEditContent] = useState(""); 
   const [editImage, setEditImage] = useState(null);
+  const [editReply, setEditReply] = useState('');
+  const [editReplyId, setEditReplyId] = useState(null);
 
 
   const sortedReplies = [];
@@ -102,6 +104,8 @@ function BoardDetailModal({ open, handleClose }) {
     console.log("Edit Image:" ,editImage);
   };
 
+  
+
   const deleteBoardHandler = async () => {
     if (window.confirm("정말로 삭제하시겠습니까?")) {
       dispatch(deleteBoard(boardId));
@@ -151,6 +155,32 @@ function BoardDetailModal({ open, handleClose }) {
     }
   };
 
+  
+  const updateReply = async (replyId, updatedReplyContent) => {
+    try {
+      if (Array.isArray(updatedReplyContent)) {
+        updatedReplyContent = updatedReplyContent[0];
+      }
+      
+      const updatedReply = {
+        content: updatedReplyContent ,
+        board_id: boardId,
+        user_id: userInfo.id,
+      };
+      const response = await mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
+        {
+          headers: { Authorization: `Bearer ${userInfo.access}` }, 
+        }
+      );
+      // console.log(updatedReplyContent)
+      console.log(response.data);
+      dispatch(getBoardDetails(boardId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
     alert("Copied the link to clipboard: " + location.pathname);
@@ -195,6 +225,21 @@ function BoardDetailModal({ open, handleClose }) {
     setReplyToUser(username);
     setApply(`@${username} `);
   }
+  const handleUpdateReply = (id, text) => {
+    setEditReplyId(id);
+    setEditReply(text);
+  };
+
+  const submitUpdateReplyHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await updateReply(editReplyId, editReply);
+      setEditReplyId(null);
+      setEditReply('');
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   
   
@@ -335,11 +380,19 @@ function BoardDetailModal({ open, handleClose }) {
                           </Link>
                         </p>
                         {userInfo && userInfo.id === reply.user_id && (
-                            <button onClick={() => deleteReply(reply.id)}
-                            style = {{color: 'red', fontSize: 'small',
-                              marginLeft: 'auto'}}
+                            <div style={{display: 'flex', marginLeft: 'auto'}}>
+                            <button onClick={() => handleUpdateReply(reply.id)}
+                            style = {{color: 'blue', fontSize: 'small', marginRight: '10px'}}
+                            >Edit</button>
+                            <button onClick={() =>{ 
+                              if (window.confirm('삭제하시겠습니까?')) {
+                                deleteReply(reply.id);
+                             }
+                            }}
+                            style = {{color: 'red', fontSize: 'small'}}
                             >Delete</button>
-                          )}
+                        </div>
+                      )}      
                         </div>
                         <p style={{paddingLeft: reply.replied_id !== 0 ? '30px': '0px'}}>{reply.content}</p>
                         <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -366,6 +419,23 @@ function BoardDetailModal({ open, handleClose }) {
                             </button>
                           </form>
                         )}
+                        {editReplyId === reply.id && (
+                    <form onSubmit={submitUpdateReplyHandler} className="mt-4">
+                      <textarea
+                        className="w-full p-2 border rounded mb-2"
+                        rows="3"
+                        value={editReply}
+                        onChange={(e) => setEditReply(e.target.value)}
+                        placeholder="Edit a reply..."
+                      ></textarea>
+                      <button
+                        type="submit"
+                        className="w-full bg-blue-500 text-white p-2 rounded"
+                      >
+                        Edit
+                      </button>
+                    </form>
+                  )}
                       </div>
                     ))}
                   </div>

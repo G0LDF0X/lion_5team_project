@@ -346,7 +346,6 @@ def get_other_answer(request, pk):
     return Response(serializer.data)
 
 
-
 @api_view(['POST', 'DELETE','GET' ])
 @permission_classes([IsAuthenticated])
 def follow_save(request, pk):
@@ -356,7 +355,7 @@ def follow_save(request, pk):
     # 팔로워 수
     followers_count = Follow.objects.filter(followed_id=followed).count()
     # # 팔로잉 수
-    following_count = Follow.objects.filter(follower_id=follower).count()
+    following_count = Follow.objects.filter(follower_id=followed).count()
     
     if request.method == 'POST':
         follow_relation = Follow.objects.filter(follower_id=follower, followed_id=followed)
@@ -388,6 +387,11 @@ def follow_save(request, pk):
 
         return Response({'follow_exists': follow_exists,  'followers_count': followers_count, 'following_count': following_count}, status=201)
     
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
