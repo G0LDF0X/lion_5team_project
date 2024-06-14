@@ -485,7 +485,7 @@ function ProductDetail() {
                               onClick={() => deleteQnAHandler(item_qna)}>삭제</button>
                             </div>
                           )}
-                          {!showTextField && (
+                          {!showTextField && userInfo.is_seller && (
                             <button
                               className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                               onClick={handleButtonClick}
