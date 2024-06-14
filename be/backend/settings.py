@@ -118,13 +118,14 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # 프론트엔드 서버의 URL
+    "http://127.0.0.1:5173",
 ]
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:5173",
-]
+    "http://127.0.0.1:5173",]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173', "http://127.0.0.1:5173",]
 
 CSRF_COOKIE_HTTPONLY = False
 
