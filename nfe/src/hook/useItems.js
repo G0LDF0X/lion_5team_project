@@ -11,3 +11,4 @@ const useItems = (id) => {
   }, [id]);
   return items;
 };
+export default useItems;

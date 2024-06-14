@@ -104,9 +104,10 @@ function ProductQnAUpdate() {
   
   }
 useEffect(() => {
-    if (QnA) {
+    if (QnA&& QnA.title, QnA.content) {
       setTitle(QnA.title);
       setContent(QnA.content);
+      console.log(QnA.content)
     }
   }, [QnA]);
 

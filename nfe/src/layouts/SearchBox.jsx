@@ -36,24 +36,15 @@ function SearchBox() {
   const getConsontants = (query) => {
     const consonantSuggestions = [];
     for (const product of items) {
-      if (
-        chosungIncludes(product.name, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
-      if (
-        chosungIncludes(product.description, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
-      if (
-        chosungIncludes(product.category, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
+      ['name', 'description', 'category'].forEach((prop) => {
+        if (
+          product[prop] &&
+          chosungIncludes(product[prop], query) &&
+          !consonantSuggestions.includes(product.name)
+        ) {
+          consonantSuggestions.push(product.name);
+        }
+      });
     }
     return consonantSuggestions;
   };
