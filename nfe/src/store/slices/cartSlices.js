@@ -38,11 +38,11 @@ export const cartSlice = createSlice({
             state.error = action.payload;
         })
         .addCase(addToCart.fulfilled, (state, action) => {
-            state.cartItems = action.payload;
+            state.cartItems = [...state.cartItems, action.payload];
             state.successAdd = true;
         })
         .addCase(removeFromCart.fulfilled, (state, action) => {
-            state.cartItems = action.payload;
+            state.cartItems = state.cartItems.filter(item => item.id !== action.payload.id);
             state.successCartRemove = true;
         })
         .addCase(addToCart.pending, (state) => {
