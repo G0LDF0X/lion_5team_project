@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, OrderItem
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, SimpleItemSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
@@ -21,6 +21,22 @@ def view_item(request, pk):
     Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
     serializer = ItemSerializer(item)
     return Response(serializer.data)
+@api_view(['GET'])
+def get_all_items(request):
+    items = Item.objects.all()
+    serializer = SimpleItemSerializer(items, many=True)
+    return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+
 
 @api_view(['GET'])
 def get_items(request):

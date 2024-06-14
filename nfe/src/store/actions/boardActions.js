@@ -32,6 +32,27 @@ export const listBoards = createAsyncThunk(
   }
 );
 
+// export const listBoards = createAsyncThunk(
+//   "boardList/listBoards",
+//   async ({ query = '', page = '' }, { rejectWithValue }) => {
+//     try {
+//       let params = new URLSearchParams();
+//       if (query) params.append('query', query);
+//       if (page) params.append('page', page);
+      
+//       const url = `/board?${params.toString()}`;
+//       const res = await mainAxiosInstance.get(url);
+//       return res.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response && error.response.data.detail
+//           ? error.response.data.detail
+//           : error.message
+//       );
+//     }
+//   }
+// );
+
 export const getBoardDetails = createAsyncThunk(
   "boardDetails/getBoardDetails",
   async (id, { getState, rejectWithValue }) => {
@@ -97,13 +118,14 @@ export const updateBoard = createAsyncThunk(
 
       console.log('Access Token:', userInfo.access);  // 토큰 확인
       console.log('Request Data:', board);
+      console.log('Image File:', board.get('image'));
 
       const res = await mainAxiosInstance.put(
         `/board/update_board/${id}/`,
         board,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${userInfo.access}`,
           },
         }
@@ -117,9 +139,17 @@ export const updateBoard = createAsyncThunk(
 
 export const deleteBoard = createAsyncThunk(
   "boardDelete/deleteBoard",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.delete(`/board/delete/${id}`);
+      const {
+        user: { userInfo },
+      } = getState();
+
+      const res = await mainAxiosInstance.delete(`/board/delete/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+      });
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
@@ -160,3 +190,5 @@ export const createApply = createAsyncThunk(
     }
   }
 );
+
+

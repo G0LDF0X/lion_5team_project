@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -22,12 +22,17 @@ import {
 } from "@mui/icons-material";
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchBox from "./SearchBox";
+import Badge from '@mui/material/Badge';
+import { mainAxiosInstance } from "../api/axiosInstances";
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  console.log(cartItems);
+  
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
   };
@@ -38,7 +43,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
 
   return (
     <AppBar position="static" className="bg-pink-500 shadow-none">
-      <Toolbar className="flex justify-between bg-pink-200">
+      <Toolbar className="flex justify-between bg-pink-200 w-full">
         <Typography
           variant="h6"
           component={Link}
@@ -47,7 +52,6 @@ function Header({ openModal, openPostModal, openSideBar }) {
         >
           PetPals
         </Typography>
-        
         <Box className="flex space-x-4">
           <Button
             startIcon={<Home />}
@@ -90,7 +94,9 @@ function Header({ openModal, openPostModal, openSideBar }) {
 
           {userInfo && (
             <IconButton color="inherit" component={Link} to="/cart">
+              <Badge badgeContent={cartItems.length} color="secondary">
               <ShoppingCart className="text-gray-700 hover:text-gray-900 transition-colors duration-300" />
+              </Badge>
             </IconButton>
           )}
           {userInfo ? (

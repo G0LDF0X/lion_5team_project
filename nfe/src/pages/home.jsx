@@ -23,6 +23,12 @@ function HomeScreen() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  // useEffect(() => {
+  //   dispatch(listProducts({ query: "", page: 1, category: [] }));
+  //   dispatch(listBoards());
+  //   dispatch(listQNA());
+  //   console.log(location)
+  // }, [dispatch]);
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());

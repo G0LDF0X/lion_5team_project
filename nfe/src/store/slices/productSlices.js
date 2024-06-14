@@ -118,7 +118,11 @@ const initialState = { loading: false, success: false, productQnA: [], error: nu
 export const productQnASlice = createSlice({  
   name: "productQnA",
   initialState: initialState,
-  reducers: {reset : () => initialState,},
+  reducers: {reset : () => initialState,
+    getQnA: (state, action) => {
+      state.productQnA = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createProductQnA.pending, (state) => {
@@ -165,3 +169,4 @@ export const productQnASlice = createSlice({
   },
 });
 export const { reset: productQnaReset } = productQnASlice.actions;
+export const { getQnA } = productQnASlice.actions;

@@ -16,7 +16,7 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@mui/material";
-
+import { getQnA } from "../store/slices/productSlices";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
@@ -116,9 +116,11 @@ function ProductDetail() {
     if (marked) {
       dispatch(removeFromBookMark(id));
       setMarked(false);
+      window.alert("북마크에서 삭제되었습니다.");
     } else {
       dispatch(addToBookMark(id));
       setMarked(true);
+      window.alert("북마크에 추가되었습니다.");
     }
   }
   
@@ -197,7 +199,8 @@ function ProductDetail() {
     }
     console.log(item_qna);
     if (userInfo && userInfo.id === item_qna.user_id) {
-      dispatch(updateProductQnA({id: item_qna.id, title: item_qna.title, content: item_qna.content}));
+      dispatch(getQnA(item_qna))
+      // dispatch(updateProductQnA({id: item_qna.id, title: item_qna.title, content: item_qna.content}));
       navigate(`/items/qna/update/${item_qna.id}`);
     } else {
       alert("You can only edit your own qna.");
@@ -484,7 +487,7 @@ function ProductDetail() {
                               onClick={() => deleteQnAHandler(item_qna)}>삭제</button>
                             </div>
                           )}
-                          {!showTextField && (
+                          {!showTextField && userInfo.is_seller && (
                             <button
                               className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                               onClick={handleButtonClick}
