@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../store/actions/productActions";
-// import { listBoards } from "../store/actions/boardActions";
-
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Product from "../components/Product";
@@ -11,20 +9,14 @@ import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/materia
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import Button from '@mui/material/Button';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const [categories, setCategories] = useState([]);
-  const [showAllResults, setShowAllResults] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState([]);
   
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages } = productList;
-
-  // const boardList = useSelector((state) => state.boardList);
-  // const { loading: loadingBoards, error: errorBoards, boards } = boardList;
 
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -34,15 +26,10 @@ function ProductsScreen() {
   const page = params.get('page') || 1;
   const tag = params.get('tag');
   const suggestions = params.get('s') || ''; 
-  console.log(params)
-  console.log(suggestions);
-
 
 useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
-    
-    // dispatch(listBoards({ query:query, page:page}));
-    
+
     if (selectedCategory.length === 1) {
       fetchTags(selectedCategory[0]);
     } else {
@@ -50,7 +37,8 @@ useEffect(() => {
     }
 }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
-useCategory(setCategories);
+const  categories  = useCategory(); 
+
   const handleCategoryChange = (e) => {
     if (e.target.checked) {
       setSelectedCategory((prev) => [...prev, e.target.value]);
@@ -98,17 +86,7 @@ const fetchTags = async (categoryId) => {
             <Message variant="danger">{error}</Message>
           ) : (
             <>
-              {/* {query && <h6 className="text-xl mb-4">{query}에 관한 PRODUCTS 검색결과 {products.length}</h6>} */}
-              {query && (
-                <div className="text-xl mb-4">
-                  <h6>
-                    {query}에 관한 PRODUCTS 검색결과 {products.length}
-                    <ArrowRightIcon 
-                      style={{ cursor: 'pointer' }} 
-                      onClick={() => setShowAllResults(!showAllResults)}
-                    />
-                  </h6>        
-                </div>  )}
+              {query && <h6 className="text-xl mb-4">{query}에 관한 검색결과</h6>}
 
               <div>
                 {tags.map(tag => (
@@ -124,36 +102,12 @@ const fetchTags = async (categoryId) => {
                 ))}
               </div>
 
-              {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products
                   .filter(product => !selectedTag || (product.tag_id ===selectedTag.id))
                   .map((product) => (
                   <Product key={product.id} product={product} id={product.id} />
                   
-                ))}
-              </div> */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {(showAllResults ? products : products.slice(0, 4)).map((product) => (
-                  <Product key={product.id} product={product} id={product.id} />
-                ))}
-              </div>
-                  <br />
-                  <br />
-                  <br />
-              {query && (
-                <div className="text-xl mb-4">
-                  <h6>
-                    {query}에 관한 BOARDS 검색결과 {products.length}
-                    <ArrowRightIcon 
-                      style={{ cursor: 'pointer' }} 
-                      onClick={() => setShowAllResults(!showAllResults)}
-                    />
-                  </h6>        
-                </div>  )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {(showAllResults ? products : products.slice(0, 4)).map((product) => (
-                  <Product key={product.id} product={product} id={product.id} />
                 ))}
               </div>
             </>
