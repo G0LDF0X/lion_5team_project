@@ -9,6 +9,57 @@ from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
+import ssl
+from elasticsearch import Elasticsearch
+from transformers import BertTokenizer, BertModel
+from django.conf import settings
+import torch
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+# ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+
+# ca_cert_path = os.path.join(settings.BASE_DIR, 'http_ca.crt')
+# print (ca_cert_path)
+# es = Elasticsearch(
+#     ['https://localhost:9200'],
+#     basic_auth=('elastic', ELASTIC_PASSWORD),
+#     ca_certs=ca_cert_path,
+#     verify_certs=True
+# )
+# tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
+# model = BertModel.from_pretrained('monologg/kobert')
+
+# def embed_query(query):
+#     inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
+#     with torch.no_grad():
+#         outputs = model(**inputs)
+#     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
+#     return embedding
+
+# @api_view(['GET'])
+# def get_items(request):
+#     query = request.GET.get('query', '')
+#     if not query:
+#         return Response({"error": "Query parameter is required"}, status=400)
+#     query_embedding = embed_query(query)
+#     script_query = {
+#         "script_score": {
+#             "query": {"match_all": {}},
+#             "script": {
+#                 "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+#                 "params": {"query_vector": query_embedding}
+#             }
+#         }
+#     }
+#     response = es.search(index='items', body={"query": script_query})
+#     # print (response)
+#     item_ids = [hit['_id'] for hit in response['hits']['hits']]
+#     items = Item.objects.filter(id__in=item_ids)
+#     serializer = ItemSerializer(items, many=True)
+#     return Response(serializer.data)
+
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])
@@ -26,16 +77,6 @@ def get_all_items(request):
     items = Item.objects.all()
     serializer = SimpleItemSerializer(items, many=True)
     return Response(serializer.data)
-
-
-
-
-
-
-
-
-
-
 
 
 @api_view(['GET'])
