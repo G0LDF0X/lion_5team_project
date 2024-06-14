@@ -114,11 +114,15 @@ export const productDeleteSlice = createSlice({
       });
   },
 });
-const initialState = { loading: false, success: false, productQnA: [], error: null, successUpdate: false,}; 
+const initialState = { loading: false, success: false, productQnA: [], error: null, successUpdate: false,successCreate:false}; 
 export const productQnASlice = createSlice({  
   name: "productQnA",
   initialState: initialState,
-  reducers: {reset : () => initialState,},
+  reducers: {reset : () => initialState,
+    getQnA: (state, action) => {
+      state.productQnA = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createProductQnA.pending, (state) => {
@@ -126,7 +130,7 @@ export const productQnASlice = createSlice({
       })
       .addCase(createProductQnA.fulfilled, (state, action) => {
         state.loading = false;
-        state.success = true;
+        state.successCreate = true;
         state.productQnA = action.payload;
       })
       .addCase(createProductQnA.rejected, (state, action) => {
@@ -165,3 +169,4 @@ export const productQnASlice = createSlice({
   },
 });
 export const { reset: productQnaReset } = productQnASlice.actions;
+export const { getQnA } = productQnASlice.actions;

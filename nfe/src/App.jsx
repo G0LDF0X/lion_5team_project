@@ -30,9 +30,6 @@ const routers = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: '/', element: <Home /> ,
-        children: [
-          { path: '/:id', element: <BoardDetailModal /> }
-        ]
       },
       { path: '/board', element: <BoardPage /> ,
         children: [

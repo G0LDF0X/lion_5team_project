@@ -37,7 +37,7 @@ function ProductQnAUpdate() {
   const [fileName, setFileName] = useState(null);
   const [uploading, setUploading] = useState(false);  
   const productQnA = useSelector((state) => state.productQnA);
-    const {loading, error, successUpdate} = productQnA;
+    const {loading, error, productQnA:QnA, successUpdate} = productQnA;
   
 
   class CustomUploadAdapter {
@@ -97,11 +97,19 @@ function ProductQnAUpdate() {
       return new CustomUploadAdapter(loader);
     };
   }
-  function submitHandler() {
+  function submitHandler(e) {
+    e.preventDefault();
     dispatch(updateProductQnA({ id, title, content: editorData, image_url: fileName}));
   
   
   }
+useEffect(() => {
+    if (QnA&& QnA.title, QnA.content) {
+      setTitle(QnA.title);
+      setContent(QnA.content);
+      console.log(QnA.content)
+    }
+  }, [QnA]);
 
 
   useEffect(() => {
@@ -141,7 +149,7 @@ function ProductQnAUpdate() {
       ) : (
         <div className="bg-white p-8 rounded-lg shadow-md">
           <Typography variant="h4" className="text-center mb-8">
-            Review
+            Product Q&A
           </Typography>
           <form onSubmit={submitHandler}>
             <div className="mb-4">

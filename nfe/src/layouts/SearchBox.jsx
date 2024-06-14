@@ -13,14 +13,13 @@ import { mainAxiosInstance, searchAxiosInstance } from "../api/axiosInstances";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSelector } from "react-redux";
 import { chosungIncludes } from "es-hangul";
-
+import useItems from "../hook/useItems";
 function SearchBox() {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const location = useLocation();
-  const productList = useSelector((state) => state.productList);
-  const { products } = productList;
+  const items = useItems();
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
 
@@ -36,25 +35,16 @@ function SearchBox() {
 
   const getConsontants = (query) => {
     const consonantSuggestions = [];
-    for (const product of products) {
-      if (
-        chosungIncludes(product.name, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
-      if (
-        chosungIncludes(product.description, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
-      if (
-        chosungIncludes(product.category, query) &&
-        !consonantSuggestions.includes(product.name)
-      ) {
-        consonantSuggestions.push(product.name);
-      }
+    for (const product of items) {
+      ['name', 'description', 'category'].forEach((prop) => {
+        if (
+          product[prop] &&
+          chosungIncludes(product[prop], query) &&
+          !consonantSuggestions.includes(product.name)
+        ) {
+          consonantSuggestions.push(product.name);
+        }
+      });
     }
     return consonantSuggestions;
   };

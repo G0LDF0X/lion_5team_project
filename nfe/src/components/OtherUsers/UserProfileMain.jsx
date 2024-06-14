@@ -2,13 +2,58 @@ import React, { useState, useEffect } from 'react';
 import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
+import { Link } from 'react-router-dom';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);
     const [followerCount, setFollowerCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
     const [isFollowing, setIsFollowing] = useState(false);
+    const [showFollowers, setShowFollowers] = useState(false);
+    const [followers, setFollowers] = useState([]);
+    const [followersList, setFollowersList] = useState([]);
+    const [followingList, setFollowingsList] = useState([]); 
+    
+    // 팔로워 리스트를 표시할지 여부를 제어하는 상태 변수
+    const [showFollowersList, setShowFollowersList] = useState(false);
 
+    const fetchFollowings = async () => {
+        try {
+            const response = await mainAxiosInstance.get(`/users/following/${userDetail.id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${userInfo.access}`
+                }
+            });
+            setFollowingsList(response.data); 
+             
+        } catch (error) {
+            console.error(`An error occurred: ${error}`);
+        }
+    };
+        
+    const fetchFollowers = async () => {
+        try {
+            const response = await mainAxiosInstance.get(`/users/follower/${userDetail.id}/`, {
+                headers: {
+                    'Authorization': `Bearer ${userInfo.access}`
+                }
+            });
+            console.log(response.data);
+            setFollowersList(response.data);
+            setShowFollowersList(true); // 팔로워 리스트를 표시
+        } catch (error) {
+            console.error(`An error occurred: ${error}`);
+        }
+    };
+
+
+    useEffect(() => {
+        if (userDetail.id && userInfo.access) {
+            fetchFollowings();
+            fetchFollowers();
+
+        }
+    }, [userDetail, userInfo]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,8 +72,9 @@ function UserProfileMain({ userDetail, url, userInfo }) {
         };
         if (userDetail.id && userInfo.access) {
             fetchData();
-            console.log(followerCount)
-            console.log(followingCount)
+            // console.log(followerCount)
+            // console.log(followingCount)
+    
         }
       
         const checkFollowStatus = async () => {
@@ -58,6 +104,13 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             checkFollowStatus();
         }
     }, [userDetail.id, userInfo.access]);
+
+    // 추가
+    useEffect(() => {
+        if (showFollowers) {
+            fetchFollowers();
+        }
+    }, [showFollowers])
 
     const handleFollow = async () => {
         try {
@@ -104,6 +157,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
         }
     };
   
+  
     return (
         <div className="flex justify-center mt-6">
             <div className="bg-white shadow-md rounded-lg w-full max-w-2xl">
@@ -115,7 +169,13 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
                         )}
                         <h4 className="mt-4">{userDetail?.nickname || userDetail?.username}</h4>
-                        <h6>팔로워 {followerCount} | 팔로잉 {followingCount}</h6>
+                        <h6>
+                        <span onClick={fetchFollowings}>
+                            팔로워 {followerCount}
+                            </span> |   
+                            <span onClick={fetchFollowings}>
+                             팔로잉 {followingCount}</span>
+                            </h6>
                         <Button 
                         variant="contained" 
                         color={isFollowing ? "secondary" : "primary"} 
@@ -145,6 +205,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 </div>
             </div>
         </div>
+        
     );
   }
 
