@@ -108,10 +108,14 @@ function BoardDetailModal({ open, handleClose }) {
   
 
   const deleteBoardHandler = async () => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
+    if (window.confirm("게시글을 삭제하시겠습니까?")) {
       dispatch(deleteBoard(boardId));
       window.location.href = '/board';
     }
+  };
+
+  const cancelEditHandler = () => {
+    setEditMode(false);
   };
 
 
@@ -232,9 +236,6 @@ function BoardDetailModal({ open, handleClose }) {
   };
 
 
-  const cancelEditHandler = () => {
-    setEditMode(false);
-  };
 
 
   const submitUpdateReplyHandler = async (replyId) => {
@@ -300,10 +301,10 @@ function BoardDetailModal({ open, handleClose }) {
                   </button>
                   <button
                     type="button"
-                    onClick={deleteBoardHandler}
+                    onClick={cancelEditHandler}
                     className="bg-red-500 text-white p-2 rounded"
                   >
-                    Delete
+                    Cancel
                   </button>
                 </div>
               </form>
@@ -349,7 +350,27 @@ function BoardDetailModal({ open, handleClose }) {
                     </div>
                   </div>
                   <div className="flex-grow overflow-y-auto">
-                    <h2 className="text-2xl font-bold mb-2">{boardDetail.title}</h2>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                      <h2 className="text-2xl font-bold mb-2">{boardDetail.title}</h2>
+                      {userInfo && userInfo.id === boardDetail.user_id && (
+                        <div style={{ display: 'flex', marginLeft: 'auto' }}>
+                          <button
+                            type="button"
+                            onClick={editHandler}
+                            style={{ color: 'blue', fontSize: 'small', marginRight: '10px' }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={deleteBoardHandler}
+                            style={{ color: 'red', fontSize: 'small' }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <p
                       dangerouslySetInnerHTML={{ __html: boardDetail.content }}
                       className="mb-4"
@@ -376,7 +397,6 @@ function BoardDetailModal({ open, handleClose }) {
                     </CardActions>
                     <h2 className="text-xl font-bold mb-2">Comments</h2>
                     {replies.length === 0 && <p>No Comments</p>}
-                   
                     {sortedReplies.map((reply, index) => (
                       <div key={index} className="border-b pb-2 mb-2">
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -387,13 +407,14 @@ function BoardDetailModal({ open, handleClose }) {
                           </p>
                           {userInfo && userInfo.id === reply.user_id && (
                             <div style={{ display: 'flex', marginLeft: 'auto' }}>
-                      
                               {editReplyId !== reply.id && userInfo && userInfo.id === reply.user_id && (
                                 <button
                                   onClick={() => handleUpdateReply(reply.id, reply.content)}
                                   style={{ color: 'blue', fontSize: 'small', marginRight: '10px' }}
-                                >Edit</button>
-                          )}
+                                >
+                                  Edit
+                                </button>
+                              )}
                               <button
                                 onClick={() => {
                                   if (window.confirm('삭제하시겠습니까?')) {
@@ -401,8 +422,9 @@ function BoardDetailModal({ open, handleClose }) {
                                   }
                                 }}
                                 style={{ color: 'red', fontSize: 'small' }}
-                              >Delete</button>
-                              
+                              >
+                                Delete
+                              </button>
                             </div>
                           )}
                         </div>
@@ -415,13 +437,12 @@ function BoardDetailModal({ open, handleClose }) {
                               onChange={(e) => setEditReply(e.target.value)}
                               placeholder="Edit a reply..."
                             ></textarea>
-
-                          <button
-                          onClick={() => submitUpdateReplyHandler(reply.id)}
-                          className="w-full bg-blue-500 text-white p-2 rounded"
-                        >
-                          Save
-                        </button>
+                            <button
+                              onClick={() => submitUpdateReplyHandler(reply.id)}
+                              className="w-full bg-blue-500 text-white p-2 rounded"
+                            >
+                              Save
+                            </button>
                           </form>
                         ) : (
                           <p>{reply.content}</p>
@@ -433,7 +454,9 @@ function BoardDetailModal({ open, handleClose }) {
                               color: 'gray', fontSize: 'small',
                               marginTop: '5px'
                             }}
-                          >답글 작성</button>
+                          >
+                            답글 작성
+                          </button>
                         </div>
                         {applied_id === reply.id && (
                           <form onSubmit={submitApplyHandler} className="mt-4">
@@ -453,11 +476,7 @@ function BoardDetailModal({ open, handleClose }) {
                           </form>
                         )}
                       </div>
-                      
-
                     ))}
-
-
                   </div>
                   <form onSubmit={submitHandler} className="mt-4">
                     <textarea
@@ -473,15 +492,6 @@ function BoardDetailModal({ open, handleClose }) {
                     >
                       Submit
                     </button>
-                    {userInfo && userInfo.id === boardDetail.user_id && (
-                      <button
-                        type="button"
-                        onClick={editHandler}
-                        className="w-full bg-blue-500 text-white p-2 rounded mt-2"
-                      >
-                        Edit
-                      </button>
-                    )}
                   </form>
                 </div>
               </>
@@ -496,5 +506,6 @@ function BoardDetailModal({ open, handleClose }) {
     </Modal>
   );
 }
+
 
 export default BoardDetailModal;
