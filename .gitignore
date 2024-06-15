@@ -36,6 +36,7 @@ docker-compose.yml
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+http_ca.crt
 
 # Unit test / coverage reports
 htmlcov/
