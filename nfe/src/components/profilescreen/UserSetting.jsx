@@ -28,7 +28,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     if (updateSuccess) {
       alert('수정이 완료되었습니다.');
       // window.location.reload();
-        dispatch(clearSuccess());
+        dispatch(logout());
         navigate("/");
     }
   }, [updateSuccess, dispatch, navigate]);
