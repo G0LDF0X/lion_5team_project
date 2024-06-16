@@ -103,6 +103,7 @@ function BoardDetailModal({ open, handleClose }) {
     dispatch(getBoardDetails(boardId)); 
 
     console.log("Edit Image:" ,editImage);
+    window.location.reload();
   };
 
   
