@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart, PieChart } from '@mui/x-charts';
+import { LineChart } from '@mui/x-charts';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
@@ -10,36 +10,34 @@ function SellerMain() {
   const [dateRange, setDateRange] = useState(''); // 날짜 범위 상태 추가
 
   useEffect(() => {
-    const userinfo = localStorage.getItem('userInfo');
-    const parsedUserinfo = JSON.parse(userinfo);
-    const sellerId = parsedUserinfo.id;
+    const fetchData = async () => {
+      try {
+        const userinfo = localStorage.getItem('userInfo');
+        const parsedUserinfo = JSON.parse(userinfo);
+        const sellerId = parsedUserinfo.id;
 
-    if (sellerId) {
-      mainAxiosInstance.get(`/seller/monthly-revenue/${sellerId}/?filter=${filter}`)
-      .then(response => {
-        const monthlyData = response.data.monthly_revenue;
-        const xAxis = monthlyData.map(item => item.month);
-        const series = monthlyData.map(item => item.revenue);
-        setMonthlyRevenue({ xAxis, series });
-      })
-      .catch(error => {
-        console.error('월간 수익금 데이터를 가져오는 중 오류가 발생했습니다!', error);
-      });
+        if (sellerId) {
+          const response1 = await mainAxiosInstance.get(`/seller/monthly-revenue/${sellerId}/?filter=${filter}`);
+          const monthlyData = response1.data.monthly_revenue;
+          const xAxis = monthlyData.map(item => item.month);
+          const series = monthlyData.map(item => item.revenue);
+          setMonthlyRevenue({ xAxis, series });
 
-      mainAxiosInstance.get(`/seller/item-sales-stats/${sellerId}/?filter=${filter}`)
-      .then(response => {
-        const itemStats = response.data.item_stats;
-        setSalesStats(itemStats);
-      })
-      .catch(error => {
-        console.error('판매 통계 데이터를 가져오는 중 오류가 발생했습니다!', error);
-      });
-    } else {
-      console.error('판매자 ID를 찾을 수 없습니다.');
-    }
+          const response2 = await mainAxiosInstance.get(`/seller/item-sales-stats/${sellerId}/?filter=${filter}`);
+          const itemStats = response2.data.item_stats;
+          setSalesStats(itemStats);
 
-    // 선택된 필터에 따라 정확한 날짜 범위를 설정
-    setDateRange(getDateRange(filter));
+          // 선택된 필터에 따라 정확한 날짜 범위를 설정
+          setDateRange(getDateRange(filter));
+        } else {
+          console.error('판매자 ID를 찾을 수 없습니다.');
+        }
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류가 발생했습니다!', error);
+      }
+    };
+
+    fetchData();
   }, [filter]);
 
   // 선택된 필터에 따라 정확한 날짜 범위 반환하는 함수
@@ -91,8 +89,8 @@ function SellerMain() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {salesStats.map((row) => (
-                <TableRow key={row.item_id}>
+              {salesStats.map((row, index) => (
+                <TableRow key={index}>
                   <TableCell component="th" scope="row">
                     {row.item_name}
                   </TableCell>

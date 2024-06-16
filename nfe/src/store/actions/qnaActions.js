@@ -53,13 +53,28 @@ export const createQNA = createAsyncThunk(
 
 export const updateQNA = createAsyncThunk(
   "qnaUpdate/updateQnA",
-  async (qna, { rejectWithValue }) => {
+  async ({ id, userqna }, { getState, rejectWithValue }) => {
+    console.log(id);
     try {
-      const res = await mainAxiosInstance.put(`/qna/update/${qna.id}`, {
-        qna,
-      });
-      const data = await res.json();
-      return data;
+      const {
+        user: { userInfo },
+      } = getState();
+
+      console.log('Access Token:', userInfo.access);  // 토큰 확인
+      console.log('Request Data:', userqna); // 요청 데이터 확인
+      console.log('Image File:', userqna.get('image')); // 이미지 파일 확인
+
+      const res = await mainAxiosInstance.put(
+        `/qna/update/${id}/`,
+        userqna,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userInfo.access}`,
+          },
+        }
+      );
+      return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
     }
@@ -67,10 +82,17 @@ export const updateQNA = createAsyncThunk(
 );
 export const deleteQnA = createAsyncThunk(
   "qnaDelete/deleteQnA",
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
-      const res = await mainAxiosInstance.delete(`/qna/delete/${id}`);
+      const {
+        user: { userInfo },
+      } = getState();
 
+      const res = await mainAxiosInstance.delete(`/qna/delete/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+      });
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
