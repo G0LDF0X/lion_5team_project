@@ -361,7 +361,8 @@ function BoardDetailModal({ open, handleClose }) {
                           }}
                         >
                           
-                          <AddCircleRoundedIcon style={{ fontSize: 30, color: "skyblue" }} />
+                          
+                          <AddCircleRoundedIcon style={{ fontSize: 30, color: "yellow" }} />
                           <TagInfo className="tag-info">
                             {/* <img
                               src={tag.image}
