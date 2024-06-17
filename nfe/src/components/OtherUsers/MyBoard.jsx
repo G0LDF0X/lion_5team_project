@@ -33,7 +33,7 @@ const MyBoard = ({ userId, url, userDetail }) => {
   return (
     <Container className="py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        {userDetail.nickname} 게시글
+        {userDetail.nickname}의 게시글
       </Typography>
       <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
       <Grid container spacing={4}>

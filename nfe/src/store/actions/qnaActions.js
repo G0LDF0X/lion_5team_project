@@ -40,10 +40,10 @@ export const listQnADetails = createAsyncThunk(
 
 export const createQNA = createAsyncThunk(
   "qnaCreate/createQnA",
-  async ({ formData }, { getState, rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       const headers = getAuthHeaders(getState);
-      const res = await mainAxiosInstance.post(`/qna/create/`, formData, {headers});
+      const res = await mainAxiosInstance.post(`/qna/create/`,{}, {headers});
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));
@@ -53,20 +53,19 @@ export const createQNA = createAsyncThunk(
 
 export const updateQNA = createAsyncThunk(
   "qnaUpdate/updateQnA",
-  async ({ id, userqna }, { getState, rejectWithValue }) => {
-    console.log(id);
+  async ({  formdata, QnaId }, { getState, rejectWithValue }) => {
+    console.log(QnaId);
     try {
       const {
         user: { userInfo },
       } = getState();
 
-      console.log('Access Token:', userInfo.access);  // 토큰 확인
-      console.log('Request Data:', userqna); // 요청 데이터 확인
-      console.log('Image File:', userqna.get('image')); // 이미지 파일 확인
+      console.log(formdata)
+      // console.log('Request Data:', userqna); // 요청 데이터 확인
 
       const res = await mainAxiosInstance.put(
-        `/qna/update/${id}/`,
-        userqna,
+        `/qna/update/${QnaId}/`,
+        formdata,
         {
           headers: {
             "Content-Type": "multipart/form-data",
