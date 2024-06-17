@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, OrderItem
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, SimpleItemSerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, SimpleItemSerializer, SingleItemSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
@@ -104,8 +104,8 @@ def view_item(request, pk):
     stay_time_interval = f'{staytime} seconds'
 
     Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
-    serializer = ItemSerializer(item)
-    return Response(serializer.data)
+    
+    return Response('Interaction created')
 @api_view(['GET'])
 def get_all_items(request):
     items = Item.objects.all()
@@ -169,7 +169,7 @@ def get_my_items(request):
 @api_view(['GET'])
 def item_details(request, pk):
     item = Item.objects.get(pk=pk)
-    serializer = ItemSerializer(item)
+    serializer = SingleItemSerializer(item)
     return Response(serializer.data)
 
 
@@ -193,7 +193,7 @@ def create_item(request):
         
         )
     
-    serializer = ItemSerializer(item, many=False)
+    serializer = SingleItemSerializer(item, many=False)
     # create_itemindex(item)  
     return Response(serializer.data)
 
@@ -224,7 +224,7 @@ def update_item(request, pk):
     item.description = data['description']
     item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
-    serializer = ItemSerializer(item, many=False)
+    serializer = SingleItemSerializer(item, many=False)
     # update_itemindex(item)
     return Response(serializer.data)
 
