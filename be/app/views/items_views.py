@@ -45,6 +45,31 @@ def embed_query(query):
         outputs = model(**inputs)
     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
     return embedding
+
+def create_itemindex(item):
+    body = {
+        "name": item.name,
+        "description": item.description,
+        "category": item.category_id.name,
+        "embedding": embed_query(item.name)
+    }
+    es.index(index='items', id=item.id, body=body)
+    print(f"Item {item.id} indexed")
+def update_itemindex(item):
+    body = {
+        "doc": {
+            "name": item.name,
+            "description": item.description,
+            "category": item.category_id.name,
+            "embedding": embed_query(item.name)
+        }
+    }
+    es.update(index='items', id=item.id, body=body)
+    print(f"Item {item.id} updated")
+def delete_itemindex(item):
+    es.delete(index='items', id=item.id)
+    print(f"Item {item.id} deleted")
+    
 @api_view(['GET'])
 def get_items2(request):
     print (ca_cert_path)
@@ -169,8 +194,9 @@ def create_item(request):
         created_at = datetime.now()
         
         )
+    
     serializer = ItemSerializer(item, many=False)
-
+    # create_itemindex(item)  
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -201,7 +227,7 @@ def update_item(request, pk):
     item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
     serializer = ItemSerializer(item, many=False)
-    
+    # update_itemindex(item)
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -217,6 +243,7 @@ def delete_item(request, pk):
         item = Item.objects.get(pk=pk)
         item.delete()
         return Response("Item deleted")
+        # delete_itemindex(item)
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
