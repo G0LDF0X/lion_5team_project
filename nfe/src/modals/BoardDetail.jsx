@@ -245,12 +245,6 @@ function BoardDetailModal({ open, handleClose }) {
     setShowTag(!showTag);
   }
 
-  // const handleReplyClick = (id, username) => {
-  //   setAppliedId(id);
-  //   setReplyToUser(username);
-  //   setApply(`@${username} `);
-  // }
-
   const handleReplyClick = (id) => {
     setAppliedId(id);
     setReplyToUser(userInfo.nickname);
