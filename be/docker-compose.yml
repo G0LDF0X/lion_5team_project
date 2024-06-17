@@ -8,7 +8,8 @@ services:
       - discovery.type=single-node
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=1bwSAqBSSorcm3ZyagqJ
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
+      # - xpack.security.enabled=true
     volumes:
       - es-data:/usr/share/elasticsearch/data
       - ./certs:/usr/share/elasticsearch/config/certs
