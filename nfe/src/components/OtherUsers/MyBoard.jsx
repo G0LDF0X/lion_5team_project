@@ -5,6 +5,7 @@ import { mainAxiosInstance } from '../../api/axiosInstances';
 import BoardDetailModal from '../../modals/BoardDetail';
 import { getBoardDetails } from '../../store/actions/boardActions';
 import useShow from '../../hook/useShow';
+import { Link } from 'react-router-dom';
 const MyBoard = ({ userId, url }) => {
   const [myBoards, setMyBoards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,7 +38,8 @@ const MyBoard = ({ userId, url }) => {
       <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
       <Grid container spacing={4}>
         {myBoards?.map((board) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={board.id}onClick={() => handleOpenModal(board.id)}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={board.id} >
+            <Link key = {board.id} to={`/board/${board.id}`} >
             <Card className="h-full shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
              
                 <CardMedia
@@ -60,6 +62,7 @@ const MyBoard = ({ userId, url }) => {
                 </Typography>
               </CardContent>
             </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

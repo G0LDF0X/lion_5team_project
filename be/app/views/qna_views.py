@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from app.serializer import UserQnASerializer, UserAnswerSerializer
 from datetime import datetime
 from django.core.files.images import ImageFile
+import json
 
 @api_view(['GET'])
 def qna_board(request):
@@ -69,32 +70,52 @@ def uploadImage(request, pk):
     return Response('Image was uploaded')
     
     
-@api_view(['PUT'])
-def update_user_qna(request, pk):
-    qna_board = User_QnA.objects.get(id=pk)
-    qna_board.title = request.data['title']
-    qna_board.content = request.data['content'] 
-    qna_board.save()    
-
-    serializer = UserQnASerializer(qna_board, many=False)
-    return Response(serializer.data)
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_user_qna(request, pk):
-    qna_board = User_QnA.objects.get(pk=pk)
+    qna_board = User_QnA.objects.get(id=pk)
     qna_board.delete()
     return Response({"message": "Question deleted successfully"})
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_user_qna(request, pk):
-    qna_board = User_QnA.objects.get(id=pk)
-    qna_board.title = request.data['title']
-    qna_board.content = request.data['content'] 
-    qna_board.save()    
+    try:
+        user_info = json.loads(request.data.get('userInfo', '{}'))
+        qna_data = {}
+        image = request.FILES.get('image')
 
-    serializer = UserQnASerializer(qna_board, many=False)
-    return Response(serializer.data)
+        # Get the User_QnA instance
+        user_qna = User_QnA.objects.get(id=pk)
+
+        # Check permissions
+        print("User ID from request:", user_info.get('id'))  # 로그 추가
+        print("User ID from QnA:", user_qna.user_id.id)  # 로그 추가
+        if user_qna.user_id.id != user_info.get('id'):
+            return Response({'detail': 'You do not have permission to edit this qna'}, status=403)
+
+        # Update fields if they exist in request data
+        if 'title' in request.data:
+            qna_data['title'] = request.data['title']
+        if 'content' in request.data:
+            qna_data['content'] = request.data['content']
+        if image:
+            qna_data['image_url'] = image
+
+        # Save updated fields
+        for key, value in qna_data.items():
+            setattr(user_qna, key, value)
+
+        user_qna.save()
+
+        serializer = UserQnASerializer(user_qna, many=False)
+        return Response(serializer.data)
+
+    except User_QnA.DoesNotExist:
+        return Response({'detail': 'User_QnA not found'}, status=404)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])

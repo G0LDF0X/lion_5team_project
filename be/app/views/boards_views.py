@@ -50,7 +50,9 @@ def board_detail_or_create_reply(request, pk):
     if request.method == 'GET':
         board = get_object_or_404(Board, id=pk)
         replies = Reply.objects.filter(board_id=board)
-        user = User.objects.get(username=request.user)
+        print(request.user)
+        if not request.user.is_anonymous:
+            user = User.objects.get(username=request.user)
         if request.user.is_authenticated:   #로그인한 사용자가 게시물을 조회했을 때, 조회수를 추가합니다.
             board.show += 1
             Interaction.objects.create(user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='view')

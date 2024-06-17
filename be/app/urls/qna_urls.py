@@ -7,7 +7,7 @@ urlpatterns = [
     path('create/', create_user_qna, name='create_user_qna'),  # Q&A 생성
     path('answer/create/<int:pk>/', create_user_answer, name='create_user_answer'),  # Q&A 답변 생성
     path('answer/update/<int:pk>/', update_user_answer, name='create_user_answer'),  # Q&A 답변 수정
-    path('update/<int:pk>/', update_user_qna, name='update_user_qna'),  # Q&A 수정
-    path('delete/<int:pk>/', delete_user_qna, name='delete_user_qna'),  # Q&A 삭제
+    path('update/<str:pk>/', update_user_qna, name='update_user_qna'),  # Q&A 수정
+    path('delete/<str:pk>/', delete_user_qna, name='delete_user_qna'),  # Q&A 삭제
     path('uploadImage/<int:pk>/', uploadImage, name='uploadImage'),  # 이미지 업로드
 ]
