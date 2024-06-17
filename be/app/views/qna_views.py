@@ -57,13 +57,18 @@ def create_user_answer(request, pk):
 
 @api_view(['PUT'])
 def uploadImage(request, pk):
-    qna = User_QnA.objects.get(id=pk)
-    qna.image_url = request.FILES.get('file')
-    qna.save()
-    return Response('Image was uploaded')
-    
-    
-
+    try:
+        qna = User_QnA.objects.get(id=pk)
+        if 'file' in request.FILES:
+            qna.image_url = request.FILES['file']
+            qna.save()
+            return Response({'url': qna.image_url.url}, status=200)
+        else:
+            return Response({'error': 'No file provided'}, status=400)
+    except User_QnA.DoesNotExist:
+        return Response({'error': 'QnA not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -88,7 +93,6 @@ def update_user_qna(request, pk):
         data = request.data
         user_qna.title = data.get('title')
         user_qna.content = data.get('content')
-
         user_qna.save()
 
         serializer = UserQnASerializer(user_qna, many=False)
