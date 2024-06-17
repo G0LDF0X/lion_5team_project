@@ -9,9 +9,9 @@ from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
-import ssl
-from elasticsearch import Elasticsearch
-from transformers import BertTokenizer, BertModel
+# import ssl
+# from elasticsearch import Elasticsearch
+# from transformers import BertTokenizer, BertModel
 from django.conf import settings
 import torch
 import os
@@ -20,80 +20,80 @@ import logging
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 
-ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
-ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
-es = Elasticsearch(
-    ['https://localhost:9200'],
-    basic_auth=('elastic', ELASTIC_PASSWORD),
-    verify_certs=True,
-    ca_certs=ca_cert_path,
-)
+# ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
+# ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+# es = Elasticsearch(
+#     ['https://localhost:9200'],
+#     basic_auth=('elastic', ELASTIC_PASSWORD),
+#     verify_certs=True,
+#     ca_certs=ca_cert_path,
+# )
 
-tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
-model = BertModel.from_pretrained('monologg/kobert')
+# tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
+# model = BertModel.from_pretrained('monologg/kobert')
 
-try:
-    response = es.info()
-    print("Elasticsearch info:", response)
-except Exception as e:
-    print("Error connecting to Elasticsearch:", e)
-def embed_query(query):
-    inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
-    return embedding
+# try:
+#     response = es.info()
+#     print("Elasticsearch info:", response)
+# except Exception as e:
+#     print("Error connecting to Elasticsearch:", e)
+# def embed_query(query):
+#     inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
+#     with torch.no_grad():
+#         outputs = model(**inputs)
+#     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
+#     return embedding
 
-def create_itemindex(item):
-    body = {
-        "name": item.name,
-        "description": item.description,
-        "category": item.category_id.name,
-        "embedding": embed_query(item.name)
-    }
-    es.index(index='items', id=item.id, body=body)
-    print(f"Item {item.id} indexed")
-def update_itemindex(item):
-    body = {
-        "doc": {
-            "name": item.name,
-            "description": item.description,
-            "category": item.category_id.name,
-            "embedding": embed_query(item.name)
-        }
-    }
-    es.update(index='items', id=item.id, body=body)
-    print(f"Item {item.id} updated")
-def delete_itemindex(item):
-    es.delete(index='items', id=item.id)
-    print(f"Item {item.id} deleted")
+# def create_itemindex(item):
+#     body = {
+#         "name": item.name,
+#         "description": item.description,
+#         "category": item.category_id.name,
+#         "embedding": embed_query(item.name)
+#     }
+#     es.index(index='items', id=item.id, body=body)
+#     print(f"Item {item.id} indexed")
+# def update_itemindex(item):
+#     body = {
+#         "doc": {
+#             "name": item.name,
+#             "description": item.description,
+#             "category": item.category_id.name,
+#             "embedding": embed_query(item.name)
+#         }
+#     }
+#     es.update(index='items', id=item.id, body=body)
+#     print(f"Item {item.id} updated")
+# def delete_itemindex(item):
+#     es.delete(index='items', id=item.id)
+#     print(f"Item {item.id} deleted")
     
-@api_view(['GET'])
-def get_items1(request):
-    print (ca_cert_path)
-    print 
-    query = request.GET.get('query', '')
-    if not query:
-        return Response({"error": "Query parameter is required"}, status=400)
-    query_embedding = embed_query(query)
-    script_query = {
-        "script_score": {
-            "query": {"match_all": {}},
-            "script": {
-                "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
-                "params": {"query_vector": query_embedding}
-            }
-        }
-    }
-    try:
-        response = es.search(index='items', body={"query": script_query})
-        item_ids = [hit['_id'] for hit in response['hits']['hits']]
-        items = Item.objects.filter(id__in=item_ids)
-        serializer = ItemSerializer(items, many=True)
-        return Response(serializer.data)
-    except Exception as e:
-        logging.error(f"Error during Elasticsearch search: {e}")
-        return Response({"error": "Error during search"}, status=500)
+# @api_view(['GET'])
+# def get_items1(request):
+#     print (ca_cert_path)
+#     print 
+#     query = request.GET.get('query', '')
+#     if not query:
+#         return Response({"error": "Query parameter is required"}, status=400)
+#     query_embedding = embed_query(query)
+#     script_query = {
+#         "script_score": {
+#             "query": {"match_all": {}},
+#             "script": {
+#                 "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+#                 "params": {"query_vector": query_embedding}
+#             }
+#         }
+#     }
+#     try:
+#         response = es.search(index='items', body={"query": script_query})
+#         item_ids = [hit['_id'] for hit in response['hits']['hits']]
+#         items = Item.objects.filter(id__in=item_ids)
+#         serializer = ItemSerializer(items, many=True)
+#         return Response(serializer.data)
+#     except Exception as e:
+#         logging.error(f"Error during Elasticsearch search: {e}")
+#         return Response({"error": "Error during search"}, status=500)
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])

@@ -31,7 +31,6 @@ function Header({ openModal, openPostModal, openSideBar }) {
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log(cartItems);
   
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);
