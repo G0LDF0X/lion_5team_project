@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardContent, CardMedia, Typography, Grid, Container } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import BoardDetailModal from '../../modals/BoardDetail';
 import { getBoardDetails } from '../../store/actions/boardActions';
 import useShow from '../../hook/useShow';
 import { Link } from 'react-router-dom';
-const MyBoard = ({ userId, url }) => {
+const MyBoard = ({ userId, url, userDetail }) => {
   const [myBoards, setMyBoards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
@@ -33,7 +33,7 @@ const MyBoard = ({ userId, url }) => {
   return (
     <Container className="py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        나의 게시글
+        {userDetail.nickname} 게시글
       </Typography>
       <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
       <Grid container spacing={4}>
