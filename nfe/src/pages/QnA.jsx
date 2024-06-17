@@ -64,7 +64,7 @@ function QAScreen() {
                   </Link>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="div">
-                  <span dangerouslySetInnerHTML={{ __html: qna.content }} className="text-gray-700" />
+                  <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "")  }} className="text-gray-700" />
                 </Typography>
               </CardContent>
             </Card>
