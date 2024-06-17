@@ -21,16 +21,14 @@ from app.models import Item, Category
 elastic_password = 'elastic'    
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(os.path.dirname(__file__), 'ca.crt')
-
+ca_cert_path = os.path.join(settings.BASE_DIR,'./certs/http_ca.crt')
+print (ca_cert_path)    
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')    
 es = Elasticsearch(
     ['https://localhost:9200'],
     basic_auth=('elastic', ELASTIC_PASSWORD),
     verify_certs=True,
     ca_certs=ca_cert_path,
-    client_cert=os.path.join(settings.BASE_DIR, 'es01.crt'),
-    client_key=os.path.join(settings.BASE_DIR, 'es01.key')
 )
 # Define the index name
 index_name = 'items'

@@ -1,5 +1,3 @@
-version: "2.27.1"
-
 services:
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
@@ -227,6 +225,4 @@ volumes:
     driver: local
 
 
-# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/ca.crt ./ca.crt
-# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/es01/es01.crt ./es01.crt
-# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/es01/es01.key ./es01.key
+# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/ca.crt ./certs/http_ca.crt

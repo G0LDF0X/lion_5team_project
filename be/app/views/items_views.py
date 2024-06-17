@@ -20,15 +20,13 @@ import logging
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 
-ca_cert_path = os.path.join(settings.BASE_DIR, 'ca.crt')
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
 es = Elasticsearch(
     ['https://localhost:9200'],
     basic_auth=('elastic', ELASTIC_PASSWORD),
     verify_certs=True,
     ca_certs=ca_cert_path,
-    client_cert=os.path.join(settings.BASE_DIR, 'es01.crt'),
-    client_key=os.path.join(settings.BASE_DIR, 'es01.key')
 )
 
 tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
@@ -71,7 +69,7 @@ def delete_itemindex(item):
     print(f"Item {item.id} deleted")
     
 @api_view(['GET'])
-def get_items2(request):
+def get_items1(request):
     print (ca_cert_path)
     print 
     query = request.GET.get('query', '')
