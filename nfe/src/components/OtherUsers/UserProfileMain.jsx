@@ -114,7 +114,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 console.log('response:', response);
                 if (response.status === 201) {
                     setIsFollowing(true);
-                    
+                    window.location.reload();
                     setFollowerCount(followerCount + 1);
 
                     
@@ -137,7 +137,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
             console.log('response:', response);
             if (response.status === 201) {
                 setIsFollowing(false);
-                
+                window.location.reload();
                 setFollowerCount(followerCount - 1);
                 
             }

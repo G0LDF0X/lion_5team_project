@@ -245,11 +245,19 @@ function BoardDetailModal({ open, handleClose }) {
     setShowTag(!showTag);
   }
 
-  const handleReplyClick = (id, username) => {
+  // const handleReplyClick = (id, username) => {
+  //   setAppliedId(id);
+  //   setReplyToUser(username);
+  //   setApply(`@${username} `);
+  // }
+
+  const handleReplyClick = (id) => {
     setAppliedId(id);
-    setReplyToUser(username);
-    setApply(`@${username} `);
+    setReplyToUser(userInfo.nickname);
+    setApply(`@${userInfo.nickname} `);
   }
+
+  
   const handleUpdateReply = (id, content) => {
     setEditReplyId(id);
     setEditReply(content);
