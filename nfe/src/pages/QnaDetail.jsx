@@ -56,10 +56,15 @@ function QADetailScreen() {
     const file = e.target.files[0];
     setEditImage(file);
   };
-  const deleteHandler = async () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      dispatch(deleteQnA(qnaId));
-      window.location.href = "/qna";
+  const deleteHandler = () => {
+    if (window.confirm('정말 이 Q&A를 삭제하시겠습니까?')) {
+      dispatch(deleteQnA(id))
+        .then(() => {
+          navigate('/qna'); // 삭제 후 Q&A 목록 페이지로 이동
+        })
+        .catch((error) => {
+          console.error('Q&A 삭제 오류:', error);
+        });
     }
   };
     
@@ -148,9 +153,21 @@ function QADetailScreen() {
               <div className="mb-8">
                 <Card className="shadow-lg rounded-lg">
                   <CardContent>
-                    <Typography variant="h5" component="div" className="mb-4">
-                      {qna.question && qna.question.title}
-                    </Typography>
+                    <div className="flex justify-between items-center">
+                      <Typography variant="h5" component="div" className="mb-4">
+                        {qna.question && qna.question.title}
+                      </Typography>
+                      {userInfo && qna.question && userInfo.id === qna.question.user_id && (
+                        <div>
+                          <Button variant="contained" color="primary" onClick={editHandler} className="ml-2" >
+                            수정
+                          </Button>
+                          <Button variant="contained" color="primary" onClick={deleteHandler} className="ml-2" >
+                            삭제
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                     <Typography variant="body2" color="text.secondary">
                       <Link to={`/users/${qna.question && qna.question.user_id}/`}>{qna.question && qna.question.user}</Link> - {qna.question && qna.question.created_at.substring(0, 10)}
                     </Typography>
@@ -158,7 +175,7 @@ function QADetailScreen() {
                       <img src={VITE_API_BASE_URL + qna.question.image_url} alt="QnA" className="w-full rounded-lg my-4" />
                     )}
                     {qna.question && (
-                      <Typography variant="body1" component="p" dangerouslySetInnerHTML={{ __html: qna.question.content }} className="text-gray-800" />
+                      <Typography variant="body1" component="p" dangerouslySetInnerHTML={{ __html: qna.question.content.replace(/<img[^>]*>/g, "")  }} className="text-gray-800" />
                     )}
                   </CardContent>
                 </Card>
@@ -169,11 +186,6 @@ function QADetailScreen() {
                     <Button variant="contained" color="primary" onClick={answerCreateHandler}>
                       Create Q&A Answer
                     </Button>
-                    {qna.question && userInfo.id === qna.question.user_id && (
-                      <Button variant="contained" color="secondary" onClick={editHandler} className="ml-2" >
-                        수정
-                      </Button>
-                    )}
                   </>
                 )}
               </div>
