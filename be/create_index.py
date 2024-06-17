@@ -6,6 +6,7 @@ import sys
 from transformers import BertTokenizer, BertModel
 import torch
 from dotenv import load_dotenv
+from django.conf import settings
 load_dotenv()
 
 
@@ -17,22 +18,20 @@ django.setup()
 from app.models import Item, Category
 
 # Ensure the environment variable is set
-# elastic_password = os.getenv('ELASTIC_PASSWORD')
-elastic_password = 'o5v-nKUcWG4qfu6+s0*W'
-if not elastic_password:
-    raise ValueError("ELASTICSEARCH_PASSWORD environment variable not set")
+elastic_password = 'elastic'    
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(os.path.dirname(__file__), 'http_ca.crt')
+ca_cert_path = os.path.join(os.path.dirname(__file__), 'ca.crt')
 
-# Initialize Elasticsearch with authentication and CA certificate
+ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')    
 es = Elasticsearch(
     ['https://localhost:9200'],
-    basic_auth=('elastic', elastic_password),
+    basic_auth=('elastic', ELASTIC_PASSWORD),
+    verify_certs=True,
     ca_certs=ca_cert_path,
-    verify_certs=True
+    client_cert=os.path.join(settings.BASE_DIR, 'es01.crt'),
+    client_key=os.path.join(settings.BASE_DIR, 'es01.key')
 )
-
 # Define the index name
 index_name = 'items'
 
@@ -84,8 +83,3 @@ def index_items():
 
 # Run the indexing function
 index_items()
-# import os
-# import base64
-
-# key = base64.urlsafe_b64encode(os.urandom(32)).decode('utf-8')
-# print(key)

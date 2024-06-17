@@ -16,50 +16,61 @@ from django.conf import settings
 import torch
 import os
 from dotenv import load_dotenv
+import logging
 load_dotenv()
+logging.basicConfig(level=logging.DEBUG)
 
-# ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+ca_cert_path = os.path.join(settings.BASE_DIR, 'ca.crt')
+ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+es = Elasticsearch(
+    ['https://localhost:9200'],
+    basic_auth=('elastic', ELASTIC_PASSWORD),
+    verify_certs=True,
+    ca_certs=ca_cert_path,
+    client_cert=os.path.join(settings.BASE_DIR, 'es01.crt'),
+    client_key=os.path.join(settings.BASE_DIR, 'es01.key')
+)
 
-# ca_cert_path = os.path.join(settings.BASE_DIR, 'http_ca.crt')
-# print (ca_cert_path)
-# es = Elasticsearch(
-#     ['https://localhost:9200'],
-#     basic_auth=('elastic', ELASTIC_PASSWORD),
-#     ca_certs=ca_cert_path,
-#     verify_certs=True
-# )
-# tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
-# model = BertModel.from_pretrained('monologg/kobert')
+tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
+model = BertModel.from_pretrained('monologg/kobert')
 
-# def embed_query(query):
-#     inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
-#     with torch.no_grad():
-#         outputs = model(**inputs)
-#     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
-#     return embedding
-
-# @api_view(['GET'])
-# def get_items(request):
-#     query = request.GET.get('query', '')
-#     if not query:
-#         return Response({"error": "Query parameter is required"}, status=400)
-#     query_embedding = embed_query(query)
-#     script_query = {
-#         "script_score": {
-#             "query": {"match_all": {}},
-#             "script": {
-#                 "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
-#                 "params": {"query_vector": query_embedding}
-#             }
-#         }
-#     }
-#     response = es.search(index='items', body={"query": script_query})
-#     # print (response)
-#     item_ids = [hit['_id'] for hit in response['hits']['hits']]
-#     items = Item.objects.filter(id__in=item_ids)
-#     serializer = ItemSerializer(items, many=True)
-#     return Response(serializer.data)
-
+try:
+    response = es.info()
+    print("Elasticsearch info:", response)
+except Exception as e:
+    print("Error connecting to Elasticsearch:", e)
+def embed_query(query):
+    inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
+    return embedding
+@api_view(['GET'])
+def get_items2(request):
+    print (ca_cert_path)
+    print 
+    query = request.GET.get('query', '')
+    if not query:
+        return Response({"error": "Query parameter is required"}, status=400)
+    query_embedding = embed_query(query)
+    script_query = {
+        "script_score": {
+            "query": {"match_all": {}},
+            "script": {
+                "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+                "params": {"query_vector": query_embedding}
+            }
+        }
+    }
+    try:
+        response = es.search(index='items', body={"query": script_query})
+        item_ids = [hit['_id'] for hit in response['hits']['hits']]
+        items = Item.objects.filter(id__in=item_ids)
+        serializer = ItemSerializer(items, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        logging.error(f"Error during Elasticsearch search: {e}")
+        return Response({"error": "Error during search"}, status=500)
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])
@@ -109,18 +120,18 @@ def get_items(request):
         item_query |= query_condition
     # print(item_query)   
     items = Item.objects.filter(item_query)
-    # if categories and suggestions_list:
-    #     items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
-    #     print("2",' '.join(suggestions_list))
-    #     print(categories)
-    # elif categories:    
-    #     items = Item.objects.filter( category_id_id__in=categories)
-    #     print("3",' '.join(suggestions_list))
-    # elif suggestions_list:
-    #     items = Item.objects.filter(name__icontains=','.join(suggestions_list))
-    #     print("4",' '.join(suggestions_list))
+    if categories and suggestions_list:
+        items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
+        print("2",' '.join(suggestions_list))
+        print(categories)
+    elif categories:    
+        items = Item.objects.filter( category_id_id__in=categories)
+        print("3",' '.join(suggestions_list))
+    elif suggestions_list:
+        items = Item.objects.filter(name__icontains=','.join(suggestions_list))
+        print("4",' '.join(suggestions_list))
         
-        #     items = Item.objects.filter(name__icontains=query)
+    items = Item.objects.filter(name__icontains=query)
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 

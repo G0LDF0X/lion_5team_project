@@ -22,16 +22,15 @@ const MyBoard = ({ userInfo }) => {
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {MyBoards.map((board) => (
+              <Link to={`/board/${board.id}`}>
           <div key={board.id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <img className="w-full h-48 object-cover" src={VITE_API_BASE_URL + board.image_url} alt={board.title} />
             <div className="p-4">
-              <Link to={`/board/${board.id}`}>
                 <h5 className="text-lg font-semibold mb-2">
                   {board.title.length > 20
                     ? `${board.title.substring(0, 20)}...`
                     : board.title}
                 </h5>
-              </Link>
               <p className="text-gray-700">
                 {board.content.length > 30
                   ? `${board.content.substring(0, 30)}...`
@@ -39,6 +38,7 @@ const MyBoard = ({ userInfo }) => {
               </p>
             </div>
           </div>
+                  </Link>
         ))}
       </div>
     </div>
