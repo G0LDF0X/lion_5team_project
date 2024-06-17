@@ -175,7 +175,7 @@ function QADetailScreen() {
                       <img src={VITE_API_BASE_URL + qna.question.image_url} alt="QnA" className="w-full rounded-lg my-4" />
                     )}
                     {qna.question && (
-                      <Typography variant="body1" component="p" dangerouslySetInnerHTML={{ __html: qna.question.content }} className="text-gray-800" />
+                      <Typography variant="body1" component="p" dangerouslySetInnerHTML={{ __html: qna.question.content.replace(/<img[^>]*>/g, "")  }} className="text-gray-800" />
                     )}
                   </CardContent>
                 </Card>
