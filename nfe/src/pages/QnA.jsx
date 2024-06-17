@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { listQNA } from '../store/actions/qnaActions';
+import { createQNA, listQNA } from '../store/actions/qnaActions';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Typography, Grid, Box, Button, Container } from '@mui/material';
 
@@ -11,11 +11,22 @@ function QAScreen() {
   const qnaList = useSelector((state) => state.qnaList);
   const { qnas } = qnaList;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+  const qnaCreate = useSelector((state) => state.qnaCreate);
+  const { success, qna } = qnaCreate;
   useEffect(() => {
     dispatch(listQNA());
   }, [navigate, dispatch]);
 
+  const qnaCreateHandler = () => {
+    dispatch(createQNA());}
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/qna/update/${qna.id}`);
+
+    }
+  }
+  , [success, navigate, qna]);
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
       <Box className="flex justify-between items-center mb-8">
@@ -25,7 +36,7 @@ function QAScreen() {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate('/qna/create')}
+          onClick={qnaCreateHandler}
           className="bg-blue-500 text-white hover:bg-blue-600"
         >
           Create Q&A
