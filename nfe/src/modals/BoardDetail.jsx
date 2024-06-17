@@ -400,7 +400,7 @@ function BoardDetailModal({ open, handleClose }) {
                   <div className="flex items-center border-b pb-2 mb-4">
                     <div>
                       <Link to={`/users/${boardDetail.user_id}`}>
-                        <p className="font-bold">{boardDetail.username}</p>
+                        <p className="font-bold">{boardDetail.nickname}</p>
                       </Link>
                       <p className="text-sm text-gray-500">
                         {boardDetail.created_at}
@@ -460,7 +460,7 @@ function BoardDetailModal({ open, handleClose }) {
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                           <p className="font-bold">
                             <Link to={`/users/${reply.user_id}`}>
-                              {reply.username || reply.nickname}
+                              {reply.nickname || reply.username}
                             </Link>
                           </p>
                           {userInfo && userInfo.id === reply.user_id && (
