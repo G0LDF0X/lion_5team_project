@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField } from "@mui/material";
 import { listQnADetails, updateQNA } from "../store/actions/qnaActions";
 import { useParams, useNavigate } from 'react-router-dom';
+import { qnaCreateReset } from "../store/slices/qnaSlices";
 
 function QAUpdateScreen() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ function QAUpdateScreen() {
   const dispatch = useDispatch();
   const qnaDetails = useSelector((state) => state.qnaDetails);
   const { qna } = qnaDetails;
+  const qnaUpdate = useSelector((state) => state.qnaUpdate);
+  const { success } = qnaUpdate;
 
   class CustomUploadAdapter {
     constructor(loader) {
@@ -76,12 +79,23 @@ function QAUpdateScreen() {
   }
 
   function submithandler() {
-    dispatch(updateQNA({ id: qna.id, content: editorData, title: title, product_url: "product_url" }));
-    dispatch({ type: QNA_UPDATE_RESET });
-    dispatch({ type: QNA_DETAILS_RESET });
-    navigate(`/qna/detail/${qna.id}`)
-  }
+    console.log({ id: QnaId, content: editorData, title: title, product_url: "product_url" })
+    const formdata = new FormData(); 
+    formdata.append("content", editorData);
+    formdata.append("title", title);
+    formdata.append("product_url", "product_url");
 
+    dispatch(updateQNA({formdata, QnaId}));
+    // dispatch(qnaCreateReset());
+    // window.history.back()
+  }
+  useEffect(() => {
+    if (success) {
+      dispatch(qnaCreateReset());
+      navigate(`/qna/detail/${QnaId}`);
+    }
+  }
+    , [success, navigate, QnaId]);
   useEffect(() => {
     if (!qna || qna.id === undefined) {
       dispatch(listQnADetails(QnaId));
@@ -91,7 +105,7 @@ function QAUpdateScreen() {
   return (
     <div className="container mx-auto py-8">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Update Q&A</h2>
+        <h2 className="text-2xl font-bold mb-4">Q&A</h2>
         <TextField
           label="Title"
           variant="outlined"

@@ -26,19 +26,13 @@ def qna_detail(request, pk):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def create_user_qna(request):
     user = User.objects.get(username=request.user)
-    data = request.data
-    image_file = request.FILES.get('image_url', None)
-    if image_file:
-        image_file = ImageFile(image_file)
-
     qna_board = User_QnA.objects.create(
-        user_id=user,
-        title=data['title'],
-        content=data['content'],
-        image_url=image_file,
+        user_id_id=user.id,
+        title='',
+        content='',
+        created_at=datetime.now(),
     )
     serializer = UserQnASerializer(qna_board, many=False)
     return Response(serializer.data)
@@ -56,7 +50,6 @@ def create_user_answer(request, pk):
         title=data['title'],
         content=data['content'],
         user_qna_id=qna,
-        created_at=current_time,
     )
     serializer = UserAnswerSerializer(qna_board, many=False)
     return Response(serializer.data)
@@ -83,30 +76,18 @@ def delete_user_qna(request, pk):
 @permission_classes([IsAuthenticated])
 def update_user_qna(request, pk):
     try:
-        user_info = json.loads(request.data.get('userInfo', '{}'))
-        qna_data = {}
-        image = request.FILES.get('image')
-
+        
+        user = User.objects.get(username=request.user)
         # Get the User_QnA instance
         user_qna = User_QnA.objects.get(id=pk)
 
         # Check permissions
-        print("User ID from request:", user_info.get('id'))  # 로그 추가
-        print("User ID from QnA:", user_qna.user_id.id)  # 로그 추가
-        if user_qna.user_id.id != user_info.get('id'):
+        print(request.data)
+        if user_qna.user_id.id != user.id:
             return Response({'detail': 'You do not have permission to edit this qna'}, status=403)
-
-        # Update fields if they exist in request data
-        if 'title' in request.data:
-            qna_data['title'] = request.data['title']
-        if 'content' in request.data:
-            qna_data['content'] = request.data['content']
-        if image:
-            qna_data['image_url'] = image
-
-        # Save updated fields
-        for key, value in qna_data.items():
-            setattr(user_qna, key, value)
+        data = request.data
+        user_qna.title = data.get('title')
+        user_qna.content = data.get('content')
 
         user_qna.save()
 

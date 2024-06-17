@@ -3,7 +3,7 @@ import { Button, Card, CardContent, CardActions, Typography, Grid, Box } from '@
 import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
-const OtherFollowingList = ({ userId }) => {
+const OtherFollowingList = ({ userId, userDetail }) => {
   const [following, setFollowing] = useState([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const OtherFollowingList = ({ userId }) => {
   return (
     <Box className="container mx-auto py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        나의 팔로잉
+        {userDetail.nickname  }의 팔로잉
       </Typography>
       <Grid container spacing={4}>
         {following.map((follow, index) => (

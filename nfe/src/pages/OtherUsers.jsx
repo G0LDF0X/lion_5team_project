@@ -77,10 +77,10 @@ function OtherUserProfile() {
             <UserProfileMain userInfo={userInfo} userDetail={userDetail} url={VITE_API_BASE_URL} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <MyBoard userId={id} url={VITE_API_BASE_URL}/>
+            <MyBoard userId={id} url={VITE_API_BASE_URL} userDetail={userDetail}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            <Follow userId={id} />
+            <Follow userId={id} userDetail={userDetail}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={3}>
             {/* <UserQnA userInfo={userInfo} /> */}
