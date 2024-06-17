@@ -245,29 +245,25 @@ function BoardDetailModal({ open, handleClose }) {
     setShowTag(!showTag);
   }
 
-  const handleReplyClick = (id) => {
+  const handleReplyClick = (id, nickname) => {
     setAppliedId(id);
-    setReplyToUser(userInfo.nickname);
-    setApply(`@${userInfo.nickname} `);
+    setReplyToUser(nickname);
+    setApply(`@${nickname} `);
   }
 
-  
+
+
+
   const handleUpdateReply = (id, content) => {
     setEditReplyId(id);
     setEditReply(content);
   };
 
 
-
-
   const submitUpdateReplyHandler = async (replyId) => {
-    // Get the updated reply content
-    const updatedReplyContent = editReply;
-  
-    // Call the updateReply function with the replyId and updated content
+    const updatedReplyContent = editReply
     await updateReply(replyId, updatedReplyContent);
-  
-    // Reset the editReply and editReplyId state
+ 
     setEditReply('');
     setEditReplyId(null);
   };
@@ -509,7 +505,7 @@ function BoardDetailModal({ open, handleClose }) {
                         )}
                         <div style={{ display: 'flex', justifyContent: 'space-between'}}>
                           <button
-                            onClick={() => handleReplyClick(reply.id, reply.username)}
+                            onClick={() => handleReplyClick(reply.id, reply.nickname || reply.username)}
                             style={{
                               color: 'gray', fontSize: 'small',
                               marginTop: '5px'
