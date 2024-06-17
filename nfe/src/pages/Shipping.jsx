@@ -207,19 +207,9 @@ function ShippingScreen() {
                   onChange={(e) => setPayment(e.target.value)}
                 >
                   <FormControlLabel
-                    value="paypal"
-                    control={<Radio />}
-                    label="PayPal"
-                  />
-                  <FormControlLabel
                     value="toss"
                     control={<Radio />}
                     label="토스"
-                  />
-                  <FormControlLabel
-                    value="creditcard"
-                    control={<Radio />}
-                    label="신용카드"
                   />
                 </RadioGroup>
               </Box>
