@@ -6,8 +6,10 @@ import { Button, TextField } from "@mui/material";
 import { listQnADetails, updateQNA } from "../store/actions/qnaActions";
 import { useParams, useNavigate } from 'react-router-dom';
 import { qnaCreateReset } from "../store/slices/qnaSlices";
+import { mainAxiosInstance } from "../api/axiosInstances";
 
 function QAUpdateScreen() {
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState("");
   const [fileName, setFileName] = useState(null);
@@ -27,37 +29,22 @@ function QAUpdateScreen() {
 
     upload() {
       return this.loader.file.then((file) => {
-        localStorage.setItem("file", file.name);
-        setFileName(file.name);
+        const data = new FormData();
+        data.append("file", file);
+        setUploading(true);
 
-        return new Promise((resolve, reject) => {
-          const data = new FormData();
-          data.append("file", file);
-          setUploading(true);
-          fetch(`/qna/uploadImage/${QnaId}/`, {
-            method: "PUT",
-            body: data,
+        return mainAxiosInstance.put(`/qna/uploadImage/${QnaId}/`, data)
+          .then((response) => {
+            setUploading(false);
+            return { default: VITE_API_BASE_URL+response.data.url };
           })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.error) {
-                reject(data.error);
-                setUploading(false);
-              } else {
-                resolve({
-                  default: data.url,
-                });
-                setUploading(false);
-              }
-            })
-            .catch((error) => {
-              reject(error.message);
-            });
-        });
+          .catch((error) => {
+            setUploading(false);
+            return Promise.reject(error.message);
+          });
       });
     }
   }
-
   useEffect(() => {
     const parser = new DOMParser();
     const parsedHtml = parser.parseFromString(editorData, "text/html");
@@ -65,7 +52,7 @@ function QAUpdateScreen() {
     figures.forEach((figure) => {
       const img = figure.querySelector("img");
       if (img) {
-        img.src = "/images/" + fileName;
+        img.src = VITE_API_BASE_URL+"/images/" + fileName;
       }
     });
     const serializer = new XMLSerializer();
@@ -83,7 +70,6 @@ function QAUpdateScreen() {
     const formdata = new FormData(); 
     formdata.append("content", editorData);
     formdata.append("title", title);
-    formdata.append("product_url", "product_url");
 
     dispatch(updateQNA({formdata, QnaId}));
     // dispatch(qnaCreateReset());
