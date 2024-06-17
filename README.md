@@ -89,3 +89,6 @@ npm run dev
 npm i @portone/browser-sdk
 
 import * as PortOne from "@portone/browser-sdk/v2"; (반영완료)
+
+
+#풀리퀘테스트 예찬님
