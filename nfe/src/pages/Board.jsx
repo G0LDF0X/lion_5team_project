@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { listBoards } from "../store/actions/boardActions";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Skeleton from "@mui/material/Skeleton";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Grid, Box, Skeleton} from "@mui/material";
+import { Visibility, FavoriteBorder } from "@mui/icons-material";
 
 function StandardImageList() {
   const navigate = useNavigate();
@@ -56,22 +53,22 @@ function StandardImageList() {
                   loading="lazy"
                 />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-white text-lg font-bold mb-2">
-                    {board.title}
-                  </p>
-                  <div className="flex items-center text-white text-lg font-bold mb-2">
-                    <VisibilityIcon className="mr-1" />
-                    {board.show}
-                  </div>
-                  <div className="flex items-center text-white text-lg font-bold">
-                    <FavoriteBorderIcon className="mr-1" />
-                    {board.like}
-                  </div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <p className="text-white text-lg font-bold mb-2">
+                  {board.title}
+                </p>
+                <div className="flex items-center text-white text-lg font-bold mb-2">
+                  <Visibility className="mr-1" />
+                  {board.show}
+                </div>
+                <div className="flex items-center text-white text-lg font-bold">
+                  <FavoriteBorder className="mr-1" />
+                  {board.like}
                 </div>
               </div>
-            </Link>
-          ))
+            </div>
+          </Link>
+        ))
       )}
     </div>
   );

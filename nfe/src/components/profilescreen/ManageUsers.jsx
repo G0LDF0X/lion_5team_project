@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import { Edit, Delete, CheckCircle, Cancel } from '@mui/icons-material';
 
 function ManageUsers({ deleteUserHandler, users }) {
   return (
@@ -29,29 +26,29 @@ function ManageUsers({ deleteUserHandler, users }) {
                 <td className="py-3 px-6">{user.email}</td>
                 <td className="py-3 px-6 text-center">
                   {user.is_seller ? (
-                    <CheckCircleIcon className="text-green-500" />
+                    <CheckCircle className="text-green-500" />
                   ) : (
-                    <CancelIcon className="text-red-500" />
+                    <Cancel className="text-red-500" />
                   )}
                 </td>
                 <td className="py-3 px-6 text-center">
                   {user.is_staff ? (
-                    <CheckCircleIcon className="text-green-500" />
+                    <CheckCircle className="text-green-500" />
                   ) : (
-                    <CancelIcon className="text-red-500" />
+                    <Cancel className="text-red-500" />
                   )}
                 </td>
                 <td className="py-3 px-6 text-center flex justify-center">
                   <Link to={`/admin/user/${user.id}/edit`} className="text-blue-600 hover:text-blue-800">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
-                      <EditIcon />
+                      <Edit />
                     </button>
                   </Link>
                   <button
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
                     onClick={() => deleteUserHandler(user.id)}
                   >
-                    <DeleteIcon />
+                    <Delete />
                   </button>
                 </td>
               </tr>

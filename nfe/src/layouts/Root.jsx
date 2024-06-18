@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';

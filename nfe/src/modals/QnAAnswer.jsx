@@ -1,17 +1,11 @@
-import React, {  useState } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-
+import React, {  useState, lazy, Suspense } from "react";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 
 function QnAAnswer({ open, handleClose , submithandler}) {
   const [editorData, setEditorData] = useState("");
   const [title, setTitle] = useState("");
+  const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
+const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
 
  
 
@@ -27,6 +21,7 @@ function QnAAnswer({ open, handleClose , submithandler}) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          <Suspense fallback={<div>Loading...</div>}>
           <CKEditor
             editor={ClassicEditor}
             data={editorData}
@@ -35,6 +30,7 @@ function QnAAnswer({ open, handleClose , submithandler}) {
               setEditorData(data);
             }}
           />
+          </Suspense>
         </div>
       </DialogContent>
       <DialogActions>

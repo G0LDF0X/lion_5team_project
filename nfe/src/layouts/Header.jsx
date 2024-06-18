@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -18,8 +18,8 @@ import {
   Pets,
   QuestionAnswer,
   AccountCircle,
+  Photo
 } from "@mui/icons-material";
-import PhotoIcon from '@mui/icons-material/Photo';
 import SearchBox from "./SearchBox";
 import Badge from '@mui/material/Badge';
 
@@ -67,7 +67,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             Products
           </Button>
           <Button
-            startIcon={<PhotoIcon />}
+            startIcon={<Photo />}
             component={Link}
             to="/board"
             className="text-gray-700 hover:text-gray-900 transition-colors duration-300"
@@ -100,7 +100,9 @@ function Header({ openModal, openPostModal, openSideBar }) {
             <div className="flex items-center">
               <IconButton onClick={openSideBar} color="inherit">
                 {userInfo.image_url ? (
-                  <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+                  <Avatar src={VITE_API_BASE_URL + userInfo.image_url}
+                  alt = {userInfo.username}
+                   />
                 ) : (
                   <Avatar>{userInfo.username[0]}</Avatar>
                 )}

@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, ListItemIcon, Avatar } from '@mui/material';
+import { Inbox, Mail, Logout } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/actions/userActions';
 
@@ -49,7 +46,7 @@ export default function SideBar({ toggleDrawer, open }) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <MailIcon className="text-gray-700" />
+                  <Mail className="text-gray-700" />
                 </ListItemIcon>
                 <ListItemText className="text-gray-700" primary="나의 쇼핑" />
               </ListItemButton>
@@ -59,7 +56,7 @@ export default function SideBar({ toggleDrawer, open }) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <InboxIcon className="text-gray-700" />
+                  <Inbox className="text-gray-700" />
                 </ListItemIcon>
                 <ListItemText className="text-gray-700" primary="나의 리뷰" />
               </ListItemButton>
@@ -69,7 +66,7 @@ export default function SideBar({ toggleDrawer, open }) {
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <MailIcon className="text-gray-700" />
+                  <Mail className="text-gray-700" />
                 </ListItemIcon>
                 <ListItemText className="text-gray-700" primary="설정" />
               </ListItemButton>
@@ -81,7 +78,7 @@ export default function SideBar({ toggleDrawer, open }) {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <InboxIcon className="text-gray-700" />
+                    <Inbox className="text-gray-700" />
                   </ListItemIcon>
                   <ListItemText className="text-gray-700" primary="판매자 관리" />
                 </ListItemButton>
@@ -93,7 +90,7 @@ export default function SideBar({ toggleDrawer, open }) {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <MailIcon className="text-gray-700" />
+                    <Mail className="text-gray-700" />
                   </ListItemIcon>
                   <ListItemText className="text-gray-700" primary="관리자" />
                 </ListItemButton>
@@ -107,7 +104,7 @@ export default function SideBar({ toggleDrawer, open }) {
         <ListItem disablePadding>
           <ListItemButton onClick={handleLogout}>
             <ListItemIcon>
-              <LogoutIcon className="text-gray-700" />
+              <Logout className="text-gray-700" />
             </ListItemIcon>
             <ListItemText className="text-gray-700" primary="로그아웃" />
           </ListItemButton>

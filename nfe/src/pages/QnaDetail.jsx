@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { listQnADetails, deleteQnA } from "../store/actions/qnaActions";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+import { listQnADetails, createQNAAnswer, updateQNA, deleteQnA } from "../store/actions/qnaActions";
+import { Button, List, ListItem, ListItemText, Card, CardContent, Typography } from "@mui/material";
 import QnAAnswer from "../modals/QnAAnswer";
 
 function QADetailScreen() {
@@ -51,6 +45,16 @@ function QADetailScreen() {
         });
     }
   };
+  const submithandler = (title, content) => { 
+    dispatch(createQNAAnswer(id, title, content))
+      .then(() => {
+        dispatch(listQnADetails(id));
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Q&A 답변 생성 오류:", error);
+      });
+  }
     
 
   return (
