@@ -10,22 +10,6 @@ const getAuthHeaders = (getState) => {
     Authorization: `Bearer ${userInfo.access}`,
   };
 };
-// export const fetchProducts = createAsyncThunk(
-//   'products/fetchProducts',
-//   async (_, { getState, rejectWithValue }) => {
-//     const { products: { lastFetched } } = getState();
-//     // Check if the products were fetched within the last 5 minutes
-//     if (lastFetched && (Date.now() - lastFetched) < 5 * 60 * 1000) {
-//       return rejectWithValue('Products already fetched recently');
-//     }
-//     try {
-//       const products = await fetchProductsApi();
-//       return products;
-//     } catch (error) {
-//       return rejectWithValue(error.message);
-//     }
-//   }
-// );
 export const listProducts = createAsyncThunk(
   'products/listProducts',
   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue, getState }) => {
