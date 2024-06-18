@@ -67,9 +67,7 @@ function MyShoppingScreen() {
           <Tab label="주문배송목록" {...a11yProps(0)} />
           <Tab label="상품 스크랩북" {...a11yProps(1)} />
           <Tab label="나의문의내역" {...a11yProps(2)} />
-          <Tab label="포인트" {...a11yProps(3)} />
-          <Tab label="공지사항" {...a11yProps(4)} />
-          <Tab label="고객센터" {...a11yProps(5)} />
+          <Tab label="고객센터" {...a11yProps(3)} />
           
         </Tabs>
       </Box>
@@ -80,16 +78,10 @@ function MyShoppingScreen() {
         <BookMarks bookMarkItems={bookMarkItems} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Item Three
+        문의내역 페이지
       </CustomTabPanel>
         <CustomTabPanel value={value} index={3}>
-            Item Four
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={4}>
-            Item Five
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={5}>
-            Item Six
+            고객센터 페이지
         </CustomTabPanel>
     </Box>
       </CustomTabPanel>

@@ -20,20 +20,31 @@ function QAScreen() {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const qnaCreate = useSelector((state) => state.qnaCreate);
   const { success, qna } = qnaCreate;
+  
   useEffect(() => {
     dispatch(listQNA());
   }, [navigate, dispatch]);
 
   const qnaCreateHandler = () => {
-    dispatch(createQNA());}
+    dispatch(createQNA());
+  };
 
   useEffect(() => {
     if (success) {
       navigate(`/qna/update/${qna.id}`);
-
     }
-  }
-  , [success, navigate, qna]);
+  }, [success, navigate, qna]);
+
+  // QNA 글을 최신순으로 정렬
+  const sortedQnas = [...qnas].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  // 날짜와 시간 포맷팅 함수
+  const formatDateTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString('ko-KR', options);
+  };
+
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
       <Box className="flex justify-between items-center mb-8">
@@ -50,7 +61,7 @@ function QAScreen() {
         </Button>
       </Box>
       <Grid container spacing={4}>
-        {qnas.map((qna) => (
+        {sortedQnas.map((qna) => (
           <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
             <Card className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
               {qna.image_url && (
@@ -71,7 +82,10 @@ function QAScreen() {
                   </Link>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="div">
-                  <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "")  }} className="text-gray-700" />
+                  <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "") }} className="text-gray-700" />
+                </Typography>
+                <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+                  {formatDateTime(qna.created_at)}
                 </Typography>
               </CardContent>
             </Card>
