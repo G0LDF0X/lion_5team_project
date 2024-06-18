@@ -10,8 +10,7 @@ import {
   Button,
   Avatar,
   Typography,
-  Box,
-  InputBase
+  Box
 } from "@mui/material";
 import {
   ShoppingCart,
@@ -23,7 +22,6 @@ import {
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchBox from "./SearchBox";
 import Badge from '@mui/material/Badge';
-import { mainAxiosInstance } from "../api/axiosInstances";
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
@@ -31,7 +29,6 @@ function Header({ openModal, openPostModal, openSideBar }) {
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log(cartItems);
   
   const handlePostMenu = (event) => {
     setPostMenuAnchorEl(event.currentTarget);

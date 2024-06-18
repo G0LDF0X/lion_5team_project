@@ -10,19 +10,51 @@ import {
   deleteProductQnA,
 } from "../actions/productActions";
 
+// export const productListSlice = createSlice({
+//   name: "productList",
+//   initialState: { loading: false, products: [] },
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(listProducts.pending, (state) => {
+//         state.loading = true;
+//         state.products = [];
+//       })
+//       .addCase(listProducts.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.products = action.payload;
+//       })
+//       .addCase(listProducts.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       });
+//   },
+// });
 export const productListSlice = createSlice({
-  name: "productList",
-  initialState: { loading: false, products: [] },
+  name: 'products',
+  initialState: {
+    products: [],
+    loading: false,
+    error: null,
+    cache: {}, // Initialize cache as an empty object
+    fetchTime: null, // Initialize fetchTime as null
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(listProducts.pending, (state) => {
         state.loading = true;
-        state.products = [];
+        state.error = null;
       })
       .addCase(listProducts.fulfilled, (state, action) => {
+        const { data, cacheKey, fromCache } = action.payload;
+        state.products = data;
         state.loading = false;
-        state.products = action.payload;
+        if (!fromCache) {
+          state.cache[cacheKey] = data; // Store fetched data in cache
+          state.fetchTime = Date.now(); // Update fetchTime
+        }
+        
       })
       .addCase(listProducts.rejected, (state, action) => {
         state.loading = false;
@@ -30,7 +62,6 @@ export const productListSlice = createSlice({
       });
   },
 });
-
 export const productDetailsSlice = createSlice({
   name: "productDetails",
   initialState: { loading: false, product: {}, error: "" },

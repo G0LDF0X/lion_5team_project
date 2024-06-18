@@ -22,10 +22,18 @@ const getAuthHeaders = (getState) => {
 
 export const listBoards = createAsyncThunk(
   "boardList/listBoards",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
+
+    const state = getState();
+    const cache = state.board.cache['boards'];
+    const fetchTime = state.board.fetchTime;
+    if (cache&& fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+      console.log('Cache:', cache);
+      return { data: cache, fromCache: true, };
+    }
     try {
       const res = await mainAxiosInstance.get(`/board`);
-      return res.data;
+      return {data:res.data, fromCache: false};
     } catch (error) {
       return rejectWithValue(handleError(error));
     }
