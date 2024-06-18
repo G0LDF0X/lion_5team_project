@@ -1,18 +1,6 @@
 services:
-<<<<<<< HEAD
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.1
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=1bwSAqBSSorcm3ZyagqJ
-      - xpack.security.enabled=false
-      # - xpack.security.enabled=true
-=======
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
->>>>>>> main
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
     user: "0"
