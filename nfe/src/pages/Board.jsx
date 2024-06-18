@@ -15,6 +15,10 @@ function StandardImageList() {
   const board = useSelector((state) => state.board);
   const { boards, loading } = board;
 
+  useEffect(() => {
+    dispatch(listBoards());
+  }, [navigate]);
+
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
      {loading ? (

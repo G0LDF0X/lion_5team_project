@@ -10,8 +10,7 @@ import {
   Button,
   Avatar,
   Typography,
-  Box,
-  InputBase
+  Box
 } from "@mui/material";
 import {
   ShoppingCart,
@@ -23,7 +22,6 @@ import {
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchBox from "./SearchBox";
 import Badge from '@mui/material/Badge';
-import { mainAxiosInstance } from "../api/axiosInstances";
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);

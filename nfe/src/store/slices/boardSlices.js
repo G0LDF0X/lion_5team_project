@@ -15,6 +15,9 @@ const initialState = {
   boardDetail: {},
   boards: [],
   replies: [],
+  cache: {},
+  fetchTime: null,
+  fromCache: false,
 };
 
 const pendingReducer = (state) => {
@@ -23,9 +26,15 @@ const pendingReducer = (state) => {
 };
 
 const fulfilledListReducer = (state, action) => {
+  const { data, fromCache } = action.payload;
   state.loading = false;
-  state.boards = action.payload;
+  state.boards = data;
   state.error = null;
+  if (!fromCache) {
+    state.cache['boards'] = data;
+    state.fetchTime = Date.now();
+  }
+
 };
 
 const fulfilledDetailsReducer = (state, action) => {
