@@ -13,9 +13,7 @@ function Footer() {
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
               PetPals
             </Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Teach the world online. Create an online video course, reach students across the globe, and earn money.
-            </Typography>
+        
           </Grid>
           <Grid item xs={12} md={3}>
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>

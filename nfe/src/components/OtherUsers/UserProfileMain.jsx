@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
+// import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
+import Button from '@mui/material/Button';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+// import { BookmarkBorder, FavoriteBorder, ConfirmationNumberOutlined } from '@mui/icons-material';
+import BookmarkBorder from '@mui/icons-material/BookmarkBorder';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import ConfirmationNumberOutlined from '@mui/icons-material/ConfirmationNumberOutlined';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import { Link, useAsyncError } from 'react-router-dom';
+
+const BookmarkBorderIcon = BookmarkBorder;
+const FavoriteBorderIcon = FavoriteBorder;
+const ConfirmationNumberOutlinedIcon = ConfirmationNumberOutlined;
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);

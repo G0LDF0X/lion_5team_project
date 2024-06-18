@@ -1,6 +1,12 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography, Grid, Skeleton } from '@mui/material';
+
 import Carousel from 'react-multi-carousel';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+
 import 'react-multi-carousel/lib/styles.css';
 import Product from '../Product';
 import Message from '../Message';

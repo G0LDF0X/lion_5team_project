@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { listQnADetails, createQNAAnswer, updateQNA, deleteQnA } from "../store/actions/qnaActions";
-import { Button, List, ListItem, ListItemText, Card, CardContent, Typography } from "@mui/material";
+import { listQnADetails, deleteQnA } from "../store/actions/qnaActions";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import QnAAnswer from "../modals/QnAAnswer";
 
 function QADetailScreen() {

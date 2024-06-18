@@ -11,7 +11,9 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CardActions, IconButton, Checkbox, Box } from "@mui/material";
-import { FavoriteBorder, Favorite, Share } from "@mui/icons-material";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import Favorite from "@mui/icons-material/Favorite";
+import Share from "@mui/icons-material/Share";
 import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";

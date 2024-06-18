@@ -8,16 +8,12 @@ export default defineConfig({
     react(),
     polyfillNode(),
     viteCompression({
-      // 압축 알고리즘 지정, 기본적으로는 'gzip'을 사용
-      algorithm: "gzip",
-      // 압축된 파일의 확장자를 '.gz'로 설정
-      ext: ".gz",
+      algorithm: 'gzip',
+      ext: '.gz',
+    }),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
     }),
   ],
-  // resolve: {
-  //   alias: {
-  //     // Polyfill `global` as `globalThis`
-  //     'global': 'globalthis',
-  //   },
-  // },
 });

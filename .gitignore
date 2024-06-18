@@ -77,6 +77,7 @@ docs/_build/
 .pybuilder/
 target/
 node_modules/
+.vite/
 package-lock.json
 .env
 # Jupyter Notebook

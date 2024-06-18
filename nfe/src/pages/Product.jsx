@@ -9,13 +9,10 @@ import {
   removeFromBookMark,
 } from "../store/actions/bookMarkActions";
 import { addToCart, listCartItems } from "../store/actions/cartActions";
-
-import {
-  Snackbar,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 import { getQnA } from "../store/slices/productSlices";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -27,7 +24,7 @@ import { listReviewDetails } from "../store/actions/reviewActions";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import { resetSuccess } from "../store/slices/cartSlices";
 import { reviewCreateReset } from "../store/slices/reviewSlices";
-import { createProductQnA, deleteProductQnA, updateProductQnA } from "../store/actions/productActions";
+import { createProductQnA, deleteProductQnA } from "../store/actions/productActions";
 import { productQnaReset } from "../store/slices/productSlices";
 function ProductDetail() {
   const [qty, setQty] = useState(1);

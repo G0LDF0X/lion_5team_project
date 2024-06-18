@@ -1,6 +1,9 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Typography, Box, Button } from "@mui/material";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { listProducts } from "../store/actions/productActions";
 import { listBoards } from "../store/actions/boardActions";
 import { listQNA } from "../store/actions/qnaActions";
