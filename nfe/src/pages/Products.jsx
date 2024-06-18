@@ -15,9 +15,11 @@ function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태 추가
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products, totalPages, currentPage } = productList;
+  const { loading, error, products, totalPages, currentPage: apiCurrentPage } = productList;
 
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -29,23 +31,27 @@ function ProductsScreen() {
   const suggestions = params.get('s') || ''; 
 
   useEffect(() => {
-    dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
+    dispatch(listProducts({query:query, page:currentPage, category:selectedCategory, suggestions:suggestions})); // currentPage로 수정
 
     if (selectedCategory.length === 1) {
       fetchTags(selectedCategory[0]);
     } else {
       setTags([]);
     }
-  }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
+  }, [dispatch, query, tag, currentPage, selectedCategory, suggestions ]); // currentPage로 수정
 
   const categories = useCategory(); 
 
   const handleCategoryChange = (e) => {
-    if (e.target.checked) {
-      setSelectedCategory((prev) => [...prev, e.target.value]);
-    } else {
-      setSelectedCategory((prev) => prev.filter((cat) => cat !== e.target.value));
-    }
+    const value = e.target.value;
+    const newSelectedCategories = e.target.checked
+      ? [...selectedCategory, value]
+      : selectedCategory.filter((cat) => cat !== value);
+
+    setSelectedCategory(newSelectedCategories);
+    setCurrentPage(1);  // 카테고리 변경 시 페이지를 1로 초기화
+    navigate(`?query=${query}&page=1&category=${newSelectedCategories.join(',')}`);
+    dispatch(listProducts({ query, page: 1, category: newSelectedCategories, suggestions }));
   };
 
   const fetchTags = async (categoryId) => {
@@ -58,8 +64,8 @@ function ProductsScreen() {
   };
 
   const handlePageChange = (event, value) => {
-    setCurrentPage(value)
-    navigate(`?query=${query}&page=${curre}`);
+    setCurrentPage(value); // currentPage 상태 업데이트
+    navigate(`?query=${query}&page=${value}`);
     dispatch(listProducts({query:query, page:value, category:selectedCategory, suggestions:suggestions}));
   };
 
@@ -120,7 +126,7 @@ function ProductsScreen() {
           )}
           <Pagination
             count={totalPages} // 총 페이지 수
-            page={parseInt(page, 10)} // 현재 페이지
+            page={parseInt(currentPage, 10)} // 현재 페이지를 currentPage로 수정
             onChange={handlePageChange} // 페이지 변경 핸들러
             sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}
           />
@@ -131,6 +137,7 @@ function ProductsScreen() {
 }
 
 export default ProductsScreen;
+
 // let isLoading = false;
 // let page = 1;
 
