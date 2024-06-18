@@ -37,6 +37,7 @@ export const productListSlice = createSlice({
     loading: false,
     error: null,
     cache: {}, // Initialize cache as an empty object
+    fetchTime: null, // Initialize fetchTime as null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -51,6 +52,7 @@ export const productListSlice = createSlice({
         state.loading = false;
         if (!fromCache) {
           state.cache[cacheKey] = data; // Store fetched data in cache
+          state.fetchTime = Date.now(); // Update fetchTime
         }
         
       })

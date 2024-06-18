@@ -32,7 +32,8 @@ export const listProducts = createAsyncThunk(
     try {
       const state = getState();
       const cacheKey = `${query}-${page}-${category.join(',')}-${suggestions}`;
-      if (state.productList.cache[cacheKey]) {
+      const fetchTime = state.productList.fetchTime;
+      if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
         return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true };
       }
 
