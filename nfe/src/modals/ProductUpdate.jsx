@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Modal, Box, Chip, Stack } from "@mui/material";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+
 import Message from "../components/Message";
 import Loading from "../components/Loading";
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { updateProduct } from "../store/actions/productActions";
 import useCategory from "../hook/useCategory";
 function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [name, setName] = useState(product.name);

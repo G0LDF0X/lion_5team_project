@@ -1,13 +1,12 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  CircularProgress,
-  Typography,
-  Grid,
-  Skeleton,
-  Avatar,
-} from "@mui/material";
+
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+
 import PropTypes from "prop-types";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";

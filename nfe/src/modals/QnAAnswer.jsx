@@ -1,7 +1,13 @@
 import React, {  useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+
 
 function QnAAnswer({ open, handleClose , submithandler}) {
   const [editorData, setEditorData] = useState("");

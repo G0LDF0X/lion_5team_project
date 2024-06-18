@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { register } from '../store/actions/userActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { mainAxiosInstance } from "../api/axiosInstances";
 import { useFetch } from '../hook/useFetch';
 import AddressSearch from '../components/AddressSearch';
 

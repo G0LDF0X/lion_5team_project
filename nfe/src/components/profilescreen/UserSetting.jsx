@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { updateUserProfile, getUserDetail, logout, deleteUserAccount } from "../../store/actions/userActions";
-import {mainAxiosInstance} from "../../api/axiosInstances";
-import { clearSuccess } from "../../store/slices/userSlices";
+import {
+  updateUserProfile,
+  getUserDetail,
+  logout,
+  deleteUserAccount,
+} from "../../store/actions/userActions";
+import { mainAxiosInstance } from "../../api/axiosInstances";
 
 function UserSetting() {
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const { userInfo, userDetail, updateSuccess, deleteSuccess } = user;
   const [message, setMessage] = useState("");
@@ -17,19 +21,18 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     if (deleteSuccess) {
-      alert('회원 탈퇴가 완료되었습니다.');
+      alert("회원 탈퇴가 완료되었습니다.");
       dispatch(logout());
       navigate("/");
     }
   }, [deleteSuccess, navigate, dispatch]);
 
-
   useEffect(() => {
     if (updateSuccess) {
-      alert('수정이 완료되었습니다.');
+      alert("수정이 완료되었습니다.");
       // window.location.reload();
-        dispatch(logout());
-        navigate("/");
+      dispatch(logout());
+      navigate("/");
     }
   }, [updateSuccess, dispatch, navigate]);
 
@@ -41,8 +44,8 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     if (userDetail && userDetail.user) {
-      nicknameRef.current.value = userDetail.nickname; 
-      emailRef.current.value = userDetail.email; 
+      nicknameRef.current.value = userDetail.nickname;
+      emailRef.current.value = userDetail.email;
     }
   }, [userDetail]);
 
@@ -54,11 +57,15 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     formData.append("image_url", image);
 
     try {
-      const response = await mainAxiosInstance.put("/users/updateImage/", formData, {
-        headers: {
-          Authorization: `Bearer ${userInfo.access}`,
-        },
-      });
+      const response = await mainAxiosInstance.put(
+        "/users/updateImage/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${userInfo.access}`,
+          },
+        }
+      );
       if (response.status === 200) {
         setMessage("Image uploaded successfully");
         dispatch(getUserDetail(userInfo.id));
@@ -83,34 +90,32 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm('정말로 탈퇴하시겠습니까?')) {
-      dispatch(deleteUserAccount())
-        .catch((error) => {
-          console.error('회원 탈퇴 실패:', error);
-        });
+    if (window.confirm("정말로 탈퇴하시겠습니까?")) {
+      dispatch(deleteUserAccount()).catch((error) => {
+        console.error("회원 탈퇴 실패:", error);
+      });
     }
   };
-
 
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-center">
         <div className="flex flex-col items-center">
-        <label htmlFor="fileInput">
-            {userDetail&& userDetail.image_url ? (
-                <img
-                    src={VITE_API_BASE_URL + userDetail.image_url}
-                    alt="User"
-                    className="rounded-full w-40 h-40 object-cover"
-                />
+          <label htmlFor="fileInput">
+            {userDetail && userDetail.image_url ? (
+              <img
+                src={VITE_API_BASE_URL + userDetail.image_url}
+                alt="User"
+                className="rounded-full w-40 h-40 object-cover"
+              />
             ) : (
-                <img
-                    src="https://placehold.co/400"
-                    alt="Placeholder"
-                    className="rounded-full w-40 h-40 object-cover"
-                />
+              <img
+                src="https://placehold.co/400"
+                alt="Placeholder"
+                className="rounded-full w-40 h-40 object-cover"
+              />
             )}
-        </label>
+          </label>
           <input
             type="file"
             id="fileInput"
@@ -130,7 +135,7 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
                 type="text"
                 id="nickname"
                 ref={nicknameRef}
-                defaultValue={userDetail&& userDetail.nickname}
+                defaultValue={userDetail && userDetail.nickname}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
                 required
               />
@@ -155,10 +160,11 @@ const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
               >
                 Update
               </button>
-              <button 
-                type = "button"
-                onClick={handleDeleteAccount} 
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+              >
                 Delete Account
               </button>
             </div>

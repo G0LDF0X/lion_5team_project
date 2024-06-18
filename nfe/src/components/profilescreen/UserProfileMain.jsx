@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import { Link  } from 'react-router-dom';
 
-function UserProfileMain({ userInfo, user, url}) {
-  const [value, setValue] = useState(0);
+function UserProfileMain({ userInfo, user}) {
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [followers, setFollowers] = useState([]);
@@ -91,6 +90,7 @@ try {
                                 <span style={{ color: hoverFollowings ? 'blue' : 'initial', textDecoration: hoverFollowings ? 'underline' : 'none' }}> | 팔로잉 {followingCount}</span>
                             </h6>
                                 </div>
+
           </div>
         </div>
     

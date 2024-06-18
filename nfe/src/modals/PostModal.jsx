@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useDropzone } from 'react-dropzone';
 import TagInput from '../components/TagInput';
-import { mainAxiosInstance } from '../api/axiosInstances';
 import { resetSuccess } from '../store/slices/boardSlices';
 import { createBoard } from '../store/actions/boardActions';
 import { useDispatch, useSelector } from 'react-redux';

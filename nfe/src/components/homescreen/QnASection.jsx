@@ -1,6 +1,10 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography, Grid, Skeleton } from '@mui/material';
 import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 import { Link } from 'react-router-dom';
 import Message from '../Message';
 function Media() {

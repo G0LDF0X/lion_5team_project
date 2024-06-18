@@ -2,22 +2,34 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import polyfillNode from 'rollup-plugin-polyfill-node';
 import viteCompression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   plugins: [
     react(),
     polyfillNode(),
     viteCompression({
-      // 압축 알고리즘 지정, 기본적으로는 'gzip'을 사용
-      algorithm: "gzip",
-      // 압축된 파일의 확장자를 '.gz'로 설정
-      ext: ".gz",
+      algorithm: 'gzip',
+      ext: '.gz',
+    }),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+    }),
+    visualizer({
+      filename: './dist/stats.html',
+      open: true,
     }),
   ],
-  // resolve: {
-  //   alias: {
-  //     // Polyfill `global` as `globalThis`
-  //     'global': 'globalthis',
-  //   },
-  // },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
+        },
+      },
+    },
+  },
 });

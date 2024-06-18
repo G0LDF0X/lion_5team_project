@@ -10,7 +10,9 @@ import Follow from "../components/profilescreen/Follow";
 import UserQnA from "../components/profilescreen/UserQnA";
 import Bookmark from "../components/profilescreen/Bookmark";
 import Like from "../components/profilescreen/Like";
-import { Tab, Tabs, Box } from "@mui/material";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Box from "@mui/material/Box";
 
 
 function CustomTabPanel({ children, value, index, ...other }) {

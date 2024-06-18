@@ -10,6 +10,7 @@ import {
 
 const initialState = {
   loading: false,
+  detailLoading: false, 
   success: false,
   error: null,
   boardDetail: {},
@@ -22,6 +23,10 @@ const initialState = {
 
 const pendingReducer = (state) => {
   state.loading = true;
+  state.error = null;
+};
+const pendingDetailReducer = (state) => {
+  state.detailLoading = true;
   state.error = null;
 };
 
@@ -39,6 +44,7 @@ const fulfilledListReducer = (state, action) => {
 
 const fulfilledDetailsReducer = (state, action) => {
   state.loading = false;
+  state.detailLoading = false;
   state.boardDetail = action.payload.board;
   state.replies = action.payload.replies || [];
   state.error = null;
@@ -75,7 +81,7 @@ export const boardSlice = createSlice({
       .addCase(listBoards.pending, pendingReducer)
       .addCase(listBoards.fulfilled, fulfilledListReducer)
       .addCase(listBoards.rejected, rejectedReducer)
-      .addCase(getBoardDetails.pending, pendingReducer)
+      .addCase(getBoardDetails.pending, pendingDetailReducer)
       .addCase(getBoardDetails.fulfilled, fulfilledDetailsReducer)
       .addCase(getBoardDetails.rejected, rejectedReducer)
       .addCase(createBoard.pending, pendingReducer)
