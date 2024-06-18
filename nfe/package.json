@@ -1,7 +1,6 @@
 {
   "name": "nfe",
   "private": true,
-  "proxy": "http://127.0.0.1:8000",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -28,7 +27,6 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
-    "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^14.2.3",
     "react-modal": "^3.16.1",
     "react-multi-carousel": "^2.8.5",
