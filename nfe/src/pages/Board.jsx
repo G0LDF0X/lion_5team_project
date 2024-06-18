@@ -20,35 +20,38 @@ function StandardImageList() {
 
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
-     {loading ? (
-  <Grid container wrap="nowrap" direction="column">
-    {Array.from(new Array(3)).map((_, rowIndex) => (
-      <Grid container key={rowIndex} wrap="nowrap">
-        {Array.from(new Array(3)).map((_, colIndex) => (
-          <Box key={colIndex} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
-            <Skeleton variant="rectangular" width={490} height={490} />
-          </Box>
-        ))}
-      </Grid>
-    ))}
+      {loading ? (
+        <Grid container wrap="nowrap" direction="column">
+          {Array.from(new Array(3)).map((_, rowIndex) => (
+            <Grid container key={rowIndex} wrap="nowrap">
+              {Array.from(new Array(3)).map((_, colIndex) => (
+                <Box key={colIndex} sx={{ width: 490, marginRight: 0.5, my: 5 }}>
+                  <Skeleton variant="rectangular" width={490} height={490} />
+                </Box>
+              ))}
+            </Grid>
+          ))}
         </Grid>
       ) : (
-        boards.map((board) => (
-          <Link
-            key={board.id}
-            to={`/board/${board.id}`}
-            state={{ background: location }}
-          >
-            <div
+        boards
+          .slice()
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .map((board) => (
+            <Link
               key={board.id}
-              className="relative w-full h-full cursor-pointer"
+              to={`/board/${board.id}`}
+              state={{ background: location }}
             >
-              <img
-                src={`${VITE_API_BASE_URL}${board.image_url}`}
-                alt={board.title}
-                className="w-full h-full object-cover rounded shadow-lg"
-                loading="lazy"
-              />
+              <div
+                key={board.id}
+                className="relative w-full h-full cursor-pointer"
+              >
+                <img
+                  src={`${VITE_API_BASE_URL}${board.image_url}`}
+                  alt={board.title}
+                  className="w-full h-full object-cover rounded shadow-lg"
+                  loading="lazy"
+                />
 
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300">
                 <p className="text-white text-lg font-bold mb-2">
