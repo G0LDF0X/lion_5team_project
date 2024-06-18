@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import polyfillNode from 'rollup-plugin-polyfill-node';
 import viteCompression from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default defineConfig({
   plugins: [
     react(),
-    polyfillNode(),
+    commonjs({
+      include: /node_modules/,
+    }),
     viteCompression({
       algorithm: 'gzip',
       ext: '.gz',
@@ -21,6 +23,9 @@ export default defineConfig({
       open: true,
     }),
   ],
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'react-redux'],
+  },
   build: {
     rollupOptions: {
       output: {

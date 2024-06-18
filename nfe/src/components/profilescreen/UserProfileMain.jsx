@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BookmarkBorder from '@mui/icons-material/BookmarkBorder';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import ConfirmationNumberOutlined from '@mui/icons-material/ConfirmationNumberOutlined';
+import { BottomNavigationAction, BottomNavigation } from '@mui/material';
+import { BookmarkBorder, FavoriteBorder, ConfirmationNumberOutlined } from '@mui/icons-material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
 function UserProfileMain({ userInfo, user, url}) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -18,8 +18,8 @@ import {
   Pets,
   QuestionAnswer,
   AccountCircle,
+  Photo
 } from "@mui/icons-material";
-import PhotoIcon from '@mui/icons-material/Photo';
 import SearchBox from "./SearchBox";
 import Badge from '@mui/material/Badge';
 
@@ -67,7 +67,7 @@ function Header({ openModal, openPostModal, openSideBar }) {
             Products
           </Button>
           <Button
-            startIcon={<PhotoIcon />}
+            startIcon={<Photo />}
             component={Link}
             to="/board"
             className="text-gray-700 hover:text-gray-900 transition-colors duration-300"

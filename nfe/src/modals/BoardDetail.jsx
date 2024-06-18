@@ -8,15 +8,12 @@ import {
   updateBoard,
   deleteBoard,
 } from "../store/actions/boardActions";
-import CloseIcon from "@mui/icons-material/Close";
+import { Close, FavoriteBorder, Favorite, Share, AddCircleRounded } from "@mui/icons-material";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { CardActions, IconButton, Checkbox, Box } from "@mui/material";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import Favorite from "@mui/icons-material/Favorite";
-import Share from "@mui/icons-material/Share";
 import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+// import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 const StyledCheckbox = styled(Checkbox)({
   "&.Mui-checked": {
     color: "#ff6d75",
@@ -282,7 +279,7 @@ function BoardDetailModal({ open, handleClose }) {
           onClick={handleClose}
           className="absolute top-2 right-2 p-1 rounded-full bg-gray-200 hover:bg-gray-300"
         >
-          <CloseIcon />
+          <Close />
         </button>
         {detailLoading ? (
           <div className="w-full flex justify-center items-center p-8">
@@ -350,7 +347,7 @@ function BoardDetailModal({ open, handleClose }) {
                               left: `${tag.x}px`,
                             }}
                           >
-                            <AddCircleRoundedIcon
+                            <AddCircleRounded
                               style={{ fontSize: 30, color: "yellow" }}
                             />
                             <TagInfo className="tag-info">

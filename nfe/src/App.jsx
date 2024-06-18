@@ -1,5 +1,4 @@
-import './App.css';
-import { createBrowserRouter, Outlet, RouterProvider, useLocation } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import RootLayout from './layouts/Root';
 import Home from './pages/home';
 import BoardPage from './pages/Board';
@@ -12,7 +11,6 @@ import ProductDetail from './pages/Product';
 import ProductsScreen from './pages/Products';
 import UpdateReviewScreen from './pages/UpdateReview';
 import QAScreen from './pages/QnA';
-import CreateQnAScreen from './pages/CreateQnA';
 import QAUpdateScreen from './pages/UpdateQnA';
 import QADetailScreen from './pages/QnaDetail';
 import CartScreen from './pages/Cart';
@@ -44,7 +42,6 @@ const routers = createBrowserRouter([
       { path: '/items', element: <ProductsScreen /> },
       { path: '/items/review/update/:id', element: <UpdateReviewScreen /> },
       { path: '/qna', element: <QAScreen /> },
-      { path: '/qna/create', element: <CreateQnAScreen /> },
       { path: '/qna/update/:id', element: <QAUpdateScreen /> },
       { path: '/qna/detail/:id', element: <QADetailScreen /> },
       { path: '/cart', element: <CartScreen /> },

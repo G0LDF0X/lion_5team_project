@@ -1,7 +1,6 @@
 import React, { useEffect, lazy, Suspense, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
+import { Container, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
 import { listBoards } from "../store/actions/boardActions";
 import { listQNA } from "../store/actions/qnaActions";

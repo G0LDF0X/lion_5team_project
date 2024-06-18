@@ -1,8 +1,6 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link as MuiLink } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
+import { Box, Grid, Typography, Link as MuiLink } from '@mui/material';
+import { GitHub, Instagram, Facebook } from '@mui/icons-material';
 
 function Footer() {
   return (
@@ -82,13 +80,13 @@ function Footer() {
           <Typography variant="body2">&copy; 2024 PetPals, Inc.</Typography>
           <Box>
             <MuiLink href="https://github.com/G0LDF0X/lion_5team_project" color="inherit" underline="hover" sx={{ mr: 1 }}>
-              <GitHubIcon sx={{ width: 24, height: 24 }} />
+              <GitHub sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
-              <FacebookIcon sx={{ width: 24, height: 24 }} />
+              <Facebook sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
-              <InstagramIcon sx={{ width: 24, height: 24 }} />
+              <Instagram sx={{ width: 24, height: 24 }} />
             </MuiLink>
             <MuiLink href="#" color="inherit" underline="hover">
               <i className="fas fa-globe mr-1"></i> English

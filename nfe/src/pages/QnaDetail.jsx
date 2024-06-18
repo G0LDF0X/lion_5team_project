@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listQnADetails, deleteQnA } from "../store/actions/qnaActions";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+import { Button, Card, CardContent, Typography, List, ListItem, ListItemText } from "@mui/material";
 import QnAAnswer from "../modals/QnAAnswer";
 
 function QADetailScreen() {

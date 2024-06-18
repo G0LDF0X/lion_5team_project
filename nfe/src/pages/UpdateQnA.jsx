@@ -1,15 +1,17 @@
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import React, { useEffect, useState } from "react";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import {Button, TextField} from "@mui/material";
 import { listQnADetails, updateQNA } from "../store/actions/qnaActions";
 import { useParams, useNavigate } from 'react-router-dom';
 import { qnaCreateReset } from "../store/slices/qnaSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
 
 function QAUpdateScreen() {
+
+const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
+const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState("");
@@ -101,6 +103,7 @@ function QAUpdateScreen() {
           onChange={(e) => setTitle(e.target.value)}
           className="mb-4"
         />
+        <Suspense fallback={<div>Loading...</div>}>
         <CKEditor
           data={qna && qna.content ? qna.content : ""}
           editor={ClassicEditor}
@@ -112,6 +115,7 @@ function QAUpdateScreen() {
             setEditorData(data);
           }}
         />
+        </Suspense>
         <Button
           variant="contained"
           color="primary"
