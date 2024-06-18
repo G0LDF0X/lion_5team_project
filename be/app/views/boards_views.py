@@ -17,6 +17,7 @@ from io import BytesIO
 from PIL import Image
 import json
 from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
+from django.utils import timezone
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
@@ -252,14 +253,14 @@ def delete_Reply(request, pk):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
 def update_Reply(request, pk):
-    reply = Reply.objects.get(id=pk)
-    serializer = ReplySerializer(instance=reply, data=request.data)
+    try:
+        reply = Reply.objects.get(pk=pk)
+    except Reply.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=400)
+    reply.content = request.data.get('content', reply.content)
+    reply.created_at = timezone.now()
+    reply.save()
 
+    return Response(status=status.HTTP_200_OK)

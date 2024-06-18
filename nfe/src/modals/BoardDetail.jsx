@@ -11,6 +11,10 @@ import { styled } from "@mui/material/styles";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import moment from 'moment';
+import 'moment/locale/ko';
+
+
 const StyledCheckbox = styled(Checkbox)({
   "&.Mui-checked": {
     color: "#ff6d75",
@@ -60,6 +64,9 @@ function BoardDetailModal({ open, handleClose }) {
   const [editImage, setEditImage] = useState(null);
   const [editReply, setEditReply] = useState('');
   const [editReplyId, setEditReplyId] = useState(null);
+  const [isEdited, setIsEdited] = useState(false); 
+
+
 
 
   const sortedReplies = [];
@@ -186,25 +193,24 @@ function BoardDetailModal({ open, handleClose }) {
       if (Array.isArray(updatedReplyContent)) {
         updatedReplyContent = updatedReplyContent[0];
       }
-      
+      const currentTime = new Date();
       const updatedReply = {
         content: updatedReplyContent ,
         board_id: boardId,
         user_id: userInfo.id,
+        created_at : currentTime
+        
       };
       const response = await mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
         {
           headers: { Authorization: `Bearer ${userInfo.access}` }, 
         }
       );
-      // console.log(updatedReplyContent)
-      console.log(response.data);
       dispatch(getBoardDetails(boardId));
     } catch (error) {
       console.error(error);
     }
   };
-
 
   const shareHandler = () => {  
     navigator.clipboard.writeText("localhost:5173"+`/board/${boardId}`);
@@ -257,16 +263,23 @@ function BoardDetailModal({ open, handleClose }) {
   const handleUpdateReply = (id, content) => {
     setEditReplyId(id);
     setEditReply(content);
+
+   
   };
 
 
   const submitUpdateReplyHandler = async (replyId) => {
     const updatedReplyContent = editReply
     await updateReply(replyId, updatedReplyContent);
+
  
     setEditReply('');
     setEditReplyId(null);
+
+
   };
+
+
   
   return (
     <Modal
@@ -460,6 +473,10 @@ function BoardDetailModal({ open, handleClose }) {
                             <Link to={`/users/${reply.user_id}`}>
                               {reply.nickname || reply.username}
                             </Link>
+                            <span style={{ fontSize: 'small', fontWeight: 'normal', color: 'gray' }}>
+                              {"    " + moment(reply.created_at).locale('ko').fromNow()}
+
+                            </span>
                           </p>
                           {userInfo && userInfo.id === reply.user_id && (
                             <div style={{ display: 'flex', marginLeft: 'auto' }}>
@@ -501,14 +518,16 @@ function BoardDetailModal({ open, handleClose }) {
                             </button>
                           </form>
                         ) : (
-                          <p>{reply.content}</p>
+                          <p style={{ marginTop: '8px' }}>{reply.content}
+                          <span style={{ marginLeft: '8px', color: 'gray', fontSize: 'small' }}>
+                          </span></p>
                         )}
                         <div style={{ display: 'flex', justifyContent: 'space-between'}}>
                           <button
                             onClick={() => handleReplyClick(reply.id, reply.nickname || reply.username)}
                             style={{
                               color: 'gray', fontSize: 'small',
-                              marginTop: '5px'
+                              marginTop: '9px'
                             }}
                           >
                             답글 작성

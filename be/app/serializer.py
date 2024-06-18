@@ -10,13 +10,18 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 import base64
+from django.utils import timezone
+
 
 class ReplySerializer(serializers.ModelSerializer):
     nickname = serializers.ReadOnlyField(source='user_id.nickname')
     username = serializers.ReadOnlyField(source='user_id.username')
+
     class Meta:
         model = Reply
         fields = '__all__'
+
+   
 
 class ImageTagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -389,7 +394,6 @@ class FollowSerializer(serializers.ModelSerializer):
     followed_nickname = serializers.ReadOnlyField(source='followed_id.nickname')
     followed_image_url = serializers.SerializerMethodField()
     follower_image_url = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Follow
