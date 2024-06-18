@@ -55,7 +55,6 @@ function ProductsScreen() {
     setSelectedCategory(newSelectedCategories);
     setCurrentPage(1);  // 카테고리 변경 시 페이지를 1로 초기화
     navigate(`?query=${query}&page=1&category=${newSelectedCategories.join(',')}`);
-    dispatch(listProducts({ query, page: 1, category: newSelectedCategories, suggestions }));
   };
 
   const fetchTags = async (categoryId) => {

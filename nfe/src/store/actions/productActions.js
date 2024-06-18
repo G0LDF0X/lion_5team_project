@@ -53,6 +53,7 @@ export const listProducts = createAsyncThunk(
       const fetchTime = state.productList.fetchTime;
       
       if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+        print ("CACHE:", state.productList.cache[cacheKey]);
         return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true, totalPages: state.productList.totalPages, currentPage: state.productList.currentPage };
       }
 
@@ -68,6 +69,7 @@ export const listProducts = createAsyncThunk(
 
       const url = `items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
+      console.log("RESPONSE:", response.data);
       const { items, total_pages, current_page } = response.data;
       
       return { data: items, cacheKey, fromCache: false, totalPages: total_pages, currentPage: current_page };

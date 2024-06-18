@@ -225,7 +225,7 @@ volumes:
     driver: local
 
 
-# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/ca.crt ./certs/http_ca.crt
+# docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/http_ca.crt ./certs/http_ca.crt
 # version: "3.8"
 
 # services:
