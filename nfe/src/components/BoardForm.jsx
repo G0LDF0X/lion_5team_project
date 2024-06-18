@@ -20,6 +20,7 @@ export default function BoardForm({ board  }) {
             {board.user_image ? (
               <Avatar
                 src={VITE_API_BASE_URL + board.user_image}
+                alt = {board.username}
                 aria-label="user"
               />
             ) : (
