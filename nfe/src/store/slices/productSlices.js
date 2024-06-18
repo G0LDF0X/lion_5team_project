@@ -12,7 +12,7 @@ import {
 
 export const productListSlice = createSlice({
   name: "productList",
-  initialState: { loading: false, products: [] },
+  initialState: { loading: false, products: [], totalPages: 1, currentPage: 1 },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -22,7 +22,9 @@ export const productListSlice = createSlice({
       })
       .addCase(listProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.items;
+        state.totalPages = action.payload.total_pages;
+        state.currentPage = action.payload.current_page;
       })
       .addCase(listProducts.rejected, (state, action) => {
         state.loading = false;

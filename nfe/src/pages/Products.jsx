@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../store/actions/productActions";
 import Loading from "../components/Loading";
@@ -9,14 +9,15 @@ import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/materia
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import Button from '@mui/material/Button';
+import Pagination from '@mui/material/Pagination';
 
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState([]);
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products, pages } = productList;
+  const { loading, error, products, totalPages, currentPage } = productList;
 
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -27,7 +28,7 @@ function ProductsScreen() {
   const tag = params.get('tag');
   const suggestions = params.get('s') || ''; 
 
-useEffect(() => {
+  useEffect(() => {
     dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
 
     if (selectedCategory.length === 1) {
@@ -35,9 +36,9 @@ useEffect(() => {
     } else {
       setTags([]);
     }
-}, [dispatch, query, tag, page, selectedCategory, suggestions ]);
+  }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
-const  categories  = useCategory(); 
+  const categories = useCategory(); 
 
   const handleCategoryChange = (e) => {
     if (e.target.checked) {
@@ -47,14 +48,20 @@ const  categories  = useCategory();
     }
   };
 
-const fetchTags = async (categoryId) => {
-  try {
-    const response = await mainAxiosInstance.get(`/items/tags/${categoryId}`);
-    setTags(response.data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
+  const fetchTags = async (categoryId) => {
+    try {
+      const response = await mainAxiosInstance.get(`/items/tags/${categoryId}`);
+      setTags(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value)
+    navigate(`?query=${query}&page=${curre}`);
+    dispatch(listProducts({query:query, page:value, category:selectedCategory, suggestions:suggestions}));
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -63,7 +70,7 @@ const fetchTags = async (categoryId) => {
           <h3 className="text-2xl font-bold mb-4">Category</h3>
           <FormControl component="fieldset">
             <FormGroup>
-              {categories&&categories.map((category) => (
+              {categories && categories.map((category) => (
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -103,26 +110,27 @@ const fetchTags = async (categoryId) => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products
-                  .filter(product => !selectedTag || (product.tag_id ===selectedTag.id))
+                {(Array.isArray(products) ? products : []) // 배열이 아닌 경우 빈 배열 사용
+                  .filter(product => !selectedTag || (product.tag_id === selectedTag.id))
                   .map((product) => (
-                  <Product key={product.id} product={product} id={product.id} />
-                  
-                ))}
+                    <Product key={product.id} product={product} id={product.id} />
+                  ))}
               </div>
             </>
           )}
+          <Pagination
+            count={totalPages} // 총 페이지 수
+            page={parseInt(page, 10)} // 현재 페이지
+            onChange={handlePageChange} // 페이지 변경 핸들러
+            sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}
+          />
         </div>
-      </div>
-      <div className="pagination-container">
-        {/* Pagination component if available */}
       </div>
     </div>
   );
 }
 
 export default ProductsScreen;
-
 // let isLoading = false;
 // let page = 1;
 
