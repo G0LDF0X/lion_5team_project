@@ -29,7 +29,7 @@ function RootLayout() {
   const openPostModal = () => setPostModalIsOpen(true);
   const closePostModal = () => setPostModalIsOpen(false);
 
-  const isBoardDetailModalOpen = (location.pathname.startsWith('/board/') && id) || (location.state&&location.state.background=='/' && id);
+  const isBoardDetailModalOpen = (location.pathname.startsWith('/board/') && id) 
 
   
 
