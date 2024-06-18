@@ -261,6 +261,7 @@ def update_Reply(request, pk):
 
     reply.content = request.data.get('content', reply.content)
     reply.created_at = timezone.now()
+    reply.isEdited = True
     reply.save()
 
     return Response(status=status.HTTP_200_OK)

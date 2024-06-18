@@ -257,26 +257,17 @@ function BoardDetailModal({ open, handleClose }) {
     setApply(`@${nickname} `);
   }
 
-
-
-
   const handleUpdateReply = (id, content) => {
     setEditReplyId(id);
     setEditReply(content);
-
-   
   };
 
 
   const submitUpdateReplyHandler = async (replyId) => {
     const updatedReplyContent = editReply
     await updateReply(replyId, updatedReplyContent);
-
- 
     setEditReply('');
     setEditReplyId(null);
-
-
   };
 
 
@@ -475,7 +466,7 @@ function BoardDetailModal({ open, handleClose }) {
                             </Link>
                             <span style={{ fontSize: 'small', fontWeight: 'normal', color: 'gray' }}>
                               {"    " + moment(reply.created_at).locale('ko').fromNow()}
-
+                              {reply.isEdited && " (수정됨)"}
                             </span>
                           </p>
                           {userInfo && userInfo.id === reply.user_id && (
