@@ -1,20 +1,15 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardMedia,
-  CardContent,
-  
-  Avatar,
-  IconButton,
-  Typography,
-  Checkbox,
-  Box,
-} from "@mui/material";
+import React from "react";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import {Link, useLocation} from "react-router-dom";
-import {  MoreVert } from "@mui/icons-material";
+import {  MoreVert } from "@mui/icons-material/esm";
 import { grey } from "@mui/material/colors";
-import { styled } from "@mui/material/styles";
 
 export default function BoardForm({ board  }) {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;

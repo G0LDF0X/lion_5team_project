@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardContent, CardMedia, Typography, Grid, Container } from '@mui/material';
+import { useDispatch } from 'react-redux';
 import { mainAxiosInstance } from '../../api/axiosInstances';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 import BoardDetailModal from '../../modals/BoardDetail';
 import { getBoardDetails } from '../../store/actions/boardActions';
 import useShow from '../../hook/useShow';

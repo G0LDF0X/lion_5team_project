@@ -1,14 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 
-// Helper function to handle errors
 const handleError = (error) => {
   return error.response && error.response.data.detail
     ? error.response.data.detail
     : error.message;
 };
-
-// Helper function to get Authorization headers
 const getAuthHeaders = (getState) => {
   const {
     user: { userInfo },
@@ -96,11 +93,6 @@ export const createBoard = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-
-      // Debugging logs to verify token and headers
-      console.log('User Info:', userInfo);
-      console.log('Access Token:', userInfo?.access);
-
       const res = await mainAxiosInstance.post(`/board/create/`, formData, {
         headers: {
         'Content-Type': 'multipart/form-data',
@@ -123,11 +115,6 @@ export const updateBoard = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-
-      console.log('Access Token:', userInfo.access);  // 토큰 확인
-      console.log('Request Data:', board);
-      console.log('Image File:', board.get('image'));
-
       const res = await mainAxiosInstance.put(
         `/board/update_board/${id}/`,
         board,

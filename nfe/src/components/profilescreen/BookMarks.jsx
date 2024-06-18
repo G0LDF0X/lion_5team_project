@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 import Product from "../Product";
 import Loading from "../Loading";
 import Message from "../Message";
-import { Grid, Container, Typography, Paper } from "@mui/material";
+
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+
 
 function BookMarks({ bookMarkItems }) {
   const loading = useSelector((state) => state.loading);

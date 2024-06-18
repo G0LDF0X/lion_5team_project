@@ -5,7 +5,10 @@ import { listProducts } from "../store/actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Product from "../components/Product";
-import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
 import Button from '@mui/material/Button';
@@ -13,8 +16,9 @@ import Button from '@mui/material/Button';
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
-  
+
   const [selectedCategory, setSelectedCategory] = useState([]);
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages } = productList;
 
@@ -37,7 +41,7 @@ useEffect(() => {
     }
 }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
-const  categories  = useCategory(); 
+const categories = useCategory();
 
   const handleCategoryChange = (e) => {
     if (e.target.checked) {
@@ -46,7 +50,7 @@ const  categories  = useCategory();
       setSelectedCategory((prev) => prev.filter((cat) => cat !== e.target.value));
     }
   };
-
+  
 const fetchTags = async (categoryId) => {
   try {
     const response = await mainAxiosInstance.get(`/items/tags/${categoryId}`);
@@ -102,14 +106,20 @@ const fetchTags = async (categoryId) => {
                 ))}
               </div>
 
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {products
-                  .filter(product => !selectedTag || (product.tag_id ===selectedTag.id))
+                  .filter(product => {
+                    // selectedCategory(String)의 값을 숫자로 변환 (product.category_id는 숫자)
+                    const selectedCategoryAsNumbers = selectedCategory.map(Number);
+                    return selectedCategoryAsNumbers.length === 0 || selectedCategoryAsNumbers.includes(product.category_id);
+                  })
+                  .filter(product => !selectedTag || (product.tag_id === selectedTag.id))
                   .map((product) => (
-                  <Product key={product.id} product={product} id={product.id} />
-                  
-                ))}
+                    <Product key={product.id} product={product} id={product.id} />
+                  ))}
               </div>
+              
             </>
           )}
         </div>

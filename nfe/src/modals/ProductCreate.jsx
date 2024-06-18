@@ -6,7 +6,6 @@ import Loading from "../components/Loading";
 import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { createProduct } from "../store/actions/productActions";
 import useCategory from "../hook/useCategory";
 
 function ProductCreateModal({ isOpen, onClose, createProduct}) {
