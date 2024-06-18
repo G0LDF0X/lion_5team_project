@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /private/
+Disallow: /temp/
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+
+Sitemap: https://www.yourdomain.com/sitemap.xml

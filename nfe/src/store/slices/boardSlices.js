@@ -10,26 +10,41 @@ import {
 
 const initialState = {
   loading: false,
+  detailLoading: false, 
   success: false,
   error: null,
   boardDetail: {},
   boards: [],
   replies: [],
+  cache: {},
+  fetchTime: null,
+  fromCache: false,
 };
 
 const pendingReducer = (state) => {
   state.loading = true;
   state.error = null;
 };
+const pendingDetailReducer = (state) => {
+  state.detailLoading = true;
+  state.error = null;
+};
 
 const fulfilledListReducer = (state, action) => {
+  const { data, fromCache } = action.payload;
   state.loading = false;
-  state.boards = action.payload;
+  state.boards = data;
   state.error = null;
+  if (!fromCache) {
+    state.cache['boards'] = data;
+    state.fetchTime = Date.now();
+  }
+
 };
 
 const fulfilledDetailsReducer = (state, action) => {
   state.loading = false;
+  state.detailLoading = false;
   state.boardDetail = action.payload.board;
   state.replies = action.payload.replies || [];
   state.error = null;
@@ -66,7 +81,7 @@ export const boardSlice = createSlice({
       .addCase(listBoards.pending, pendingReducer)
       .addCase(listBoards.fulfilled, fulfilledListReducer)
       .addCase(listBoards.rejected, rejectedReducer)
-      .addCase(getBoardDetails.pending, pendingReducer)
+      .addCase(getBoardDetails.pending, pendingDetailReducer)
       .addCase(getBoardDetails.fulfilled, fulfilledDetailsReducer)
       .addCase(getBoardDetails.rejected, rejectedReducer)
       .addCase(createBoard.pending, pendingReducer)

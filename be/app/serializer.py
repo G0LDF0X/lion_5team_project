@@ -44,6 +44,7 @@ class BoardSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source='user_id.username')
     item_name = serializers.ReadOnlyField(source='item_id.name')
+    imgae_url = serializers.ImageField(source='item_id.image_url')
     class Meta:
         model = Review
         fields = '__all__'
@@ -90,7 +91,8 @@ class ItemSerializer(serializers.ModelSerializer):
     category = serializers.ReadOnlyField(source='category_id.name')
     class Meta:
         model = Item
-        fields = [ 'name', 'price', 'rate', 'category', 'image_url', 'reviews', 'id']
+        fields = [ 'name', 'price', 'rate', 'category', 'image_url', 'reviews', 'id', 'category_id', 'tag_id']
+
 class SingleItemSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, read_only=True)
     item_qna_set = ItemQnASerializer(many=True, read_only=True)

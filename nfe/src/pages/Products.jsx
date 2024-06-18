@@ -5,19 +5,21 @@ import { listProducts } from "../store/actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Product from "../components/Product";
-import { FormControl, FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import { FormControl, FormGroup, FormControlLabel, Checkbox, Button } from '@mui/material';
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
-import Button from '@mui/material/Button';
+
 import Pagination from '@mui/material/Pagination';
 
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
   
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태 추가
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, totalPages, currentPage: apiCurrentPage } = productList;
 
@@ -40,8 +42,6 @@ function ProductsScreen() {
     }
   }, [dispatch, query, tag, currentPage, selectedCategory, suggestions ]); // currentPage로 수정
 
-  const categories = useCategory(); 
-
   const handleCategoryChange = (e) => {
     const value = e.target.value;
     const newSelectedCategories = e.target.checked
@@ -63,11 +63,14 @@ function ProductsScreen() {
     }
   };
 
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value); // currentPage 상태 업데이트
     navigate(`?query=${query}&page=${value}`);
-    dispatch(listProducts({query:query, page:value, category:selectedCategory, suggestions:suggestions}));
+   
   };
+
+
 
   return (
     <div className="container mx-auto py-8">
@@ -115,13 +118,16 @@ function ProductsScreen() {
                 ))}
               </div>
 
+              
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
                 {(Array.isArray(products) ? products : []) // 배열이 아닌 경우 빈 배열 사용
                   .filter(product => !selectedTag || (product.tag_id === selectedTag.id))
                   .map((product) => (
                     <Product key={product.id} product={product} id={product.id} />
                   ))}
               </div>
+              
             </>
           )}
           <Pagination

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Card, CircularProgress, Typography, Grid, Skeleton } from '@mui/material';
+import { Box, Card, Typography, Grid, Skeleton } from '@mui/material';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Product from '../Product';

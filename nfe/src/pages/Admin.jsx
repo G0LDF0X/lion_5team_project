@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Tab, Tabs, Box, Typography } from '@mui/material'
+import { Tab, Tabs, Box } from '@mui/material'
 import PropTypes from 'prop-types'
 import { listProducts } from '../store/actions/productActions'
 import { deleteProduct } from '../store/actions/productActions'

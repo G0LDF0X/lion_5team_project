@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { TextField, Select, MenuItem, InputLabel, FormControl, Button, Modal, Box, Chip, Stack } from "@mui/material";
+import { TextField, Button, Modal, Box, Chip, Stack, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+
 import Message from "../components/Message";
 import Loading from "../components/Loading";
-import DoneIcon from '@mui/icons-material/Done';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
-import { updateProduct } from "../store/actions/productActions";
+import { Done, Delete, Close } from "@mui/icons-material";
 import useCategory from "../hook/useCategory";
 function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [name, setName] = useState(product.name);
@@ -58,7 +56,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
           onClick={onClose}
           className="absolute top-2 right-2 p-1 rounded-full bg-gray-200 hover:bg-gray-300"
         >
-          <CloseIcon />
+          <Close />
         </button>
         {loading && <Loading />}
         {error && <Message variant="danger">{error}</Message>}
@@ -130,19 +128,19 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
                 label="목줄"
                 onClick={() => handleClick("1")}
                 onDelete={handleDelete("1")}
-                deleteIcon={chipData.includes("1") ? <DeleteIcon /> : <DoneIcon />}
+                delete={chipData.includes("1") ? <Delete /> : <Done />}
               />
               <Chip
                 label="스텔라앤츄이스"
                 onClick={() => handleClick("2")}
                 onDelete={handleDelete("2")}
-                deleteIcon={chipData.includes("2") ? <DeleteIcon /> : <DoneIcon />}
+                delete={chipData.includes("2") ? <Delete /> : <Done />}
               />
               <Chip
                 label="캐츠랑"
                 onClick={() => handleClick("3")}
                 onDelete={handleDelete("3")}
-                deleteIcon={chipData.includes("3") ? <DeleteIcon /> : <DoneIcon />}
+                delete={chipData.includes("3") ? <Delete /> : <Done />}
               />
             </Stack>
           </FormControl>

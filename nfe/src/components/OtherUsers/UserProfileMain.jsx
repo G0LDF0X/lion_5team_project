@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
+import { BookmarkBorder, FavoriteBorder, ConfirmationNumberOutlined } from '@mui/icons-material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
-import { Link, useAsyncError } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);
@@ -184,9 +184,9 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             value={value}
                             onChange={(event, newValue) => setValue(newValue)}
                         >
-                            <BottomNavigationAction label="스크랩북" icon={<BookmarkBorderIcon />} />
-                            <BottomNavigationAction label="좋아요" icon={<FavoriteBorderIcon />} />
-                            <BottomNavigationAction label="내 쿠폰" icon={<ConfirmationNumberOutlinedIcon />} />
+                            <BottomNavigationAction label="스크랩북" icon={<BookmarkBorder />} />
+                            <BottomNavigationAction label="좋아요" icon={<FavoriteBorder />} />
+                            <BottomNavigationAction label="내 쿠폰" icon={<ConfirmationNumberOutlined />} />
                         </BottomNavigation>
                     </div>
                 </div>

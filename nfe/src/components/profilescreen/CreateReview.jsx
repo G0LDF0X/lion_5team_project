@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { mainAxiosInstance } from "../../api/axiosInstances";
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { Button, Box } from '@mui/material';
 
 function CreateReview() {
   const [unreviewedItems, setUnreviewedItems] = useState([]);

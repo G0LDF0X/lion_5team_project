@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, CardActions, Typography, Grid, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Box, Card, CardActions, CardContent, Grid, Typography, Button } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
 const OtherFollowingList = ({ userId, userDetail }) => {

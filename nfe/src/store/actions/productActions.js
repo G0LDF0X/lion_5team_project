@@ -10,11 +10,17 @@ const getAuthHeaders = (getState) => {
     Authorization: `Bearer ${userInfo.access}`,
   };
 };
-
 export const listProducts = createAsyncThunk(
   'products/listProducts',
-  async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue }) => {
+  async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const cacheKey = `${query}-${page}-${category.join(',')}-${suggestions}`;
+      const fetchTime = state.productList.fetchTime;
+      if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+        return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true };
+      }
+
       let params = new URLSearchParams();
       if (query) params.append('query', query);
       if (page) params.append('page', page);
@@ -24,9 +30,10 @@ export const listProducts = createAsyncThunk(
       if (suggestions) {
         params.append('s', suggestions);
       }
+
       const url = `items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
-      return response.data;
+      return { data: response.data, cacheKey, fromCache: false  };
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail
@@ -36,6 +43,33 @@ export const listProducts = createAsyncThunk(
     }
   }
 );
+// export const listProducts = createAsyncThunk(
+//   'products/listProducts',
+//   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue }) => {
+    
+//     try {
+//       let params = new URLSearchParams();
+//       if (query) params.append('query', query);
+      
+//       if (page) params.append('page', page);
+//       if (category.length) {
+//         category.forEach((cat) => params.append('category', cat));
+//       }
+//       if (suggestions) {
+//         params.append('s', suggestions);
+//       }
+//       const url = `items?${params.toString()}`;
+//       const response = await mainAxiosInstance.get(url);
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response && error.response.data.detail
+//           ? error.response.data.detail
+//           : error.message
+//       );
+//     }
+//   }
+// );
 export const listProductDetails = createAsyncThunk(
   "productDetails/listProductDetails",
   async (id, { rejectWithValue }) => {

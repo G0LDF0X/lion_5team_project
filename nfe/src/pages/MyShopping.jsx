@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate} from "react-router-dom";
 import { listBookMark } from "../store/actions/bookMarkActions";
 import { getMyOrders } from "../store/actions/orderActions";
-import { Tab, Tabs, Box, Typography } from "@mui/material";
+import {Tab, Tabs, Box} from "@mui/material";
 import PropTypes from "prop-types";
 import Orderlist from "../components/profilescreen/OrderList";
 import BookMarks from "../components/profilescreen/BookMarks";

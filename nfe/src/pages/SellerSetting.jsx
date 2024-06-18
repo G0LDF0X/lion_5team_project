@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react'
 import { useSelector} from 'react-redux'
-import { Tab, Tabs, Box } from '@mui/material' 
+import {Tab, Tabs, Box} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import SellerMain from '../components/profilescreen/SellerMain';

@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createReview, deleteReview } from "../store/actions/reviewActions";
-import { listProductDetails } from "../store/actions/productActions";
+import { createReview, deleteReview,listReviewDetails } from "../store/actions/reviewActions";
+import { createProductQnA, deleteProductQnA,listProductDetails } from "../store/actions/productActions";
 import {
   addToBookMark,
   listBookMark,
   removeFromBookMark,
 } from "../store/actions/bookMarkActions";
 import { addToCart, listCartItems } from "../store/actions/cartActions";
-
-import {
-  Snackbar,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from "@mui/material";
-import { getQnA } from "../store/slices/productSlices";
+import { getQnA, productQnaReset } from "../store/slices/productSlices";
+import { resetSuccess } from "../store/slices/cartSlices";
+import { reviewCreateReset } from "../store/slices/reviewSlices";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Rating from "../components/Rating";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { listReviewDetails } from "../store/actions/reviewActions";
+import { Snackbar, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { BookmarkBorder, Bookmark, ShoppingCart } from "@mui/icons-material";
+
 import { mainAxiosInstance } from "../api/axiosInstances";
-import { resetSuccess } from "../store/slices/cartSlices";
-import { reviewCreateReset } from "../store/slices/reviewSlices";
-import { createProductQnA, deleteProductQnA, updateProductQnA } from "../store/actions/productActions";
-import { productQnaReset } from "../store/slices/productSlices";
+
+
 function ProductDetail() {
   const [qty, setQty] = useState(1);
   const [marked, setMarked] = useState(false);
@@ -340,7 +332,7 @@ function ProductDetail() {
                       className="flex-1 bg-gradient-to-r from-yellow-300 to-yellow-500 text-white py-2 rounded-lg shadow-md hover:from-yellow-400 hover:to-yellow-600 transition duration-300 flex items-center justify-center"
                       disabled={product.countInStock === 0}
                     >
-                      <ShoppingCartIcon className="mr-2" /> 장바구니에 담기
+                      <ShoppingCart className="mr-2" /> 장바구니에 담기
                     </button>
                     <button
                       className={`w-16 h-16 bg-gradient-to-r from-purple-300 to-purple-500 text-white py-2 rounded-full shadow-md hover:from-purple-400 hover:to-purple-600 transition duration-300 flex items-center justify-center ${
@@ -349,9 +341,9 @@ function ProductDetail() {
                       onClick={BookmarkHandler}
                     >
                       {marked ? (
-                        <BookmarkIcon className="w-6 h-6" />
+                        <Bookmark className="w-6 h-6" />
                       ) : (
-                        <BookmarkBorderIcon className="w-6 h-6" />
+                        <BookmarkBorder className="w-6 h-6" />
                       )}
                     </button>
                   </div>

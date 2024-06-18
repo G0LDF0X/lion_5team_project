@@ -207,6 +207,7 @@ class Reply(models.Model):
     content = models.TextField()
     replied_id = models.IntegerField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    isEdited = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return self.content

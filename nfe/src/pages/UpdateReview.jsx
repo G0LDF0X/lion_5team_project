@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useDispatch, useSelector } from "react-redux";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { Button, Snackbar, Typography, Rating } from "@mui/material";
-import { createReview, updateReview, listReviewDetails} from "../store/actions/reviewActions";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useNavigate, useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Typography from "@mui/material/Typography";
+import Rating from "@mui/material/Rating";
+import { updateReview} from "../store/actions/reviewActions";
 
 import Loading from "../components/Loading";
 import Message from "../components/Message";
@@ -16,6 +19,8 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 function UpdateReviewScreen() {
   const [title, setTitle] = useState("");
   
+const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
+const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
   const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -223,6 +228,7 @@ function UpdateReviewScreen() {
               />
             </div>
             <div className="mb-4">
+              <Suspense fallback={<div>Loading...</div>}>
             <CKEditor
         data={content}
         editor={ClassicEditor}
@@ -234,6 +240,7 @@ function UpdateReviewScreen() {
           setEditorData(data);
         }}
       />
+      </Suspense>
             </div>
             <div className="mb-4">
               <Typography id="rate-slider" gutterBottom>

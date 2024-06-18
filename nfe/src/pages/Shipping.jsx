@@ -7,10 +7,6 @@ import {
   Grid,
   Box,
   Button,
-  TextField,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Card,
   CardContent,
   List,
@@ -19,6 +15,9 @@ import {
   ListItemAvatar,
   Avatar,
   Divider,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
 } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
 import { listCartItems } from "../store/actions/cartActions";
@@ -26,9 +25,8 @@ import Message from "../components/Message";
 import { createOrder } from "../store/actions/orderActions";
 //포트원 모듈 추가 npm i @portone/browser-sdk로 설치함
 import * as PortOne from "@portone/browser-sdk/v2";
-import {mainAxiosInstance} from "../api/axiosInstances";
+import { mainAxiosInstance } from "../api/axiosInstances";
 import AddressSearch from "../components/AddressSearch";
-
 
 function ShippingScreen() {
   const dispatch = useDispatch();
@@ -43,23 +41,23 @@ function ShippingScreen() {
   const [otherAddress, setOtherAddress] = useState(false);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-    const productList = useSelector((state) => state.productList);
-    const { products } = productList;
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
   useEffect(() => {
     if (!products.length) {
-        dispatch(listProducts({ query: "", page: 1, category: [] }));
+      dispatch(listProducts({ query: "", page: 1, category: [] }));
     }
     if (!cartItems.length) {
       dispatch(listCartItems());
     }
   }, [dispatch]);
 
-// 결제하기 버튼 누를시 requestPayment() 함수 실행
-// 결제요청 시작부분(react 방식, 포트원 V2)
-  
+  // 결제하기 버튼 누를시 requestPayment() 함수 실행
+  // 결제요청 시작부분(react 방식, 포트원 V2)
+
   async function requestPayment() {
     console.log("결제하기 버튼 눌림");
-    
+
     console.log(combinedCartItems);
     // console.log(combinedCartItems);
     // console.log(combinedCartItems.length);
@@ -77,16 +75,18 @@ function ShippingScreen() {
       // 채널 키 설정(현재는 토스 test)
       channelKey: "channel-key-0d3a759f-1678-4bc4-b640-15cc05170f0b",
       paymentId: `payment-${crypto.randomUUID()}`,
-      orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
+      orderName:
+        combinedCartItems.length === 1
+          ? combinedCartItems[0].name
+          : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
-      payMethod: "CARD", 
+      payMethod: "CARD",
       // redirectUrl: "http://localhost:5173", // 결제 완료 후 리다이렉트할 URL",
       // noticeUrls: ["https://127.0.0.1:8000/payment/complete/"],
-
     });
-    
-    if (response.code != null){
+
+    if (response.code != null) {
       // 오류 발생한 경우
       return alert(response.message);
     }
@@ -94,12 +94,14 @@ function ShippingScreen() {
     // paymentId: "payment-9ce6810e-f611-45fb-81c7-3c799a2cb80f" >> DB에 별도저장 필요
     // transactionType: "PAYMENT"
     // txId: "018fdb9c-1177-9bde-be09-406d002e097a"
-      // 결제 오류 없는경우
-    
+    // 결제 오류 없는경우
 
     const paymentInfo = {
       paymentId: response.paymentId,
-      orderName: combinedCartItems.length === 1 ? combinedCartItems[0].name : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
+      orderName:
+        combinedCartItems.length === 1
+          ? combinedCartItems[0].name
+          : `${combinedCartItems[0].name} 외 ${combinedCartItems.length - 1}건`,
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
       payMethod: "CARD",
@@ -109,29 +111,29 @@ function ShippingScreen() {
       // ... 기타 필요한 정보 ...
     };
 
-    
     console.log(paymentInfo);
-    
 
-      // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
-    const savePaymentResponse = await mainAxiosInstance.post('/payment/save/', paymentInfo, 
-    {  headers: {
+    // 오류없이 결제가 성공했다면 여기로 감, 결제 정보를 서버에 저장합니다.
+    const savePaymentResponse = await mainAxiosInstance.post(
+      "/payment/save/",
+      paymentInfo,
+      {
+        headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${userInfo.access}`
-        } }
-                  );
+          Authorization: `Bearer ${userInfo.access}`,
+        },
+      }
+    );
 
     if (savePaymentResponse.status !== 200) {
       // 결제 정보 저장에 실패한 경우
-      return alert('Failed to save payment information.');
+      return alert("Failed to save payment information.");
     }
 
     // 결제 정보 저장에 성공한 경우
-    alert('Payment information saved successfully.');
+    alert("Payment information saved successfully.");
     window.location.href = "http://localhost:5173";
-    
-  };
-  
+  }
 
   const subtotalQuantity = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const subtotalPrice = cartItems
@@ -151,7 +153,7 @@ function ShippingScreen() {
   };
 
   const combinedCartItems = combineCartItems(cartItems);
-  
+
   return (
     <Container maxWidth="lg" className="py-8">
       <Grid container spacing={4}>
@@ -192,9 +194,7 @@ function ShippingScreen() {
                   />
                 </RadioGroup>
                 {otherAddress && (
-                  <AddressSearch
-                  onAddressSelected={setAddress}
-                  />
+                  <AddressSearch onAddressSelected={setAddress} />
                 )}
               </Box>
               <Divider />
@@ -218,13 +218,19 @@ function ShippingScreen() {
                 <Typography variant="h6">주문자 정보</Typography>
                 <List>
                   <ListItem>
-                    <ListItemText primary="이름" secondary={userInfo.username} />
+                    <ListItemText
+                      primary="이름"
+                      secondary={userInfo.username}
+                    />
                   </ListItem>
                   <ListItem>
                     <ListItemText primary="이메일" secondary={userInfo.email} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="전화번호" secondary={userInfo.phone} />
+                    <ListItemText
+                      primary="전화번호"
+                      secondary={userInfo.phone}
+                    />
                   </ListItem>
                 </List>
               </Box>
@@ -238,7 +244,10 @@ function ShippingScreen() {
                     {combinedCartItems.map((item, index) => (
                       <ListItem key={index} alignItems="flex-start">
                         <ListItemAvatar>
-                          <Avatar src={VITE_API_BASE_URL+item.image} alt={item.name} />
+                          <Avatar
+                            src={VITE_API_BASE_URL + item.image}
+                            alt={item.name}
+                          />
                         </ListItemAvatar>
                         <ListItemText
                           primary={
@@ -253,17 +262,17 @@ function ShippingScreen() {
                                 variant="body2"
                                 color="textPrimary"
                               >
-                                {item.qty} x {item.price}₩ = {item.qty * item.price}₩
+                                {item.qty} x {item.price}₩ ={" "}
+                                {item.qty * item.price}₩
                               </Typography>
                             </>
                           }
                         />
                         <ListItemText primary="수량" secondary={item.qty} />
-
                       </ListItem>
-                    //   <ListItem>
-                    //     <ListItemText primary="수량" secondary={item.qty} />
-                    //     </ListItem>
+                      //   <ListItem>
+                      //     <ListItemText primary="수량" secondary={item.qty} />
+                      //     </ListItem>
                     ))}
                   </List>
                 )}
@@ -279,13 +288,19 @@ function ShippingScreen() {
               </Typography>
               <List>
                 <ListItem>
-                  <ListItemText primary="총 상품금액" secondary={`${subtotalPrice}₩`} />
+                  <ListItemText
+                    primary="총 상품금액"
+                    secondary={`${subtotalPrice}₩`}
+                  />
                 </ListItem>
                 <ListItem>
                   <ListItemText primary="배송비" secondary="5000₩" />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="총 결제금액" secondary={`${realPrice}₩`} />
+                  <ListItemText
+                    primary="총 결제금액"
+                    secondary={`${realPrice}₩`}
+                  />
                 </ListItem>
               </List>
               <Button
@@ -296,7 +311,6 @@ function ShippingScreen() {
               >
                 {realPrice}₩ 결제하기
               </Button>
-              
             </CardContent>
           </Card>
         </Grid>
@@ -304,6 +318,5 @@ function ShippingScreen() {
     </Container>
   );
 }
-
 
 export default ShippingScreen;

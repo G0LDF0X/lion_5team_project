@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Card,
-  CircularProgress,
   Typography,
   Grid,
   Skeleton,

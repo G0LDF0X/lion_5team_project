@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUserDetail } from "../store/actions/userActions";
-import { Tab, Tabs, Box, Typography } from "@mui/material";
+import {Tab, Tabs, Box} from "@mui/material";
 import PropTypes from "prop-types";
 import UserSetting from "../components/profilescreen/UserSetting";
 import SellerApplication from "../components/profilescreen/SellerApplication";

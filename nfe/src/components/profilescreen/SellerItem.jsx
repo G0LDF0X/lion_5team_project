@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Box, Typography, IconButton } from "@mui/material";
-import { Delete, Edit, Add } from "@mui/icons-material";
-import Message from "../Message";
-import Loading from "../Loading";
-import { deleteProduct, createProduct, listProductDetails, updateProduct } from "../../store/actions/productActions";
-import ItemListSkeleton from "../ItemListSkeleton";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Button, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import ProductCreateModal from "../../modals/ProductCreate";
 import ProductUpdateModal from "../../modals/ProductUpdate";
+import { deleteProduct, createProduct, listProductDetails, updateProduct } from "../../store/actions/productActions";
 function SellerItem({ fetchProducts, products, isLoading}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
