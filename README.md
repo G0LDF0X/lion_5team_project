@@ -51,7 +51,7 @@ docker-compose up -d
 docker ps  -> es01 container id 찾기
 docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/ca.crt ./certs/http_ca.crt
 python create_index.py
-
+django 실행
 
 ```
 

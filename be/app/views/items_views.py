@@ -120,30 +120,7 @@ def get_my_items(request):
         'current_page': paginated_items.number
     }) 	
     
-# @api_view(['GET'])
-# def get_items1(request):
-#     query = request.GET.get('query', '')
-#     if not query:
-#         return Response({"error": "Query parameter is required"}, status=400)
-#     query_embedding = embed_query(query)
-#     script_query = {
-#         "script_score": {
-#             "query": {"match_all": {}},
-#             "script": {
-#                 "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
-#                 "params": {"query_vector": query_embedding}
-#             }
-#         }
-#     }
-#     try:
-#         response = es.search(index='items', body={"query": script_query})
-#         item_ids = [hit['_id'] for hit in response['hits']['hits']]
-#         items = Item.objects.filter(id__in=item_ids)
-#         serializer = ItemSerializer(items, many=True)
-#         return Response(serializer.data)
-#     except Exception as e:
-#         logging.error(f"Error during Elasticsearch search: {e}")
-#         return Response({"error": "Error during search"}, status=500)
+
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])
@@ -191,7 +168,7 @@ def create_item(request):
         )
     
     serializer = SingleItemSerializer(item, many=False)
-    # create_itemindex(item)  
+    create_itemindex(item)  
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -222,7 +199,7 @@ def update_item(request, pk):
     item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
     serializer = SingleItemSerializer(item, many=False)
-    # update_itemindex(item)
+    update_itemindex(item)
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -238,7 +215,7 @@ def delete_item(request, pk):
         item = Item.objects.get(pk=pk)
         item.delete()
         return Response("Item deleted")
-        # delete_itemindex(item)
+        delete_itemindex(item)
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
@@ -279,12 +256,6 @@ def create_review(request, item_id):
         rate=5,
         image_url=''
     )
-    # Interaction.objects.create(
-    #     user_id_id = user.id,
-    #     content_type='item',
-    #     interaction_type = 'review',
-    #     item_id_id = item_id
-    # )
 
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -312,6 +283,12 @@ def update_review(request, pk):
     review.orderitem_id = orderitem
     
     review.save()
+    Interaction.objects.create(
+        user_id_id = user.id,
+        content_type='item',
+        interaction_type = 'review',
+        item_id_id = review.item_id_id
+    )
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)
 
