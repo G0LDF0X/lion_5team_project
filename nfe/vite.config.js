@@ -7,10 +7,10 @@ export default defineConfig({
     react(),
     polyfillNode()
   ],
-  resolve: {
-    alias: {
-      // Polyfill `global` as `globalThis`
-      'global': 'globalthis',
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     // Polyfill `global` as `globalThis`
+  //     'global': 'globalthis',
+  //   },
+  // },
 });

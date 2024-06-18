@@ -3,34 +3,40 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from app.models import Item, Review, Category, Item_QnA, Seller, Tag, User, auth_user, Interaction, OrderItem
-from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, SimpleItemSerializer
+from app.serializer import ItemSerializer, ReviewSerializer, CategorySerializer, ItemQnASerializer, TagSerializer, SimpleItemSerializer, SingleItemSerializer
 from datetime import datetime
 from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
-import ssl
-from elasticsearch import Elasticsearch
-from transformers import BertTokenizer, BertModel
+# import ssl
+# from elasticsearch import Elasticsearch
+# from transformers import BertTokenizer, BertModel
 from django.conf import settings
 import torch
 import os
 from dotenv import load_dotenv
+import logging
 load_dotenv()
+logging.basicConfig(level=logging.DEBUG)
 
+# ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
 # ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
-
-# ca_cert_path = os.path.join(settings.BASE_DIR, 'http_ca.crt')
-# print (ca_cert_path)
 # es = Elasticsearch(
 #     ['https://localhost:9200'],
 #     basic_auth=('elastic', ELASTIC_PASSWORD),
+#     verify_certs=True,
 #     ca_certs=ca_cert_path,
-#     verify_certs=True
 # )
+
 # tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
 # model = BertModel.from_pretrained('monologg/kobert')
 
+# try:
+#     response = es.info()
+#     print("Elasticsearch info:", response)
+# except Exception as e:
+#     print("Error connecting to Elasticsearch:", e)
 # def embed_query(query):
 #     inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
 #     with torch.no_grad():
@@ -38,8 +44,34 @@ load_dotenv()
 #     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
 #     return embedding
 
+# def create_itemindex(item):
+#     body = {
+#         "name": item.name,
+#         "description": item.description,
+#         "category": item.category_id.name,
+#         "embedding": embed_query(item.name)
+#     }
+#     es.index(index='items', id=item.id, body=body)
+#     print(f"Item {item.id} indexed")
+# def update_itemindex(item):
+#     body = {
+#         "doc": {
+#             "name": item.name,
+#             "description": item.description,
+#             "category": item.category_id.name,
+#             "embedding": embed_query(item.name)
+#         }
+#     }
+#     es.update(index='items', id=item.id, body=body)
+#     print(f"Item {item.id} updated")
+# def delete_itemindex(item):
+#     es.delete(index='items', id=item.id)
+#     print(f"Item {item.id} deleted")
+    
 # @api_view(['GET'])
-# def get_items(request):
+# def get_items1(request):
+#     print (ca_cert_path)
+#     print 
 #     query = request.GET.get('query', '')
 #     if not query:
 #         return Response({"error": "Query parameter is required"}, status=400)
@@ -53,13 +85,15 @@ load_dotenv()
 #             }
 #         }
 #     }
-#     response = es.search(index='items', body={"query": script_query})
-#     # print (response)
-#     item_ids = [hit['_id'] for hit in response['hits']['hits']]
-#     items = Item.objects.filter(id__in=item_ids)
-#     serializer = ItemSerializer(items, many=True)
-#     return Response(serializer.data)
-
+#     try:
+#         response = es.search(index='items', body={"query": script_query})
+#         item_ids = [hit['_id'] for hit in response['hits']['hits']]
+#         items = Item.objects.filter(id__in=item_ids)
+#         serializer = ItemSerializer(items, many=True)
+#         return Response(serializer.data)
+#     except Exception as e:
+#         logging.error(f"Error during Elasticsearch search: {e}")
+#         return Response({"error": "Error during search"}, status=500)
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])
@@ -70,8 +104,8 @@ def view_item(request, pk):
     stay_time_interval = f'{staytime} seconds'
 
     Interaction.objects.create(user_id_id=user.id, content_type='item', content_id=pk, interaction_type='view', stay_time=stay_time_interval)
-    serializer = ItemSerializer(item)
-    return Response(serializer.data)
+    
+    return Response('Interaction created')
 @api_view(['GET'])
 def get_all_items(request):
     items = Item.objects.all()
@@ -109,18 +143,18 @@ def get_items(request):
         item_query |= query_condition
     # print(item_query)   
     items = Item.objects.filter(item_query)
-    # if categories and suggestions_list:
-    #     items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
-    #     print("2",' '.join(suggestions_list))
-    #     print(categories)
-    # elif categories:    
-    #     items = Item.objects.filter( category_id_id__in=categories)
-    #     print("3",' '.join(suggestions_list))
-    # elif suggestions_list:
-    #     items = Item.objects.filter(name__icontains=','.join(suggestions_list))
-    #     print("4",' '.join(suggestions_list))
+    if categories and suggestions_list:
+        items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
+        print("2",' '.join(suggestions_list))
+        print(categories)
+    elif categories:    
+        items = Item.objects.filter( category_id_id__in=categories)
+        print("3",' '.join(suggestions_list))
+    elif suggestions_list:
+        items = Item.objects.filter(name__icontains=','.join(suggestions_list))
+        print("4",' '.join(suggestions_list))
         
-        #     items = Item.objects.filter(name__icontains=query)
+    items = Item.objects.filter(name__icontains=query)
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 
@@ -135,7 +169,7 @@ def get_my_items(request):
 @api_view(['GET'])
 def item_details(request, pk):
     item = Item.objects.get(pk=pk)
-    serializer = ItemSerializer(item)
+    serializer = SingleItemSerializer(item)
     return Response(serializer.data)
 
 
@@ -158,8 +192,9 @@ def create_item(request):
         created_at = datetime.now()
         
         )
-    serializer = ItemSerializer(item, many=False)
-
+    
+    serializer = SingleItemSerializer(item, many=False)
+    # create_itemindex(item)  
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -189,8 +224,8 @@ def update_item(request, pk):
     item.description = data['description']
     item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
-    serializer = ItemSerializer(item, many=False)
-    
+    serializer = SingleItemSerializer(item, many=False)
+    # update_itemindex(item)
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -206,6 +241,7 @@ def delete_item(request, pk):
         item = Item.objects.get(pk=pk)
         item.delete()
         return Response("Item deleted")
+        # delete_itemindex(item)
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
