@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
 import { listBoards } from "../store/actions/boardActions";
 import { listQNA } from "../store/actions/qnaActions";
-import ProductCarousel from "../components/homescreen/ProductCarousel";
-import BoardCarousel from "../components/homescreen/BoardCarousel";
-import QnASection from "../components/homescreen/QnASection";
 import { motion } from "framer-motion";
 import { useOutletContext } from "react-router-dom";
 import "../animations.css";
+
+// Lazy load components
+const ProductCarousel = lazy(() => import("../components/homescreen/ProductCarousel"));
+const BoardCarousel = lazy(() => import("../components/homescreen/BoardCarousel"));
+const QnASection = lazy(() => import("../components/homescreen/QnASection"));
 
 function HomeScreen() {
   const dispatch = useDispatch();
@@ -23,49 +25,33 @@ function HomeScreen() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  // useEffect(() => {
-  //   dispatch(listProducts({ query: "", page: 1, category: [] }));
-  //   dispatch(listBoards());
-  //   dispatch(listQNA());
-  //   console.log(location)
-  // }, [dispatch]);
+
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
   }, [dispatch]);
+
   return (
     <Container maxWidth="lg" className="mx-auto py-8">
       <section
         className="relative bg-cover bg-center py-20"
         style={{
-          backgroundImage:
-            `url(${VITE_API_BASE_URL}/images/puppies2.png)`,
+          backgroundImage: `url(${VITE_API_BASE_URL}/images/puppies2.png)`,
           height: '400px',
         }}
       >
-        {userInfo? null : (
-        <div className="container mx-auto px-4 flex flex-col items-end text-right">
-          
-          <Button
-            variant="contained"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-            onClick={openModal}
-          >
-            Sign In
-          </Button>
-          <Button class="bg-purple-700 text-white py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-white text-black py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-gray-100 text-black py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-pink-700 text-white py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-blue-200 text-black py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-teal-500 text-white py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-orange-500 text-white py-2 px-4 rounded">SIGN IN</Button>
-          <Button class="bg-green-500 text-white py-2 px-4 rounded">SIGN IN</Button>
-
-
-
-        </div>
+        {userInfo ? null : (
+          <div className="container mx-auto px-4 flex flex-col items-end text-right">
+            <Button
+              variant="contained"
+              className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
+              onClick={openModal}
+            >
+              Sign In
+            </Button>
+            {/* Additional buttons can be removed for simplicity */}
+          </div>
         )}
       </section>
       <motion.section
@@ -74,11 +60,13 @@ function HomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <ProductCarousel
-          loading={productLoading}
-          error={productError}
-          products={products}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProductCarousel
+            loading={productLoading}
+            error={productError}
+            products={products}
+          />
+        </Suspense>
       </motion.section>
       <motion.section
         className="my-16"
@@ -86,11 +74,13 @@ function HomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <BoardCarousel
-          loading={boardLoading}
-          error={boardError}
-          boards={boards}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <BoardCarousel
+            loading={boardLoading}
+            error={boardError}
+            boards={boards}
+          />
+        </Suspense>
       </motion.section>
       <motion.section
         className="my-16"
@@ -98,7 +88,13 @@ function HomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <QnASection loading={qnaLoading} error={qnaError} qnas={qnas} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <QnASection
+            loading={qnaLoading}
+            error={qnaError}
+            qnas={qnas}
+          />
+        </Suspense>
       </motion.section>
       <motion.section
         className="my-16 fade-in"
