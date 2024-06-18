@@ -37,7 +37,7 @@ function HomeScreen() {
       <section
         className="relative bg-cover bg-center py-20"
         style={{
-          backgroundImage: `url(${VITE_API_BASE_URL}/images/puppies2.png)`,
+          backgroundImage: `url(${VITE_API_BASE_URL}/images/puppies2.webp)`,
           height: '400px',
         }}
       >
