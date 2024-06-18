@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../store/actions/productActions";
 import Loading from "../components/Loading";
@@ -9,14 +9,19 @@ import { FormControl, FormGroup, FormControlLabel, Checkbox, Button } from '@mui
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
 
+import Pagination from '@mui/material/Pagination';
+
 function ProductsScreen() {
   const location = useLocation();
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+  
   const [selectedCategory, setSelectedCategory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태 추가
 
   const productList = useSelector((state) => state.productList);
-  const { loading, error, products, pages } = productList;
+  const { loading, error, products, totalPages, currentPage: apiCurrentPage } = productList;
 
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -28,25 +33,31 @@ function ProductsScreen() {
   const suggestions = params.get('s') || ''; 
 
   useEffect(() => {
-    dispatch(listProducts({query:query, page:page, category:selectedCategory, suggestions:suggestions}));
-  }, [dispatch, query, tag, page, selectedCategory, suggestions ]);
 
-  useEffect(() => {
+    dispatch(listProducts({query:query, page:currentPage, category:selectedCategory, suggestions:suggestions})); // currentPage로 수정
     if (selectedCategory.length === 1) {
       fetchTags(selectedCategory[0]);
     } else {
       setTags([]);
     }
-  }, [selectedCategory]);
+      }, [dispatch, query, tag, currentPage, selectedCategory, suggestions ]); // currentPage로 수정
 
   const categories = useCategory();
 
+
+
   const handleCategoryChange = (e) => {
-    setSelectedCategory((prev) => 
-      e.target.checked ? [...prev, e.target.value] : prev.filter((cat) => cat !== e.target.value)
-    );
+    const value = e.target.value;
+    const newSelectedCategories = e.target.checked
+      ? [...selectedCategory, value]
+      : selectedCategory.filter((cat) => cat !== value);
+
+    setSelectedCategory(newSelectedCategories);
+    setCurrentPage(1);  // 카테고리 변경 시 페이지를 1로 초기화
+    navigate(`?query=${query}&page=1&category=${newSelectedCategories.join(',')}`);
+    dispatch(listProducts({ query, page: 1, category: newSelectedCategories, suggestions }));
   };
-  
+
   const fetchTags = async (categoryId) => {
     try {
       const response = await mainAxiosInstance.get(`/items/tags/${categoryId}`);
@@ -56,6 +67,14 @@ function ProductsScreen() {
     }
   };
 
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value); // currentPage 상태 업데이트
+    navigate(`?query=${query}&page=${value}`);
+   
+  };
+
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex flex-col md:flex-row">
@@ -63,7 +82,7 @@ function ProductsScreen() {
           <h3 className="text-2xl font-bold mb-4">Category</h3>
           <FormControl component="fieldset">
             <FormGroup>
-              {categories&&categories.map((category) => (
+              {categories && categories.map((category) => (
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -104,11 +123,9 @@ function ProductsScreen() {
 
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {products
-                  .filter(product => {
-                    const selectedCategoryAsNumbers = selectedCategory.map(Number);
-                    return (selectedCategoryAsNumbers.length === 0 || selectedCategoryAsNumbers.includes(product.category_id)) && (!selectedTag || (product.tag_id === selectedTag.id));
-                  })
+
+                {(Array.isArray(products) ? products : []) // 배열이 아닌 경우 빈 배열 사용
+                  .filter(product => !selectedTag || (product.tag_id === selectedTag.id))
                   .map((product) => (
                     <Product key={product.id} product={product} id={product.id} />
                   ))}
@@ -116,10 +133,13 @@ function ProductsScreen() {
               
             </>
           )}
+          <Pagination
+            count={totalPages} // 총 페이지 수
+            page={parseInt(currentPage, 10)} // 현재 페이지를 currentPage로 수정
+            onChange={handlePageChange} // 페이지 변경 핸들러
+            sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}
+          />
         </div>
-      </div>
-      <div className="pagination-container">
-        {/* Pagination component if available */}
       </div>
     </div>
   );
