@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { BookmarkBorder as BookmarkBorderIcon, FavoriteBorder as FavoriteBorderIcon, ConfirmationNumberOutlined as ConfirmationNumberOutlinedIcon } from '@mui/icons-material';
+import { Button} from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
-import { Link, useAsyncError } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [value, setValue] = useState(0);
@@ -15,6 +14,8 @@ function UserProfileMain({ userDetail, url, userInfo }) {
     const [showFollowings, setShowFollowings] = useState(false);
     const [hoverFollowers, setHoverFollowers] = useState(false);
     const [hoverFollowings, setHoverFollowings] = useState(false);
+    const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+
 
     const fetchFollowers = async () => {
                 try {
@@ -24,10 +25,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             'Authorization': `Bearer ${userInfo.access}`
                         }
                     });
-                    // const data = await response.json();
-                    // 팔로워 목록을 state 변수에 저장
                     setFollowers(response.data);
-                    console.log(response.data);
                     setShowFollowers(true);
                     setShowFollowings(false);
                 } catch (error) {
@@ -45,7 +43,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                     });
 
                     setFollowings(response.data);
-                    console.log(response.data);
                     setShowFollowers(false);
                     setShowFollowings(true);
                 } catch (error) {
@@ -71,9 +68,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
         };
         if (userDetail.id && userInfo.access) {
             fetchData();
-            console.log(followerCount)
-            console.log(FollowingCount)
-    
         }
       
         const checkFollowStatus = async () => {
@@ -129,14 +123,11 @@ function UserProfileMain({ userDetail, url, userInfo }) {
 
     const handleUnfollow = async () => {
         try {
-            console.log('userDetail.id:', userDetail.id);
-            console.log('userInfo.access:', userInfo.access);
             const response = await mainAxiosInstance.delete(`/users/follow/${userDetail.id}/`, {
                     headers: {
                         'Authorization': `Bearer ${userInfo.access}`
                 }
             });
-            console.log('response:', response);
             if (response.status === 201) {
                 setIsFollowing(false);
                 window.location.reload();
@@ -171,7 +162,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                                 </div>
                         <Button 
                         variant="contained" 
-                        color={isFollowing ? "secondary" : "primary"} 
                         onClick={isFollowing ? handleUnfollow : handleFollow}
                         className="mt-5"
                         style={{
@@ -183,24 +173,9 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         </Button>
                     </div>
                 </div>
-                <div className="mt-6 mb-4 text-center">
-                    <div className="w-full">
-                        <BottomNavigation
-                            showLabels
-                            value={value}
-                            onChange={(event, newValue) => setValue(newValue)}
-                        >
-                            <BottomNavigationAction label="스크랩북" icon={<BookmarkBorderIcon />} />
-                            <BottomNavigationAction label="좋아요" icon={<FavoriteBorderIcon />} />
-                            <BottomNavigationAction label="내 쿠폰" icon={<ConfirmationNumberOutlinedIcon />} />
-                        </BottomNavigation>
-                    </div>
-                </div>
-                <div>
-                
-            </div>
+               
                 {showFollowers && followers && (
-                    <div className="followers-list">
+                    <div className="followers-list" style={{ marginTop: '20px' }}>
                         <ul style={{ paddingLeft: '20px' }}>
                         <h3 style={{ 
                         textAlign: 'center',
@@ -213,12 +188,12 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             {followers.map((follower) => (
                             <li key={follower.id} className="flex items-center py-4">
                                 {follower.follower_image_url ? (
-                                <img src={url + follower.follower_image_url} alt="Profile" className="rounded-full w-16 h-16 mr-4" />
+                                <img src={VITE_API_BASE_URL + follower.follower_image_url} alt="Profile" className="rounded-full w-16 h-16 mr-4" />
                                 ) : (
                                 <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-16 h-16 mr-4" />
                                 )}
                                 <Link to={`/users/${follower.follower_id}`} onClick={() => setShowFollowers(false)}>
-                                <span className="text-xl font-bold">{follower.follower_nickname}</span>
+                                <span className="text-xl font-bold">{follower.follower_nickname || follower.follower_username}</span>
                                 </Link>
                             </li>
                             ))}
@@ -227,6 +202,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         <p style={{ 
                             textAlign: 'center',
                             marginBottom: '20px',
+                            fontSize: '20px',
                         }}>No Followers</p>
                         )}
 
@@ -236,7 +212,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                  
                 )}
                     {showFollowings && followings && (
-                        <div className="followings-list">
+                        <div className="followings-list" style={{ marginTop: '20px' }}>
                             <ul style={{ paddingLeft: '20px' }}>
 
                             <h3 style={{ 
@@ -250,14 +226,14 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                                { followings.map((following) => (
                                     <li key={following.id} className="flex items-center py-4">
 
-                                    {following.following_image_url ? (
-                                        <img src={url + following.followed_image_url} alt="Profile"  className="rounded-full w-16 h-16 mr-4" />
+                                    {following.followed_image_url ? (
+                                        <img src={VITE_API_BASE_URL + following.follower_image_url} alt="Profile"  className="rounded-full w-16 h-16 mr-4" />
                                     ) : (
                                         <img src="https://placehold.co/400" alt="Placeholder"  className="rounded-full w-16 h-16 mr-4"  />
                                     )}
                                      <Link to={`/users/${following.followed_id}`}
                                      onClick={() => setShowFollowings(false)}>
-                                    <span className="text-xl font-bold">{following.followed_nickname}</span>
+                                    <span className="text-xl font-bold">{following.followed_nickname || following.followed_username}</span>
                                     </Link></li>
                                 ))}
                                 </ul>
@@ -265,6 +241,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                                 <p style={{ 
                                     textAlign: 'center',
                                     marginBottom: '20px',
+                                    fontSize: '20px',
                                  }}>No Following users.</p>
                             )
                         }
