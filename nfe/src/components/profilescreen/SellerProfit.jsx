@@ -1,10 +1,6 @@
 import React from 'react';
-
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-
-import {BarChart} from '@mui/x-charts/BarChart';
-import {LineChart} from '@mui/x-charts/LineChart';
+import { Box, Typography } from '@mui/material';
+import { BarChart, LineChart } from '@mui/x-charts';
 function SellerProfit() {
   return (
     <Box className="flex flex-col md:flex-row gap-8 p-4">

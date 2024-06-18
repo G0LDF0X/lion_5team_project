@@ -1,18 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Avatar from "@mui/material/Avatar";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import { List, ListItem, ListItemAvatar, ListItemText, Avatar, Select, MenuItem, Button, Card, CardContent, Typography, IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import {
   removeFromCart,

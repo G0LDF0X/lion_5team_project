@@ -15,6 +15,7 @@ import { Link} from 'react-router-dom';
 // const FavoriteBorderIcon = FavoriteBorder;
 // const ConfirmationNumberOutlinedIcon = ConfirmationNumberOutlined;
 
+
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [followerCount, setFollowerCount] = useState(0);
     const [FollowingCount, setFollowingCount] = useState(0);
@@ -184,7 +185,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         </Button>
                     </div>
                 </div>
-               
+
                 {showFollowers && followers && (
                     <div className="followers-list" style={{ marginTop: '20px' }}>
                         <ul style={{ paddingLeft: '20px' }}>

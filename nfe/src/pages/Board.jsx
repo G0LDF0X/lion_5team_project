@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { listBoards } from "../store/actions/boardActions";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Skeleton from "@mui/material/Skeleton";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import {Grid, Box, Skeleton} from "@mui/material";
+import { Visibility, FavoriteBorder } from "@mui/icons-material";
 
 function StandardImageList() {
   const navigate = useNavigate();
@@ -58,11 +55,11 @@ function StandardImageList() {
                   {board.title}
                 </p>
                 <div className="flex items-center text-white text-lg font-bold mb-2">
-                  <VisibilityIcon className="mr-1" />
+                  <Visibility className="mr-1" />
                   {board.show}
                 </div>
                 <div className="flex items-center text-white text-lg font-bold">
-                  <FavoriteBorderIcon className="mr-1" />
+                  <FavoriteBorder className="mr-1" />
                   {board.like}
                 </div>
               </div>

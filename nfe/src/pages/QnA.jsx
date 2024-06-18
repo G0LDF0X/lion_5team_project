@@ -3,14 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createQNA, listQNA } from '../store/actions/qnaActions';
 import { Link } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
+import {Card, CardContent, CardMedia, Typography, Grid, Box, Button, Container} from '@mui/material';
 
 function QAScreen() {
   const dispatch = useDispatch();

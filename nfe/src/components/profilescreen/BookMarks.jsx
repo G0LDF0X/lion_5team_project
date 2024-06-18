@@ -3,10 +3,7 @@ import { useSelector } from "react-redux";
 import Product from "../Product";
 import Loading from "../Loading";
 import Message from "../Message";
-
-import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import { Grid, Container, Typography } from "@mui/material";
 
 
 function BookMarks({ bookMarkItems }) {
