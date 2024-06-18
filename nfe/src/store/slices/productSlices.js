@@ -29,7 +29,46 @@ import {
 //         state.error = action.payload;
 //       });
 //   },
+// // });
+// export const productListSlice = createSlice({
+//   name: 'productList',
+//   initialState: {
+//     products: [],
+//     loading: false,
+//     error: null,
+//     cache: {}, // Initialize cache as an empty object
+//     fetchTime: null, // Initialize fetchTime as null
+//      totalPages:1, 
+//        currentPage:1
+//   },
+
+//   reducers: {},
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(listProducts.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(listProducts.fulfilled, (state, action) => {
+//         const { data, cacheKey, fromCache, total_page, current_page } = action.payload;
+//         state.products = data;
+//         state.loading = false;
+//         state.totalPages = total_page;
+//         state.currentPage = current_page;      
+//         if (!fromCache) {
+//           state.cache[cacheKey] = data; // Store fetched data in cache
+//           state.fetchTime = Date.now(); // Update fetchTime
+//         }
+        
+
+//       })
+//       .addCase(listProducts.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       });
+//   },
 // });
+
 export const productListSlice = createSlice({
   name: 'productList',
   initialState: {
@@ -38,10 +77,9 @@ export const productListSlice = createSlice({
     error: null,
     cache: {}, // Initialize cache as an empty object
     fetchTime: null, // Initialize fetchTime as null
-     totalPages:1, 
-       currentPage:1
+    totalPages: 1, 
+    currentPage: 1
   },
-
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -50,17 +88,15 @@ export const productListSlice = createSlice({
         state.error = null;
       })
       .addCase(listProducts.fulfilled, (state, action) => {
-        const { data, cacheKey, fromCache, total_page, current_page } = action.payload;
+        const { data, cacheKey, fromCache, totalPages, currentPage } = action.payload;
         state.products = data;
         state.loading = false;
-        state.totalPages = total_pages;
-        state.currentPage = current_page;      
+        state.totalPages = totalPages;
+        state.currentPage = currentPage;      
         if (!fromCache) {
           state.cache[cacheKey] = data; // Store fetched data in cache
           state.fetchTime = Date.now(); // Update fetchTime
         }
-        
-
       })
       .addCase(listProducts.rejected, (state, action) => {
         state.loading = false;

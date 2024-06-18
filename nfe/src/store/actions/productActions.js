@@ -10,6 +10,40 @@ const getAuthHeaders = (getState) => {
     Authorization: `Bearer ${userInfo.access}`,
   };
 };
+// export const listProducts = createAsyncThunk(
+//   'products/listProducts',
+//   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue, getState }) => {
+//     try {
+//       const state = getState();
+//       const cacheKey = `${query}-${page}-${category.join(',')}-${suggestions}`;
+//       const fetchTime = state.productList.fetchTime;
+//       if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+//         return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true };
+//       }
+
+//       let params = new URLSearchParams();
+//       if (query) params.append('query', query);
+//       if (page) params.append('page', page);
+//       if (category.length) {
+//         category.forEach((cat) => params.append('category', cat));
+//       }
+//       if (suggestions) {
+//         params.append('s', suggestions);
+//       }
+
+//       const url = `items?${params.toString()}`;
+//       const response = await mainAxiosInstance.get(url);
+//       return { data: response.data, cacheKey, fromCache: false  };
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response && error.response.data.detail
+//           ? error.response.data.detail
+//           : error.message
+//       );
+//     }
+//   }
+// );
+
 export const listProducts = createAsyncThunk(
   'products/listProducts',
   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue, getState }) => {
@@ -17,8 +51,9 @@ export const listProducts = createAsyncThunk(
       const state = getState();
       const cacheKey = `${query}-${page}-${category.join(',')}-${suggestions}`;
       const fetchTime = state.productList.fetchTime;
+      
       if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
-        return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true };
+        return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true, totalPages: state.productList.totalPages, currentPage: state.productList.currentPage };
       }
 
       let params = new URLSearchParams();
@@ -33,7 +68,9 @@ export const listProducts = createAsyncThunk(
 
       const url = `items?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);
-      return { data: response.data, cacheKey, fromCache: false  };
+      const { items, total_pages, current_page } = response.data;
+      
+      return { data: items, cacheKey, fromCache: false, totalPages: total_pages, currentPage: current_page };
     } catch (error) {
       return rejectWithValue(
         error.response && error.response.data.detail

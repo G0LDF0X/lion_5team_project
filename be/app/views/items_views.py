@@ -121,18 +121,51 @@ def get_all_items(request):
     })
 
 
+# @api_view(['GET'])
+# def get_items(request):
+#     query = request.GET.get('query', '')
+#     suggestions = request.query_params.get('s','')
+#     categories = request.query_params.getlist('category', [])
+#     page = request.query_params.get('page', 1)
+
+#     if suggestions:
+#         suggestions_list = suggestions.split(',')
+#     else:
+#         suggestions_list = []
+
+#     categories = [c for c in categories if c]
+#     suggestions_list = [s.strip() for s in suggestions_list if s.strip()]
+#     item_query = Q()
+
+#     if categories:
+#         item_query &= Q(category_id_id__in=categories)
+#     if suggestions_list:
+#         suggestions_query = Q()
+#         for suggestion in suggestions_list:
+#             suggestions_query |= Q(name__icontains=suggestion)
+#         item_query &= suggestions_query
+#     if query:
+#         query_condition = Q(name__icontains=query) | Q(description__icontains=query)
+#         item_query |= query_condition
+
+#     items = Item.objects.filter(item_query)
+#     paginator = Paginator(items, 12)  # 페이지당 12개 아이템
+#     paginated_items = paginator.get_page(page)
+    
+#     serializer = ItemSerializer(paginated_items, many=True)
+#     return Response({
+#         'items': serializer.data,
+#         'total_pages': paginator.num_pages,
+#         'current_page': paginated_items.number
+#     })
 @api_view(['GET'])
 def get_items(request):
     query = request.GET.get('query', '')
-    suggestions = request.query_params.get('s','')
+    suggestions = request.query_params.get('s', '')
     categories = request.query_params.getlist('category', [])
     page = request.query_params.get('page', 1)
 
-    if suggestions:
-        suggestions_list = suggestions.split(',')
-    else:
-        suggestions_list = []
-
+    suggestions_list = suggestions.split(',') if suggestions else []
     categories = [c for c in categories if c]
     suggestions_list = [s.strip() for s in suggestions_list if s.strip()]
     item_query = Q()
@@ -146,10 +179,10 @@ def get_items(request):
         item_query &= suggestions_query
     if query:
         query_condition = Q(name__icontains=query) | Q(description__icontains=query)
-        item_query |= query_condition
+        item_query &= query_condition
 
     items = Item.objects.filter(item_query)
-    paginator = Paginator(items, 12)  # 페이지당 12개 아이템
+    paginator = Paginator(items, 12)  # 12 items per page
     paginated_items = paginator.get_page(page)
     
     serializer = ItemSerializer(paginated_items, many=True)
@@ -158,6 +191,7 @@ def get_items(request):
         'total_pages': paginator.num_pages,
         'current_page': paginated_items.number
     })
+
 @api_view(['GET'])
 def get_my_items(request):
     user = User.objects.get(username=request.user)

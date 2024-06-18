@@ -79,16 +79,16 @@ function Footer() {
         <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="body2">&copy; 2024 PetPals, Inc.</Typography>
           <Box>
-            <MuiLink href="https://github.com/G0LDF0X/lion_5team_project" color="inherit" underline="hover" sx={{ mr: 1 }}>
+            <MuiLink href="https://github.com/G0LDF0X/lion_5team_project" color="inherit" underline="hover" sx={{ mr: 1 }} title="GitHub">
               <GitHub sx={{ width: 24, height: 24 }} />
             </MuiLink>
-            <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
+            <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }} title="Facebook">
               <Facebook sx={{ width: 24, height: 24 }} />
             </MuiLink>
-            <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }}>
+            <MuiLink href="#" color="inherit" underline="hover" sx={{ mr: 2 }} title = "Instagram">
               <Instagram sx={{ width: 24, height: 24 }} />
             </MuiLink>
-            <MuiLink href="#" color="inherit" underline="hover">
+            <MuiLink href="#" color="inherit" underline="hover" >
               <i className="fas fa-globe mr-1"></i> English
             </MuiLink>
           </Box>
