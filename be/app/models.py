@@ -196,6 +196,7 @@ class Image_Tag(models.Model):
     x = models.IntegerField()
     y = models.IntegerField()
     tag = models.CharField(max_length=100)
+    tagId = models.IntegerField(blank=True)
 
     def __str__(self):
         return f"Tag: {self.tag} on board {self.board.title} at ({self.x}, {self.y})"

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import { Button, IconButton, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from "@mui/material";
 import ProductCreateModal from "../../modals/ProductCreate";
 import ProductUpdateModal from "../../modals/ProductUpdate";
 import { deleteProduct, createProduct, listProductDetails, updateProduct } from "../../store/actions/productActions";
+import { Add, Delete, Edit } from "@mui/icons-material";
+import ItemListSkeleton from "../ItemListSkeleton";
+import Loading from "../Loading";
 function SellerItem({ fetchProducts, products, isLoading}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,6 +27,7 @@ function SellerItem({ fetchProducts, products, isLoading}) {
   
   useEffect(() => {
     fetchProducts();
+    console.log(products)
   }, [navigate, successCreate, successDelete, successUpdate]);
 
   const deleteHandler = (id) => {
@@ -74,7 +78,7 @@ function SellerItem({ fetchProducts, products, isLoading}) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
+              {products&&products.map((product) => (
                 
                 <TableRow key={product.id}>
                   <TableCell>{product.id}</TableCell>

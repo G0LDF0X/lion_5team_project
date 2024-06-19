@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import useItems from '../hook/useItems';
 
-const TagInput = ({ selectedTags, setSelectedTags }) => {
+const TagInput = ({ selectedTags, setSelectedTags, setSelectedTagId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   // const productList = useSelector((state) => state.productList);
   // const { items } = productList;
   const items = useItems();
-  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  console.log("ITEMS:", items);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -15,6 +15,7 @@ const TagInput = ({ selectedTags, setSelectedTags }) => {
 
   const handleTagSelect = (product) => {
     setSelectedTags(product.name);
+    setSelectedTagId(product.id);
     setSearchTerm('');
   };
 

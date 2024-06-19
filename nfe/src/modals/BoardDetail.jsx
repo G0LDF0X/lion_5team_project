@@ -80,6 +80,7 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
+      console.log(boardDetail)
       setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
@@ -352,7 +353,7 @@ function BoardDetailModal({ open, handleClose }) {
                             />
                             <TagInfo className="tag-info">
                               <div>
-                                <Link to={`/items/?query=${tag.tag}`}>
+                                <Link to={`/items/detail/${tag.tagId}`}>
                                   <p style={{ margin: 1 }}>{tag.tag}</p>
                                 </Link>
                               </div>
