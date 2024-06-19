@@ -182,6 +182,16 @@ def my_bookmarks(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def user_bookmarks(request, pk):
+    try:
+        user = User.objects.get(id=pk)
+        bookmarks = Bookmark.objects.filter(user_id=user)
+        serializer = BookmarkSerializer(bookmarks, many=True)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=404)
+
+@api_view(['GET'])
 def get_likes(request, pk):
     user = User.objects.get(id=pk)
     likes = Interaction.objects.filter(user_id_id=user, interaction_type='like')

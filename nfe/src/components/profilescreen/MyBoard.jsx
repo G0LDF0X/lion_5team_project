@@ -20,7 +20,15 @@ const MyBoard = ({ userInfo }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      
+      {MyBoards.length === 0 ? (
+        <div className="w-full p-4 text-center">
+          <h1 className="text-center text-2xl font-bold text-gray-700">
+            등록된 게시물이 없습니다.
+          </h1>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {MyBoards.map((board) => (
               <Link to={`/board/${board.id}`}>
           <div key={board.id} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -38,10 +46,12 @@ const MyBoard = ({ userInfo }) => {
               </p>
             </div>
           </div>
-                  </Link>
+          </Link>
         ))}
+        </div>
+      )}
       </div>
-    </div>
+    
   );
 };
 
