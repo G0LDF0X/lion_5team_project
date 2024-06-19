@@ -21,7 +21,6 @@ def order_item_detail(request, pk):
 
 @api_view(['POST'])
 def add_to_cart(request, pk):
-    print(request.user)
     user = User.objects.get(username=request.user)
     item_id = pk
     item = Item.objects.get(id=item_id)
@@ -75,7 +74,6 @@ def create_order(request):
     user = User.objects.get(username=request.user)
     cart_items = Cart.objects.filter(user_id=user.id)
     payment_info = request.data.get('paymentInfo', None)  # paymentInfo 데이터 추출
-    print(payment_info)
     if not payment_info:
         return Response({"detail":"Payment information is missing"}, status=400)
 
@@ -98,11 +96,9 @@ def create_order(request):
 
         total_price = 0
         for cart_item in cart_items:
-            print(cart_item)
             image = cart_item.image if cart_item.image else "path/to/default/image.jpg"
             price_multi_qty = cart_item.item_id.price * cart_item.qty
             item_name = Item.objects.get(id=cart_item.item_id_id).name
-            print(item_name)
             order_item_data = {"order_id": order.id, "item_id": cart_item.item_id.id, "qty": cart_item.qty, "name": item_name, "price_multi_qty": price_multi_qty, "image": image}
             order_item_serializer = OrderItemSerializer(data=order_item_data)
             if order_item_serializer.is_valid():
