@@ -17,6 +17,8 @@ from io import BytesIO
 from PIL import Image
 import json
 from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
+from django.core.cache import cache
+
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
@@ -25,6 +27,20 @@ def get_Boards(request):
 
     serializer = BoardSerializer(boards, many=True)
     return Response(serializer.data)
+
+# @api_view(['GET'])
+# def get_Boards(request):
+#     cache_key = 'all_boards'
+#     data = cache.get(cache_key)
+
+#     if not data:
+#         boards = Board.objects.all()
+#         serializer = BoardSerializer(boards, many=True)
+#         data = serializer.data
+
+#         cache.set(cache_key, data, 600)  # 캐시 유효 시간을 10분으로 설정
+
+#     return Response(data)
 
 def filter_reply(sentence):
     model_name = 'sgunderscore/hatescore-korean-hate-speech'

@@ -18,8 +18,12 @@ import os
 from dotenv import load_dotenv
 from operator import itemgetter
 import logging
+from django.core.cache import cache
+
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
+
+
 
 ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
@@ -105,6 +109,51 @@ def get_items(request):
         'total_pages': paginator.num_pages,
         'current_page': paginated_items.number
     })
+
+#redis 서버 띄우고 get_items cacheing 추가
+# @api_view(['GET'])
+# def get_items(request):
+#     query = request.GET.get('query', '')
+#     categories = request.query_params.getlist('category', [])
+#     page = request.query_params.get('page', 1)
+#     categories = [c for c in categories if c]
+
+#     cache_key = f'items_{query}_{str(categories)}_{page}'
+#     items = cache.get(cache_key)
+#     if not items:
+#         if query:
+#             query_embedding = embed_query(query)
+#             script_query = {
+#                 "script_score": {
+#                     "query": {"match_all": {}},
+#                     "script": {
+#                         "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+#                         "params": {"query_vector": query_embedding}
+#                     }
+#                 }
+#             }
+#             response = es.search(index='items', body={"query": script_query})
+#             sorted_hits = sorted(response['hits']['hits'], key=itemgetter('_score'), reverse=True)
+#             item_ids = [hit['_id'] for hit in sorted_hits]
+#             if len(categories) > 0:
+#                 items = Item.objects.filter(id__in=item_ids, category_id__in=categories)
+#             else:
+#                 items = Item.objects.filter(id__in=item_ids)
+#         elif len(categories) > 0:
+#             items = Item.objects.filter(category_id__in=categories)
+#         else:
+#             items = Item.objects.all()
+#         cache.set(cache_key, items)
+#     paginator = Paginator(items, 12)  # 12 items per page
+#     paginated_items = paginator.get_page(page)
+    
+#     serializer = ItemSerializer(paginated_items, many=True)
+    
+#     return Response({
+#         'items': serializer.data,
+#         'total_pages': paginator.num_pages,
+#         'current_page': paginated_items.number
+#     })
 
 @api_view(['GET'])
 def get_my_items(request):
@@ -249,7 +298,6 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
