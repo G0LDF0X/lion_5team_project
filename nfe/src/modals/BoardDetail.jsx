@@ -352,7 +352,7 @@ function BoardDetailModal({ open, handleClose }) {
                             />
                             <TagInfo className="tag-info">
                               <div>
-                                <Link to={`/items/?q=${tag.tag}`}>
+                                <Link to={`/items/?query=${tag.tag}`}>
                                   <p style={{ margin: 1 }}>{tag.tag}</p>
                                 </Link>
                               </div>

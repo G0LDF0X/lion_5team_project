@@ -16,6 +16,7 @@ from django.conf import settings
 import torch
 import os
 from dotenv import load_dotenv
+from operator import itemgetter
 import logging
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
@@ -81,9 +82,10 @@ def get_items(request):
                 }
             }
         }
-    
         response = es.search(index='items', body={"query": script_query})
-        item_ids = [hit['_id'] for hit in response['hits']['hits']]
+        sorted_hits = sorted(response['hits']['hits'], key=itemgetter('_score'), reverse=True)
+        item_ids = [hit['_id'] for hit in sorted_hits]
+        # item_ids = [hit['_id'] for hit in response['hits']['hits']]
         if len(categories) > 0:
             items = Item.objects.filter(id__in=item_ids, category_id__in=categories)
         else:
