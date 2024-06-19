@@ -11,7 +11,7 @@ from django.db.models import F, Sum
 from datetime import timedelta,datetime
 from dateutil.relativedelta import relativedelta
 import pytz
-
+from django.core.cache import cache 
 
 @api_view(['GET'])
 def index(request):
@@ -52,6 +52,27 @@ def SellerRevenueView(request):
             order_item.price_multi_qty = item.price * order_item.qty
             total_revenue += order_item.price_multi_qty
     return Response({'total_revenue': total_revenue})
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def SellerRevenueView(request):
+#     cache_key = f'seller_revenue_{request.user}'
+#     total_revenue = cache.get(cache_key)
+
+#     if total_revenue is None:
+#         user = User.objects.get(username=request.user)
+#         seller = Seller.objects.get(user_id=user)
+#         items = Item.objects.filter(seller_id=seller)
+#         total_revenue = 0
+#         for item in items:
+#             order_items = OrderItem.objects.filter(item_id=item)
+#             for order_item in order_items:
+#                 order_item.price_multi_qty = item.price * order_item.qty
+#                 total_revenue += order_item.price_multi_qty
+
+#         cache.set(cache_key, total_revenue, 600)  # 캐시 유효 시간을 10분으로 설정
+
+#     return Response({'total_revenue': total_revenue})
 
 @api_view(['G'])
 @api_view(['GET', 'POST'])
