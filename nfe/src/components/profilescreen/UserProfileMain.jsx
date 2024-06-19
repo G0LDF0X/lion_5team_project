@@ -46,16 +46,7 @@ function UserProfileMain({ userInfo, user, url}) {
           </div>
         </div>
         <div className="mt-6 mb-4 text-center">
-          <div className="w-full">
-            <BottomNavigation
-              showLabels
-              value={value}
-              onChange={(event, newValue) => setValue(newValue)}
-            >
-              <BottomNavigationAction label="스크랩북" icon={<BookmarkBorder />} />
-              <BottomNavigationAction label="좋아요" icon={<FavoriteBorder />} />
-              <BottomNavigationAction label="내 쿠폰" icon={<ConfirmationNumberOutlined />} />
-            </BottomNavigation>
+          <div className="w-full">              
           </div>
         </div>
       </div>

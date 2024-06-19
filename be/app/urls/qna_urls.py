@@ -1,5 +1,5 @@
 from django.urls import path
-from app.views.qna_views import qna_board, qna_detail, create_user_qna, update_user_qna, delete_user_qna, uploadImage, create_user_answer, update_user_answer
+from app.views.qna_views import qna_board, qna_detail, create_user_qna, update_user_qna, delete_user_qna, uploadImage, create_user_answer, update_user_answer, get_user_qna
 
 urlpatterns = [
     path('', qna_board, name='qna_board'),  # Q&A 전체보기
@@ -10,4 +10,5 @@ urlpatterns = [
     path('update/<str:pk>/', update_user_qna, name='update_user_qna'),  # Q&A 수정
     path('delete/<str:pk>/', delete_user_qna, name='delete_user_qna'),  # Q&A 삭제
     path('uploadImage/<int:pk>/', uploadImage, name='uploadImage'),  # 이미지 업로드
+    path('<int:pk>/qna/', get_user_qna, name='get_user_qna'),  # 유저 QnA
 ]

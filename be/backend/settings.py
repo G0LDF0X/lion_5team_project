@@ -168,7 +168,7 @@ DATABASES = {
         'NAME': "petpals",
         'USER': "postgres",
         'PASSWORD': "G=nf_-}EKl",
-        'HOST' : "hanslab.org",
+        'HOST' : "211.110.169.141",
         "PORT" :"25432",
     }
 }

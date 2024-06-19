@@ -39,6 +39,11 @@ const OtherFollowingList = ({ userId, userDetail }) => {
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
         {userDetail.nickname  }의 팔로잉
       </Typography>
+      {following.length === 0 ? (
+        <h1 className="text-center text-2xl font-bold text-gray-700">
+          팔로잉한 유저가 없습니다.
+        </h1>
+      ) : (
       <Grid container spacing={4}>
         {following.map((follow, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -60,6 +65,7 @@ const OtherFollowingList = ({ userId, userDetail }) => {
           </Grid>
         ))}
       </Grid>
+      )}
     </Box>
   );
 };
