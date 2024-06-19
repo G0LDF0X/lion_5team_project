@@ -41,7 +41,8 @@ pip install torch
 cd be
 uvicorn recommend.main:app --reload --port 8003
 
-http://localhost:8003/recommend?user_id=49  get요청으로 확인가능
+http://localhost:8003/recommendations/49  get요청으로 확인가능
+http://localhost:8003/board-recommendations/49  get요청으로 확인가능
 ```
 ### ElasticSearch
 

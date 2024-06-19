@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { mainAxiosInstance } from "../../api/axiosInstances";
+import { mainAxiosInstance, recommendationAxiosInstance } from "../../api/axiosInstances";
 
 const handleError = (error) => {
   return error.response && error.response.data.detail
@@ -36,28 +36,6 @@ export const listBoards = createAsyncThunk(
     }
   }
 );
-
-// export const listBoards = createAsyncThunk(
-//   "boardList/listBoards",
-//   async ({ query = '', page = '' }, { rejectWithValue }) => {
-//     try {
-//       let params = new URLSearchParams();
-//       if (query) params.append('query', query);
-//       if (page) params.append('page', page);
-      
-//       const url = `/board?${params.toString()}`;
-//       const res = await mainAxiosInstance.get(url);
-//       return res.data;
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response && error.response.data.detail
-//           ? error.response.data.detail
-//           : error.message
-//       );
-//     }
-//   }
-// );
-
 export const getBoardDetails = createAsyncThunk(
   "boardDetails/getBoardDetails",
   async (id, { getState, rejectWithValue }) => {
@@ -187,3 +165,39 @@ export const createApply = createAsyncThunk(
 );
 
 
+export const getTopBoards = createAsyncThunk( 
+  "boardTop/getTopBoards",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState();
+    const cacheKey = 'topBoards';
+    const fetchTime = state.topBoard.fetchTime;
+    if( state.topBoard.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+      return { data: state.topBoard.cache[cacheKey],cacheKey,  fromCache: true, };
+    }
+    try {
+      const res = await mainAxiosInstance.get(`/board/top/`);
+      return {data:res.data, cacheKey, fromCache: false};
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+
+export const getBoardRecommendations = createAsyncThunk(
+  "boardRecommendations/getBoardRecommendations",
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState();
+    const userIfo = state.user.userInfo;
+    const cacheKey = 'recommendations';
+    const fetchTime = state.topBoard.fetchTime;
+    if( state.topBoard.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+      return { data: state.topBoard.cache[cacheKey],cacheKey,  fromCache: true, };
+    }
+    try {
+      const res = await recommendationAxiosInstance.get(`/board-recommendations/${userIfo.id}/`);
+      return {data:res.data, cacheKey, fromCache: false};
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);

@@ -8,66 +8,61 @@ import {
   createProductQnA,
   updateProductQnA,
   deleteProductQnA,
+  getTopProducts,
+  getRecommendations
+
 } from "../actions/productActions";
 
-// export const productListSlice = createSlice({
-//   name: "productList",
-//   initialState: { loading: false, products: [] },
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(listProducts.pending, (state) => {
-//         state.loading = true;
-//         state.products = [];
-//       })
-//       .addCase(listProducts.fulfilled, (state, action) => {
-//         state.loading = false;
-//         state.products = action.payload;
-//       })
-//       .addCase(listProducts.rejected, (state, action) => {
-//         state.loading = false;
-//         state.error = action.payload;
-//       });
-//   },
-// // });
-// export const productListSlice = createSlice({
-//   name: 'productList',
-//   initialState: {
-//     products: [],
-//     loading: false,
-//     error: null,
-//     cache: {}, // Initialize cache as an empty object
-//     fetchTime: null, // Initialize fetchTime as null
-//      totalPages:1, 
-//        currentPage:1
-//   },
+export const topProductsSlice = createSlice({
+  name: "topProducts",
+  initialState: { loading: false, products: [], error: "" , success: false, cache: {}, fetchTime: null},
+  reducers: {},
 
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(listProducts.pending, (state) => {
-//         state.loading = true;
-//         state.error = null;
-//       })
-//       .addCase(listProducts.fulfilled, (state, action) => {
-//         const { data, cacheKey, fromCache, total_page, current_page } = action.payload;
-//         state.products = data;
-//         state.loading = false;
-//         state.totalPages = total_page;
-//         state.currentPage = current_page;      
-//         if (!fromCache) {
-//           state.cache[cacheKey] = data; // Store fetched data in cache
-//           state.fetchTime = Date.now(); // Update fetchTime
-//         }
-        
+  extraReducers: (builder) => {
+    builder
+      .addCase(getTopProducts.pending, (state) => {
+        state.loading = true;
+        state.products = [];
+        state.error = "";
+      })
+      .addCase(getTopProducts.fulfilled, (state, action) => {
+        const { data, cacheKey, fromCache } = action.payload;
+        state.loading = false;
+        state.products = data;
+        if (!fromCache) {
+          state.cache[cacheKey] = data; // Store fetched data in cache
+          state.fetchTime = Date.now(); // Update fetchTime
+        }
 
-//       })
-//       .addCase(listProducts.rejected, (state, action) => {
-//         state.loading = false;
-//         state.error = action.payload;
-//       });
-//   },
-// });
+      })
+      .addCase(getTopProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getRecommendations.pending, (state) => {
+        state.loading = true;
+        state.products = [];
+        state.error = "";
+      }
+      )
+      .addCase(getRecommendations.fulfilled, (state, action) => {
+        const { data, cacheKey, fromCache } = action.payload;
+        state.loading = false;
+        state.products = data;
+        if (!fromCache) {
+          state.cache[cacheKey] = data; // Store fetched data in cache
+          state.fetchTime = Date.now(); // Update fetchTime
+      }
+      }
+      )
+      .addCase(getRecommendations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      }
+      );
+
+  },
+});
 
 export const productListSlice = createSlice({
   name: 'productList',

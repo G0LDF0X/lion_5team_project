@@ -64,10 +64,6 @@ export const updateQNA = createAsyncThunk(
       const {
         user: { userInfo },
       } = getState();
-
-      console.log(formdata)
-      // console.log('Request Data:', userqna); // 요청 데이터 확인
-
       const res = await mainAxiosInstance.put(
         `/qna/update/${QnaId}/`,
         formdata,

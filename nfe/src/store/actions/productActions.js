@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { mainAxiosInstance } from "../../api/axiosInstances";
+import { mainAxiosInstance, recommendationAxiosInstance } from "../../api/axiosInstances";
 
 const getAuthHeaders = (getState) => {
   const {
@@ -10,40 +10,6 @@ const getAuthHeaders = (getState) => {
     Authorization: `Bearer ${userInfo.access}`,
   };
 };
-// export const listProducts = createAsyncThunk(
-//   'products/listProducts',
-//   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue, getState }) => {
-//     try {
-//       const state = getState();
-//       const cacheKey = `${query}-${page}-${category.join(',')}-${suggestions}`;
-//       const fetchTime = state.productList.fetchTime;
-//       if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
-//         return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true };
-//       }
-
-//       let params = new URLSearchParams();
-//       if (query) params.append('query', query);
-//       if (page) params.append('page', page);
-//       if (category.length) {
-//         category.forEach((cat) => params.append('category', cat));
-//       }
-//       if (suggestions) {
-//         params.append('s', suggestions);
-//       }
-
-//       const url = `items?${params.toString()}`;
-//       const response = await mainAxiosInstance.get(url);
-//       return { data: response.data, cacheKey, fromCache: false  };
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response && error.response.data.detail
-//           ? error.response.data.detail
-//           : error.message
-//       );
-//     }
-//   }
-// );
-
 export const listProducts = createAsyncThunk(
   'products/listProducts',
   async ({ query = '', page = '', category = [] }, { rejectWithValue, getState }) => {
@@ -79,33 +45,6 @@ export const listProducts = createAsyncThunk(
     }
   }
 );
-// export const listProducts = createAsyncThunk(
-//   'products/listProducts',
-//   async ({ query = '', page = '', category = [], suggestions = '' }, { rejectWithValue }) => {
-    
-//     try {
-//       let params = new URLSearchParams();
-//       if (query) params.append('query', query);
-      
-//       if (page) params.append('page', page);
-//       if (category.length) {
-//         category.forEach((cat) => params.append('category', cat));
-//       }
-//       if (suggestions) {
-//         params.append('s', suggestions);
-//       }
-//       const url = `items?${params.toString()}`;
-//       const response = await mainAxiosInstance.get(url);
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response && error.response.data.detail
-//           ? error.response.data.detail
-//           : error.message
-//       );
-//     }
-//   }
-// );
 export const listProductDetails = createAsyncThunk(
   "productDetails/listProductDetails",
   async (id, { rejectWithValue }) => {
@@ -247,6 +186,46 @@ export const deleteProductQnA = createAsyncThunk(
       return res.data;
     } catch (error) {
       console.error(error);
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+
+export const getTopProducts = createAsyncThunk(
+  "products/getTopProductsOrRecommendations",
+  async(_, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const cacheKey = 'top';
+      const fetchTime = state.topProducts.fetchTime;
+      if (state.topProducts.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+        console.log ("CACHE:", state.topProducts.cache[cacheKey]);
+        return { data: state.topProducts.cache[cacheKey], cacheKey, fromCache: true };
+      }
+      const res = await mainAxiosInstance.get(`/items/top/`);
+      return { data: res.data, cacheKey, fromCache: false}
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+
+);
+
+export const getRecommendations = createAsyncThunk(
+  "products/getRecommendations",
+  async(_, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const user = state.user.userInfo;
+      const cacheKey = 'recommendation';
+      const fetchTime = state.topProducts.fetchTime;
+      if (state.topProducts.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+        console.log ("CACHE:", state.topProducts.cache[cacheKey]);
+        return { data: state.topProducts.cache[cacheKey], cacheKey, fromCache: true };
+      }
+      const res = await recommendationAxiosInstance.get(`/recommendations/${user.id}/`);
+      return { data: res.data, cacheKey, fromCache: false}
+    } catch (error) {
       return rejectWithValue(handleError(error));
     }
   }
