@@ -30,17 +30,16 @@ function ProductsScreen() {
   const query = params.get('query') || '';
   const page = params.get('page') || 1;
   const tag = params.get('tag');
-  const suggestions = params.get('s') || ''; 
 
   useEffect(() => {
 
-    dispatch(listProducts({query:query, page:currentPage, category:selectedCategory, suggestions:suggestions})); // currentPage로 수정
+    dispatch(listProducts({query:query, page:currentPage, category:selectedCategory})); // currentPage로 수정
     if (selectedCategory.length === 1) {
       fetchTags(selectedCategory[0]);
     } else {
       setTags([]);
     }
-      }, [dispatch, query, tag, currentPage, selectedCategory, suggestions ]); // currentPage로 수정
+      }, [dispatch, query, tag, currentPage, selectedCategory ]); // currentPage로 수정
 
   const categories = useCategory();
 
