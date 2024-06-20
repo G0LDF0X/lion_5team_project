@@ -25,7 +25,6 @@ export const listBoards = createAsyncThunk(
     const cache = state.board.cache['boards'];
     const fetchTime = state.board.fetchTime;
     if (cache&& fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
-      console.log('Cache:', cache);
       return { data: cache, fromCache: true, };
     }
     try {
@@ -79,7 +78,6 @@ export const createBoard = createAsyncThunk(
     });
       return res.data;
     } catch (error) {
-      console.error('Error:', error);
       return rejectWithValue(handleError(error));
     }
   }
