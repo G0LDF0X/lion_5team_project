@@ -140,10 +140,6 @@ function Header({ openModal, openPostModal, openSideBar }) {
                   <i className="fa-regular fa-image"></i>
                   <Typography>PET 사진/영상올리기</Typography>
                 </MenuItem>
-                <MenuItem component={Link} to="/qna/create/" className="flex items-center space-x-2">
-                  <i className="fa-regular fa-question-circle"></i>
-                  <Typography>Q&A 글쓰기</Typography>
-                </MenuItem>
               </Menu>
             </div>
           )}
