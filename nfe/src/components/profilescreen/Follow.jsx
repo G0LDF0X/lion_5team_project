@@ -38,11 +38,11 @@ const Follow = ({ userInfo }) => {
       </Typography>
     {following.length === 0 ? (
       <div className="w-full p-4 text-center">
-      <div className="border border-gray-300 p-8 w-full h-auto mt-10 rounded-md shadow-sm">
-          <h1 className="text-center text-2xl font-bold text-gray-700">
-              팔로잉 한 유저가 없습니다.
-          </h1>
-      </div>
+      <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+            <h1 className="mb-8 mt-8 text-center text-xl text-gray-700"> 
+              팔로잉이 없습니다.
+            </h1>
+        </div>
       </div>
     ) : (
       <div className="flex flex-wrap -mx-2">
