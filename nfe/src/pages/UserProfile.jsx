@@ -65,7 +65,7 @@ function UserProfileScreen() {
       dispatch(listBookMark());
       dispatch(getUserDetail(userInfo.id));
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate]);
 
   return (
     <Box sx={{ width: "100%" }}>
