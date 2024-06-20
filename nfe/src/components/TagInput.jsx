@@ -44,7 +44,7 @@ const TagInput = ({ selectedTags, setSelectedTags, setSelectedTagId }) => {
         placeholder="Search to tag items"
       />
       {searchTerm && (
-        <div className="mt-2 bg-white shadow-md rounded-md max-h-40 overflow-y-auto">
+        <div className="mt-2 bg-white shadow-md rounded-md max-h-60 overflow-y-auto">
           {items
           .filter(product => chosungIncludes(product.name, searchTerm) || product.name.toLowerCase().includes(searchTerm.toLowerCase()))
             // .filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
