@@ -389,9 +389,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
 from app.models import Interaction, Item
+from pathlib import Path
 from dotenv import load_dotenv
+env_path = Path('recommend/.env')
 
-load_dotenv()
+load_dotenv(env_path)
 
 db_host = os.getenv('DB_HOST')
 db_name = os.getenv('DB_NAME')
