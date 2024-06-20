@@ -57,6 +57,10 @@ function Loading2() {
 }
 
 function ProductCarousel({ loading, error, products }) {
+  if (!Array.isArray(products)) {
+    console.error('products is not an array:', products);
+    return null;
+  }
   return (
     <>
       <Typography variant="h5" className="my-4 font-semibold text-gray-700">
