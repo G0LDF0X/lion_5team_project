@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+
 import useItems from '../hook/useItems';
 import { chosungIncludes } from 'es-hangul';
 

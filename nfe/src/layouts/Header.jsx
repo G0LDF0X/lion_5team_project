@@ -10,7 +10,8 @@ import {
   Button,
   Avatar,
   Typography,
-  Box
+  Box,
+  Badge
 } from "@mui/material";
 import {
   ShoppingCart,
@@ -21,7 +22,7 @@ import {
   Photo
 } from "@mui/icons-material";
 import SearchBox from "./SearchBox";
-import Badge from '@mui/material/Badge';
+
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);

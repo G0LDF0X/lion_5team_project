@@ -3,10 +3,7 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useNavigate, useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
+import {Button, Snackbar, Typography, Rating} from "@mui/material";
 import { updateReview} from "../store/actions/reviewActions";
 
 import Loading from "../components/Loading";
