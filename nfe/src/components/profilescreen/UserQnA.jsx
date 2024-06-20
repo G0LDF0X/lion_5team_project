@@ -18,6 +18,10 @@ const UserQnA = ({ userInfo }) => {
     })
       .then((response) => {
         const data = response.data;
+
+        // 질문을 최신순으로 정렬
+        data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
         const promises = data.map((qna) =>
           mainAxiosInstance.get(`/qna/detail/${qna.id}`).then((res) => res.data)
         );
@@ -40,6 +44,11 @@ const UserQnA = ({ userInfo }) => {
       },
     })
       .then((response) => {
+        const data = response.data;
+
+        // 답변을 최신순으로 정렬
+        data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        
         setUserAnswers(response.data);
       })
       .catch((error) => console.error('Error:', error));

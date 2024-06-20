@@ -19,29 +19,24 @@ import json
 from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
 from django.utils import timezone
 from django.core.cache import cache
+from django.core.paginator import Paginator
 
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
 def get_Boards(request):
+    page = request.query_params.get('page', 1)
     boards = Board.objects.all()
-
-    serializer = BoardSerializer(boards, many=True)
-    return Response(serializer.data)
-
-# @api_view(['GET'])
-# def get_Boards(request):
-#     cache_key = 'all_boards'
-#     data = cache.get(cache_key)
-
-#     if not data:
-#         boards = Board.objects.all()
-#         serializer = BoardSerializer(boards, many=True)
-#         data = serializer.data
-
-#         cache.set(cache_key, data, 600)  # 캐시 유효 시간을 10분으로 설정
-
-#     return Response(data)
+    paginator = Paginator(boards, 12)  # 12 boards per page
+    paginated_boards = paginator.get_page(page)
+    
+    serializer = BoardSerializer(paginated_boards, many=True)
+    
+    return Response({
+        'boards': serializer.data,
+        'total_pages': paginator.num_pages,
+        'current_page': paginated_boards.number
+    })
 
 def filter_reply(sentence):
     model_name = 'sgunderscore/hatescore-korean-hate-speech'
@@ -79,7 +74,7 @@ def board_detail_or_create_reply(request, pk):
         board_data['liked_by_user'] = Interaction.objects.filter(
             user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
         ).exists() if request.user.is_authenticated else False
-        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag', 'tagId').all()
+        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag').all()
         
         reply_serializer = ReplySerializer(replies, many=True)
         
@@ -164,8 +159,7 @@ def create_Board(request):
                 board=board,
                 x=tag['x'],
                 y=tag['y'],
-                tag=tag['tag'],
-                tagId=tag['tagId']
+                tag=tag['tag']
             )
 
         serializer = BoardSerializer(board)

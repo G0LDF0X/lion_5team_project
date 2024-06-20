@@ -12,6 +12,8 @@ from datetime import timedelta,datetime
 from dateutil.relativedelta import relativedelta
 import pytz
 from django.core.cache import cache 
+from rest_framework.decorators import authentication_classes
+from rest_framework.authentication import TokenAuthentication
 
 @api_view(['GET'])
 def index(request):
@@ -131,15 +133,18 @@ def seller_refund_view(request):
     serializer = RefundSerializer(refund_items, many=True)
     return Response(serializer.data)
 
+
+# @permission_classes([IsAuthenticated])
+
 @api_view(['POST', 'GET'])
-@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def Seller_Apply_Save(request):
     if request.method == 'POST':
         bs_number = request.data.get('bs_number')
         if bs_number is None:
             return Response({'error': 'bs_number is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        user = User.objects.get(username=request.user)
+        user = User.objects.get(username=request.data.get('user'))
         user.is_seller = True
         user.save()
         seller = Seller.objects.create(
@@ -149,7 +154,7 @@ def Seller_Apply_Save(request):
         serializer = SellerSerializer(seller)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     elif request.method == 'GET':
-        user = User.objects.get(username=request.user)
+        user = User.objects.get(username=request.data.get('user'))
         if user.is_seller:
             seller = Seller.objects.get(user_id=user)
             serializer = SellerSerializer(seller)
