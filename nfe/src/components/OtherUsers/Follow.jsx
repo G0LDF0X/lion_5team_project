@@ -40,32 +40,35 @@ const OtherFollowingList = ({ userId, userDetail }) => {
         {userDetail.nickname  }의 팔로잉
       </Typography>
       {following.length === 0 ? (
-        <h1 className="text-center text-2xl font-bold text-gray-700">
-          팔로잉한 유저가 없습니다.
-        </h1>
+        <div className="border border-gray-300 p-8 w-full h-auto mt-10 rounded-md shadow-sm">
+          <h1 className="text-center text-2xl font-bold text-gray-700">
+              팔로잉 한 유저가 없습니다.
+          </h1>
+      </div>
       ) : (
-      <Grid container spacing={4}>
-        {following.map((follow, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Card className="shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-              <CardContent>
-                <Typography variant="h6" className="font-bold text-gray-800 mb-2">
-                  {follow.user.username}
-                </Typography>
-                <Typography variant="body2" className="text-gray-600 mb-4">
-                  {follow.created_at.split('T')[0]}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button variant="contained" color="primary" component={Link} to={`/users/${follow.followed_id}`}>
+   
+    <div className="flex flex-wrap -mx-2 mt-10">
+      {following.map((follow, index) => (
+        <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-2">
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="p-4">
+              <h2 className="text-xl font-semibold mb-2">
+                {follow.user.username}
+              </h2>
+              <p className="text-gray-600 mb-4">
+                {follow.created_at.split('T')[0]}
+              </p>
+              <Link to={`/users/${follow.followed_id}`}>
+                <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   바로가기
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      )}
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+        )}
     </Box>
   );
 };

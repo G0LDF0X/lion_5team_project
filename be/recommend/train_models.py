@@ -387,6 +387,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
 django.setup()
 
+from pathlib import Path
 from app.models import Interaction, Item
 from pathlib import Path
 from dotenv import load_dotenv
