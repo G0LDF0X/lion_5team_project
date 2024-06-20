@@ -13,13 +13,26 @@ from asgiref.sync import sync_to_async
 import pandas as pd
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
+from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
-from app.models import Item, Board  # Ensure you import the Item and Board models
+from app.models import Item, Board, User  # Ensure you import the Item, Board, and User models
 
 app = FastAPI()
+origins = [
+    "http://localhost:5173",
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():
@@ -28,6 +41,7 @@ async def startup_event():
     background_tasks.add_task(train_rbm_model)
     background_tasks.add_task(train_board_svd_model)
     background_tasks.add_task(train_board_rbm_model)
+    background_tasks.add_task(generate_all_user_recommendations)  # Add this line to generate recommendations for all users
     await background_tasks()
 
 @app.post("/train")
@@ -46,7 +60,7 @@ async def get_recommendations(user_id: int):
     if recommendations is None:
         recommendations = await generate_recommendations(user_id)
         cache.set(cache_key, recommendations, timeout=24*60*60)
-    
+    # background_tasks.add_task(generate_recommendations, user_id)
     return recommendations
 
 @app.get("/board-recommendations/{user_id}", response_model=List[schemas.BoardRecommendationResponse])
@@ -57,10 +71,20 @@ async def get_board_recommendations(user_id: int):
     if recommendations is None:
         recommendations = await generate_board_recommendations(user_id)
         cache.set(cache_key, recommendations, timeout=24*60*60)
-    
+    # background_tasks.add_task(generate_board_recommendations, user_id)
     return recommendations
 
-async def generate_recommendations(user_id: int):
+async def generate_all_user_recommendations():
+    users = await sync_to_async(list)(User.objects.all())
+    for user in users:
+        user_id = user.id
+        recommendations = await generate_recommendations(user_id)
+        cache.set(f"recommendations_{user_id}", recommendations, timeout=24*60*60)
+
+        board_recommendations = await generate_board_recommendations(user_id)
+        cache.set(f"board_recommendations_{user_id}", board_recommendations, timeout=24*60*60)
+
+async def generate_recommendations(user_id: int):   
     svd_model_path = 'svd_model.pkl'
     rbm_model_path = 'rbm_model.pkl'
 
@@ -146,25 +170,11 @@ async def generate_board_recommendations(user_id: int):
 
     return await get_boards_from_ids([rec[0] for rec in recommendations[:10]])
 
-async def get_top_rated_items():
-    top_rated_items = cache.get('top_rated_items')
-    if not top_rated_items:
-        top_rated_items = await sync_to_async(fetch_top_rated_items)()
-        cache.set('top_rated_items', top_rated_items, timeout=24*60*60)
-    return await get_items_from_ids(top_rated_items)
-
-async def get_top_rated_boards():
-    top_rated_boards = cache.get('top_rated_boards')
-    if not top_rated_boards:
-        top_rated_boards = await sync_to_async(fetch_top_rated_boards)()
-        cache.set('top_rated_boards', top_rated_boards, timeout=24*60*60)
-    return await get_boards_from_ids(top_rated_boards)
-
 async def get_items_from_ids(item_ids):
     items = await sync_to_async(list)(Item.objects.filter(id__in=item_ids))
     response_data = [
         {
-            'item_id': item.id,
+            'id': item.id,
             'name': item.name,
             'image_url': item.image_url.url if item.image_url else '',
             'description': item.description,
@@ -176,20 +186,19 @@ async def get_items_from_ids(item_ids):
     return response_data
 
 async def get_boards_from_ids(board_ids):
-    boards = await sync_to_async(list)(Board.objects.filter(id__in=board_ids))
-    response_data = [
+    boards = await sync_to_async(list)(Board.objects.filter(id__in=board_ids).select_related('user_id'))
+    response_data = await sync_to_async(list)([
         {
-            'board_id': board.id,
+            'id': board.id,
             'title': board.title,
             'image_url': board.image_url.url if board.image_url else '',
-            'score': board.show
+            'username': board.user_id.username,
+            'user_image': board.user_id.image_url.url if board.user_id.image_url else '',
+            'content': board.content,
+            'created_at': board.created_at.isoformat(),
+            'score': board.show,
+            'user_id': board.user_id_id
         }
         for board in boards
-    ]
+    ])
     return response_data
-
-def fetch_top_rated_items():
-    return list(Item.objects.all().order_by('-rate').values_list('id', flat=True)[:10])
-
-def fetch_top_rated_boards():
-    return list(Board.objects.all().order_by('-show').values_list('id', flat=True)[:10])

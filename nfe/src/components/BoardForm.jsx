@@ -1,12 +1,11 @@
 import React from "react";
 import {Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, Box} from "@mui/material";
-import {Link, useLocation} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {  MoreVert } from "@mui/icons-material/esm";
 import { grey } from "@mui/material/colors";
 
 export default function BoardForm({ board  }) {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-  const location = useLocation();
 
   return (
     <Card
@@ -39,7 +38,7 @@ export default function BoardForm({ board  }) {
         title={board.title}
         subheader={new Date(board.created_at).toLocaleDateString()}
       />
-        <Link key = {board.id} to={`/board/${board.id}`} state = {{background:location}}>
+        <Link key = {board.id} to={`/board/${board.id}`} >
       <div style={{ position: "relative" }} >
         <CardMedia
           component="img"

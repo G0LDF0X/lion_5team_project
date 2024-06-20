@@ -91,9 +91,9 @@ def get_items(request):
         item_ids = [hit['_id'] for hit in sorted_hits]
         # item_ids = [hit['_id'] for hit in response['hits']['hits']]
         if len(categories) > 0:
-            items = Item.objects.filter(id__in=item_ids, category_id__in=categories)
+            items = Item.objects.filter(Q(id__in=item_ids) | Q(name__contains=query), category_id__in=categories)
         else:
-            items = Item.objects.filter(id__in=item_ids)
+            items = Item.objects.filter(Q(id__in=item_ids) | Q(name__contains=query))
    
     elif len(categories) > 0:
         items = Item.objects.filter(category_id__in=categories)
@@ -171,7 +171,11 @@ def get_my_items(request):
         'current_page': paginated_items.number
     }) 	
     
-
+@api_view(['GET'])
+def get_top_items(request):
+    items = Item.objects.all().order_by('-rate')[:5]
+    serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data)
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])

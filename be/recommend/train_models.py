@@ -514,7 +514,7 @@ def save_rbm_model(rbm, path):
 async def train_rbm_model():
     df_agg = await load_and_preprocess_data()
     user_item_matrix = df_agg.pivot(index='user_id', columns='content_id', values='rating').fillna(0).values
-    device = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))  
+    device = torch.device('cuda' if torch.cuda.is_available() else'cpu')  
     train_data = torch.FloatTensor(user_item_matrix).to(device)
 
     # Embedding content (name, description)

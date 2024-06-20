@@ -6,6 +6,8 @@ import {
   updateBoard,
   deleteBoard,
   createReply,
+  getTopBoards,
+  getBoardRecommendations
 } from "../actions/boardActions";
 
 const initialState = {
@@ -106,3 +108,51 @@ export const boardSlice = createSlice({
 });
 
 export const { resetSuccess } = boardSlice.actions;
+
+export const topBoardSlice = createSlice({
+  name : "topBoards",
+  initialState: {loading: false, success: false, topBoards: [], error: null, cache: {}, fetchTime: null, fromCache: false},
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getTopBoards.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTopBoards.fulfilled, (state, action) => {
+        const { data,cacheKey, fromCache } = action.payload;
+        state.loading = false;
+        state.topBoards = data;
+        state.error = null;
+        if (!fromCache) {
+          state.cache[cacheKey] = data;
+          state.fetchTime = Date.now();
+        }
+      })
+      .addCase(getTopBoards.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      }
+      )
+      .addCase(getBoardRecommendations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getBoardRecommendations.fulfilled, (state, action) => {
+        const { data,cacheKey, fromCache } = action.payload;
+        state.loading = false;
+        state.topBoards = data;
+        state.error = null;
+        if (!fromCache) {
+          state.cache[cacheKey] = data;
+          state.fetchTime = Date.now();
+        }
+      })
+      .addCase(getBoardRecommendations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      }
+      );
+  }
+});
+  
