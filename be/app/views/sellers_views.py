@@ -12,6 +12,8 @@ from datetime import timedelta,datetime
 from dateutil.relativedelta import relativedelta
 import pytz
 from django.core.cache import cache 
+from rest_framework.decorators import authentication_classes
+from rest_framework.authentication import TokenAuthentication
 
 @api_view(['GET'])
 def index(request):
@@ -131,8 +133,11 @@ def seller_refund_view(request):
     serializer = RefundSerializer(refund_items, many=True)
     return Response(serializer.data)
 
+
+# @permission_classes([IsAuthenticated])
+
 @api_view(['POST', 'GET'])
-@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def Seller_Apply_Save(request):
     if request.method == 'POST':
         bs_number = request.data.get('bs_number')
