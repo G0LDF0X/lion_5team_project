@@ -37,14 +37,12 @@ const OtherFollowingList = ({ userId, userDetail }) => {
   return (
     <Box className="container mx-auto py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        {userDetail.nickname  }의 팔로잉
+        {userDetail.nickname}님의 팔로잉
       </Typography>
       {following.length === 0 ? (
-        <div className="border border-gray-300 p-8 w-full h-auto mt-10 rounded-md shadow-sm">
-          <h1 className="text-center text-2xl font-bold text-gray-700">
-              팔로잉 한 유저가 없습니다.
-          </h1>
-      </div>
+          <div className="text-center bg-white shadow-md rounded-lg  mb-8 mt-8 p-4 max-w-xxl mx-auto">
+                <h1 className="mb-8 mt-8 text-center text-xl text-gray-700" >팔로잉이 없습니다.</h1>
+        </div>
       ) : (
    
     <div className="flex flex-wrap -mx-2 mt-10">
