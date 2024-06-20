@@ -144,7 +144,7 @@ def Seller_Apply_Save(request):
         if bs_number is None:
             return Response({'error': 'bs_number is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        user = User.objects.get(username=request.user)
+        user = User.objects.get(username=request.data.get('user'))
         user.is_seller = True
         user.save()
         seller = Seller.objects.create(
@@ -154,7 +154,7 @@ def Seller_Apply_Save(request):
         serializer = SellerSerializer(seller)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     elif request.method == 'GET':
-        user = User.objects.get(username=request.user)
+        user = User.objects.get(username=request.data.get('user'))
         if user.is_seller:
             seller = Seller.objects.get(user_id=user)
             serializer = SellerSerializer(seller)
