@@ -17,7 +17,10 @@ from io import BytesIO
 from PIL import Image
 import json
 from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
+from django.utils import timezone
+from django.core.cache import cache
 from django.core.paginator import Paginator
+
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
@@ -71,7 +74,7 @@ def board_detail_or_create_reply(request, pk):
         board_data['liked_by_user'] = Interaction.objects.filter(
             user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
         ).exists() if request.user.is_authenticated else False
-        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag').all()
+        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag', 'tagId').all()
         
         reply_serializer = ReplySerializer(replies, many=True)
         
@@ -261,14 +264,15 @@ def delete_Reply(request, pk):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
 def update_Reply(request, pk):
-    reply = Reply.objects.get(id=pk)
-    serializer = ReplySerializer(instance=reply, data=request.data)
+    try:
+        reply = Reply.objects.get(pk=pk)
+    except Reply.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=400)
+    reply.content = request.data.get('content', reply.content)
+    reply.created_at = timezone.now()
+    reply.isEdited = True
+    reply.save()
 
+    return Response(status=status.HTTP_200_OK)

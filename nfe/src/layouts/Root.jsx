@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Chatbot from './Chatbot';
@@ -13,10 +13,8 @@ function RootLayout() {
   const [postModalIsOpen, setPostModalIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const id = useParams().id;
-  const navigate = useNavigate();
 
   const location = useLocation();
-  const state = location.state;
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from '../../api/axiosInstances';
+import { Typography} from '@mui/material';
+
 
 const UserQnA = ({ userInfo }) => {
   const [userQnAs, setUserQnAs] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+
 
   useEffect(() => {
     mainAxiosInstance.get('/users/profile/myuserqna/', {
@@ -49,6 +53,9 @@ const UserQnA = ({ userInfo }) => {
       })
       .catch((error) => console.error('Error:', error));
   }, [userInfo]);
+
+
+
 
   return (
     <div className="container mx-auto py-8">
