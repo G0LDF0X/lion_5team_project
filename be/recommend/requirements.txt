@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pandas
+scikit-learn
+torch
+transformers
+python-dotenv
+asgiref
+Django
+djangorestframework
+django-cors-headers
+redis

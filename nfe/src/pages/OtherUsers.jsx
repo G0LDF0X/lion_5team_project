@@ -8,6 +8,9 @@ import UserProfileMain from "../components/OtherUsers/UserProfileMain";
 import MyBoard from "../components/OtherUsers/MyBoard";
 import Follow from "../components/OtherUsers/Follow";
 import Like from "../components/OtherUsers/Like";
+import BookMark from "../components/OtherUsers/BookMark";
+import UserQnA from "../components/OtherUsers/UserQnA";
+
 function CustomTabPanel({ children, value, index, ...other }) {
   return (
     <div
@@ -49,50 +52,48 @@ function OtherUserProfile() {
     setValue(newValue);
   };
   const user = useSelector((state) => state.user);
-  const {userDetail, userInfo} = user
+  const { userDetail, userInfo } = user;
 
   useEffect(() => {
-      dispatch(getUserDetail(id));
-    
+    dispatch(getUserDetail(id));
   }, [dispatch, navigate, id]);
 
   return (
     <Box sx={{ width: "100%" }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-              centered
-            >
-              <Tab label="모두보기" {...a11yProps(0)} />
-              <Tab label="사진" {...a11yProps(1)} />
-              <Tab label="팔로잉" {...a11yProps(2)} />
-              <Tab label="질문과 답변" {...a11yProps(3)} />
-              <Tab label="북마크" {...a11yProps(4)} />
-              <Tab label="좋아요" {...a11yProps(5)} />
-            </Tabs>
-          </Box>
-          <CustomTabPanel value={value} index={0}>
-            <UserProfileMain userInfo={userInfo} userDetail={userDetail} url={VITE_API_BASE_URL} />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <MyBoard userId={id} url={VITE_API_BASE_URL} userDetail={userDetail}/>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            <Follow userId={id} userDetail={userDetail}/>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
-            {/* <UserQnA userInfo={userInfo} /> */}
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={4}>
-            {/* <Bookmark bookMarkItems={bookMarkItems} /> */}
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={5}>
-            <Like userId={id} />
-          </CustomTabPanel>
-        </Box>
-         
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          centered
+        >
+          <Tab label="모두보기" {...a11yProps(0)} />
+          <Tab label="사진" {...a11yProps(1)} />
+          <Tab label="팔로잉" {...a11yProps(2)} />
+          <Tab label="질문과 답변" {...a11yProps(3)} />
+          <Tab label="북마크" {...a11yProps(4)} />
+          <Tab label="좋아요" {...a11yProps(5)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <UserProfileMain userInfo={userInfo} userDetail={userDetail} url={VITE_API_BASE_URL} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <MyBoard userId={id} url={VITE_API_BASE_URL} userDetail={userDetail} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <Follow userId={id} userDetail={userDetail} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
+        <UserQnA userId={id} userDetail={userDetail} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <BookMark userId={id} userDetail={userDetail} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
+        <Like userId={id} userDetail={userDetail} />
+      </CustomTabPanel>
+    </Box>
   );
 }
 

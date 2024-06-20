@@ -1,14 +1,14 @@
-import React, { useEffect, lazy, Suspense, useState } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Button } from "@mui/material";
 import { listProducts } from "../store/actions/productActions";
-import { listBoards } from "../store/actions/boardActions";
+import { getBoardRecommendations, getTopBoards, listBoards } from "../store/actions/boardActions";
 import { listQNA } from "../store/actions/qnaActions";
 import { motion } from "framer-motion";
 import { useOutletContext } from "react-router-dom";
 import "../animations.css";
+import { getRecommendations, getTopProducts } from "../store/actions/productActions";
 
-// Lazy load components
 const ProductCarousel = lazy(() => import("../components/homescreen/ProductCarousel"));
 const BoardCarousel = lazy(() => import("../components/homescreen/BoardCarousel"));
 const QnASection = lazy(() => import("../components/homescreen/QnASection"));
@@ -16,23 +16,28 @@ const QnASection = lazy(() => import("../components/homescreen/QnASection"));
 function HomeScreen() {
   const dispatch = useDispatch();
   const { openModal } = useOutletContext();
-  const productList = useSelector((state) => state.productList);
-  const { loading: productLoading, error: productError, products } = productList;
-  const board = useSelector((state) => state.board);
-  const { loading: boardLoading, error: boardError, boards } = board;
+  const topBoad = useSelector((state) => state.topBoard);
+  const { loading: topBoardLoading, error: topBoardError, topBoards } = topBoad;
   const qnaList = useSelector((state) => state.qnaList);
   const { loading: qnaLoading, error: qnaError, qnas } = qnaList;
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
+  const topProducts = useSelector((state) => state.topProducts);
+  const { loading: topProductsLoading, error: topProductsError, products: topProductsList } = topProducts;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const [imageLoaded, setImageLoaded] = useState(false);
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
     dispatch(listBoards());
     dispatch(listQNA());
-    const img = new Image();
-    img.src = `${VITE_API_BASE_URL}/images/puppies2.webp`;
-    img.onload = () => setImageLoaded(true);
+    if (userInfo) {
+      dispatch(getBoardRecommendations());
+      dispatch(getRecommendations());
+    }
+    else {
+      dispatch(getTopProducts());
+      dispatch(getTopBoards());
+    }
+
   }, [dispatch]);
 
 
@@ -41,9 +46,9 @@ const [imageLoaded, setImageLoaded] = useState(false);
      <section
         className="relative bg-cover bg-center py-20"
         style={{
-          backgroundImage: imageLoaded
-            ? `url(${VITE_API_BASE_URL}/images/puppies2.webp)`
-            : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+          backgroundImage: 
+             `url(${VITE_API_BASE_URL}/images/puppies2.webp)`
+           ,
           height: '400px',
         }}
       >
@@ -68,9 +73,9 @@ const [imageLoaded, setImageLoaded] = useState(false);
       >
         <Suspense fallback={<div>Loading...</div>}>
           <ProductCarousel
-            loading={productLoading}
-            error={productError}
-            products={products}
+            loading={topProductsLoading}
+            error={topProductsError}
+            products={topProductsList}
           />
         </Suspense>
       </motion.section>
@@ -82,9 +87,9 @@ const [imageLoaded, setImageLoaded] = useState(false);
       >
         <Suspense fallback={<div>Loading...</div>}>
           <BoardCarousel
-            loading={boardLoading}
-            error={boardError}
-            boards={boards}
+            loading={topBoardLoading}
+            error={topBoardError}
+            boards={topBoards}
           />
         </Suspense>
       </motion.section>

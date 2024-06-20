@@ -6,7 +6,8 @@ import {
     productCreateSlice,
     productUpdateSlice,
     productDeleteSlice,
-    productQnASlice
+    productQnASlice,
+    topProductsSlice
     } from "./store/slices/productSlices";
 import {
     reviewListSlice,
@@ -37,7 +38,8 @@ import {
 //     cartSavePaymentMethodSlice,
 //     } from "./store/slices/cartSlices";
 import {
-    boardSlice
+    boardSlice,
+    topBoardSlice
     } from "./store/slices/boardSlices";
 
 import {
@@ -57,7 +59,7 @@ const sotre = configureStore({
     productUpdate: productUpdateSlice.reducer,
     productDelete: productDeleteSlice.reducer,
     productQnA: productQnASlice.reducer,
-
+    topProducts: topProductsSlice.reducer,
 
     reviewList: reviewListSlice.reducer,
     reviewDetails: reviewDetailsSlice.reducer,
@@ -85,6 +87,8 @@ const sotre = configureStore({
     // cartSavePaymentMethod: cartSavePaymentMethodSlice.reducer,
 
     board: boardSlice.reducer,
+    topBoard: topBoardSlice.reducer,
+    
     bookMarkList: bookMarkListSlice.reducer,
     bookMarkAdd: bookMarkAddSlice.reducer,
     bookMarkRemove: bookMarkRemoveSlice.reducer,

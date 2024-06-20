@@ -10,7 +10,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from app.models import Seller, User, User_QnA, Order, OrderItem, Review, Bookmark, Item, Board, Follow, Item_QnA,User_Answer, Interaction
 from app.serializer import SellerSerializer, User_Serializer, UserSerializerWithToken, UserprofileSerializer, ReviewSerializer, BookmarkSerializer, FollowSerializer, MyTokenObtainPairSerializer, OrderItemSerializer, BoardSerializer, UserQnASerializer, ItemQnASerializer, UserAnswerSerializer, ItemSerializer
-
+from django.core.cache import cache
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -182,6 +182,16 @@ def my_bookmarks(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def user_bookmarks(request, pk):
+    try:
+        user = User.objects.get(id=pk)
+        bookmarks = Bookmark.objects.filter(user_id=user)
+        serializer = BookmarkSerializer(bookmarks, many=True)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=404)
+
+@api_view(['GET'])
 def get_likes(request, pk):
     user = User.objects.get(id=pk)
     likes = Interaction.objects.filter(user_id_id=user, interaction_type='like')
@@ -273,6 +283,38 @@ def get_userprofile(request, pk):
 
     return Response(data)
 
+# @api_view(['GET'])
+# def get_userprofile(request, pk):
+#     cache_key = f'userprofile_{pk}'
+#     data = cache.get(cache_key)
+
+#     if not data:
+#         try: 
+#             user = User.objects.get(pk=pk)
+#             serializer = UserprofileSerializer(user)
+        
+#         except User.DoesNotExist:
+#             return Response("User does not exist")
+
+#         board_posts = Board.objects.filter(user_id=user)
+#         board_serializer = BoardSerializer(board_posts, many=True)
+
+#         qna_posts = User_QnA.objects.filter(user_id=user)
+#         qna_serializer = UserQnASerializer(qna_posts, many=True)
+
+#         review = Review.objects.filter(user_id=user)
+#         review_serializer = ReviewSerializer(review, many=True)
+        
+#         data = {
+#             'User': serializer.data,
+#             'Board_posts': board_serializer.data,
+#             'QnA_posts': qna_serializer.data,
+#             'Review': review_serializer.data
+#         }
+
+#         cache.set(cache_key, data, 600)  # 캐시 유효 시간을 10분으로 설정
+
+#     return Response(data)
 
 @api_view(['GET'])
 def getFollower(request, pk):

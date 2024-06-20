@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import useItems from '../hook/useItems';
 
-const TagInput = ({ selectedTags, setSelectedTags }) => {
+const TagInput = ({ selectedTags, setSelectedTags, setSelectedTagId }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const productList = useSelector((state) => state.productList);
-  const { products } = productList;
-  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+  // const productList = useSelector((state) => state.productList);
+  // const { items } = productList;
+  const items = useItems();
+  console.log("ITEMS:", items);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -13,6 +15,7 @@ const TagInput = ({ selectedTags, setSelectedTags }) => {
 
   const handleTagSelect = (product) => {
     setSelectedTags(product.name);
+    setSelectedTagId(product.id);
     setSearchTerm('');
   };
 
@@ -37,11 +40,11 @@ const TagInput = ({ selectedTags, setSelectedTags }) => {
         value={searchTerm}
         onChange={handleSearchChange}
         className="w-full p-2 border border-gray-300 rounded-md"
-        placeholder="Search to tag products"
+        placeholder="Search to tag items"
       />
       {searchTerm && (
         <div className="mt-2 bg-white shadow-md rounded-md max-h-40 overflow-y-auto">
-          {products
+          {items
             .filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
             .map(product => (
               <div
@@ -49,10 +52,8 @@ const TagInput = ({ selectedTags, setSelectedTags }) => {
                 className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleTagSelect(product)}
               >
-                <img src={`${VITE_API_BASE_URL}${product.image_url}`} alt={product.name} className="w-10 h-10 rounded-full mr-2" />
-                <div>
                   <p className="text-gray-500 text-sm">{product.name}</p>
-                </div>
+                
               </div>
             ))}
         </div>

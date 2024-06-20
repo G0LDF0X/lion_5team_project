@@ -16,6 +16,7 @@ const PostModal = ({ isOpen, onRequestClose }) => {
   const dispatch = useDispatch();
   const success = useSelector((state) => state.board.success);
   const [tagName, setTagName] = useState('');
+  const [tagId, setTagId] = useState(0);
   const selectTag = (tag) => {
     setFormData({
       ...formData,
@@ -39,12 +40,13 @@ const PostModal = ({ isOpen, onRequestClose }) => {
   };
 
   const handleTagClick = (imageIndex, e) => {
-    if (tagName) {
+    if (tagName, tagId) {
       const newTag = {
         imageIndex,
         x: e.nativeEvent.offsetX,
         y: e.nativeEvent.offsetY,
-        tag: tagName
+        tag: tagName,
+        tagId: tagId,
       };
       setFormData({
         ...formData,
@@ -176,7 +178,7 @@ const PostModal = ({ isOpen, onRequestClose }) => {
             
             <div>
               <label className="block text-gray-700">Tag Products:</label>
-              <TagInput selectedTags={tagName} setSelectedTags={setTagName} />
+              <TagInput selectedTags={tagName} setSelectedTags={setTagName} setSelectedTagId={setTagId} />
             </div>
             <button type="submit" className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-700">Submit</button>
           </form>

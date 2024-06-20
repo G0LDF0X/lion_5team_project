@@ -45,6 +45,16 @@ function QADetailScreen() {
         });
     }
   };
+  const submithandler = (title, content) => { 
+    dispatch(createQNAAnswer(id, title, content))
+      .then(() => {
+        dispatch(listQnADetails(id));
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Q&A 답변 생성 오류:", error);
+      });
+  }
     
 
   return (

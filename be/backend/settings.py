@@ -30,7 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,6 +46,16 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -168,7 +177,7 @@ DATABASES = {
         'NAME': "petpals",
         'USER': "postgres",
         'PASSWORD': "G=nf_-}EKl",
-        'HOST' : "hanslab.org",
+        'HOST' : "211.110.169.141",
         "PORT" :"25432",
     }
 }

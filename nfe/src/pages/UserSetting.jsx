@@ -66,31 +66,22 @@ function UserSettingScreen() {
               centered
             >
               <Tab label="회원정보 수정" {...a11yProps(0)} />
-              <Tab label="알림 설정" {...a11yProps(1)} />
-              <Tab label="사용자 숨기기 신청" {...a11yProps(2)} />
-              <Tab label="판매자 신청" {...a11yProps(3)} />
-              <Tab label="비밀번호 변경" {...a11yProps(4)} />
-              <Tab label="추천코드" {...a11yProps(5)} />
+              <Tab label="판매자 신청" {...a11yProps(1)} />
+              <Tab label="비밀번호 변경" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
             <UserSetting userInfo={userInfo} userDetail={userDetail} reset={clearSuccess} />
           </CustomTabPanel>
+          
+          
           <CustomTabPanel value={value} index={1}>
-            Item Two
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            Item Three
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
             <SellerApplication userInfo={userInfo} />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={4}>
+          <CustomTabPanel value={value} index={2}>
             <MyPassword userInfo={userInfo} user={userDetail} reset={clearSuccess} />
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={5}>
-            Item Six
-          </CustomTabPanel>
+        
         </Box>
   );
 }

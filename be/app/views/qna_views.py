@@ -6,12 +6,27 @@ from app.serializer import UserQnASerializer, UserAnswerSerializer
 from datetime import datetime
 from django.core.files.images import ImageFile
 import json
+from django.core.cache import cache
 
 @api_view(['GET'])
 def qna_board(request):
     questions = User_QnA.objects.all()
     question_serializer = UserQnASerializer(questions, many=True)  
     return Response(question_serializer.data)
+
+# @api_view(['GET'])
+# def qna_board(request):
+#     cache_key = 'all_questions'
+#     data = cache.get(cache_key)
+
+#     if not data:
+#         questions = User_QnA.objects.all()
+#         question_serializer = UserQnASerializer(questions, many=True)
+#         data = question_serializer.data
+
+#         cache.set(cache_key, data, 600)  # 캐시 유효 시간을 10분으로 설정
+
+#     return Response(data)
 
 @api_view(['GET'])
 def qna_detail(request, pk):
@@ -23,6 +38,24 @@ def qna_detail(request, pk):
         'question': question_serializer.data,
         'answers': answer_serializer.data
     })
+
+@api_view(['GET'])
+def get_user_qna(request, pk):
+    try:
+        user = User.objects.get(id=pk)
+        qnas = User_QnA.objects.filter(user_id=user)
+        qna_data = []
+        for qna in qnas:
+            answers = User_Answer.objects.filter(user_qna_id=qna)
+            qna_data.append({
+                'question': UserQnASerializer(qna).data,
+                'answers': UserAnswerSerializer(answers, many=True).data
+            })
+        return Response(qna_data)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
 
 
 @api_view(['POST'])

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Bookmark = ({ bookMarkItems }) => {
   return (
     <div className="flex flex-wrap">
-      {bookMarkItems &&
+      {bookMarkItems && bookMarkItems.length > 0 ? (
         bookMarkItems.map((bookmark) => (
           <div
             key={bookmark.id}
@@ -34,7 +34,13 @@ const Bookmark = ({ bookMarkItems }) => {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      ) : ( <div className="w-full p-4 text-center">  
+        <h1 className="text-center text-2xl font-bold text-gray-700">
+            등록된 북마크가 없습니다.
+          </h1>
+      </div>  
+      )}
     </div>
   );
 };

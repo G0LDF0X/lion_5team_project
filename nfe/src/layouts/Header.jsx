@@ -100,7 +100,9 @@ function Header({ openModal, openPostModal, openSideBar }) {
             <div className="flex items-center">
               <IconButton onClick={openSideBar} color="inherit">
                 {userInfo.image_url ? (
-                  <Avatar src={VITE_API_BASE_URL + userInfo.image_url} />
+                  <Avatar src={VITE_API_BASE_URL + userInfo.image_url}
+                  alt = {userInfo.username}
+                   />
                 ) : (
                   <Avatar>{userInfo.username[0]}</Avatar>
                 )}

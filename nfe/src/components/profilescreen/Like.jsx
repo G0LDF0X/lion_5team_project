@@ -23,7 +23,9 @@ const Like = ({ userInfo }) => {
     }, []);
     if (likes&&likes.length === 0) {
         return (
-            <h1>좋아요한 게시물이 없습니다.</h1>
+            <h1 className="text-center text-2xl font-bold text-gray-700"> 
+                좋아요한 게시물이 없습니다.
+          </h1>
         );
     }
     else {

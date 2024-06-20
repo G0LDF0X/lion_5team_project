@@ -81,6 +81,7 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
+      console.log(boardDetail)
       setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
@@ -340,61 +341,29 @@ function BoardDetailModal({ open, handleClose }) {
                         alt={boardDetail.title}
                         className="w-full h-full object-cover"
                       />
-                      { boardDetail.tags && boardDetail.tags.map((tag, index) => (
-                        // <div
-                        //   key={index}
-                        //   style={{
-                        //     position: 'absolute',
-                        //     top: `${tag.y}px`,
-                        //     left: `${tag.x}px`,
-                        //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        //     color: 'white',
-                        //     padding: '2px 5px',
-                        //     borderRadius: '4px',
-                        //     cursor: 'pointer'
-                        //   }}
-                        // >
-                        //   {tag.tag}
-                        // </div>  
-                        <PlusIconWrapper
-                          key={index}
-                          style={{
-                            top: `${tag.y}px`,
-                            left: `${tag.x}px`,
-                          }}
-                        >
-                          
-                          
-                          <AddCircleRoundedIcon style={{ fontSize: 30, color: "yellow" }} />
-                          <TagInfo className="tag-info">
-                            {/* <img
-                              src={tag.image}
-                              alt="tag"
-                              style={{ width: "50px", height: "50px", marginBottom: "5px" }}
-                            /> */}
-                            <div >
-                              <Link to={`/items/?q=${tag.tag}`}>
-                              <p style={{ margin: 1 }}>{tag.tag}</p>
-                              {/* <p style={{ margin: 0 }}>{tag.price}원</p> */}
-                              </Link>
-                            </div>
-                          </TagInfo>
-                        </PlusIconWrapper>
-                    //    <PlusIconWrapper>
-                    //    <ControlPointIcon style={{ fontSize: 40, color: "white" }} />
-                    //    <TagInfo className="tag-info">
-                    //      {/* <img
-                    //        src={boardDetail.tagImageUrl}
-                    //        alt="tag"
-                    //        style={{ width: "50px", height: "50px", marginBottom: "5px" }}
-                    //      /> */}
-                    //      <div>
-                    //        <p style={{ margin: 0 }}>{tag.tag}</p>
-                    //        {/* <p style={{ margin: 0 }}>{boardDetail.tagPrice}원</p> */}
-                    //      </div>
-                    //    </TagInfo>
-                    //  </PlusIconWrapper>
-                      ))}
+                      
+                      {boardDetail.tags &&
+                        boardDetail.tags.map((tag, index) => (
+                          <PlusIconWrapper
+                            key={index}
+                            style={{
+                              top: `${tag.y}px`,
+                              left: `${tag.x}px`,
+                            }}
+                          >
+                            <AddCircleRounded
+                              style={{ fontSize: 30, color: "yellow" }}
+                            />
+                            <TagInfo className="tag-info">
+                              <div>
+                                <Link to={`/items/detail/${tag.tagId}`}>
+                                  <p style={{ margin: 1 }}>{tag.tag}</p>
+                                </Link>
+                              </div>
+                            </TagInfo>
+                          </PlusIconWrapper>
+                        ))}
+
                     </>
                   )}
                 </div>

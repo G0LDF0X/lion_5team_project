@@ -1,23 +1,11 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# fastapi_app/Dockerfile
+FROM python:3.9-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED 1
-
-# Set work directory
 WORKDIR /app
 
-# Install dependencies
-RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements.txt
 COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
-# Copy the rest of the application
 COPY . /app/
 
-# Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]

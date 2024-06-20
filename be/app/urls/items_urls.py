@@ -25,4 +25,5 @@ urlpatterns = [
     path('tags/<int:pk>/', get_tag_with_category, name='get_tag_with_category'),
     path('items/qna/', get_qna, name='get_qna'),
     path('all/', get_all_items, name='get_all_items'),
+    path('top/', get_top_items, name='get_top_items'),
 ]

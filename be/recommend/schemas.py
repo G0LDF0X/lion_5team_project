@@ -1,22 +1,28 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class DetailedRecommendationResponse(BaseModel):
-    item_id: int
-    name: str
-    image_url: str
-    description: str
-    price: float
-    score: float
+    id: int
+    name: Optional[str]
+    image_url: Optional[str]
+    description: Optional[str]
+    price: Optional[float]
+    score: Optional[float]
 
     class Config:
         orm_mode = True
 
 class BoardRecommendationResponse(BaseModel):
-    board_id: int
-    title: str
-    image_url: str
+    id: int
+    title: Optional[str]
+    image_url: Optional[str]
+    username: Optional[str]
+    user_image: Optional[str]
+    content: Optional[str]
+    user_id: Optional[int]
+    created_at: Optional[str]
     
-    score: float
+    score: Optional[float]
 
     class Config:
         orm_mode = True

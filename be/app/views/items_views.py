@@ -9,91 +9,173 @@ from django.core.paginator import Paginator
 import json
 from rest_framework import status
 from django.db.models import Q
-# import ssl
-# from elasticsearch import Elasticsearch
-# from transformers import BertTokenizer, BertModel
+import ssl
+from elasticsearch import Elasticsearch
+from transformers import BertTokenizer, BertModel
 from django.conf import settings
 import torch
 import os
 from dotenv import load_dotenv
+from operator import itemgetter
 import logging
+from django.core.cache import cache
+
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 
-# ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
-# ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
-# es = Elasticsearch(
-#     ['https://localhost:9200'],
-#     basic_auth=('elastic', ELASTIC_PASSWORD),
-#     verify_certs=True,
-#     ca_certs=ca_cert_path,
-# )
 
-# tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
-# model = BertModel.from_pretrained('monologg/kobert')
 
-# try:
-#     response = es.info()
-#     print("Elasticsearch info:", response)
-# except Exception as e:
-#     print("Error connecting to Elasticsearch:", e)
-# def embed_query(query):
-#     inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
-#     with torch.no_grad():
-#         outputs = model(**inputs)
-#     embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
-#     return embedding
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
+ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+es = Elasticsearch(
+    ['https://localhost:9200'],
+    basic_auth=('elastic', ELASTIC_PASSWORD),
+    verify_certs=True,
+    ca_certs=ca_cert_path,
+)
 
-# def create_itemindex(item):
-#     body = {
-#         "name": item.name,
-#         "description": item.description,
-#         "category": item.category_id.name,
-#         "embedding": embed_query(item.name)
-#     }
-#     es.index(index='items', id=item.id, body=body)
-#     print(f"Item {item.id} indexed")
-# def update_itemindex(item):
-#     body = {
-#         "doc": {
-#             "name": item.name,
-#             "description": item.description,
-#             "category": item.category_id.name,
-#             "embedding": embed_query(item.name)
-#         }
-#     }
-#     es.update(index='items', id=item.id, body=body)
-#     print(f"Item {item.id} updated")
-# def delete_itemindex(item):
-#     es.delete(index='items', id=item.id)
-#     print(f"Item {item.id} deleted")
+tokenizer = BertTokenizer.from_pretrained('monologg/kobert')
+model = BertModel.from_pretrained('monologg/kobert')
+
+def embed_query(query):
+    inputs = tokenizer(query, return_tensors='pt', padding=True, truncation=True)
+    with torch.no_grad():
+        outputs = model(**inputs)
+    embedding = outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()[0]
+    return embedding
+
+def create_itemindex(item):
+    body = {
+        "name": item.name,
+        "description": item.description,
+        "category": item.category_id.name,
+        "embedding": embed_query(item.name)
+    }
+    es.index(index='items', id=item.id, body=body)
+    print(f"Item {item.id} indexed")
+def update_itemindex(item):
+    body = {
+        "doc": {
+            "name": item.name,
+            "description": item.description,
+            "category": item.category_id.name,
+            "embedding": embed_query(item.name)
+        }
+    }
+    es.update(index='items', id=item.id, body=body)
+    print(f"Item {item.id} updated")
+def delete_itemindex(item):
+    es.delete(index='items', id=item.id)
+    print(f"Item {item.id} deleted")
+
+@api_view(['GET'])
+def get_items(request):
+    query = request.GET.get('query', '')
+    categories = request.query_params.getlist('category', [])
+    page = request.query_params.get('page', 1)
+    categories = [c for c in categories if c]
+
+    if query:
+        query_embedding = embed_query(query)
+        script_query = {
+            "script_score": {
+                "query": {"match_all": {}},
+                "script": {
+                    "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+                    "params": {"query_vector": query_embedding}
+                }
+            }
+        }
+        response = es.search(index='items', body={"query": script_query})
+        sorted_hits = sorted(response['hits']['hits'], key=itemgetter('_score'), reverse=True)
+        item_ids = [hit['_id'] for hit in sorted_hits]
+        # item_ids = [hit['_id'] for hit in response['hits']['hits']]
+        if len(categories) > 0:
+            items = Item.objects.filter(Q(id__in=item_ids) | Q(name__contains=query), category_id__in=categories)
+        else:
+            items = Item.objects.filter(Q(id__in=item_ids) | Q(name__contains=query))
+   
+    elif len(categories) > 0:
+        items = Item.objects.filter(category_id__in=categories)
+    else:
+        items = Item.objects.all()
+    paginator = Paginator(items, 12)  # 12 items per page
+    paginated_items = paginator.get_page(page)
     
+    serializer = ItemSerializer(paginated_items, many=True)
+    
+    return Response({
+        'items': serializer.data,
+        'total_pages': paginator.num_pages,
+        'current_page': paginated_items.number
+    })
+
+#redis 서버 띄우고 get_items cacheing 추가
 # @api_view(['GET'])
-# def get_items1(request):
-#     print (ca_cert_path)
-#     print 
+# def get_items(request):
 #     query = request.GET.get('query', '')
-#     if not query:
-#         return Response({"error": "Query parameter is required"}, status=400)
-#     query_embedding = embed_query(query)
-#     script_query = {
-#         "script_score": {
-#             "query": {"match_all": {}},
-#             "script": {
-#                 "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
-#                 "params": {"query_vector": query_embedding}
+#     categories = request.query_params.getlist('category', [])
+#     page = request.query_params.get('page', 1)
+#     categories = [c for c in categories if c]
+
+#     cache_key = f'items_{query}_{str(categories)}_{page}'
+#     items = cache.get(cache_key)
+#     if not items:
+#         if query:
+#             query_embedding = embed_query(query)
+#             script_query = {
+#                 "script_score": {
+#                     "query": {"match_all": {}},
+#                     "script": {
+#                         "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
+#                         "params": {"query_vector": query_embedding}
+#                     }
+#                 }
 #             }
-#         }
-#     }
-#     try:
-#         response = es.search(index='items', body={"query": script_query})
-#         item_ids = [hit['_id'] for hit in response['hits']['hits']]
-#         items = Item.objects.filter(id__in=item_ids)
-#         serializer = ItemSerializer(items, many=True)
-#         return Response(serializer.data)
-#     except Exception as e:
-#         logging.error(f"Error during Elasticsearch search: {e}")
-#         return Response({"error": "Error during search"}, status=500)
+#             response = es.search(index='items', body={"query": script_query})
+#             sorted_hits = sorted(response['hits']['hits'], key=itemgetter('_score'), reverse=True)
+#             item_ids = [hit['_id'] for hit in sorted_hits]
+#             if len(categories) > 0:
+#                 items = Item.objects.filter(id__in=item_ids, category_id__in=categories)
+#             else:
+#                 items = Item.objects.filter(id__in=item_ids)
+#         elif len(categories) > 0:
+#             items = Item.objects.filter(category_id__in=categories)
+#         else:
+#             items = Item.objects.all()
+#         cache.set(cache_key, items)
+#     paginator = Paginator(items, 12)  # 12 items per page
+#     paginated_items = paginator.get_page(page)
+    
+#     serializer = ItemSerializer(paginated_items, many=True)
+    
+#     return Response({
+#         'items': serializer.data,
+#         'total_pages': paginator.num_pages,
+#         'current_page': paginated_items.number
+#     })
+
+@api_view(['GET'])
+def get_my_items(request):
+    user = User.objects.get(username=request.user)
+    seller = Seller.objects.get(user_id=user)
+    items = Item.objects.filter(seller_id=seller)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(items, 12)  # 페이지당 12개 아이템
+    paginated_items = paginator.get_page(page)
+    
+    serializer = ItemSerializer(paginated_items, many=True)
+    return Response({
+        'items': serializer.data,
+        'total_pages': paginator.num_pages,
+        'current_page': paginated_items.number
+    }) 	
+    
+@api_view(['GET'])
+def get_top_items(request):
+    items = Item.objects.all().order_by('-rate')[:5]
+    serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data)
 
 @api_view(['Post'])
 @permission_classes([IsAuthenticated])
@@ -109,63 +191,10 @@ def view_item(request, pk):
 @api_view(['GET'])
 def get_all_items(request):
     items = Item.objects.all()
+    
     serializer = SimpleItemSerializer(items, many=True)
     return Response(serializer.data)
-
-
-@api_view(['GET'])
-def get_items(request):
-    query = request.GET.get('query', '')
-
-    suggestions = request.query_params.get('s','')
-    categories = request.query_params.getlist('category', [])
-    page = request.query_params.get('page', 1)
-    if suggestions:
-        suggestions_list = suggestions.split(',')
     
-    else:
-        suggestions_list = []
-    # page = request.query_params.get('page', 1)
-    # items_per_page = request.query_params.get('items_per_page', 10)
-    
-    categories = [c for c in categories if c]
-    suggestions_list = [s.strip() for s in suggestions_list if s.strip()]
-    item_query = Q()
-    if categories:
-        item_query &= Q(category_id_id__in=categories)
-    if suggestions_list:
-        suggestions_query = Q()
-        for suggestion in suggestions_list:
-            suggestions_query |= Q(name__icontains=suggestion)
-        item_query &= suggestions_query
-    if query:
-        query_condition = Q(name__icontains=query) | Q(description__icontains=query)
-        item_query |= query_condition
-    # print(item_query)   
-    items = Item.objects.filter(item_query)
-    if categories and suggestions_list:
-        items = Item.objects.filter(Q(category_id_id__in=categories) &  Q(name__icontains=''.join(suggesions_llist)))
-        print("2",' '.join(suggestions_list))
-        print(categories)
-    elif categories:    
-        items = Item.objects.filter( category_id_id__in=categories)
-        print("3",' '.join(suggestions_list))
-    elif suggestions_list:
-        items = Item.objects.filter(name__icontains=','.join(suggestions_list))
-        print("4",' '.join(suggestions_list))
-        
-    items = Item.objects.filter(name__icontains=query)
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-def get_my_items(request):
-    user = User.objects.get(username=request.user)
-    seller = Seller.objects.get(user_id=user)
-    items = Item.objects.filter(seller_id=seller)
-    serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
-
 @api_view(['GET'])
 def item_details(request, pk):
     item = Item.objects.get(pk=pk)
@@ -194,7 +223,7 @@ def create_item(request):
         )
     
     serializer = SingleItemSerializer(item, many=False)
-    # create_itemindex(item)  
+    create_itemindex(item)  
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -225,7 +254,7 @@ def update_item(request, pk):
     item.tag_id = Tag.objects.get(id=data['tag'][0])
     item.save()
     serializer = SingleItemSerializer(item, many=False)
-    # update_itemindex(item)
+    update_itemindex(item)
     return Response(serializer.data)
 
 @api_view(['PUT'])
@@ -241,7 +270,7 @@ def delete_item(request, pk):
         item = Item.objects.get(pk=pk)
         item.delete()
         return Response("Item deleted")
-        # delete_itemindex(item)
+        delete_itemindex(item)
     except Item.DoesNotExist:
         return Response("Item does not exist")
 
@@ -269,7 +298,6 @@ def get_review(request, pk):
 
 @api_view(['POST'])
 def create_review(request, item_id):
-    print(request.user)
     user = User.objects.get(username=request.user)
     item = Item.objects.get(id=item_id)
     data = request.data
@@ -282,12 +310,6 @@ def create_review(request, item_id):
         rate=5,
         image_url=''
     )
-    # Interaction.objects.create(
-    #     user_id_id = user.id,
-    #     content_type='item',
-    #     interaction_type = 'review',
-    #     item_id_id = item_id
-    # )
 
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -315,6 +337,12 @@ def update_review(request, pk):
     review.orderitem_id = orderitem
     
     review.save()
+    Interaction.objects.create(
+        user_id_id = user.id,
+        content_type='item',
+        interaction_type = 'review',
+        item_id_id = review.item_id_id
+    )
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)
 
