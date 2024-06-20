@@ -5,10 +5,7 @@ import { chosungIncludes } from 'es-hangul';
 
 const TagInput = ({ selectedTags, setSelectedTags, setSelectedTagId }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  // const productList = useSelector((state) => state.productList);
-  // const { items } = productList;
   const items = useItems();
-  console.log("ITEMS:", items);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);

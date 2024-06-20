@@ -1,8 +1,7 @@
 import React from "react";
 import {Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, Box} from "@mui/material";
 import {Link} from "react-router-dom";
-import {  MoreVert } from "@mui/icons-material/esm";
-import { grey } from "@mui/material/colors";
+import MoreVertIcon from '@mui/icons-material/MoreVert';import { grey } from "@mui/material/colors";
 
 export default function BoardForm({ board  }) {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -32,7 +31,7 @@ export default function BoardForm({ board  }) {
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVert />
+            <MoreVertIcon />
           </IconButton>
         }
         title={board.title}
