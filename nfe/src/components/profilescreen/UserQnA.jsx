@@ -8,7 +8,8 @@ const UserQnA = ({ userInfo }) => {
   const [userQnAs, setUserQnAs] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
-
+  const questionContainerRef = useRef(null);
+  const noAnswerRef = useRef(null);
 
   useEffect(() => {
     mainAxiosInstance.get('/users/profile/myuserqna/', {
@@ -45,8 +46,6 @@ const UserQnA = ({ userInfo }) => {
     })
       .then((response) => {
         const data = response.data;
-
-        // 답변을 최신순으로 정렬
         data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         
         setUserAnswers(response.data);
@@ -55,13 +54,17 @@ const UserQnA = ({ userInfo }) => {
   }, [userInfo]);
 
 
-
+  useEffect(() => {
+    if (questionContainerRef.current && noAnswerRef.current) {
+      noAnswerRef.current.style.height = `${questionContainerRef.current.offsetHeight}px`;
+    }
+  }, []);
 
   return (
 
     <div className="container mx-auto py-8">
   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div>
+    <div ref={questionContainerRef}>
       <Typography variant="h4" className="mb-10 font-bold text-gray-800">
         나의 질문
       </Typography>
@@ -113,7 +116,6 @@ const UserQnA = ({ userInfo }) => {
         </Typography>
         {userAnswers && userAnswers.length > 0 ? (
           userAnswers && userAnswers.map((userAnswer, index) => (
-            // <div key={index} className="bg-white shadow-md rounded-lg mb-4 p-4">
             <div key={index} className="bg-white mb-4 mt-4 p-4 border-b border-gray-200">
               <Link to={`/qna/detail/${userAnswer.user_qna_id}`}>
                 <h3 className="text-lg font-semibold">{userAnswer.title}</h3>
@@ -149,11 +151,11 @@ const UserQnA = ({ userInfo }) => {
             </div>
           ))
         ) : (
-          <div className="text-center shadow-md rounded-lg mb-4 mt-4 p-4 max-w-xxl mx-auto flex items-center justify-center" style={{ height: '100%' }}>
+          <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' , margin: '20px 10px' }}>
             <p><strong>답변이 없습니다.</strong></p>
           </div>
         )}
-</div>
+        </div>
       </div>
     </div>
   );
