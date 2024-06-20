@@ -74,7 +74,7 @@ def board_detail_or_create_reply(request, pk):
         board_data['liked_by_user'] = Interaction.objects.filter(
             user_id_id=user.id, content_type='board', content_id=board.id, interaction_type='like'
         ).exists() if request.user.is_authenticated else False
-        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag').all()
+        board_data['tags'] = Image_Tag.objects.filter(board_id=board.id).values('x', 'y', 'tag', 'tagId').all()
         
         reply_serializer = ReplySerializer(replies, many=True)
         
