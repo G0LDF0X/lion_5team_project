@@ -13,18 +13,20 @@ const SellerApplication = ({ userInfo }) => {
     const pattern = /^\d{10}$/;
     if (!pattern.test(bsNumber)) {
       setError("BS_NUMBER는 10자리 숫자로 입력해주세요.");
+      console.log(userInfo);
     } else {
       try {
         const response = await mainAxiosInstance.post(
           "/seller/apply/",
-          { bs_number: bsNumber },
+          { bs_number: bsNumber, user: userInfo.username},
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${userInfo.access}`,
+              "Authorization": `Bearer ${userInfo.access}`,
             },
           }
         );
+
 
         if (response.status !== 200) {
           throw new Error("Network response was not ok");

@@ -30,7 +30,15 @@ function ProductsScreen() {
   const query = params.get('query') || '';
   const page = params.get('page') || 1;
   const tag = params.get('tag');
-
+  const selectTagHandler = (tag) => () => {
+    if (selectedTag && selectedTag.id === tag.id) {
+      setSelectedTag(null);
+    } else {
+      setSelectedTag(tag);
+    }
+  }
+    
+      
   useEffect(() => {
 
     dispatch(listProducts({query:query, page:currentPage, category:selectedCategory})); // currentPage로 수정
@@ -109,9 +117,9 @@ function ProductsScreen() {
                 {tags.map(tag => (
                   <Button 
                     key={tag.id} 
-                    variant="outlined" 
+                    variant={selectedTag && selectedTag.id === tag.id ? "contained" : "outlined"} 
                     color="primary" 
-                    onClick={() => setSelectedTag(tag)}
+                    onClick={selectTagHandler(tag)}
                     style={{ margin: '10px' }}
                   >
                     {tag.name}

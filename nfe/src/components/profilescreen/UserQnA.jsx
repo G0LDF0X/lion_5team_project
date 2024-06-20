@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from '../../api/axiosInstances';
+import { Typography} from '@mui/material';
+
 
 const UserQnA = ({ userInfo }) => {
   const [userQnAs, setUserQnAs] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+
 
   useEffect(() => {
     mainAxiosInstance.get('/users/profile/myuserqna/', {
@@ -50,57 +54,68 @@ const UserQnA = ({ userInfo }) => {
       .catch((error) => console.error('Error:', error));
   }, [userInfo]);
 
+
+
+
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-2xl font-bold mb-4">나의 질문</h2>
-          {userQnAs && userQnAs.map((userQnA, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg mb-4 p-4">
-              <Link to={`/qna/detail/${userQnA.id}`}>
-                <h3 className="text-lg font-semibold">{userQnA.title}</h3>
-              </Link>
-              {userQnA.content.length > 100 ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }}
-                  className="text-black bg-white mt-2"
-                />
-              ) : (
-                <div
-                  dangerouslySetInnerHTML={{ __html: userQnA.content }}
-                  className="text-black bg-white mt-2"
-                />
-              )}
-              <small className="text-gray-500 mt-2 block">{userQnA.created_at.split('T')[0]}</small>
-              <div className="mt-2">
-                <span className="bg-blue-500 text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                  {userQnA.answers.answers && userQnA.answers.answers.length}
-                </span>
+          {userQnAs.length > 0 ? (
+            userQnAs.map((userQnA, index) => (
+              <div key={index} className="bg-white shadow-md rounded-lg mb-4 p-4">
+                <Link to={`/qna/detail/${userQnA.id}`}>
+                  <h3 className="text-lg font-semibold">{userQnA.title}</h3>
+                </Link>
+                {userQnA.content.length > 100 ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: `${userQnA.content.substring(0, 100)}...` }}
+                    className="text-black bg-white mt-2"
+                  />
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: userQnA.content }}
+                    className="text-black bg-white mt-2"
+                  />
+                )}
+                <small className="text-gray-500 mt-2 block">{userQnA.created_at.split('T')[0]}</small>
+                <div className="mt-2">
+                  <span className="bg-blue-500 text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
+                    {userQnA.answers.answers && userQnA.answers.answers.length}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-gray-500">등록된 질문이 없습니다.</div>
+          )}
         </div>
         <div>
           <h2 className="text-2xl font-bold mb-4">나의 답변</h2>
-          {userAnswers && userAnswers.map((userAnswer, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg mb-4 p-4">
-              <Link to={`/qna/detail/${userAnswer.user_qna_id}`}>
-                <h3 className="text-lg font-semibold">{userAnswer.title}</h3>
-              </Link>
-              {userAnswer.content.length > 100 ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }}
-                  className="text-black bg-white mt-2"
-                />
-              ) : (
-                <div
-                  dangerouslySetInnerHTML={{ __html: userAnswer.content }}
-                  className="text-black bg-white mt-2"
-                />
-              )}
-              <small className="text-gray-500 mt-2 block">{userAnswer.created_at.split('T')[0]}</small>
-            </div>
-          ))}
+          {userAnswers.length > 0 ? (
+            userAnswers.map((userAnswer, index) => (
+              <div key={index} className="bg-white shadow-md rounded-lg mb-4 p-4">
+                <Link to={`/qna/detail/${userAnswer.user_qna_id}`}>
+                  <h3 className="text-lg font-semibold">{userAnswer.title}</h3>
+                </Link>
+                {userAnswer.content.length > 100 ? (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: `${userAnswer.content.substring(0, 100)}...` }}
+                    className="text-black bg-white mt-2"
+                  />
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: userAnswer.content }}
+                    className="text-black bg-white mt-2"
+                  />
+                )}
+                <small className="text-gray-500 mt-2 block">{userAnswer.created_at.split('T')[0]}</small>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-gray-500">등록된 답변이 없습니다.</div>
+          )}
         </div>
       </div>
     </div>

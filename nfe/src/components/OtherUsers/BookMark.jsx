@@ -17,7 +17,7 @@ const BookMark = ({ userId, userDetail }) => {
   }, [userId]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
         {userDetail.nickname}의 북마크
       </Typography>
@@ -53,10 +53,10 @@ const BookMark = ({ userId, userDetail }) => {
             </div>
           ))
         ) : (
-          <div className="w-full p-4 text-center">
-            <h1 className="text-center text-2xl font-bold text-gray-700">
-              등록된 북마크가 없습니다.
-            </h1>
+          <div className="border border-gray-300 p-8 w-full h-auto mt-10 rounded-md shadow-sm">
+              <h1 className="text-center text-2xl font-bold text-gray-700">
+                        등록된 북마크가 없습니다.
+              </h1>
           </div>
         )}
       </div>

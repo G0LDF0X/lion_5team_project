@@ -44,19 +44,25 @@ def get_user_qna(request, pk):
     try:
         user = User.objects.get(id=pk)
         qnas = User_QnA.objects.filter(user_id=user)
-        qna_data = []
-        for qna in qnas:
-            answers = User_Answer.objects.filter(user_qna_id=qna)
-            qna_data.append({
-                'question': UserQnASerializer(qna).data,
-                'answers': UserAnswerSerializer(answers, many=True).data
-            })
-        return Response(qna_data)
+        serializer = UserQnASerializer(qnas, many=True)
+        return Response(serializer.data)
     except User.DoesNotExist:
         return Response({"detail": "User not found"}, status=404)
     except Exception as e:
         return Response({"detail": str(e)}, status=500)
+    
 
+@api_view(['GET'])
+def get_user_answers(request, pk):
+    try:
+        user = User.objects.get(id=pk)
+        answers = User_Answer.objects.filter(user_id=user)
+        serializer = UserAnswerSerializer(answers, many=True)
+        return Response(serializer.data)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
 
 @api_view(['POST'])
 def create_user_qna(request):

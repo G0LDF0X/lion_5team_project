@@ -1,15 +1,13 @@
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, TextField } from "@mui/material";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { listQnADetails, updateQNA } from "../store/actions/qnaActions";
 import { useParams, useNavigate } from 'react-router-dom';
 import { qnaCreateReset } from "../store/slices/qnaSlices";
-import { mainAxiosInstance } from "../api/axiosInstances";
 
 function QAUpdateScreen() {
-  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const [editorData, setEditorData] = useState("");
   const [title, setTitle] = useState("");
@@ -48,6 +46,11 @@ function QAUpdateScreen() {
       });
   };
 
+  // 캔슬 버튼 핸들러
+  const cancelHandler = () => {
+    navigate(`/qna/`); // Q&A 리스트 페이지로 이동
+  };
+
   return (
     <div className="container mx-auto py-8">
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -71,14 +74,24 @@ function QAUpdateScreen() {
             setEditorData(data); // 에디터 데이터 업데이트
           }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={submithandler} // 서브밋 핸들러 호출
-          className="mt-4"
-        >
-          Submit
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={submithandler} // 서브밋 핸들러 호출
+            className="mt-4 mr-2"
+          >
+            Submit
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={cancelHandler} // 캔슬 핸들러 호출
+            className="mt-4"
+          >
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );
