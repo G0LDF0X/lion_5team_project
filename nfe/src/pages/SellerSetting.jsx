@@ -61,7 +61,7 @@ function SellerSettingScreen() {
           Authorization: `Bearer ${userInfo.access}`,
         },
       })
-      setProducts(response.data)
+      setProducts(response.data.items)
     } catch (error) {
       console.error("Error:", error)
     } finally {

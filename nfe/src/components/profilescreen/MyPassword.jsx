@@ -30,7 +30,6 @@ function MyPassword({ userInfo, reset }) {
     }
   }, [userInfo, success]);
   
-  console.log("Current Token:", userInfo.access); // 액세스 토큰 확인
 
   const submitHandler = async (e) => {
     e.preventDefault();

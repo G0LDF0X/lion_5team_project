@@ -81,7 +81,6 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
-      console.log(boardDetail)
       setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);

@@ -27,7 +27,7 @@ function HomeScreen() {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     dispatch(listProducts({ query: "", page: 1, category: [] }));
-    dispatch(listBoards());
+    dispatch(listBoards({page:1}));
     dispatch(listQNA());
     if (userInfo) {
       dispatch(getBoardRecommendations());
