@@ -18,7 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
-from app.models import Item, Board, User  # Ensure you import the Item, Board, and User models
+from app.models import Item, Board, User 
 
 app = FastAPI()
 origins = [
