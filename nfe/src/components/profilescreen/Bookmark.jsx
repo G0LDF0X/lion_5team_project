@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Typography} from '@mui/material';
+
 
 
 const Bookmark = ({ bookMarkItems }) => {
   return (
     <div className="flex flex-wrap">
+      <div className="container mx-auto py-8">
+      <Typography variant="h4" className="mb-10 font-bold text-gray-800">
+        나의 북마크
+      </Typography>
       {bookMarkItems && bookMarkItems.length > 0 ? (
         bookMarkItems.map((bookmark) => (
           <div
@@ -41,6 +47,7 @@ const Bookmark = ({ bookMarkItems }) => {
           </h1>
       </div>  
       )}
+    </div>
     </div>
   );
 };
