@@ -258,19 +258,19 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 
 
-# AWS S3 settings
-AWS_ACCESS_KEY_ID = 'AKIAQ3EGSAXM7O7WY7LB'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'lion-bucket-7'
-AWS_S3_REGION_NAME = 'us-east-1'  # 예를 들어, 'ap-northeast-2'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+# # AWS S3 settings
+# AWS_ACCESS_KEY_ID = 'AKIAQ3EGSAXM7O7WY7LB'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'lion-bucket-7'
+# AWS_S3_REGION_NAME = 'us-east-1'  # 예를 들어, 'ap-northeast-2'
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 
-# Static files (CSS, JavaScript, Images)
-AWS_STATIC_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STATIC_LOCATION}/'
-STATICFILES_STORAGE = 'backend.storage_backends.StaticStorage'
+# # Static files (CSS, JavaScript, Images)
+# AWS_STATIC_LOCATION = 'static'
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_STATIC_LOCATION}/'
+# STATICFILES_STORAGE = 'backend.storage_backends.StaticStorage'
 
-# Media files (uploads)
-AWS_MEDIA_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/'
+# # Media files (uploads)
+# AWS_MEDIA_LOCATION = 'media'
+# DEFAULT_FILE_STORAGE = 'backend.storage_backends.MediaStorage'
+# MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/'
