@@ -20,7 +20,6 @@ const UserQnA = ({ userInfo }) => {
       .then((response) => {
         const data = response.data;
 
-        // 질문을 최신순으로 정렬
         data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         const promises = data.map((qna) =>
@@ -105,7 +104,9 @@ const UserQnA = ({ userInfo }) => {
         </div>
       ))
     ) : (
-      <p>질문이 없습니다.</p>
+      <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' , margin: '20px 10px' }}>
+            <p><strong>질문이 없습니다.</strong></p>
+          </div>
     )}
       
     </div>
@@ -151,7 +152,7 @@ const UserQnA = ({ userInfo }) => {
             </div>
           ))
         ) : (
-          <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' , margin: '20px 10px' }}>
+          <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' , margin: '20px 10px' }}>
             <p><strong>답변이 없습니다.</strong></p>
           </div>
         )}

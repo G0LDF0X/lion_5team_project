@@ -37,7 +37,7 @@ const OtherFollowingList = ({ userId, userDetail }) => {
   return (
     <Box className="container mx-auto py-8">
       <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        {userDetail.nickname}님의 팔로잉
+        {userDetail.nickname || userDetail.username }님의 팔로잉
       </Typography>
       {following.length === 0 ? (
           <div className="text-center bg-white shadow-md rounded-lg  mb-8 mt-8 p-4 max-w-xxl mx-auto">

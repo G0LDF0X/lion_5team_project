@@ -86,7 +86,7 @@ const UserQnAProfile = ({ userId, userDetail }) => {
               </div>
             ))
           ) : (
-            <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' , margin: '20px 10px' }}>
+            <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
             <p><strong>작성된 질문이 없습니다.</strong></p>
           </div>
           )}
@@ -112,17 +112,13 @@ const UserQnAProfile = ({ userId, userDetail }) => {
             <span className="font-bold text-sm mr-2">{userDetail.nickname}</span>
             <small className="text-gray-500 mt-2 block">{answer.created_at.split('T')[0]}</small>
             <small className="text-gray-500 flex items-center">
-            {/* <span role="img" aria-label="dot" style={{ marginLeft : '7px', marginRight : '7px'}}>•</span> 댓글  */}
-            {/* <small className="text-gray-500 ml-1.5">
-              {qna.answerCount}
-            </small> */}
           </small>
           </div>
 
               </div>
             ))
           ) : (
-            <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' , margin: '20px 10px' }}>
+            <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
             <p><strong>작성된 답변이 없습니다.</strong></p>
           </div>
           )}
