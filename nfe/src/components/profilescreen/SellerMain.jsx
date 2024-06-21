@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 
@@ -8,9 +8,11 @@ function SellerMain() {
   const [salesStats, setSalesStats] = useState([]);
   const [filter, setFilter] = useState('all'); // 필터 상태 추가
   const [dateRange, setDateRange] = useState(''); // 날짜 범위 상태 추가
+  const [loading, setLoading] = useState(true);  
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const userinfo = localStorage.getItem('userInfo');
         const parsedUserinfo = JSON.parse(userinfo);
@@ -27,7 +29,7 @@ function SellerMain() {
           const itemStats = response2.data.item_stats;
           setSalesStats(itemStats);
 
-          // 선택된 필터에 따라 정확한 날짜 범위를 설정
+          // 선택된 필터에 따라 정확한 날짜 범위를 설정 
           setDateRange(getDateRange(filter));
         } else {
           console.error('판매자 ID를 찾을 수 없습니다.');
@@ -35,6 +37,7 @@ function SellerMain() {
       } catch (error) {
         console.error('데이터를 불러오는 중 오류가 발생했습니다!', error);
       }
+      setLoading(false);
     };
 
     fetchData();
@@ -66,12 +69,16 @@ function SellerMain() {
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-4">
         <h6 className="text-xl font-bold text-center mb-2">월간 수익금</h6>
         <div className="flex justify-center">
+        {loading ? (
+            <div className="flex items-center justify-center h-64">Loading...</div>
+          ) : (
           <LineChart
             xAxis={[{ data: monthlyRevenue.xAxis }]}
             series={[{ data: monthlyRevenue.series }]}
             width={500}
             height={300}
           />
+          )}
         </div>
       </div>
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-4">

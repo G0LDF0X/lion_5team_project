@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import Loading from "../components/Loading";
 import { Done, Delete, Close } from "@mui/icons-material";
 import useCategory from "../hook/useCategory";
+import useTags from "../hook/useTags";
 
 function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const  categories  = useCategory(); 
+  const tags = useTags();
   const dispatch = useDispatch();
   const productCreate = useSelector((state) => state.productCreate);
   const { loading, error } = productCreate;
@@ -44,6 +46,8 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const handleDelete = (chipToDelete) => () => {
     setChipData((chipData) => chipData.filter((chip) => chip !== chipToDelete));
   };
+
+  const filteredTags = tags.filter(tag => tag.category_id === category);
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -119,8 +123,8 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
           />
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
-            <Stack direction="row" spacing={1}>
-              <Chip
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              {/* <Chip
                 label="목줄"
                 onClick={() => handleClick("1")}
                 onDelete={handleDelete("1")}
@@ -137,7 +141,16 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
                 onClick={() => handleClick("3")}
                 onDelete={handleDelete("3")}
                 delete={chipData.includes("3") ? <Delete /> : <Done />}
-              />
+              /> */}
+              {filteredTags.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  label={tag.name}
+                  onClick={() => handleClick(tag.id.toString())}
+                  onDelete={handleDelete(tag.id.toString())}
+                  delete={chipData.includes(tag.id.toString()) ? <Delete /> : <Done />}
+                />
+              ))}
             </Stack>
 
           </FormControl>

@@ -5,11 +5,9 @@ import { listProducts } from "../store/actions/productActions";
 import Loading from "../components/Loading";
 import Message from "../components/Message";
 import Product from "../components/Product";
-import { FormControl, FormGroup, FormControlLabel, Checkbox, Button } from '@mui/material';
+import { FormControl, FormGroup, FormControlLabel, Checkbox, Button, Pagination } from '@mui/material';
 import useCategory from "../hook/useCategory";
 import { mainAxiosInstance } from "../api/axiosInstances";
-
-import Pagination from '@mui/material/Pagination';
 
 function ProductsScreen() {
   const location = useLocation();

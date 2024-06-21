@@ -10,7 +10,8 @@ import {
   Button,
   Avatar,
   Typography,
-  Box
+  Box,
+  Badge
 } from "@mui/material";
 import {
   ShoppingCart,
@@ -21,7 +22,7 @@ import {
   Photo
 } from "@mui/icons-material";
 import SearchBox from "./SearchBox";
-import Badge from '@mui/material/Badge';
+
 
 function Header({ openModal, openPostModal, openSideBar }) {
   const [postMenuAnchorEl, setPostMenuAnchorEl] = useState(null);
@@ -138,10 +139,6 @@ function Header({ openModal, openPostModal, openSideBar }) {
                 <MenuItem onClick={openPostModal} className="flex items-center space-x-2">
                   <i className="fa-regular fa-image"></i>
                   <Typography>PET 사진/영상올리기</Typography>
-                </MenuItem>
-                <MenuItem component={Link} to="/qna/create/" className="flex items-center space-x-2">
-                  <i className="fa-regular fa-question-circle"></i>
-                  <Typography>Q&A 글쓰기</Typography>
                 </MenuItem>
               </Menu>
             </div>

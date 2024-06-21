@@ -164,7 +164,6 @@ def create_Board(request):
                     tag=tag['tag'],
                     tagId=tag['tagId'],
                 )
-
         serializer = BoardSerializer(board)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

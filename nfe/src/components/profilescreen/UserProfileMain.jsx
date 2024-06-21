@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BottomNavigationAction, BottomNavigation } from '@mui/material';
-import { BookmarkBorder, FavoriteBorder, ConfirmationNumberOutlined } from '@mui/icons-material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import { Link  } from 'react-router-dom';
 

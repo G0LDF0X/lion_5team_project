@@ -51,7 +51,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className="w-full max-w-3xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
-        <h1 className="text-2xl mb-4">Create Product</h1>
+        <h1 className="text-2xl mb-4">Update Product</h1>
       <button
           onClick={onClose}
           className="absolute top-2 right-2 p-1 rounded-full bg-gray-200 hover:bg-gray-300"

@@ -10,7 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import { mainAxiosInstance, searchAxiosInstance } from "../api/axiosInstances";
-import SearchIcon from "@mui/icons-material/Search";
+import { Search } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { chosungIncludes } from "es-hangul";
 import useItems from "../hook/useItems";
@@ -126,7 +126,7 @@ function SearchBox() {
             },
           }}
         >
-          <SearchIcon />
+          <Search />
         </Button>
       </form>
       {suggestions.length > 0 && (

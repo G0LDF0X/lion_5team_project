@@ -94,7 +94,7 @@ def create_user_answer(request, pk):
     return Response(serializer.data)
     
 
-@api_view(['PUT'])
+@api_view(['POST'])
 def uploadImage(request, pk):
     try:
         qna = User_QnA.objects.get(id=pk)
