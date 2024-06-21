@@ -20,6 +20,8 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const productCreate = useSelector((state) => state.productCreate);
   const { loading, error } = productCreate;
 
+  const [previewImage, setPreviewImage] = useState(null);
+
   const submitHandler = (e) => {
     e.preventDefault();
     const product = {
@@ -48,6 +50,11 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   };
 
   const filteredTags = tags.filter(tag => tag.category_id === category);
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    console.log("Selected Category ID:", e.target.value);  // 선택한 카테고리 ID 확인
+  };
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -91,10 +98,18 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             <input
               type="file"
               hidden
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setPreviewImage(reader.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+              }}
             />
           </Button>
           {uploading && <Loading />}
+          {previewImage && <img src={previewImage} alt="Preview" style={{marginTop: '20px'}} />}
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
