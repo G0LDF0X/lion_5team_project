@@ -51,6 +51,11 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
 
   const filteredTags = tags.filter(tag => tag.category_id === category);
 
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    console.log("Selected Category ID:", e.target.value);  // 선택한 카테고리 ID 확인
+  };
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       
