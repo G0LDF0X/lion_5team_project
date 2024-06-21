@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, CardHeader, CardMedia, CardContent, Avatar, IconButton, Typography, Box} from "@mui/material";
 import {Link} from "react-router-dom";
-import {  MoreVert } from "@mui/icons-material/esm";
+import { MoreVert } from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
 
 export default function BoardForm({ board  }) {

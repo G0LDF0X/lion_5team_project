@@ -6,6 +6,7 @@ import { Button, Box } from '@mui/material';
 
 function CreateReview() {
   const [unreviewedItems, setUnreviewedItems] = useState([]);
+  const [search, setSearch] = useState('');
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -23,28 +24,29 @@ function CreateReview() {
       setUnreviewedItems(response.data);
     });
   }, []);
-
+const handleChange = (e) => {
+  setSearch(e.target.value);
+}
   return (
     <div className="flex justify-center py-4">
       <div className="w-full max-w-2xl">
       <Box style={{backgroundColor: '#FFCCCC', borderRadius: '10px', padding: '15px', margin: '5px'}}>
           <p style={{fontSize: 'medium'}}>❗️ 환불한 제품은 리뷰 작성이 불가능합니다.</p>
       </Box>
-        {/* <form className="flex">
+        <form className="flex">
           <input
             type="search"
             placeholder="Search"
             aria-label="Search"
+            onChange={handleChange}
+            value = {search}
             className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-green-500 text-white rounded-r-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            Search
-          </button>
-        </form> */}
-        {formattedItems.map(item => (
+         
+        </form>
+        {formattedItems
+        .filter((item) => { item.name.toLowerCase().includes(search.toLowerCase()) })
+        .map(item => (
           <Box display="flex" alignItems="center" justifyContent="space-between" key={item.id}>
             <Box display="flex" alignItems="center">
               <img className="w-20 h-20 object-cover mr-4" src={VITE_API_BASE_URL + item.image_url} style={{ margin: '10px' }} />

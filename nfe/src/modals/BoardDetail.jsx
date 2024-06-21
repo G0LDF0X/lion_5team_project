@@ -1,16 +1,12 @@
 
 import React, { useEffect, useState } from "react";
-import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { createReply, getBoardDetails, createApply, updateBoard, deleteBoard } from "../store/actions/boardActions";
-import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { CardActions, IconButton, Checkbox, Card, Box } from "@mui/material";
-import { FavoriteBorder, Favorite, Share } from "@mui/icons-material";
+import { CardActions, IconButton, Checkbox, Box, Modal } from "@mui/material";
+import { FavoriteBorder, Favorite, Share, AddCircleRounded,Close} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
-import { mainAxiosInstance } from "../api/axiosInstances";
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import { mainAxiosInstance } from "../api/axiosInstances"
 import moment from 'moment';
 import 'moment/locale/ko';
 
@@ -81,7 +77,6 @@ function BoardDetailModal({ open, handleClose }) {
   useEffect(() => {
     if (boardId) {
       dispatch(getBoardDetails(boardId));
-      console.log(boardDetail)
       setLikeSuccess(false);
       if (boardDetail?.liked_by_user) {
         setIsLiked(true);
@@ -284,7 +279,7 @@ function BoardDetailModal({ open, handleClose }) {
           onClick={handleClose}
           className="absolute top-2 right-2 p-1 rounded-full bg-gray-200 hover:bg-gray-300"
         >
-          <CloseIcon />
+          <Close />
         </button>
         {loading ? (
           <div className="w-full flex justify-center items-center p-8">
@@ -351,7 +346,7 @@ function BoardDetailModal({ open, handleClose }) {
                               left: `${tag.x}px`,
                             }}
                           >
-                            <AddCircleRoundedIcon
+                            <AddCircleRounded
                               style={{ fontSize: 30, color: "yellow" }}
                             />
                             <TagInfo className="tag-info">

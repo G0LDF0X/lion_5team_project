@@ -28,8 +28,8 @@ connection_string = f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{
 
 item_csv_file_path = os.path.join(os.path.dirname(__file__), 'items.csv')
 category_csv_file_path = os.path.join(os.path.dirname(__file__), 'category.csv')
-board_csv_file_path = os.path.join(os.path.dirname(__file__), 'boards.csv')
-qna_csv_file_path = os.path.join(os.path.dirname(__file__), 'qnas.csv')
+# board_csv_file_path = os.path.join(os.path.dirname(__file__), 'boards.csv')
+# qna_csv_file_path = os.path.join(os.path.dirname(__file__), 'qnas.csv')
 
 app = FastAPI()
 origins = [
@@ -72,52 +72,52 @@ def export_data_to_csv():
     finally:
         if engine is not None:
             engine.dispose()
-export_data_to_csv()
+# export_data_to_csv()
 
-# board data 조회 후, csv로 저장.
-def export_board_data_to_csv():
-    if os.path.exists(board_csv_file_path):
-        os.remove(board_csv_file_path)
-        logging.info(f"Existing {board_csv_file_path} file deleted.")
+# # board data 조회 후, csv로 저장.
+# def export_board_data_to_csv():
+#     if os.path.exists(board_csv_file_path):
+#         os.remove(board_csv_file_path)
+#         logging.info(f"Existing {board_csv_file_path} file deleted.")
 
-    query = "SELECT * FROM app_board;"
-    engine = None
-    try:
-        engine = create_engine(connection_string)
-        df_board = pd.read_sql_query(query, engine)
-        logging.info(f"Columns in board DataFrame: {df_board.columns.tolist()}")
+#     query = "SELECT * FROM app_board;"
+#     engine = None
+#     try:
+#         engine = create_engine(connection_string)
+#         df_board = pd.read_sql_query(query, engine)
+#         logging.info(f"Columns in board DataFrame: {df_board.columns.tolist()}")
 
-        df_board.to_csv(board_csv_file_path, index=False)
-        logging.info("Board data exported successfully.")
-    except Exception as e:
-        logging.error(f"Error: {e}")
-    finally:
-        if engine is not None:
-            engine.dispose()
-export_board_data_to_csv()
+#         df_board.to_csv(board_csv_file_path, index=False)
+#         logging.info("Board data exported successfully.")
+#     except Exception as e:
+#         logging.error(f"Error: {e}")
+#     finally:
+#         if engine is not None:
+#             engine.dispose()
+# export_board_data_to_csv()
 
 
 # qna data 조회 후, csv로 저장.
-def export_qna_data_to_csv():
-    if os.path.exists(qna_csv_file_path):
-        os.remove(qna_csv_file_path)
-        logging.info(f"Existing {qna_csv_file_path} file deleted.")
+# def export_qna_data_to_csv():
+#     if os.path.exists(qna_csv_file_path):
+#         os.remove(qna_csv_file_path)
+#         logging.info(f"Existing {qna_csv_file_path} file deleted.")
 
-    query = "SELECT * FROM app_user_qna;"
-    engine = None
-    try:
-        engine = create_engine(connection_string)
-        df_qna = pd.read_sql_query(query, engine)
-        logging.info(f"Columns in qna DataFrame: {df_qna.columns.tolist()}")
+#     query = "SELECT * FROM app_user_qna;"
+#     engine = None
+#     try:
+#         engine = create_engine(connection_string)
+#         df_qna = pd.read_sql_query(query, engine)
+#         logging.info(f"Columns in qna DataFrame: {df_qna.columns.tolist()}")
 
-        df_qna.to_csv(qna_csv_file_path, index=False)
-        logging.info("Qna data exported successfully.")
-    except Exception as e:
-        logging.error(f"Error: {e}")
-    finally:
-        if engine is not None:
-            engine.dispose()
-export_qna_data_to_csv()
+#         df_qna.to_csv(qna_csv_file_path, index=False)
+#         logging.info("Qna data exported successfully.")
+#     except Exception as e:
+#         logging.error(f"Error: {e}")
+#     finally:
+#         if engine is not None:
+#             engine.dispose()
+# export_qna_data_to_csv()
 
 
 async def schedule_daily_task():
@@ -127,8 +127,8 @@ async def schedule_daily_task():
         wait_time = (next_run - now).total_seconds()
         logging.info(f"Next data export scheduled at {next_run}")
         await asyncio.sleep(wait_time)
-        export_data_to_csv(), export_board_data_to_csv(), export_qna_data_to_csv()
-
+        # export_data_to_csv(), export_board_data_to_csv(), export_qna_data_to_csv()
+        export_data_to_csv()
 
 
 @app.on_event("startup")
@@ -182,27 +182,27 @@ async def search_items(query: str):
     return {"query": query, "results": []}
 
 
-@app.post("/b_search/")
-async def search_boards(query: str):
+# @app.post("/b_search/")
+# async def search_boards(query: str):
     
-    boards = pd.read_csv(board_csv_file_path)
-    vector_store = Chroma.from_texts(
-        texts=boards['title'].tolist() + boards['content'].tolist(),  # Consider both 'title' and 'content'
-        embedding=sbert
-    )
-    results = vector_store.similarity_search(query=query, k=10)
+#     boards = pd.read_csv(board_csv_file_path)
+#     vector_store = Chroma.from_texts(
+#         texts=boards['title'].tolist() + boards['content'].tolist(),  # Consider both 'title' and 'content'
+#         embedding=sbert
+#     )
+#     results = vector_store.similarity_search(query=query, k=10)
     
-    return {"query": query, "results": results }
+#     return {"query": query, "results": results }
 
 
-@app.post("/q_search/")
-async def search_qnas(query: str):
+# @app.post("/q_search/")
+# async def search_qnas(query: str):
     
-    qnas = pd.read_csv(qna_csv_file_path)
-    vector_store = Chroma.from_texts(
-        texts=qnas['title'].tolist() + qnas['content'].tolist(),  # Consider both 'question' and 'answer'
-        embedding=sbert
-    )
-    results = vector_store.similarity_search(query=query, k=10)
+#     qnas = pd.read_csv(qna_csv_file_path)
+#     vector_store = Chroma.from_texts(
+#         texts=qnas['title'].tolist() + qnas['content'].tolist(),  # Consider both 'question' and 'answer'
+#         embedding=sbert
+#     )
+#     results = vector_store.similarity_search(query=query, k=10)
     
-    return {"query": query, "results": results }
+#     return {"query": query, "results": results }

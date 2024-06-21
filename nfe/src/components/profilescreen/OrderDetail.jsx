@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'; // Import useSelector
 import { mainAxiosInstance } from "../../api/axiosInstances";
 import { useParams } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import {Button} from "@mui/material";
 
 function OrderDetail() {
   const [orderItem, setOrder] = useState(null);

@@ -28,9 +28,11 @@ const MyBoard = ({ userInfo }) => {
       </Typography>
       {MyBoards.length === 0 ? (
         <div className="w-full p-4 text-center">
-          <h1 className="text-center text-xl font-bold text-gray-700">
-            등록된 게시물이 없습니다.
-          </h1>
+          <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+            <h1 className="mb-8 mt-8 text-center text-xl text-gray-700">
+              작성한 게시물이 없습니다.
+            </h1>
+        </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

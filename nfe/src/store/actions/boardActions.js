@@ -19,10 +19,10 @@ const getAuthHeaders = (getState) => {
 
 export const listBoards = createAsyncThunk(
   "boardList/listBoards",
-  async ({ query = '', page = 1, category = [] }, { rejectWithValue, getState }) => {
+  async ({  page = ''}, { rejectWithValue, getState }) => {
     try {
       const state = getState();
-      const cacheKey = `${query}-${page}-${category.join(',')}`;
+      const cacheKey = `${page}`;
       const fetchTime = state.board.fetchTime;
 
       if (state.board.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5) {
@@ -36,11 +36,7 @@ export const listBoards = createAsyncThunk(
       }
 
       let params = new URLSearchParams();
-      if (query) params.append('query', query);
       if (page) params.append('page', page);
-      if (category.length) {
-        category.forEach((cat) => params.append('category', cat));
-      }
 
       const url = `board?${params.toString()}`;
       const response = await mainAxiosInstance.get(url);

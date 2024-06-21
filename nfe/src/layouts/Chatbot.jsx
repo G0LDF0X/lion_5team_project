@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { chatbotAxiosInstance } from '../api/axiosInstances';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { ArrowBackIos } from '@mui/icons-material';
 
 const Chatbot = () => {
     const [message, setMessage] = useState('');
@@ -61,7 +61,7 @@ const Chatbot = () => {
                     <div className="flex items-center mb-2">
                         {chatStarted && (
                             <button onClick={goBack} className="mr-2 focus:outline-none" style={{ width: '24px', height: '24px' }}>
-                                <ArrowBackIosIcon />
+                                <ArrowBackIos />
                             </button>
                         )}
                         <h2 className="text-xl font-semibold">Petpals 챗봇</h2>
