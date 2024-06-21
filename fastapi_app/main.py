@@ -133,6 +133,7 @@ async def schedule_daily_task():
 
 @app.on_event("startup")
 async def startup_event():
+    export_data_to_csv()
     asyncio.create_task(schedule_daily_task())
 
 # lifespan 핸들러 사용시

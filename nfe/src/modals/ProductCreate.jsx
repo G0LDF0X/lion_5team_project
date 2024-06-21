@@ -51,6 +51,11 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
 
   const filteredTags = tags.filter(tag => tag.category_id === category);
 
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    console.log("Selected Category ID:", e.target.value);  // 선택한 카테고리 ID 확인
+  };
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       
@@ -134,24 +139,6 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <Stack direction="row" spacing={1} flexWrap="wrap">
-              {/* <Chip
-                label="목줄"
-                onClick={() => handleClick("1")}
-                onDelete={handleDelete("1")}
-                delete={chipData.includes("1") ? <Delete /> : <Done />}
-              />
-              <Chip
-                label="스텔라앤츄이스"
-                onClick={() => handleClick("2")}
-                onDelete={handleDelete("2")}
-                delete={chipData.includes("2") ? <Delete /> : <Done />}
-              />
-              <Chip
-                label="캐츠랑"
-                onClick={() => handleClick("3")}
-                onDelete={handleDelete("3")}
-                delete={chipData.includes("3") ? <Delete /> : <Done />}
-              /> */}
               {filteredTags.map((tag) => (
                 <Chip
                   key={tag.id}
