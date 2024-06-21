@@ -11,4 +11,4 @@ asgiref
 Django
 djangorestframework
 django-cors-headers
-redis
+cachetools

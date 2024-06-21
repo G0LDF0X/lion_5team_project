@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG)
 ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
 es = Elasticsearch(
-    ['https://localhost:9200'],
+    ['https://192.168.64.3:9200'],
     basic_auth=('elastic', ELASTIC_PASSWORD),
     verify_certs=True,
     ca_certs=ca_cert_path,
