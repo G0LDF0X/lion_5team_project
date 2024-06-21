@@ -11,25 +11,36 @@ import useTags from "../hook/useTags";
 function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(product.price);
-  const [image, setImage] = useState(null);
+  console.log("PRODUCT:", product);
+  console.log("PRODUCT.IMAGE_URL:", product.image_url);
+  const [image, setImage] = useState(product.image_url);
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const  categories  = useCategory(); 
   const tags = useTags();
   const dispatch = useDispatch();
-    const productUpdate = useSelector((state) => state.productUpdate);
-    const { loading, error, success } = productUpdate;
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const { loading, error, success } = productUpdate;
 
-    useEffect(() => {
-      if (product) {
-        setName(product.name);
-        setPrice(product.price);
-        setCategory(product.category ? product.category_id : "");
-        setDescription(product.description);
-        setChipData(product.tags || []);
-      }
-    }, [product]);
+  const [previewImage, setPreviewImage] = useState(product.image_url);
+  console.log("PREVIEWIMAGE:", previewImage);
+
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setPrice(product.price);
+      setCategory(product.category ? product.category_id : "");
+      setDescription(product.description);
+      setChipData(product.tags || []);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    setPreviewImage(product.image_url);
+  }, [product.image_url]);
     
 
   const submitHandler = (e) => {
@@ -110,10 +121,22 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             <input
               type="file"
               hidden
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setPreviewImage(reader.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+              }}
             />
           </Button>
           {uploading && <Loading />}
+          {previewImage && 
+          <img
+          src={previewImage.startsWith('http') || previewImage.startsWith('data') ? previewImage : VITE_API_BASE_URL + previewImage}
+          alt="Preview"
+          style={{marginTop: '20px'}} />}
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
