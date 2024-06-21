@@ -64,9 +64,6 @@ function MyShoppingScreen() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
           <Tab label="주문배송목록" {...a11yProps(0)} />
           <Tab label="상품 스크랩북" {...a11yProps(1)} />
-          <Tab label="나의문의내역" {...a11yProps(2)} />
-          <Tab label="고객센터" {...a11yProps(3)} />
-          
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0} >
@@ -75,12 +72,7 @@ function MyShoppingScreen() {
       <CustomTabPanel value={value} index={1}>
         <BookMarks bookMarkItems={bookMarkItems} />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        문의내역 페이지
-      </CustomTabPanel>
-        <CustomTabPanel value={value} index={3}>
-            고객센터 페이지
-        </CustomTabPanel>
+      
     </Box>
       </CustomTabPanel>
 
