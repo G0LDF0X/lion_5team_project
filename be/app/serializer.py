@@ -10,13 +10,17 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import serializers, status
 import base64
+from django.utils import timezone
+
 
 class ReplySerializer(serializers.ModelSerializer):
     nickname = serializers.ReadOnlyField(source='user_id.nickname')
     username = serializers.ReadOnlyField(source='user_id.username')
+
     class Meta:
         model = Reply
         fields = '__all__'
+
 
 class ImageTagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -382,15 +386,29 @@ class RefundSerializer(serializers.ModelSerializer):
     class Meta:
         model = Refund
         fields = '__all__'
-
+        
+from django.conf import settings
 class FollowSerializer(serializers.ModelSerializer):
     follower_username = serializers.ReadOnlyField(source='follower_id.username')
     followed_username = serializers.ReadOnlyField(source='followed_id.username')
     follower_nickname = serializers.ReadOnlyField(source='follower_id.nickname')
     followed_nickname = serializers.ReadOnlyField(source='followed_id.nickname')
+    followed_image_url = serializers.SerializerMethodField()
+    follower_image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Follow
         fields = '__all__'
+
+    def get_followed_image_url(self, obj):
+        if obj.followed_id.image_url:
+            return settings.MEDIA_URL + str(obj.followed_id.image_url)
+        return None
+
+    def get_follower_image_url(self, obj):
+        if obj.follower_id.image_url:
+            return settings.MEDIA_URL + str(obj.follower_id.image_url)
+        return None
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

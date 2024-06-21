@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { mainAxiosInstance } from "../../api/axiosInstances";
+import { Typography} from '@mui/material';
+
 
 const Follow = ({ userInfo }) => {
   const [following, setFollowing] = useState([]);
@@ -30,11 +32,18 @@ const Follow = ({ userInfo }) => {
   }, [userInfo]);
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-8">
+      <Typography variant="h4" className="mb-8 font-bold text-gray-800">
+        나의 팔로잉
+      </Typography>
     {following.length === 0 ? (
-      <h1 className="text-center text-2xl font-bold text-gray-700">
-        팔로잉한 유저가 없습니다.
-      </h1>
+      <div className="w-full p-4 text-center">
+      <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+            <h1 className="mb-8 mt-8 text-center text-xl text-gray-700"> 
+              팔로잉이 없습니다.
+            </h1>
+        </div>
+      </div>
     ) : (
       <div className="flex flex-wrap -mx-2">
         {following.map((follow, index) => (

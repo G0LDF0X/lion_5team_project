@@ -27,7 +27,6 @@ function SellerItem({ fetchProducts, products, isLoading}) {
   
   useEffect(() => {
     fetchProducts();
-    console.log(products)
   }, [navigate, successCreate, successDelete, successUpdate]);
 
   const deleteHandler = (id) => {

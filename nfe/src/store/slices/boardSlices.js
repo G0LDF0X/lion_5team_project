@@ -21,6 +21,8 @@ const initialState = {
   cache: {},
   fetchTime: null,
   fromCache: false,
+  totalPages: 1, 
+  currentPage: 1,
 };
 
 const pendingReducer = (state) => {
@@ -33,14 +35,16 @@ const pendingDetailReducer = (state) => {
 };
 
 const fulfilledListReducer = (state, action) => {
-  const { data, fromCache } = action.payload;
+  const { data, fromCache, totalPages, currentPage, cacheKey } = action.payload;
   state.loading = false;
   state.boards = data;
   state.error = null;
   if (!fromCache) {
-    state.cache['boards'] = data;
+    state.cache[cacheKey] = data;
     state.fetchTime = Date.now();
   }
+  state.totalPages = totalPages; 
+  state.currentPage = currentPage;
 
 };
 

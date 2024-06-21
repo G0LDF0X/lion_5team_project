@@ -17,30 +17,26 @@ from io import BytesIO
 from PIL import Image
 import json
 from transformers import TextClassificationPipeline, BertForSequenceClassification, AutoTokenizer
+from django.utils import timezone
 from django.core.cache import cache
+from django.core.paginator import Paginator
 
 logger = logging.getLogger(__name__)
 
 @api_view(['GET'])
 def get_Boards(request):
+    page = request.query_params.get('page', 1)
     boards = Board.objects.all()
-
-    serializer = BoardSerializer(boards, many=True)
-    return Response(serializer.data)
-
-# @api_view(['GET'])
-# def get_Boards(request):
-#     cache_key = 'all_boards'
-#     data = cache.get(cache_key)
-
-#     if not data:
-#         boards = Board.objects.all()
-#         serializer = BoardSerializer(boards, many=True)
-#         data = serializer.data
-
-#         cache.set(cache_key, data, 600)  # 캐시 유효 시간을 10분으로 설정
-
-#     return Response(data)
+    paginator = Paginator(boards, 12)  # 12 boards per page
+    paginated_boards = paginator.get_page(page)
+    
+    serializer = BoardSerializer(paginated_boards, many=True)
+    
+    return Response({
+        'boards': serializer.data,
+        'total_pages': paginator.num_pages,
+        'current_page': paginated_boards.number
+    })
 
 def filter_reply(sentence):
     model_name = 'sgunderscore/hatescore-korean-hate-speech'
@@ -269,14 +265,15 @@ def delete_Reply(request, pk):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])
 def update_Reply(request, pk):
-    reply = Reply.objects.get(id=pk)
-    serializer = ReplySerializer(instance=reply, data=request.data)
+    try:
+        reply = Reply.objects.get(pk=pk)
+    except Reply.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=400)
+    reply.content = request.data.get('content', reply.content)
+    reply.created_at = timezone.now()
+    reply.isEdited = True
+    reply.save()
 
+    return Response(status=status.HTTP_200_OK)

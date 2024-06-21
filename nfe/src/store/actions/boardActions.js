@@ -19,19 +19,42 @@ const getAuthHeaders = (getState) => {
 
 export const listBoards = createAsyncThunk(
   "boardList/listBoards",
-  async (_, { rejectWithValue, getState }) => {
-
-    const state = getState();
-    const cache = state.board.cache['boards'];
-    const fetchTime = state.board.fetchTime;
-    if (cache&& fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
-      return { data: cache, fromCache: true, };
-    }
+  async ({  page = ''}, { rejectWithValue, getState }) => {
     try {
-      const res = await mainAxiosInstance.get(`/board`);
-      return {data:res.data, fromCache: false};
+      const state = getState();
+      const cacheKey = `${page}`;
+      const fetchTime = state.board.fetchTime;
+
+      if (state.board.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5) {
+        return {
+          data: state.board.cache[cacheKey],
+          cacheKey,
+          fromCache: true,
+          totalPages: state.board.totalPages,
+          currentPage: state.board.currentPage
+        };
+      }
+
+      let params = new URLSearchParams();
+      if (page) params.append('page', page);
+
+      const url = `board?${params.toString()}`;
+      const response = await mainAxiosInstance.get(url);
+      const { boards, total_pages, current_page } = response.data;
+
+      return {
+        data: boards,
+        cacheKey,
+        fromCache: false,
+        totalPages: total_pages,
+        currentPage: current_page
+      };
     } catch (error) {
-      return rejectWithValue(handleError(error));
+      return rejectWithValue(
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message
+      );
     }
   }
 );

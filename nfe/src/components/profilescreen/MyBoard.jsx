@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from "../../api/axiosInstances";
+import { Typography} from '@mui/material';
+
 const MyBoard = ({ userInfo }) => {
   const [MyBoards, setMyBoards] = useState([]);
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -20,12 +22,17 @@ const MyBoard = ({ userInfo }) => {
 
   return (
     <div className="container mx-auto p-4">
-      
+      <div className="container mx-auto py-8">
+      <Typography variant="h4" className="mb-8 font-bold text-gray-800">
+        나의 게시물
+      </Typography>
       {MyBoards.length === 0 ? (
         <div className="w-full p-4 text-center">
-          <h1 className="text-center text-2xl font-bold text-gray-700">
-            등록된 게시물이 없습니다.
-          </h1>
+          <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+            <h1 className="mb-8 mt-8 text-center text-xl text-gray-700">
+              작성한 게시물이 없습니다.
+            </h1>
+        </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -50,6 +57,7 @@ const MyBoard = ({ userInfo }) => {
         ))}
         </div>
       )}
+      </div>
       </div>
     
   );

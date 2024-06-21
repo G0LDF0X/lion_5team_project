@@ -1,10 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Typography} from '@mui/material';
+
 
 
 const Bookmark = ({ bookMarkItems }) => {
   return (
     <div className="flex flex-wrap">
+      <div className="container mx-auto py-8">
+      <Typography variant="h4" className="mb-10 font-bold text-gray-800">
+        나의 북마크
+      </Typography>
       {bookMarkItems && bookMarkItems.length > 0 ? (
         bookMarkItems.map((bookmark) => (
           <div
@@ -36,11 +42,14 @@ const Bookmark = ({ bookMarkItems }) => {
           </div>
         ))
       ) : ( <div className="w-full p-4 text-center">  
-        <h1 className="text-center text-2xl font-bold text-gray-700">
-            등록된 북마크가 없습니다.
-          </h1>
+        <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+            <h1 className="mb-8 mt-8 text-center text-xl text-gray-700"> 
+               북마크 한 게시물이 없습니다.
+            </h1>
+        </div>
       </div>  
       )}
+    </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 

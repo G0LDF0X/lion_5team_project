@@ -1,14 +1,46 @@
+# from elasticsearch import Elasticsearch
+# import os
+# import django
+# import numpy as np
+# import sys
+# from transformers import BertTokenizer, BertModel
+# import torch
+# from dotenv import load_dotenv
+# from django.conf import settings
+# load_dotenv()
+
+
+# # Ensure correct Django setup
+# sys.path.append(os.path.join(os.path.dirname(__file__), 'be'))
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+# django.setup()
+
+# from app.models import Item, Category
+
+# # Ensure the environment variable is set
+# elastic_password = 'elastic'    
+
+# # Path to the http_ca.crt file
+# ca_cert_path = os.path.join(settings.BASE_DIR,'certs','ca.crt')
+# print (ca_cert_path)    
+# # ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')    
+# es = Elasticsearch(
+#     ['https://192.168.64.3:9200'], 
+#     basic_auth=('elastic', 'elastic'),
+#     verify_certs=True,
+#     ca_certs=ca_cert_path,
+# )
+# # Define the index name
+# index_name = 'items'
 from elasticsearch import Elasticsearch
 import os
 import django
-import numpy as np
 import sys
-from transformers import BertTokenizer, BertModel
-import torch
 from dotenv import load_dotenv
 from django.conf import settings
-load_dotenv()
 
+# Load environment variables
+load_dotenv()
 
 # Ensure correct Django setup
 sys.path.append(os.path.join(os.path.dirname(__file__), 'be'))
@@ -18,20 +50,35 @@ django.setup()
 from app.models import Item, Category
 
 # Ensure the environment variable is set
-elastic_password = 'elastic'    
+elastic_password = os.getenv('ELASTIC_PASSWORD', 'elastic')
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(settings.BASE_DIR,'./certs/http_ca.crt')
-print (ca_cert_path)    
-ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')    
-es = Elasticsearch(
-    ['https://localhost:9200'],
-    basic_auth=('elastic', ELASTIC_PASSWORD),
-    verify_certs=True,
-    ca_certs=ca_cert_path,
-)
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'ca.crt')
+
+# Debugging information
+print(f"CA Certificate Path: {ca_cert_path}")
+if not os.path.exists(ca_cert_path):
+    print("CA certificate file not found!")
+else:
+    print("CA certificate file found.")
+
+# Elasticsearch connection setup
+try:
+    es = Elasticsearch(
+        ['https://192.168.64.3:9200'],  # Replace with actual IP address
+        basic_auth=('elastic', elastic_password),
+        verify_certs=True,
+        ca_certs=ca_cert_path,
+    )
+    # Test the connection
+    res = es.info()
+    print(f"Elasticsearch Info: {res}")
+except Exception as e:
+    print(f"Error connecting to Elasticsearch: {e}")
+
 # Define the index name
 index_name = 'items'
+
 
 # Define the mapping with a dense_vector field
 mapping = {

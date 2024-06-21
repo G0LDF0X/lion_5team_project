@@ -9,7 +9,7 @@ const MyReview = ({ reviews }) => {
         reviews.map((review) => (
           <div
             className="my-3 p-3 rounded shadow-md bg-white"
-            key={review.item_id}
+            key={review.id}
           >
             <div className="p-4">
               <Link to={`/items/detail/${review.item_id}`}>

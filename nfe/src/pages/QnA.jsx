@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createQNA, listQNA } from '../store/actions/qnaActions';
@@ -13,20 +13,24 @@ function QAScreen() {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const qnaCreate = useSelector((state) => state.qnaCreate);
   const { success, qna } = qnaCreate;
-  
+  const [creatingQNA, setCreatingQNA] = useState(false); // 새로운 상태 추가
+
   useEffect(() => {
     dispatch(listQNA());
-  }, [navigate, dispatch]);
+  }, [dispatch]);
 
   const qnaCreateHandler = () => {
+    // qnaCreateHandler 함수 내부에서 success를 false로 초기화
+    setCreatingQNA(true); // Creating QNA 시작
     dispatch(createQNA());
   };
 
   useEffect(() => {
-    if (success) {
+    if (success && qna && creatingQNA) {
       navigate(`/qna/update/${qna.id}`);
+      setCreatingQNA(false); // Creating QNA 종료
     }
-  }, [success, navigate, qna]);
+  }, [success, qna, navigate, creatingQNA]);
 
   // QNA 글을 최신순으로 정렬
   const sortedQnas = [...qnas].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

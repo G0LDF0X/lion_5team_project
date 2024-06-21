@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { BookmarkBorder, FavoriteBorder, ConfirmationNumberOutlined } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
-import { Link } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 function UserProfileMain({ userDetail, url, userInfo }) {
-    const [value, setValue] = useState(0);
     const [followerCount, setFollowerCount] = useState(0);
     const [FollowingCount, setFollowingCount] = useState(0);
     const [isFollowing, setIsFollowing] = useState(false);
@@ -13,6 +11,10 @@ function UserProfileMain({ userDetail, url, userInfo }) {
     const [followings, setFollowings] = useState([]);
     const [showFollowers, setShowFollowers] = useState(false);
     const [showFollowings, setShowFollowings] = useState(false);
+    const [hoverFollowers, setHoverFollowers] = useState(false);
+    const [hoverFollowings, setHoverFollowings] = useState(false);
+    const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+
 
     const fetchFollowers = async () => {
                 try {
@@ -22,10 +24,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             'Authorization': `Bearer ${userInfo.access}`
                         }
                     });
-                    // const data = await response.json();
-                    // 팔로워 목록을 state 변수에 저장
                     setFollowers(response.data);
-                    console.log(response.data);
                     setShowFollowers(true);
                     setShowFollowings(false);
                 } catch (error) {
@@ -43,7 +42,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                     });
 
                     setFollowings(response.data);
-                    console.log(response.data);
                     setShowFollowers(false);
                     setShowFollowings(true);
                 } catch (error) {
@@ -69,9 +67,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
         };
         if (userDetail.id && userInfo.access) {
             fetchData();
-            console.log(followerCount)
-            console.log(FollowingCount)
-    
         }
       
         const checkFollowStatus = async () => {
@@ -114,7 +109,7 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                 console.log('response:', response);
                 if (response.status === 201) {
                     setIsFollowing(true);
-
+                    window.location.reload();
                     setFollowerCount(followerCount + 1);
 
                     
@@ -127,17 +122,14 @@ function UserProfileMain({ userDetail, url, userInfo }) {
 
     const handleUnfollow = async () => {
         try {
-            console.log('userDetail.id:', userDetail.id);
-            console.log('userInfo.access:', userInfo.access);
             const response = await mainAxiosInstance.delete(`/users/follow/${userDetail.id}/`, {
                     headers: {
                         'Authorization': `Bearer ${userInfo.access}`
                 }
             });
-            console.log('response:', response);
             if (response.status === 201) {
                 setIsFollowing(false);
-
+                window.location.reload();
                 setFollowerCount(followerCount - 1);
                 
             }
@@ -158,14 +150,17 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         ) : (
                             <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
                         )}
-                        <h4 className="mt-4">{userDetail?.nickname || userDetail?.username}</h4>
+                        <h4 className="mt-4" style={{ fontSize: '1.8em' }}>{userDetail?.nickname || userDetail?.username}</h4>
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '140px', marginBottom: '20px' }}>
-                            <h6 onClick={fetchFollowers}>팔로워 {followerCount}</h6>
-                            <h6 onClick={fetchFollowings}> | 팔로잉 {FollowingCount}</h6>
-                        </div>
+                            <h6 onClick={fetchFollowers} style={{ cursor: 'pointer' }} onMouseEnter={() => setHoverFollowers(true)} onMouseLeave={() => setHoverFollowers(false)}>
+                                <span style={{ color: hoverFollowers ? 'blue' : 'initial', textDecoration: hoverFollowers ? 'underline' : 'none' }}>팔로워 {followerCount}</span>
+                            </h6>
+                            <h6 onClick={fetchFollowings} style={{ cursor: 'pointer' }} onMouseEnter={() => setHoverFollowings(true)} onMouseLeave={() => setHoverFollowings(false)}>
+                                <span style={{ color: hoverFollowings ? 'blue' : 'initial', textDecoration: hoverFollowings ? 'underline' : 'none' }}> | 팔로잉 {FollowingCount}</span>
+                            </h6>
+                                </div>
                         <Button 
                         variant="contained" 
-                        color={isFollowing ? "secondary" : "primary"} 
                         onClick={isFollowing ? handleUnfollow : handleFollow}
                         className="mt-5"
                         style={{
@@ -177,61 +172,46 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                         </Button>
                     </div>
                 </div>
-                <div className="mt-6 mb-4 text-center">
-                    <div className="w-full">
-                        <BottomNavigation
-                            showLabels
-                            value={value}
-                            onChange={(event, newValue) => setValue(newValue)}
-                        >
-                            <BottomNavigationAction label="스크랩북" icon={<BookmarkBorder />} />
-                            <BottomNavigationAction label="좋아요" icon={<FavoriteBorder />} />
-                            <BottomNavigationAction label="내 쿠폰" icon={<ConfirmationNumberOutlined />} />
-                        </BottomNavigation>
-                    </div>
-                </div>
-                <div>
-                
-            </div>
-            {/* 팔로워 목록 */}
+
                 {showFollowers && followers && (
-                    <div className="followers-list">
+                    <div className="followers-list" style={{ marginTop: '20px' }}>
                         <ul style={{ paddingLeft: '20px' }}>
                         <h3 style={{ 
-                            textAlign: 'center',
-                            fontWeight: 'bold', 
-                            fontSize: '24px',
-                            marginBottom: '20px',
-                            }}>팔로워 List</h3>
-                         {followers && followers.length > 0 ? (
-                            followers.map((follower) => (
-                                <li key={follower.id} style={{ display: 'flex', alignItems: 'center', margin: '10px 0' }}>
-                                   
-                                        {follower.follower_image_url ? (
-                                        <img src={url + follower.follower_image_url} alt="Profile" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
-                                    ) : (
-                                        <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
-                                    )}
-                                     <Link to={`/users/${follower.follower_id}`}
-                                     onClick={() => setShowFollowers(false)}>
-                                    <span style={{ marginLeft: '10px', fontSize: '18px' }}>{follower.follower_nickname}</span>
-                                    </Link></li>
-                                    
-                            ))
+                        textAlign: 'center',
+                        fontWeight: 'bold', 
+                        fontSize: '24px',
+                        marginBottom: '20px',
+                        }}>Follower List</h3>
+                        {followers && followers.length > 0 ? (
+                        <ul className="divide-y divide-gray-200">
+                            {followers.map((follower) => (
+                            <li key={follower.id} className="flex items-center py-4">
+                                {follower.follower_image_url ? (
+                                <img src={VITE_API_BASE_URL + follower.follower_image_url} alt="Profile" className="rounded-full w-16 h-16 mr-4" />
+                                ) : (
+                                <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-16 h-16 mr-4" />
+                                )}
+                                <Link to={`/users/${follower.follower_id}`} onClick={() => setShowFollowers(false)}>
+                                <span className="text-xl font-bold">{follower.follower_nickname || follower.follower_username}</span>
+                                </Link>
+                            </li>
+                            ))}
+                        </ul>
                         ) : (
-                            <p style={{ 
-                                textAlign: 'center',
-                                marginBottom: '20px',
-                             }}>팔로워가 없습니다.</p>
-                        )
-                        }
+                        <p style={{ 
+                            textAlign: 'center',
+                            marginBottom: '20px',
+                            fontSize: '20px',
+                        }}>No Followers</p>
+                        )}
+
+
                         </ul>
                     </div>
                  
                 )}
-                    {/* 팔로잉 목록 */}
                     {showFollowings && followings && (
-                        <div className="followings-list">
+                        <div className="followings-list" style={{ marginTop: '20px' }}>
                             <ul style={{ paddingLeft: '20px' }}>
 
                             <h3 style={{ 
@@ -239,28 +219,33 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                             fontWeight: 'bold', 
                             fontSize: '24px',
                             marginBottom: '20px',
-                            }}>팔로잉 List</h3>
+                            }}>Following List</h3>
                             {followings && followings.length > 0 ? (
-                                followings.map((following) => (
-                                    <li key={following.id} style={{ display: 'flex', alignItems: 'center', margin: '10px 0' }}>
+                                <ul className="divide-y divide-gray-200">
+                               { followings.map((following) => (
+                                    <li key={following.id} className="flex items-center py-4">
 
-                                    {following.following_image_url ? (
-                                        <img src={url + following.followed_image_url} alt="Profile" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                    {following.followed_image_url ? (
+                                        <img src={VITE_API_BASE_URL + following.follower_image_url} alt="Profile"  className="rounded-full w-16 h-16 mr-4" />
                                     ) : (
-                                        <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-8 h-8"  style={{ width: '40px', height: '40px' }} />
+                                        <img src="https://placehold.co/400" alt="Placeholder"  className="rounded-full w-16 h-16 mr-4"  />
                                     )}
                                      <Link to={`/users/${following.followed_id}`}
                                      onClick={() => setShowFollowings(false)}>
-                                    <span style={{ marginLeft: '10px', fontSize: '18px' }}>{following.followed_nickname}</span>
+                                    <span className="text-xl font-bold">{following.followed_nickname || following.followed_username}</span>
                                     </Link></li>
-                                ))
+                                ))}
+                                </ul>
                             ) : (
                                 <p style={{ 
                                     textAlign: 'center',
                                     marginBottom: '20px',
-                                 }}>팔로잉 하고 있는 사람이 없습니다.</p>
+                                    fontSize: '20px',
+                                 }}>No Following users.</p>
                             )
                         }
+                       
+
                             </ul>
                         </div>
                     )};

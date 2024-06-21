@@ -23,14 +23,14 @@ const Like = ({ userId, userDetail }) => {
     }, [userId]);
 
         return (
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto py-8">
             <Typography variant="h4" className="mb-8 font-bold text-gray-800">
                 {userDetail.nickname}의 좋아요
             </Typography>
             {likes && likes.length === 0 ? (
-                <h1 className="text-center text-2xl font-bold text-gray-700">
-                    좋아요한 게시물이 없습니다.
-                </h1>
+                 <div className="text-center bg-white shadow-md rounded-lg  mb-8 mt-8 p-4 max-w-xxl mx-auto">
+                    <h1 className="mb-8 mt-8 text-center text-xl text-gray-700" >좋아요 한 게시물이 없습니다.</h1>
+             </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {likes && likes.map((like) => (
