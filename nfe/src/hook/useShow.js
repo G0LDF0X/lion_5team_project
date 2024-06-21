@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { mainAxiosInstance } from "../api/axiosInstances";
-const useShow = (id) => {
+
+
+const useShow = (id, userInfo) => {
   useEffect(() => {
     async function show() {
         mainAxiosInstance.post(`/board/detail/${id}/add_show/`

@@ -104,6 +104,7 @@ function QAScreen() {
                   image={`${VITE_API_BASE_URL}${qna.image_url}`}
                   alt={qna.title}
                   className="object-cover"
+                  style={{ height: '50%', width: '100%', objectFit: 'cover' }}
                 />
               </Link>
             )}

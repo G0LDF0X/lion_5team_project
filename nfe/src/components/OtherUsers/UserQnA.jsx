@@ -3,6 +3,8 @@ import React, {useRef, useEffect, useState } from 'react';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
 
 
 const UserQnAProfile = ({ userId, userDetail }) => {
@@ -64,10 +66,19 @@ const UserQnAProfile = ({ userId, userDetail }) => {
                 <Link to={`/qna/detail/${qna.id}`}>
                   <h3 className="text-2xl font-bold">{qna.title}</h3>
                 </Link>
-                <div
-                  dangerouslySetInnerHTML={{ __html: qna.content }}
-                  className="text-xl bg-white mt-2"
-                />
+    
+                  {qna.content.length > 100 ? (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: `${qna.content.substring(0, 100)}...` }}
+                      className="text-xl bg-white mt-2"
+                    />
+                  ) : (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: qna.content }}
+                      className="text-black bg-white mt-2"
+                    />
+                  
+                  )}
                 <div className="flex items-center mt-2">
                 {userDetail?.image_url ? (
                   <img src={VITE_API_BASE_URL + userDetail.image_url} alt="Profile" className="w-6 h-6 rounded-full mr-2" />
@@ -87,7 +98,7 @@ const UserQnAProfile = ({ userId, userDetail }) => {
             ))
           ) : (
             <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
-            <p><strong>작성된 질문이 없습니다.</strong></p>
+            <p><strong>작성하신 질문이 없습니다.</strong></p>
           </div>
           )}
         </div>
@@ -98,11 +109,21 @@ const UserQnAProfile = ({ userId, userDetail }) => {
           {userAnswers.length > 0 ? (
             userAnswers.map((answer) => (
               <div key={answer.id} className="bg-white mb-4 mt-4 p-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold">{answer.title}</h3>
+                <Link to={`/qna/detail/${answer.user_qna_id}`}>
+                  <h3 className="text-lg font-semibold">{answer.title}</h3>
+                </Link>
+                 {answer.content.length > 100 ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: `${answer.content.substring(0, 100)}...` }}
+                  className="text-black bg-white mt-2"
+                />
+              ) : (
+                
                 <div
                   dangerouslySetInnerHTML={{ __html: answer.content }}
                   className="text-black bg-white mt-2"
                 />
+              )}
                   <div className="flex items-center mt-2">
                 {userDetail?.image_url ? (
                   <img src={VITE_API_BASE_URL + userDetail.image_url} alt="Profile" className="w-6 h-6 rounded-full mr-2" />
@@ -119,7 +140,7 @@ const UserQnAProfile = ({ userId, userDetail }) => {
             ))
           ) : (
             <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
-            <p><strong>작성된 답변이 없습니다.</strong></p>
+            <p><strong>작성하신 답변이 없습니다.</strong></p>
           </div>
           )}
         </div>

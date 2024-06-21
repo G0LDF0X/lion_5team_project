@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Card, CardActions, CardContent, Grid, Typography, Button } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
+import { useSelector } from 'react-redux';
+
 
 const OtherFollowingList = ({ userId, userDetail }) => {
   const [following, setFollowing] = useState([]);
+  const userInfo = useSelector(state => state.user.userInfo);
+
 
   useEffect(() => {
     const fetchFollowing = async () => {
@@ -56,7 +60,7 @@ const OtherFollowingList = ({ userId, userDetail }) => {
               <p className="text-gray-600 mb-4">
                 {follow.created_at.split('T')[0]}
               </p>
-              <Link to={`/users/${follow.followed_id}`}>
+              <Link to={follow.followed_id === userInfo.id ? '/users/profile' :`/users/${follow.followed_id}`}>
                 <button className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   바로가기
                 </button>
