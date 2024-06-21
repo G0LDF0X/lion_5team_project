@@ -159,7 +159,8 @@ def create_Board(request):
                 board=board,
                 x=tag['x'],
                 y=tag['y'],
-                tag=tag['tag']
+                tag=tag['tag'],
+                tagId=tag['tagId']
             )
 
         serializer = BoardSerializer(board)
