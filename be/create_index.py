@@ -53,7 +53,7 @@ from app.models import Item, Category
 elastic_password = os.getenv('ELASTIC_PASSWORD', 'elastic')
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'ca.crt')
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'http_ca.crt')
 
 # Debugging information
 print(f"CA Certificate Path: {ca_cert_path}")
