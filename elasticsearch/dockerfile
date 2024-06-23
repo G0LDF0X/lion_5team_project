@@ -1,0 +1,26 @@
+FROM docker.elastic.co/elasticsearch/elasticsearch:8.14.1
+
+# Copy custom configuration
+COPY elasticsearch.yml /usr/share/elasticsearch/config/
+
+# Copy SSL certificates
+COPY ca.crt elasticsearch.key elasticsearch.crt /usr/share/elasticsearch/config/certs/
+
+# Set permissions for certificates
+RUN chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/config/certs && \
+    chmod 600 /usr/share/elasticsearch/config/certs/elasticsearch.key
+
+# Set environment variables
+ENV discovery.type=single-node
+ENV ES_JAVA_OPTS="-Xms1g -Xmx1g"
+ENV ELASTIC_PASSWORD=petpals
+
+# Expose the default Elasticsearch ports
+EXPOSE 9200 9300
+
+# Set health check
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
+  CMD curl -s --cacert /usr/share/elasticsearch/config/certs/ca.crt -u elastic:${ELASTIC_PASSWORD} https://localhost:9200/_cluster/health || exit 1
+
+# Run Elasticsearch
+CMD ["elasticsearch"]

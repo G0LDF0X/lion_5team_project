@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-!p*v3!=0kgugwtv*at3!9z2$e5(hlvup%v&nnsny6@k1yw^um1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*",
+    "https://petpals.digital/",]
 
 # Application definition
 

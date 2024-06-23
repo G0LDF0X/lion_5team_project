@@ -34,7 +34,8 @@ category_csv_file_path = os.path.join(os.path.dirname(__file__), 'category.csv')
 app = FastAPI()
 origins = [
     "http://localhost:5173",
-    "*"
+    "*",
+    "https://petpals.digital/"
 ]
 
 app.add_middleware(
@@ -148,7 +149,7 @@ async def startup_event():
 
 # app = FastAPI(lifespan=lifespan)
 
-@app.post("/search/")
+@app.get("/search/")
 async def search_items(query: str):
     
     items = pd.read_csv(item_csv_file_path)
