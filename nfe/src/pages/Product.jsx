@@ -59,13 +59,15 @@ function ProductDetail() {
     dispatch(listProductDetails(id));
     dispatch(listBookMark());
 
+    if (userInfo) {
     mainAxiosInstance.get(`/users/check_review/${userInfo.id}/`)
     .then((response) => {
       const orderItems = response.data;
       const canReview = orderItems.some((orderItem) => orderItem.item_id == id && !orderItem.is_refund);
       setCanReview(canReview);
     });
-  }, [dispatch, id, userInfo.id]);
+  }
+  }, [dispatch, id, userInfo?.id]);
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -414,14 +416,16 @@ function ProductDetail() {
           </div>
           <div className="mt-8">
             <h2 className="text-3xl font-bold mb-4">Q&A</h2>
-            <div className="flex justify-end mb-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                onClick={createQnAHandler}
-              >
-                Create a Q&A
-              </button>
-            </div>
+            {userInfo && (
+              <div className="flex justify-end mb-4">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                  onClick={createQnAHandler}
+                >
+                  Create a Q&A
+                </button>
+              </div>
+            )}
             <div>
               {product.item_qna_set && product.item_qna_set.length > 0 ? (
                 product.item_qna_set.map((item_qna, index) => (
@@ -471,7 +475,7 @@ function ProductDetail() {
                       ) : (
                         <>
                         <div className="flex items-center">
-                          {item_qna.user_id === userInfo.id && (
+                          {userInfo && item_qna.user_id === userInfo?.id && (
                             <div className="flex">
                               <button className="bg-green-500 text-white px-4 py-2 rounded-lg"
                               onClick={() => updateQnAHandler(item_qna)}>수정</button>
@@ -479,7 +483,7 @@ function ProductDetail() {
                               onClick={() => deleteQnAHandler(item_qna)}>삭제</button>
                             </div>
                           )}
-                          {!showTextField && userInfo.is_seller && (
+                          {userInfo && !showTextField && userInfo.is_seller && (
                             <button
                               className="bg-blue-500 text-white px-4 py-2 rounded-lg ml-2"
                               onClick={handleButtonClick}
