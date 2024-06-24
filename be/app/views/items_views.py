@@ -155,33 +155,42 @@ def get_items(request):
 #         'current_page': paginated_items.number
 #     })
 
-@api_view(['GET'])
-def get_my_items(request):
-    user = User.objects.get(username=request.user)
-    seller = Seller.objects.get(user_id=user)
-    items = Item.objects.filter(seller_id=seller)
-    
-    serializer = ItemSerializer(items, many=True)
-    return Response({
-        'items': serializer.data,
-        'total_items': len(serializer.data)  # 전체 아이템 수를 반환할 수도 있음
-    })
-# 페이지네이션 코드입니다. 페이지당 12개의 아이템을 보여줍니다.
 # @api_view(['GET'])
 # def get_my_items(request):
 #     user = User.objects.get(username=request.user)
 #     seller = Seller.objects.get(user_id=user)
 #     items = Item.objects.filter(seller_id=seller)
-#     page = request.GET.get('page', 1)
-#     paginator = Paginator(items, 12)  # 페이지당 12개 아이템
-#     paginated_items = paginator.get_page(page)
     
-#     serializer = ItemSerializer(paginated_items, many=True)
+#     serializer = ItemSerializer(items, many=True)
 #     return Response({
 #         'items': serializer.data,
-#         'total_pages': paginator.num_pages,
-#         'current_page': paginated_items.number
-#     }) 	
+#         'total_items': len(serializer.data)  # 전체 아이템 수를 반환할 수도 있음
+#     })
+# 페이지네이션 코드입니다. 페이지당 12개의 아이템을 보여줍니다.
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_my_items(request):
+    user = User.objects.get(username=request.user)
+    seller = Seller.objects.get(user_id=user)
+    items = Item.objects.filter(seller_id=seller).order_by('id')
+
+    # 페이지네이터 설정: 한 페이지당 12개의 아이템
+    paginator = Paginator(items, 12)
+    
+    # 요청에서 페이지 번호 가져오기 (기본값: 1)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    # 현재 페이지의 아이템을 시리얼라이즈
+    serializer = ItemSerializer(page_obj, many=True)
+    
+    # 응답에 현재 페이지의 아이템과 전체 아이템 수, 전체 페이지 수 포함
+    return Response({
+        'items': serializer.data,
+        'total_items': paginator.count,
+        'total_pages': paginator.num_pages,
+        'current_page': page_obj.number
+    })	
     
 @api_view(['GET'])
 def get_top_items(request):

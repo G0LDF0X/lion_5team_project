@@ -9,7 +9,8 @@ import {
   updateProductQnA,
   deleteProductQnA,
   getTopProducts,
-  getRecommendations
+  getRecommendations,
+  listMyProducts,
 
 } from "../actions/productActions";
 
@@ -94,6 +95,25 @@ export const productListSlice = createSlice({
         }
       })
       .addCase(listProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(listMyProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(listMyProducts.fulfilled, (state, action) => {
+        const { data, cacheKey, fromCache, totalPages, currentPage } = action.payload;
+        state.products = data;
+        state.loading = false;
+        state.totalPages = totalPages;
+        state.currentPage = currentPage;
+        if (!fromCache) {
+          state.cache[cacheKey] = data;
+          state.fetchTime = Date.now();
+        }
+      })
+      .addCase(listMyProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
