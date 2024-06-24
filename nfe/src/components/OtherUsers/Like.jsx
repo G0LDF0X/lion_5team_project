@@ -25,7 +25,7 @@ const Like = ({ userId, userDetail }) => {
         return (
             <div className="container mx-auto py-8">
             <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-                {userDetail.nickname}의 좋아요
+                {userDetail.nickname || userDetail.username }의 좋아요
             </Typography>
             {likes && likes.length === 0 ? (
                  <div className="text-center bg-white shadow-md rounded-lg  mb-8 mt-8 p-4 max-w-xxl mx-auto">

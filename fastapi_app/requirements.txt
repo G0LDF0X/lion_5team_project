@@ -1,0 +1,15 @@
+fastapi 
+uvicorn 
+sqlalchemy 
+python-dotenv 
+pandas 
+sentence-transformers 
+langchain 
+langchain-chroma 
+psycopg2-binary 
+httpx 
+requests 
+asyncio 
+pydantic 
+langchain-core 
+langchain-huggingface

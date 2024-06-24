@@ -223,6 +223,8 @@ volumes:
     driver: local
   kibanadata:
     driver: local
+# docker cp f3924cddf887:/usr/share/elasticsearch/config/certs/ca/http_ca.crt ./certs/http_ca.crt
+# scp ubuntu@192.168.64.3:/home/ubuntu/elasticsearch-setup/certs/http_ca.crt ~/certs/
 
 
 # docker cp <es01_container_id>:/usr/share/elasticsearch/config/certs/ca/http_ca.crt ./certs/http_ca.crt

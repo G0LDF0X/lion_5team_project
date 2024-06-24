@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import Loading from "../components/Loading";
 import { Done, Delete, Close } from "@mui/icons-material";
 import useCategory from "../hook/useCategory";
+import useTags from "../hook/useTags";
 
 function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [name, setName] = useState("");
@@ -14,9 +15,12 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
   const  categories  = useCategory(); 
+  const tags = useTags();
   const dispatch = useDispatch();
   const productCreate = useSelector((state) => state.productCreate);
   const { loading, error } = productCreate;
+
+  const [previewImage, setPreviewImage] = useState(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -43,6 +47,13 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
 
   const handleDelete = (chipToDelete) => () => {
     setChipData((chipData) => chipData.filter((chip) => chip !== chipToDelete));
+  };
+
+  const filteredTags = tags.filter(tag => tag.category_id === category);
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    console.log("Selected Category ID:", e.target.value);  // 선택한 카테고리 ID 확인
   };
 
   return (
@@ -87,10 +98,18 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             <input
               type="file"
               hidden
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setPreviewImage(reader.result);
+                };
+                reader.readAsDataURL(e.target.files[0]);
+              }}
             />
           </Button>
           {uploading && <Loading />}
+          {previewImage && <img src={previewImage} alt="Preview" style={{marginTop: '20px'}} />}
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
@@ -119,25 +138,16 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
           />
           <div className="mb-4"/>
           <FormControl fullWidth variant="outlined" className="mb-4">
-            <Stack direction="row" spacing={1}>
-              <Chip
-                label="목줄"
-                onClick={() => handleClick("1")}
-                onDelete={handleDelete("1")}
-                delete={chipData.includes("1") ? <Delete /> : <Done />}
-              />
-              <Chip
-                label="스텔라앤츄이스"
-                onClick={() => handleClick("2")}
-                onDelete={handleDelete("2")}
-                delete={chipData.includes("2") ? <Delete /> : <Done />}
-              />
-              <Chip
-                label="캐츠랑"
-                onClick={() => handleClick("3")}
-                onDelete={handleDelete("3")}
-                delete={chipData.includes("3") ? <Delete /> : <Done />}
-              />
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              {filteredTags.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  label={tag.name}
+                  onClick={() => handleClick(tag.id.toString())}
+                  onDelete={handleDelete(tag.id.toString())}
+                  delete={chipData.includes(tag.id.toString()) ? <Delete /> : <Done />}
+                />
+              ))}
             </Stack>
 
           </FormControl>

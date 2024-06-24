@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { mainAxiosInstance } from '../../api/axiosInstances';
 import { Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 function UserProfileMain({ userDetail, url, userInfo }) {
     const [followerCount, setFollowerCount] = useState(0);
@@ -14,6 +16,9 @@ function UserProfileMain({ userDetail, url, userInfo }) {
     const [hoverFollowers, setHoverFollowers] = useState(false);
     const [hoverFollowings, setHoverFollowings] = useState(false);
     const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+    const navigate = useNavigate();
+    // const userInfo = useSelector(state => state.user.userInfo);
+
 
 
     const fetchFollowers = async () => {
@@ -139,18 +144,19 @@ function UserProfileMain({ userDetail, url, userInfo }) {
         }
     };
 
-    
+
+  
     return (
         <div className="flex justify-center mt-6">
             <div className="bg-white shadow-md rounded-lg w-full max-w-2xl">
                 <div className="flex justify-center mt-4">
                     <div className="flex flex-col items-center">
                         {userDetail?.image_url ? (
-                            <img src={url + userDetail.image_url} alt="Profile" className="rounded-full w-32 h-32" />
+                            <img src={VITE_API_BASE_URL + userDetail.image_url} alt="Profile" className="rounded-full w-32 h-32"/>
                         ) : (
                             <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-32 h-32" />
                         )}
-                        <h4 className="mt-4" style={{ fontSize: '1.8em' }}>{userDetail?.nickname || userDetail?.username}</h4>
+                        <h4 className="mt-4" style={{ fontSize: '1.8em' }} >{userDetail?.nickname || userDetail?.username}</h4>
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '140px', marginBottom: '20px' }}>
                             <h6 onClick={fetchFollowers} style={{ cursor: 'pointer' }} onMouseEnter={() => setHoverFollowers(true)} onMouseLeave={() => setHoverFollowers(false)}>
                                 <span style={{ color: hoverFollowers ? 'blue' : 'initial', textDecoration: hoverFollowers ? 'underline' : 'none' }}>팔로워 {followerCount}</span>
@@ -191,8 +197,10 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                                 ) : (
                                 <img src="https://placehold.co/400" alt="Placeholder" className="rounded-full w-16 h-16 mr-4" />
                                 )}
-                                <Link to={`/users/${follower.follower_id}`} onClick={() => setShowFollowers(false)}>
-                                <span className="text-xl font-bold">{follower.follower_nickname || follower.follower_username}</span>
+                                {/* <Link to={`/users/${follower.follower_id}`} > */}
+                                <Link to={follower.follower_id === userInfo.id ? '/users/profile' : `/users/${follower.follower_id}`}>
+
+                                <span className="text-xl font-bold" onClick={() => setShowFollowers(false)}>{follower.follower_nickname || follower.follower_username}</span>
                                 </Link>
                             </li>
                             ))}
@@ -230,11 +238,11 @@ function UserProfileMain({ userDetail, url, userInfo }) {
                                     ) : (
                                         <img src="https://placehold.co/400" alt="Placeholder"  className="rounded-full w-16 h-16 mr-4"  />
                                     )}
-                                     <Link to={`/users/${following.followed_id}`}
-                                     onClick={() => setShowFollowings(false)}>
-                                    <span className="text-xl font-bold">{following.followed_nickname || following.followed_username}</span>
-                                    </Link></li>
-                                ))}
+                                     {/* <Link to={`/users/${following.followed_id}`} */}
+                                    <Link to={following.followed_id === userInfo.id ? '/users/profile' : `/users/${following.followed_id}`}>
+                                            <span className="text-xl font-bold" onClick={() => setShowFollowings(false)}>{following.followed_nickname || following.followed_username}</span>
+                                        </Link></li>
+                                    ))}
                                 </ul>
                             ) : (
                                 <p style={{ 
@@ -260,5 +268,6 @@ function UserProfileMain({ userDetail, url, userInfo }) {
     );  
   }
 
-
 export default UserProfileMain;
+
+

@@ -1,7 +1,7 @@
-import React, {  useEffect, useState, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { mainAxiosInstance } from '../../api/axiosInstances';
-import { Typography } from '@mui/material';
+import { Typography} from '@mui/material';
 
 
 const UserQnA = ({ userInfo }) => {
@@ -20,7 +20,6 @@ const UserQnA = ({ userInfo }) => {
       .then((response) => {
         const data = response.data;
 
-        // 질문을 최신순으로 정렬
         data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         const promises = data.map((qna) =>
@@ -59,6 +58,8 @@ const UserQnA = ({ userInfo }) => {
       noAnswerRef.current.style.height = `${questionContainerRef.current.offsetHeight}px`;
     }
   }, []);
+  
+
 
   return (
 
@@ -84,6 +85,7 @@ const UserQnA = ({ userInfo }) => {
               dangerouslySetInnerHTML={{ __html: userQnA.content }}
               className="text-black bg-white mt-2"
             />
+           
           )}
 
           <div className="flex items-center mt-2">
@@ -105,12 +107,13 @@ const UserQnA = ({ userInfo }) => {
         </div>
       ))
     ) : (
-      <p>질문이 없습니다.</p>
+      <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
+      <p><strong>작성하신 질문이 없습니다.</strong></p>
+      </div>
     )}
       
     </div>
     <div>
-
         <Typography variant="h4" className="mb-10 font-bold text-gray-800">
           나의 답변
         </Typography>
@@ -126,6 +129,7 @@ const UserQnA = ({ userInfo }) => {
                   className="text-black bg-white mt-2"
                 />
               ) : (
+                
                 <div
                   dangerouslySetInnerHTML={{ __html: userAnswer.content }}
                   className="text-black bg-white mt-2"
@@ -151,8 +155,8 @@ const UserQnA = ({ userInfo }) => {
             </div>
           ))
         ) : (
-          <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' , margin: '20px 10px' }}>
-            <p><strong>답변이 없습니다.</strong></p>
+          <div ref={noAnswerRef} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' , margin: '20px 10px' }}>
+            <p><strong>작성하신 답변이 없습니다.</strong></p>
           </div>
         )}
         </div>
