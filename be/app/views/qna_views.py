@@ -120,7 +120,6 @@ def delete_user_qna(request, pk):
 @permission_classes([IsAuthenticated])
 def update_user_qna(request, pk):
     try:
-        
         user = User.objects.get(username=request.user)
         # Get the User_QnA instance
         user_qna = User_QnA.objects.get(id=pk)
@@ -167,3 +166,48 @@ def delete_user_answer(request, pk):
     
     user_answer.delete()
     return Response({"message": "Answer deleted successfully"})
+
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_qna_answer(request, pk):
+    try:
+        user = User.objects.get(username=request.user)
+        # Get the User_Answer instance
+        user_answer = User_Answer.objects.get(id=pk)
+
+        # Check permissions
+        if user_answer.user_id.id != user.id:
+            return Response({'detail': 'You do not have permission to edit this answer'}, status=403)
+        
+        data = request.data
+        user_answer.title = data.get('title')
+        user_answer.content = data.get('content')
+        user_answer.save()
+
+        serializer = UserAnswerSerializer(user_answer, many=False)
+        return Response(serializer.data)
+
+    except User_Answer.DoesNotExist:
+        return Response({'detail': 'User_Answer not found'}, status=404)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_qna_answer(request, pk):
+    try:
+        user = User.objects.get(username=request.user)
+        # Get the User_Answer instance
+        user_answer = User_Answer.objects.get(id=pk)
+
+        # Check permissions
+        if user_answer.user_id.id != user.id:
+            return Response({'detail': 'You do not have permission to delete this answer'}, status=403)
+        
+        user_answer.delete()
+        return Response({"message": "Answer deleted successfully"})
+
+    except User_Answer.DoesNotExist:
+        return Response({'detail': 'User_Answer not found'}, status=404)
+

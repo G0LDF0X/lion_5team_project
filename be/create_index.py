@@ -45,7 +45,7 @@ from elasticsearch import Elasticsearch
 # from requests_aws4auth import AWS4Auth
 # import urllib3
 # Load environment variables
-load_dotenv()
+load_dotenv('./be/.env')
 
 # Ensure correct Django setup
 sys.path.append(os.path.join(os.path.dirname(__file__), 'be'))
@@ -72,12 +72,10 @@ else:
 # Elasticsearch connection setup
 try:
     es = Elasticsearch(
-<<<<<<< HEAD
-        ['https://192.168.64.3:9200'],  #
-=======
+        # ['https://192.168.64.3:9200'],
         ['https://127.0.0.1:9200', 'https://localhost:9200'],  # Replace with actual IP address
         basic_auth=('elastic', elastic_password),
->>>>>>> refs/remotes/origin/main
+
         verify_certs=True,
         
         ca_certs=ca_cert_path,
