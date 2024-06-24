@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework import serializers, status
 import base64
 from django.utils import timezone
+from django.contrib.auth.hashers import check_password
 
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -191,6 +192,18 @@ class User_Serializer(serializers.ModelSerializer):
     
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):   #사용자에 대한 토큰을 생성하고, 토큰에 사용자의 username과 email을 추가한 후 반환
     def validate(self, attrs):
+        
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        try:
+            auth_user = User.objects.get(username=username)
+            if not check_password(password, auth_user.password):
+                raise serializers.ValidationError({"detail": "Invalid password"})
+        except User.DoesNotExist as error:
+            raise serializers.ValidationError({"detail": "Invalid ID"})
+            
+        
         data = super().validate(attrs)
         print(data)
 
