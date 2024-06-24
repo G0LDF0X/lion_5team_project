@@ -24,7 +24,7 @@ function MyPassword({ userInfo, reset }) {
     } 
 
     if (success) {
-      dispatch(logout());
+      // dispatch(logout());
       dispatch( reset );
       navigate("/password-change-confirm");
     }
@@ -56,9 +56,9 @@ function MyPassword({ userInfo, reset }) {
   
         // 서버에서 응답을 받습니다.
         if (response.status === 200) {
-          dispatch(updateUserPassword({ password: newPassword }));
+          alert("비밀번호가 성공적으로 변경되었습니다. 자동으로 로그아웃 되니 다시 재로그인해주세요.")
           dispatch(logout());
-          navigate("/password-change-confirm");
+          navigate("/");
         } else {
           setMessage(response.data.detail);
         }
