@@ -12,12 +12,18 @@ import Message from "../components/Message";
 import { reviewUpdateReset } from "../store/slices/reviewSlices";
 import { mainAxiosInstance } from "../api/axiosInstances";
 
+const LazyCKEditor = lazy(() => import('@ckeditor/ckeditor5-react').then(module => ({
+  default: module.CKEditor
+})));
+
+// Ensure to import ClassicEditor synchronously if possible or adjust your component to handle the lazy-loaded editor properly
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 function UpdateReviewScreen() {
+  const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
+  // const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
   const [title, setTitle] = useState("");
   
-const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
-const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
   const [rate, setRate] = useState(5);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -226,18 +232,18 @@ const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
             </div>
             <div className="mb-4">
               <Suspense fallback={<div>Loading...</div>}>
-            <CKEditor
-        data={content}
-        editor={ClassicEditor}
-        config={{
-          extraPlugins: [uploadPlugin],
-        }}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          setEditorData(data);
-        }}
-      />
-      </Suspense>
+                <LazyCKEditor
+                  data={content}
+                  editor={ClassicEditor}
+                  config={{
+                    extraPlugins: [uploadPlugin],
+                  }}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setEditorData(data);
+                  }}
+                />
+              </Suspense>
             </div>
             <div className="mb-4">
               <Typography id="rate-slider" gutterBottom>

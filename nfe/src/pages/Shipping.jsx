@@ -56,9 +56,6 @@ function ShippingScreen() {
   // 결제요청 시작부분(react 방식, 포트원 V2)
 
   async function requestPayment() {
-    console.log("결제하기 버튼 눌림");
-
-    console.log(combinedCartItems);
     // console.log(combinedCartItems);
     // console.log(combinedCartItems.length);
     // console.log(realPrice);
@@ -82,8 +79,7 @@ function ShippingScreen() {
       totalAmount: realPrice,
       currency: "CURRENCY_KRW",
       payMethod: "CARD",
-      // redirectUrl: "http://localhost:5173", // 결제 완료 후 리다이렉트할 URL",
-      // noticeUrls: ["https://127.0.0.1:8000/payment/complete/"],
+  
     });
 
     if (response.code != null) {
@@ -209,7 +205,7 @@ function ShippingScreen() {
                   <FormControlLabel
                     value="toss"
                     control={<Radio />}
-                    label="토스"
+                    label="토스간편결제 / 카드"
                   />
                 </RadioGroup>
               </Box>

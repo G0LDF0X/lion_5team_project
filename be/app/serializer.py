@@ -73,6 +73,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     shipping_price = serializers.ReadOnlyField(source='order_id.shipping_price')
     total_price = serializers.ReadOnlyField(source='order_id.total_price')
     payment_method = serializers.ReadOnlyField(source='order_id.payment_method')
+    created_at = serializers.ReadOnlyField(source='order_id.created_at')
     class Meta:
         model = OrderItem
         fields = '__all__'
