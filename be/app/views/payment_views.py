@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse
-from app.models import Payment, User, Order, OrderItem, Item
+from app.models import Payment, User, Order, OrderItem, Item, Cart
 import requests, datetime
 from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication
@@ -97,6 +97,9 @@ def complete_payment(request):
                     # 모든 금액이 지불된 경우.
                     order.paid_at = timezone.now()
                     order.save()
+                    cart_items = Cart.objects.filter(user_id=order.user_id)
+                    for cart_item in cart_items:
+                        cart_item.delete()
                     print('결제 정상처리.')
                 else:
                     # 결제 상태가 예상치 못한 값입니다.

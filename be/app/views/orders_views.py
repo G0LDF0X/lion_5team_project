@@ -106,7 +106,7 @@ def create_order(request):
                 total_price += price_multi_qty
             else:
                 return Response(order_item_serializer.errors, status=400)
-        cart_items.delete()
+
         order.total_price = total_price
         order.save()
 
