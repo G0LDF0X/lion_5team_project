@@ -92,6 +92,7 @@ def create_user_answer(request, pk):
     )
     serializer = UserAnswerSerializer(qna_board, many=False)
     return Response(serializer.data)
+
     
 
 @api_view(['POST'])
@@ -106,6 +107,21 @@ def uploadImage(request, pk):
             return Response({'error': 'No file provided'}, status=400)
     except User_QnA.DoesNotExist:
         return Response({'error': 'QnA not found'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+    
+@api_view(['POST'])
+def uploadAnswerImage(request, pk):
+    try:
+        answer = User_Answer.objects.get(id=pk)
+        if 'file' in request.FILES:
+            answer.image_url = request.FILES['file']
+            answer.save()
+            return Response({'url': answer.image_url.url}, status=200)
+        else:
+            return Response({'error': 'No file provided'}, status=400)
+    except User_Answer.DoesNotExist:
+        return Response({'error': 'Answer not found'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 

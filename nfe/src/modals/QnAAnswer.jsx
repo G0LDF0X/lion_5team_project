@@ -4,16 +4,42 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useDispatch } from "react-redux";
 import { createQNAAnswer } from "../store/actions/qnaActions";
+import { mainAxiosInstance } from "../api/axiosInstances"; // 가정: 이미지 업로드를 위한 Axios 인스턴스
 
 function QnAAnswer({ open, handleClose, questionId }) {
   const dispatch = useDispatch();
   const [editorData, setEditorData] = useState("");
   const [title, setTitle] = useState("");
+  const [answerId, setAnswerId] = useState(null); // answerId 상태 추가
+
+  class CustomUploadAdapter {
+    constructor(loader) {
+      this.loader = loader;
+    }
+
+    upload() {
+      return this.loader.file.then((file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // answerId를 사용하여 업로드 URL 설정
+        return mainAxiosInstance.post(`/qna/uploadAnswerImage/${answerId}/`, formData)
+          .then(response => ({ default: response.data.url }));
+      });
+    }
+  }
+
+  function uploadPlugin(editor) {
+    editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+      return new CustomUploadAdapter(loader);
+    };
+  }
 
   const handleSubmit = () => {
     if (questionId && editorData && title) {
       dispatch(createQNAAnswer({ id: questionId, content: editorData, title }))
-        .then(() => {
+        .then((response) => {
+          setAnswerId(response.payload.id); // 답변 생성 후 answerId 상태 업데이트
           handleClose();
           window.location.reload(); // 페이지 새로고침
         })
@@ -40,6 +66,9 @@ function QnAAnswer({ open, handleClose, questionId }) {
           <CKEditor
             editor={ClassicEditor}
             data={editorData}
+            config={{
+              extraPlugins: [uploadPlugin],
+            }}
             onChange={(event, editor) => {
               const data = editor.getData();
               setEditorData(data);
