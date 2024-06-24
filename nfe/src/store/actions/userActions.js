@@ -4,13 +4,15 @@ import { mainAxiosInstance } from "../../api/axiosInstances";
 const handleError = (error) => {
   if (error.response && error.response.data) {
     const data = error.response.data;
-    if (data.username) {
-      return data.username[0];
+    if (data.detail) {
+      return { detail: data.detail }; // 상세 오류 메시지 반환
+    } else if (data.username) {
+      return { detail: data.username[0] };
     } else if (data.nickname) {
-      return data.nickname[0]; // 닉네임 중복 오류 처리
+      return { detail: data.nickname[0] }; // 닉네임 중복 오류 처리
     }
   }
-  return error.message;
+  return { detail: error.message || 'An unknown error occurred' };
 };
 
 const getAuthHeaders = (getState) => {
@@ -40,10 +42,12 @@ export const login = createAsyncThunk(
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       return res.data;
     } catch (error) {
+      console.log("Error detail:", error.response?.data?.detail);
       return rejectWithValue(handleError(error));
     }
   }
 );
+
 export const logout = createAsyncThunk(
   "userLogout/logout",
   async (_, { rejectWithValue }) => {
