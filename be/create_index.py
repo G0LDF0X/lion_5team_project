@@ -32,13 +32,16 @@
 # )
 # # Define the index name
 # index_name = 'items'
-from elasticsearch import Elasticsearch
+# from elasticsearch import Elasticsearch
 import os
 import django
 import sys
 from dotenv import load_dotenv
 from django.conf import settings
 
+from elasticsearch import Elasticsearch
+# from requests_aws4auth import AWS4Auth
+# import urllib3
 # Load environment variables
 load_dotenv()
 
@@ -50,10 +53,12 @@ django.setup()
 from app.models import Item, Category
 
 # Ensure the environment variable is set
-elastic_password = os.getenv('ELASTIC_PASSWORD', 'elastic')
+elastic_password = os.getenv('ELASTIC_PASSWORD', 'petpals')
+# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'http_ca.crt')
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'elasticsearch.crt')
+print (ca_cert_path)
 
 # Debugging information
 print(f"CA Certificate Path: {ca_cert_path}")
@@ -65,9 +70,9 @@ else:
 # Elasticsearch connection setup
 try:
     es = Elasticsearch(
-        ['https://192.168.64.3:9200'],  # Replace with actual IP address
-        basic_auth=('elastic', elastic_password),
+        ['https://192.168.64.3:9200'],  #
         verify_certs=True,
+        
         ca_certs=ca_cert_path,
     )
     # Test the connection
