@@ -34,21 +34,24 @@ function SearchBox() {
   };
 
   const getConsontants = (query) => {
+    console.log(items)
     const consonantSuggestions = [];
     for (const product of items) {
-      ['name', 'description', 'category'].forEach((prop) => {
+      ['name', 'Category'].forEach((prop) => {
         if (
-          product[prop] &&
+          
           chosungIncludes(product[prop], query) &&
+          !consonantSuggestions.includes(product.name) ||
+          product[prop].toLowerCase().includes(query.toLowerCase()) &&
           !consonantSuggestions.includes(product.name)
         ) {
+          console.log(product.name)
           consonantSuggestions.push(product.name);
         }
       });
     }
     return consonantSuggestions;
   };
-
   const handleChange = async (e) => {
     const value = e.target.value;
     setKeyword(value);
