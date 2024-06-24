@@ -38,6 +38,8 @@ import django
 import sys
 from dotenv import load_dotenv
 from django.conf import settings
+from transformers import BertTokenizer, BertModel
+import torch
 
 # Load environment variables
 load_dotenv()
@@ -65,7 +67,7 @@ else:
 # Elasticsearch connection setup
 try:
     es = Elasticsearch(
-        ['https://192.168.64.3:9200'],  # Replace with actual IP address
+        ['https://127.0.0.1:9200', 'https://localhost:9200'],  # Replace with actual IP address
         basic_auth=('elastic', elastic_password),
         verify_certs=True,
         ca_certs=ca_cert_path,
