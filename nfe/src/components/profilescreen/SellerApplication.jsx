@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { mainAxiosInstance } from "../../api/axiosInstances";
 import useSeller from "../../hook/useSeller";
 
@@ -6,6 +7,7 @@ const SellerApplication = ({ userInfo }) => {
   const [bsNumber, setBsNumber] = useState("");
   const [error, setError] = useState("");
   const [isSeller, setIsSeller] = useState(false);
+  const navigate = useNavigate();
   useSeller(setIsSeller, userInfo);
 
   const handleSubmit = async (event) => {
@@ -27,15 +29,17 @@ const SellerApplication = ({ userInfo }) => {
           }
         );
 
-
-        if (response.status !== 200) {
+        console.log(response.status);
+        if (response.status !== 201) {
           throw new Error("Network response was not ok");
         }
         setBsNumber("");
         setError("");
-        alert("판매자 신청이 완료되었습니다.");
+        alert("판매자 신청이 완료되었습니다. 로그아웃 후 재로그인 하시면 판매자 페이지를 이용하실 수 있습니다.");
 
         setIsSeller(true);
+        navigate("/");
+        dispatch
       } catch (error) {
         setError("An error occurred while saving the data.");
       }
