@@ -25,7 +25,7 @@ function SearchBox() {
 
   const fetchSuggestions = async (query) => {
     try {
-      const response = await searchAxiosInstance.post(`search/?query=${query}`);
+      const response = await searchAxiosInstance.get(`search/?query=${query}`);
       return response.data.results.map((result) => result.page_content);
     } catch (error) {
       console.error("Error fetching suggestions:", error);

@@ -46,7 +46,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sbert = SentenceTransformerEmbeddings(model_name="jhgan/ko-sroberta-multitask")
+sbert = SentenceTransformerEmbeddings(model_name="monologg/kobert")
 
 def export_data_to_csv():
     if os.path.exists(item_csv_file_path):
