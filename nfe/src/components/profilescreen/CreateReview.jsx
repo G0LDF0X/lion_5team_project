@@ -10,7 +10,7 @@ function CreateReview() {
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+  console.log("unreviewedItems", unreviewedItems);
   const formattedItems = unreviewedItems.map(item => {
     const date = new Date(item.created_at);
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -27,6 +27,7 @@ function CreateReview() {
 const handleChange = (e) => {
   setSearch(e.target.value);
 }
+console.log("FORMATTED:", formattedItems);
   return (
     <div className="flex justify-center py-4">
       <div className="w-full max-w-2xl">
@@ -45,11 +46,12 @@ const handleChange = (e) => {
          
         </form>
         {formattedItems
-        .filter((item) => { item.name.toLowerCase().includes(search.toLowerCase()) })
-        .map(item => (
+        .filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+        .map((item) => (
           <Box display="flex" alignItems="center" justifyContent="space-between" key={item.id}>
+            {/* {console.log("ITEM", item)} */}
             <Box display="flex" alignItems="center">
-              <img className="w-20 h-20 object-cover mr-4" src={VITE_API_BASE_URL + item.image_url} style={{ margin: '10px' }} />
+              <img className="w-20 h-20 object-cover mr-4" src={VITE_API_BASE_URL + item.image} style={{ margin: '10px' }} />
               <Box display="flex" flexDirection="column">
                 <p style={{fontSize: "large", fontWeight: "bold"}}>{item.name}</p>
                 <p style={{fontSize: "small"}}>{item.qty}개 | {item.total_price}\</p>
