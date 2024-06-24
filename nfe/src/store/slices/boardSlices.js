@@ -23,6 +23,8 @@ const initialState = {
   fromCache: false,
   totalPages: 1, 
   currentPage: 1,
+  replyLoading: false,  
+  replySuccess: false,
 };
 
 const pendingReducer = (state) => {
@@ -99,13 +101,19 @@ export const boardSlice = createSlice({
       .addCase(deleteBoard.pending, pendingReducer)
       .addCase(deleteBoard.fulfilled, fulfilledDeleteReducer)
       .addCase(deleteBoard.rejected, rejectedReducer)
-      .addCase(createReply.pending, pendingReducer)
+      .addCase(createReply.pending, (state) => {
+        state.replyLoading = true;
+        state.error = null;
+        state.replySuccess = false;
+      })
       .addCase(createReply.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.reply = action.payload;
         state.replies = [...state.replies, action.payload];
         state.error = null;
+        state.replyLoading = false;
+        state.replySuccess = true;
       })
       .addCase(createReply.rejected, rejectedReducer);
   },
