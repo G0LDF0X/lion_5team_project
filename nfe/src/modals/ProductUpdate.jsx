@@ -9,15 +9,14 @@ import useCategory from "../hook/useCategory";
 import useTags from "../hook/useTags";
 
 function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
-  const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(product.price);
-  console.log("PRODUCT:", product);
-  console.log("PRODUCT.IMAGE_URL:", product.image_url);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
   const [id, setId] = useState(product.id);
   const [image, setImage] = useState(product.image_url);
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [chipData, setChipData] = useState(null);
   const  categories  = useCategory(); 
   const tags = useTags();
   const dispatch = useDispatch();
@@ -25,18 +24,17 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const { loading, error, success } = productUpdate;
 
   const [previewImage, setPreviewImage] = useState(product.image_url);
-  console.log("PREVIEWIMAGE:", previewImage);
 
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     if (product) {
-      setId(product.id);
-      setName(product.name);
-      setPrice(product.price);
+      setId(product.id ?? "");
+      setName(product.name ?? "");
+      setPrice(product.price ?? "");
       setCategory(product.category ? product.category_id : "");
-      setDescription(product.description);
-      setChipData(product.tags || []);
+      setDescription(product.description ?? "");
+      setChipData(product.tag_id ?? null);
     }
   }, [product]);
 
@@ -44,7 +42,6 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
     setPreviewImage(product.image_url);
   }, [product.image_url]);
     
-
   const submitHandler = (e) => {
     e.preventDefault();
     const product = {
@@ -63,7 +60,6 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
     
   };
 
-  const [chipData, setChipData] = useState(null)
   const handleClick = (tagId) => {
     setChipData(prevChipData => prevChipData === tagId ? null : tagId);
   };
@@ -87,8 +83,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
           <TextField
             fullWidth
             variant="outlined"
-            value={name}
-            pl
+            value={name || ""}
             onChange={(e) => setName(e.target.value)}
             className="mb-4"
           />
@@ -100,7 +95,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
             fullWidth
             variant="outlined"
             type="number"
-            value={price}
+            value={price || ""}
             onChange={(e) => setPrice(e.target.value)}
             className="mb-4"
           />
@@ -135,7 +130,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
           <FormControl fullWidth variant="outlined" className="mb-4">
             <InputLabel>Category</InputLabel>
             <Select
-              value={category}
+              value={category || ""}
               onChange={(e) => setCategory(e.target.value)}
               label="Category"
             >
@@ -154,7 +149,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
               multiline
               rows={4}
               variant="outlined"
-              value={description}
+              value={description || ""}
               onChange={(e) => setDescription(e.target.value)}
               className="mb-4"
             />
@@ -166,9 +161,9 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
                 <Chip
                   key={tag.id}
                   label={tag.name}
-                  onClick={() => handleClick(tag.id.toString())}
-                  color={chipData === tag.id.toString() ? "primary" : "default"}
-                  icon={chipData === tag.id.toString() ? <Delete /> : <Done />}
+                  onClick={() => handleClick(tag.id)}
+                  color={chipData === tag.id ? "primary" : "default"}
+                  icon={chipData === tag.id ? <Delete /> : <Done />}
 
                 />
               ))}

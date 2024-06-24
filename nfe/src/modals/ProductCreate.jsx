@@ -132,6 +132,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
                   key={tag.id}
                   label={tag.name}
                   onClick={() => handleClick(tag.id.toString())}
+                  color={chipData === tag.id.toString() ? "primary" : "default"}
                   icon = {chipData === tag.id.toString() ?  <Delete />:<Done /> }
                   >
 

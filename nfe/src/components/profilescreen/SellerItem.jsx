@@ -36,10 +36,6 @@ function SellerItem({ fetchProducts, isLoading }) {
     dispatch(listMyProducts({ page: currentPage }));
   }, [dispatch, navigate, successCreate, successDelete, successUpdate, currentPage]);
 
-  useEffect(() => {
-    console.log('Products:', products.items);
-  }, [products]);
-
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
       dispatch(deleteProduct(id));
@@ -95,7 +91,6 @@ function SellerItem({ fetchProducts, isLoading }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {console.log(products)}
                 {Array.isArray(products) && products.length > 0 ? (
                   products
                   .slice() // 배열 복사
