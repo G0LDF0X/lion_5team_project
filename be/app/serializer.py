@@ -39,7 +39,7 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        tags_data = validated_data.pop('tags', [])
+        tags_data = validated_data.pop('tags',[])
         board = Board.objects.create(**validated_data)
         for tag_data in tags_data:
             Image_Tag.objects.create(board=board, **tag_data)
