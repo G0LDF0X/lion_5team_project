@@ -104,6 +104,7 @@ class SingleItemSerializer(serializers.ModelSerializer):
     item_qna_set = ItemQnASerializer(many=True, read_only=True)
     image_url = serializers.ImageField(use_url=True)
     category = serializers.ReadOnlyField(source='category_id.name')
+    tag = serializers.ReadOnlyField(source='tag_id.name')
     class Meta:
         model = Item
         fields = '__all__'

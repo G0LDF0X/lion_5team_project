@@ -227,7 +227,6 @@ def item_details(request, pk):
 def create_item(request):
     user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
-    print(tag_id.id)
     data = request.data
     item = Item.objects.create(
         seller_id = seller,
