@@ -67,6 +67,28 @@ function Loading2() {
 
 function BoardCarousel({ loading, error, boards}) {
   
+  // return (
+  //   <>
+  //     <Typography variant="h5" className="my-4 font-semibold text-gray-700">
+  //       Boards
+  //     </Typography>
+  //     {loading ? (
+  //       <Box className="flex justify-center">
+  //         <Loading2 />
+  //       </Box>
+  //     ) : error ? (
+  //       <Message variant="error">{error}</Message>
+  //     ) : (
+  //       <Carousel  responsive={responsive} infinite>
+  //         {boards.map((board) => (
+  //           <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
+  //             <BoardForm board={board}  />
+  //           </Card>
+  //         ))}
+  //       </Carousel>
+  //     )}
+  //   </>
+  // );
   return (
     <>
       <Typography variant="h5" className="my-4 font-semibold text-gray-700">
@@ -79,13 +101,17 @@ function BoardCarousel({ loading, error, boards}) {
       ) : error ? (
         <Message variant="error">{error}</Message>
       ) : (
-        <Carousel  responsive={responsive} infinite>
-          {boards.map((board) => (
-            <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
-              <BoardForm board={board}  />
-            </Card>
-          ))}
-        </Carousel>
+        Array.isArray(boards) ? (
+          <Carousel  responsive={responsive} infinite>
+            {boards.map((board) => (
+              <Card key={board.id} className="p-4 rounded-lg shadow-lg h-full flex flex-col">
+                <BoardForm board={board}  />
+              </Card>
+            ))}
+          </Carousel>
+        ) : (
+          <Message variant="error">Boards is not an array</Message>
+        )
       )}
     </>
   );

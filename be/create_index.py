@@ -45,7 +45,7 @@ from elasticsearch import Elasticsearch
 # from requests_aws4auth import AWS4Auth
 # import urllib3
 # Load environment variables
-load_dotenv()
+load_dotenv('./be/.env')
 
 # Ensure correct Django setup
 sys.path.append(os.path.join(os.path.dirname(__file__), 'be'))
