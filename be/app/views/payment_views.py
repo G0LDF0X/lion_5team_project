@@ -41,7 +41,6 @@ def save_payment(request):
 
 
         # OrderItem에도 저장
-        print(data)
         for item in data['items']:
             item_instance = Item.objects.get(id=item['item_id'])
             image_path = item['image']
