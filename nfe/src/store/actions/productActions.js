@@ -30,7 +30,7 @@ export const listProducts = createAsyncThunk(
       }
 
       const url = `items/?${params.toString()}`;
-      const response = await mainAxiosInstance.get(url, { headers: getAuthHeaders(getState) });
+      const response = await mainAxiosInstance.get(url);
       const { items, total_pages, current_page } = response.data;
 
       return { data: items, cacheKey, fromCache: false, totalPages: total_pages, currentPage: current_page };
@@ -132,7 +132,7 @@ export const updateProduct = createAsyncThunk(
   async (product, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.put(
-        `/items/update/${product.id}`,
+        `/items/update/${product.id}/`,
         { product },
         {
           headers: {

@@ -5,7 +5,12 @@ export const orderSlice = createSlice({
     name: "order",
     initialState: {
         order: {},
-        orders: [],
+        orders: {
+            items: [],
+            totalItems: 0,
+            totalPages: 0,
+            currentPage: 1,
+        },
         shippingAddress: {},
         loading: false,
         error: null,
@@ -40,7 +45,10 @@ export const orderSlice = createSlice({
             })
             .addCase(getMyOrders.fulfilled, (state, action) => {
                 state.loading = false;
-                state.orders = action.payload;
+                state.orders.items = action.payload.items;
+                state.orders.totalItems = action.payload.total_items;
+                state.orders.totalPages = action.payload.total_pages;
+                state.orders.currentPage = action.payload.current_page;
             })
             .addCase(getMyOrders.rejected, (state, action) => {
                 state.loading = false;
@@ -70,3 +78,5 @@ export const orderSlice = createSlice({
             });
     },
 });
+
+export default orderSlice.reducer;

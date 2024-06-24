@@ -56,25 +56,39 @@ function QAUpdateScreen() {
       });
     }
   }
-  useEffect(() => {
-    const parser = new DOMParser();
-    const parsedHtml = parser.parseFromString(editorData, "text/html");
-    const figures = parsedHtml.querySelectorAll("figure");
-    figures.forEach(figure => {
-      const img = figure.querySelector("img");
+//   useEffect(() => {
+//     const parser = new DOMParser();
+//     const parsedHtml = parser.parseFromString(editorData, "text/html");
+//     const figures = parsedHtml.querySelectorAll("figure");
+//     figures.forEach(figure => {
+//       const img = figure.querySelector("img");
       
         
-        if (img.src) {
-          img.src = VITE_API_BASE_URL+ url;
-      }
+//         if (img.src) {
+//           img.src = VITE_API_BASE_URL+ url;
+//       }
      
-    }
-    )
+//     }
+//     )
+//     const serializer = new XMLSerializer();
+//     const updatedData = serializer.serializeToString(parsedHtml);
+//       setEditorData(updatedData )
+// }, [url, editorData])
+useEffect(() => {
+  if (editorData) {
+    const parser = new DOMParser();
+    const parsedHtml = parser.parseFromString(editorData, "text/html");
+    const images = parsedHtml.querySelectorAll("img");
+    images.forEach(img => {
+      if (img.src && !img.src.startsWith(VITE_API_BASE_URL)) {
+        img.src = VITE_API_BASE_URL + img.src;
+      }
+    });
     const serializer = new XMLSerializer();
     const updatedData = serializer.serializeToString(parsedHtml);
-    console.log(updatedData)
-      setEditorData(updatedData )
-}, [url, editorData])
+    setEditorData(updatedData);
+  }
+}, [qna]); // Run this effect when qna changes, not on every editorData change
   // CKEditor 플러그인 구현 (파일 업로드)
   function uploadPlugin(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
@@ -102,7 +116,23 @@ function QAUpdateScreen() {
   const cancelHandler = () => {
     navigate(`/qna/`); // Q&A 리스트 페이지로 이동
   };
-
+  // useEffect(() => {
+  //   if (qna && qna.question) {
+  //     setTitle(qna.question.title || "");
+  //     if (qna.question.content) {
+  //       console.log(qna.question.content);
+  //       // Uncomment the following line when you're ready to set the editor data
+  //       setEditorData(qna.question.content);
+  //     }
+  //   }
+  // }, [qna]);
+  useEffect(() => {
+    if (qna && qna.question && qna.question.content) {
+      setTitle(qna.question.title || "");
+      setEditorData(qna.question.content);
+      console.log(qna.question.content);
+    }
+  }, [qna]);
   return (
     <div className="container mx-auto py-8">
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -115,17 +145,17 @@ function QAUpdateScreen() {
           onChange={(e) => setTitle(e.target.value)}
           className="mb-4"
         />
-        <CKEditor
-          data={qna && qna.content ? qna.content : ""}
-          editor={ClassicEditor}
-          config={{
-            extraPlugins: [uploadPlugin], // 파일 업로드 플러그인 설정
-          }}
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            setEditorData(data); // 에디터 데이터 업데이트
-          }}
-        />
+       <CKEditor
+  data={editorData}
+  editor={ClassicEditor}
+  config={{
+    extraPlugins: [uploadPlugin],
+  }}
+  onChange={(event, editor) => {
+    const data = editor.getData();
+    setEditorData(data);
+  }}
+/>
         <div className="flex justify-end">
           <Button
             variant="contained"

@@ -45,13 +45,13 @@ export const getOrderDetails = createAsyncThunk(
 
 export const getMyOrders = createAsyncThunk(
   'myOrderList/getMyOrders',
-  async (_, { rejectWithValue, getState }) => {
+  async ({ page = 1, pageSize = 12 }, { rejectWithValue, getState }) => {
     try {
       const headers = getAuthHeaders(getState);
-      const res = await mainAxiosInstance.get('/order/myorderlist/', { headers });
+      const res = await mainAxiosInstance.get(`/order/myorderlist/?page=${page}&page_size=${pageSize}`, { headers });
       return res.data;
     } catch (error) {
-      return rejectWithValue(handleError(error));
+      return rejectWithValue(error.response.data);
     }
   }
 );

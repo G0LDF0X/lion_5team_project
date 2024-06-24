@@ -72,7 +72,6 @@ else:
 # Elasticsearch connection setup
 try:
     es = Elasticsearch(
-        # ['https://192.168.64.3:9200'],
         ['https://127.0.0.1:9200', 'https://localhost:9200'],  # Replace with actual IP address
         basic_auth=('elastic', elastic_password),
 

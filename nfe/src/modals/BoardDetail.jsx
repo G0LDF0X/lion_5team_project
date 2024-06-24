@@ -46,7 +46,7 @@ function BoardDetailModal({ open, handleClose }) {
   const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const location = useLocation();
   const board = useSelector((state) => state.board);
-  const { loading, error, replies, boardDetail } = board;
+  const { loading, error, replies, boardDetail,reflySuccess } = board;
   const user = useSelector((state) => state.user);
   const { userInfo } = user;
   const [showTag, setShowTag] = useState(false);
@@ -197,12 +197,11 @@ function BoardDetailModal({ open, handleClose }) {
         created_at : currentTime
         
       };
-      const response = await mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
+      mainAxiosInstance.put(`/board/reply/${replyId}/update/`, updatedReply,
         {
           headers: { Authorization: `Bearer ${userInfo.access}` }, 
         }
       );
-      dispatch(getBoardDetails(boardId));
     } catch (error) {
       console.error(error);
     }
@@ -214,10 +213,11 @@ function BoardDetailModal({ open, handleClose }) {
   };
 
   useEffect(() => {
-    if (replyCreated) {
+    if (reflySuccess) {
       setReplyCreated(false);
+      dispatch(getBoardDetails(boardId));
     }
-  }, [replyCreated]);
+  }, [reflySuccess]);
 
   const submitHandler = (e) => {
     e.preventDefault();

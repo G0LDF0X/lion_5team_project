@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes, authentication_classes
 from app.models import OrderItem, User, Cart, Order, Item, Shipping_Address
 from app.serializer import OrderItemSerializer, CartSerializer, OrderSerializer, ShippingAddressSerializer, RefundSerializer
-
+from django.core.paginator import Paginator
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
@@ -106,7 +106,7 @@ def create_order(request):
                 total_price += price_multi_qty
             else:
                 return Response(order_item_serializer.errors, status=400)
-        cart_items.delete()
+
         order.total_price = total_price
         order.save()
 
@@ -119,8 +119,27 @@ def create_order(request):
 def my_order_list(request):
     user = User.objects.get(username=request.user)
     orders = Order.objects.filter(user_id=user)
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data)
+
+    # 페이지 번호와 페이지 크기를 요청에서 가져오기, 기본값 설정
+    page_number = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 10)
+
+    # Paginator 생성
+    paginator = Paginator(orders, page_size)
+
+    # 요청된 페이지 가져오기
+    page_obj = paginator.get_page(page_number)
+
+    # 시리얼라이저를 사용하여 페이지 객체 직렬화
+    serializer = OrderSerializer(page_obj, many=True)
+
+    # 페이지 관련 정보와 데이터 응답
+    return Response({
+        'items': serializer.data,
+        'total_items': paginator.count,
+        'total_pages': paginator.num_pages,
+        'current_page': page_obj.number
+    })
     
 
 @api_view(['POST'])

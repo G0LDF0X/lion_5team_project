@@ -26,6 +26,7 @@ function SellerItem({ fetchProducts, isLoading }) {
   const { product } = productDetails;
   const productLists = useSelector((state) => state.productList);
   const { loading, error, products, totalPages } = productLists;
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   const createProductHandler = () => {
     setOpenModal(true);
@@ -34,10 +35,6 @@ function SellerItem({ fetchProducts, isLoading }) {
   useEffect(() => {
     dispatch(listMyProducts({ page: currentPage }));
   }, [dispatch, navigate, successCreate, successDelete, successUpdate, currentPage]);
-
-  useEffect(() => {
-    console.log('Products:', products.items);
-  }, [products]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
@@ -86,6 +83,7 @@ function SellerItem({ fetchProducts, isLoading }) {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
+                  <TableCell>IMAGE</TableCell>
                   <TableCell>NAME</TableCell>
                   <TableCell>PRICE</TableCell>
                   <TableCell>CATEGORY</TableCell>
@@ -99,6 +97,9 @@ function SellerItem({ fetchProducts, isLoading }) {
                   .sort((a, b) => a.id - b.id).map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.id}</TableCell>
+                      <TableCell>
+                        <img src={VITE_API_BASE_URL + product.image_url} alt={product.name} style={{ width: "50px", height: "auto" }} />
+                      </TableCell>
                       <TableCell>
                         <Link to={`/items/detail/${product.id}`} className="text-blue-500 hover:underline">
                           {product.name}
