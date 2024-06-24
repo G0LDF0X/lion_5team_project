@@ -12,13 +12,13 @@ const getAuthHeaders = (getState) => {
 };
 export const listProducts = createAsyncThunk(
   'products/listProducts',
-  async ({ query = '', page = '', category = [] }, { rejectWithValue, getState }) => {
+  async ({ query = '', page = 1, category = [] }, { rejectWithValue, getState }) => {
     try {
       const state = getState();
       const cacheKey = `${query}-${page}-${category.join(',')}`;
       const fetchTime = state.productList.fetchTime;
-      
-      if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5){
+
+      if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5) {
         return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true, totalPages: state.productList.totalPages, currentPage: state.productList.currentPage };
       }
 
@@ -29,20 +29,52 @@ export const listProducts = createAsyncThunk(
         category.forEach((cat) => params.append('category', cat));
       }
 
-      const url = `items?${params.toString()}`;
-      const response = await mainAxiosInstance.get(url);
+      const url = `items/?${params.toString()}`;
+      const response = await mainAxiosInstance.get(url, { headers: getAuthHeaders(getState) });
       const { items, total_pages, current_page } = response.data;
-      
+
       return { data: items, cacheKey, fromCache: false, totalPages: total_pages, currentPage: current_page };
     } catch (error) {
-      return rejectWithValue(
-        error.response && error.response.data.detail
-          ? error.response.data.detail
-          : error.message
-      );
+      return rejectWithValue(error.response.data);
     }
   }
 );
+
+
+export const listMyProducts = createAsyncThunk(
+  'products/listMyProducts',
+  async ({ query = '', page = 1, category = [] }, { rejectWithValue, getState }) => {
+    try {
+      const state = getState();
+      const cacheKey = `my-${query}-${page}-${category.join(',')}`;
+      const fetchTime = state.productList.fetchTime;
+
+      if (state.productList.cache[cacheKey] && fetchTime && (Date.now() - fetchTime) < 1000 * 60 * 5) {
+        return { data: state.productList.cache[cacheKey], cacheKey, fromCache: true, totalPages: state.productList.totalPages, currentPage: state.productList.currentPage };
+      }
+
+      let params = new URLSearchParams();
+      if (query) params.append('query', query);
+      if (page) params.append('page', page);
+      if (category.length) {
+        category.forEach((cat) => params.append('category', cat));
+      }
+
+      const url = `items/myitems?${params.toString()}`;
+      const headers = getAuthHeaders(getState); // 인증 헤더 설정
+      const response = await mainAxiosInstance.get(url, { headers });
+
+      console.log('listMyProducts response:', response.data); // API 응답 데이터 로그
+      
+      const { items, total_pages, current_page } = response.data;
+
+      return { data: items, cacheKey, fromCache: false, totalPages: total_pages, currentPage: current_page };
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const listProductDetails = createAsyncThunk(
   "productDetails/listProductDetails",
   async (id, { rejectWithValue }) => {
