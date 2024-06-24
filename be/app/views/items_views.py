@@ -353,7 +353,7 @@ def update_review(request, pk):
         user_id_id = user.id,
         content_type='item',
         interaction_type = 'review',
-        item_id_id = review.item_id_id
+        content_id = review.item_id_id
     )
     serializer = ReviewSerializer(review, many=False)
     return Response(serializer.data)

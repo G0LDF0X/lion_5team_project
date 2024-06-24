@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { mainAxiosInstance } from "../../api/axiosInstances";
+
 const handleError = (error) => {
   return error.response && error.response.data.detail
     ? error.response.data.detail
@@ -62,6 +63,7 @@ export const createReview = createAsyncThunk(
 export const updateReview = createAsyncThunk(
   "reviewUpdate/updateReview",
   async ({id, title, content, rate, orderitem_id}, { getState, rejectWithValue }) => {
+    console.log("UPDATE REVIEW", id, title, content, rate, orderitem_id);
     try {
       const headers = getAuthHeaders(getState);
       const res = await mainAxiosInstance.put(

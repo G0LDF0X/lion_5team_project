@@ -9,12 +9,17 @@ import { mainAxiosInstance } from "../api/axiosInstances";
 import { productQnaReset } from "../store/slices/productSlices";
 import { updateProductQnA } from "../store/actions/productActions";
 
+const LazyCKEditor = lazy(() => import('@ckeditor/ckeditor5-react').then(module => ({
+  default: module.CKEditor
+})));
+
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 function ProductQnAUpdate() {
   const [title, setTitle] = useState("");
   
 const CKEditor = lazy(() => import("@ckeditor/ckeditor5-react").then(module => ({ default: module.CKEditor })));
-const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
+// const ClassicEditor = lazy(() => import("@ckeditor/ckeditor5-build-classic"));
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [state, setState] = useState({ open: false });
@@ -163,7 +168,7 @@ useEffect(() => {
             </div>
             <div className="mb-4">
             <Suspense fallback={<div>Loading...</div>}>
-            <CKEditor
+            <LazyCKEditor
         data={content}
         editor={ClassicEditor}
         config={{
