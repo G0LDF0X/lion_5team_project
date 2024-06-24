@@ -102,7 +102,13 @@ function QAUpdateScreen() {
   const cancelHandler = () => {
     navigate(`/qna/`); // Q&A 리스트 페이지로 이동
   };
-
+  useEffect(() => {
+    if(qna && qna.title) {
+      setTitle(qna.title)
+      setEditorData(qna.content)
+    }
+  }
+  , [qna])
   return (
     <div className="container mx-auto py-8">
       <div className="bg-white shadow-md rounded-lg p-6">
