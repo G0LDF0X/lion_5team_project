@@ -79,13 +79,15 @@ const PostModal = ({ isOpen, onRequestClose }) => {
     formData.images.forEach((image) => {
       data.append('images', image);
     });
-    data.append('tags', JSON.stringify(formData.tags));
+    console.log('formData.tags:', formData.tags);
+    const validTags = formData.tags.filter(tag => tag !== null);
+    data.append('tags', JSON.stringify(validTags));
     data.append('title', formData.title);
     data.append('content', formData.content);
     dispatch(createBoard(data)).then(() => {
       window.location.href = '/board';
     });
-    
+
 
     // mainAxiosInstance.post('/board/create/', data, {
     //   headers: {

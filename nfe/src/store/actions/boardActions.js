@@ -42,6 +42,9 @@ export const listBoards = createAsyncThunk(
       const response = await mainAxiosInstance.get(url);
       const { boards, total_pages, current_page } = response.data;
 
+      // boards.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      boards.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
       return {
         data: boards,
         cacheKey,
@@ -99,6 +102,7 @@ export const createBoard = createAsyncThunk(
         Authorization: `Bearer ${userInfo.access}`,
       },
     });
+      console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(handleError(error));

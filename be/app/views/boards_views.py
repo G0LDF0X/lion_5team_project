@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 @api_view(['GET'])
 def get_Boards(request):
     page = request.query_params.get('page', 1)
-    boards = Board.objects.all()
+    boards = Board.objects.all().order_by('-created_at')
     paginator = Paginator(boards, 12)  # 12 boards per page
     paginated_boards = paginator.get_page(page)
     
@@ -149,26 +149,29 @@ def create_Board(request):
             content=request.data.get('content', ''),
             image_url=image_file,
             board_type=prediction,
-            created_at=current_time
+            created_at=current_time,
         )
 
         tags_data = json.loads(request.data.get('tags', '[]'))
         print(f"Tags received: {tags_data}")
         for tag in tags_data:
+            if 'tagId' not in tag:
+                    raise ValueError("tagId is required for each tag")
             Image_Tag.objects.create(
-                board=board,
-                x=tag['x'],
-                y=tag['y'],
-                tag=tag['tag'],
-                tagId=tag['tagId']
-            )
-
+                    board=board,
+                    x=tag['x'],
+                    y=tag['y'],
+                    tag=tag['tag'],
+                    tagId=tag['tagId'],
+                )
         serializer = BoardSerializer(board)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         print(f"Error occurred: {e}")
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 @api_view(['PUT', 'DELETE'])
 def handle_like(request, pk):

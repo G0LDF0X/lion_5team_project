@@ -57,38 +57,43 @@ function QAScreen() {
           Create Q&A
         </Button>
       </Box>
+    
+
       <Grid container spacing={4}>
-        {sortedQnas.map((qna) => (
-          <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
-            <Card className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-              {qna.image_url && (
-                <Link to={`/qna/detail/${qna.id}`}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={`${VITE_API_BASE_URL}${qna.image_url}`}
-                    alt={qna.title}
-                    className="object-cover"
-                  />
+      {sortedQnas.map((qna) => (
+        <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
+          <Card className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300" style={{ height: '100%' }}>
+            {qna.image_url && (
+              <Link to={`/qna/detail/${qna.id}`}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={`${VITE_API_BASE_URL}${qna.image_url}`}
+                  alt={qna.title}
+                  className="object-cover"
+                  style={{ height: '50%', width: '100%', objectFit: 'cover' }}
+                />
+              </Link>
+            )}
+            <CardContent>
+              <Typography gutterBottom variant="h6" component="div">
+                <Link to={`/qna/detail/${qna.id}`} className="no-underline text-gray-900 hover:text-blue-600">
+                  Q. {qna.title}
                 </Link>
-              )}
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                  <Link to={`/qna/detail/${qna.id}`} className="no-underline text-gray-900 hover:text-blue-600">
-                    {qna.title}
-                  </Link>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="div">
-                  <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "") }} className="text-gray-700" />
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                  {formatDateTime(qna.created_at)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="div">
+                <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "") }} className="text-gray-700" />
+              </Typography>
+              <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
+                {formatDateTime(qna.created_at)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+
+   
     </Container>
   );
 }

@@ -10,6 +10,8 @@ const MyBoard = ({ userId, url, userDetail }) => {
   const [myBoards, setMyBoards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBoardId, setSelectedBoardId] = useState(null);
+  const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const dispatch = useDispatch();
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -31,42 +33,46 @@ const MyBoard = ({ userId, url, userDetail }) => {
   }, [userId]);
 
   return (
-    <Container className="py-8">
-      <Typography variant="h4" className="mb-8 font-bold text-gray-800">
-        {userDetail.nickname}의 게시글
-      </Typography>
-      <BoardDetailModal open={modalOpen} handleClose={handleCloseModal} boardId={selectedBoardId} />
-      <Grid container spacing={4}>
-        {myBoards?.map((board) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={board.id} >
-            <Link key = {board.id} to={`/board/${board.id}`} >
-            <Card className="h-full shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-             
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={url + board.image_url}
-                  alt={board.title}
-                  className="object-cover w-full"
-                  
-                />
-              
-              <CardContent>
-               
-                  <Typography variant="h6" className="font-bold text-gray-800 mb-2" noWrap>
-                    {board.title.length > 20 ? `${board.title.substring(0, 20)}...` : board.title}
-                  </Typography>
-               
-                <Typography variant="body2" className="text-gray-600">
-                  {board.content.length > 30 ? `${board.content.substring(0, 30)}...` : board.content}
-                </Typography>
-              </CardContent>
-            </Card>
-            </Link>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+    <div className="container mx-auto p-4">
+      <div className="container mx-auto py-8">
+          <Typography variant="h4" className="mb-8 font-bold text-gray-800">
+            {userDetail.nickname || userDetail.username }의 게시글
+          </Typography>
+                
+    {myBoards.length === 0 ? (
+            <div className="w-full p-4 text-center">
+              <div className="text-center bg-white shadow-md rounded-lg  mb-5 mt-5 p-4 max-w-xxl mx-auto">
+                <h1 className="mb-8 mt-8 text-center text-xl text-gray-700">
+                  작성한 게시물이 없습니다.
+                </h1>
+            </div>
+            </div>
+          ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {myBoards.map((board) => (
+              <Link key={board.id} to={`/board/${board.id}`}>
+                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <img className="w-full h-48 object-cover" src={VITE_API_BASE_URL + board.image_url} alt={board.title} />
+                  <div className="p-4">
+                      <h5 className="text-lg font-semibold mb-2">
+                        {board.title.length > 20
+                          ? `${board.title.substring(0, 20)}...`
+                          : board.title}
+                      </h5>
+                    <p className="text-gray-700">
+                      {board.content.length > 30
+                        ? `${board.content.substring(0, 30)}...`
+                        : board.content}
+                    </p>
+                  </div>
+                </div>
+                </Link>
+              ))}
+              </div>
+            )}
+            </div>
+            </div>
+    
   );
 };
 
