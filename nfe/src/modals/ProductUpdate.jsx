@@ -13,6 +13,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const [price, setPrice] = useState(product.price);
   console.log("PRODUCT:", product);
   console.log("PRODUCT.IMAGE_URL:", product.image_url);
+  const [id, setId] = useState(product.id);
   const [image, setImage] = useState(product.image_url);
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -30,6 +31,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
 
   useEffect(() => {
     if (product) {
+      setId(product.id);
       setName(product.name);
       setPrice(product.price);
       setCategory(product.category ? product.category_id : "");
@@ -46,6 +48,7 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
   const submitHandler = (e) => {
     e.preventDefault();
     const product = {
+      id,
       name,
       price,
       image,
@@ -60,19 +63,10 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
     
   };
 
-  const [chipData, setChipData] = useState([]);
-  const handleClick = (chipValue) => {
-    if (chipData.includes(chipValue)) {
-      setChipData((chipData) => chipData.filter((chip) => chip !== chipValue));
-    } else {
-      setChipData((chipData) => [...chipData, chipValue]);
-    }
+  const [chipData, setChipData] = useState(null)
+  const handleClick = (tagId) => {
+    setChipData(prevChipData => prevChipData === tagId ? null : tagId);
   };
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chipData) => chipData.filter((chip) => chip !== chipToDelete));
-  };
-
   const filteredTags = tags.filter(tag => tag.category_id === category);
 
   return (
@@ -173,15 +167,16 @@ function ProductUpdateModal({ isOpen, onClose, updateProduct, product }) {
                   key={tag.id}
                   label={tag.name}
                   onClick={() => handleClick(tag.id.toString())}
-                  onDelete={() => handleDelete(tag.id.toString())}
-                  deleteIcon={chipData.includes(tag.id.toString()) ? <Delete /> : <Done />}
+                  color={chipData === tag.id.toString() ? "primary" : "default"}
+                  icon={chipData === tag.id.toString() ? <Delete /> : <Done />}
+
                 />
               ))}
             </Stack>
           </FormControl>
           <div className="mb-4"/>
           <Button type="submit" variant="contained" color="primary" className="w-full">
-            Create
+            Update
           </Button>
         </form>
       </Box>

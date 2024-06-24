@@ -132,7 +132,7 @@ export const updateProduct = createAsyncThunk(
   async (product, { rejectWithValue }) => {
     try {
       const res = await mainAxiosInstance.put(
-        `/items/update/${product.id}`,
+        `/items/update/${product.id}/`,
         { product },
         {
           headers: {

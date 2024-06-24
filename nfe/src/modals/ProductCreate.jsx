@@ -36,25 +36,13 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
     onClose();
   };
 
-  const [chipData, setChipData] = useState([]);
-  const handleClick = (chipValue) => {
-    if (chipData.includes(chipValue)) {
-      setChipData((chipData) => chipData.filter((chip) => chip !== chipValue));
-    } else {
-      setChipData((chipData) => [...chipData, chipValue]);
-    }
-  };
-
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chipData) => chipData.filter((chip) => chip !== chipToDelete));
+  const [chipData, setChipData] = useState(null);
+  const handleClick = (tagId) => {
+    setChipData(prevChipData => prevChipData === tagId ? null : tagId);
   };
 
   const filteredTags = tags.filter(tag => tag.category_id === category);
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-    console.log("Selected Category ID:", e.target.value);  // 선택한 카테고리 ID 확인
-  };
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -115,7 +103,7 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
             <InputLabel>Category</InputLabel>
             <Select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => setCategory(e.target.value )}
               label="Category"
             >
               {categories.map((category) => ( 
@@ -144,9 +132,10 @@ function ProductCreateModal({ isOpen, onClose, createProduct}) {
                   key={tag.id}
                   label={tag.name}
                   onClick={() => handleClick(tag.id.toString())}
-                  onDelete={handleDelete(tag.id.toString())}
-                  delete={chipData.includes(tag.id.toString()) ? <Delete /> : <Done />}
-                />
+                  icon = {chipData === tag.id.toString() ?  <Delete />:<Done /> }
+                  >
+
+                </Chip>
               ))}
             </Stack>
 

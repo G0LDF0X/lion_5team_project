@@ -227,13 +227,12 @@ def item_details(request, pk):
 def create_item(request):
     user = User.objects.get(username=request.user)
     seller = Seller.objects.get(user_id=user)
-    tag_id= Tag.objects.get(id=1)
-    category = Category.objects.get(id=1)
+    print(tag_id.id)
     data = request.data
     item = Item.objects.create(
         seller_id = seller,
-        category_id = category, 
-        tag_id = tag_id,
+        category_id = Category.objects.get(id=request.data['category']), 
+        tag_id = Tag.objects.get(id=request.data['tag']),
         name = data['name'],
         price = data['price'],
         description = data['description'],
@@ -264,20 +263,40 @@ def search_Interaction(request):
 
 @api_view(['PUT'])
 def update_item(request, pk):
-    data = request.data
-    category = Category.objects.get(id=data['category'])
-    item = Item.objects.get(id=pk)
+    data = request.data.get('product', {})
+    print(data)
+    
+    try:
+        item = Item.objects.get(id=pk)
+    except Item.DoesNotExist:
+        return Response({"error": "Item not found"}, status=404)
 
-    item.name = data['name']
-    item.price = data['price']
-    item.category_id = category
-    item.description = data['description']
-    item.tag_id = Tag.objects.get(id=data['tag'][0])
+    # Update fields if they exist in the data
+    if 'name' in data:
+        item.name = data['name']
+    if 'price' in data:
+        item.price = data['price']
+    if 'description' in data:
+        item.description = data['description']
+    
+    if 'category' in data:
+        try:
+            category = Category.objects.get(id=data['category'])
+            item.category_id = category
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=400)
+    
+    if 'tag' in data:
+        try:
+            tag = Tag.objects.get(id=data['tag'])
+            item.tag_id = tag
+        except Tag.DoesNotExist:
+            return Response({"error": "Tag not found"}, status=400)
+
     item.save()
     serializer = SingleItemSerializer(item, many=False)
     update_itemindex(item)
     return Response(serializer.data)
-
 @api_view(['PUT'])
 def upload_image(request, pk):
     item = Item.objects.get(id=pk)
