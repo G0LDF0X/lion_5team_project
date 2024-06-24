@@ -213,11 +213,11 @@ function BoardDetailModal({ open, handleClose }) {
   };
 
   useEffect(() => {
-    if (replyCreated) {
+    if (reflySuccess) {
       setReplyCreated(false);
       dispatch(getBoardDetails(boardId));
     }
-  }, [replyCreated]);
+  }, [reflySuccess]);
 
   const submitHandler = (e) => {
     e.preventDefault();
