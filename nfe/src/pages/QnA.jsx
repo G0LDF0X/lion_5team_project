@@ -57,41 +57,8 @@ function QAScreen() {
           Create Q&A
         </Button>
       </Box>
-      {/* <Grid container spacing={4}>
-        {sortedQnas.map((qna) => (
-          <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
-            <Card className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300" style={{ width: '300px', height: '400px' }}>
-              {qna.image_url && (
-                <Link to={`/qna/detail/${qna.id}`}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={`${VITE_API_BASE_URL}${qna.image_url}`}
-                    alt={qna.title}
-                    className="object-cover"
-                  />
-                </Link>
-              )}
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                  <Link to={`/qna/detail/${qna.id}`} className="no-underline text-gray-900 hover:text-blue-600">
-                    {qna.title}
-                  </Link>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="div">
-                  <span dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "") }} className="text-gray-700" />
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ mt: 2 }}>
-                  {formatDateTime(qna.created_at)}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid> */}
+    
 
-
-      {/* 사용할 확률 높은 것 */}
       <Grid container spacing={4}>
       {sortedQnas.map((qna) => (
         <Grid item key={qna.id} xs={12} sm={6} md={4} lg={3}>
@@ -125,31 +92,6 @@ function QAScreen() {
         </Grid>
       ))}
     </Grid>
-
-
-
-{/* 그냥 나열 방법 */}
-{/*     
-<div>
-      {sortedQnas.map((qna, index) => (
-        <div key={qna.id} className="my-4 p-4">
-          <div className="mb-2">
-            <Typography variant="h6">
-              <Link to={`/qna/detail/${qna.id}`} className="no-underline text-gray-900 hover:text-blue-600">
-                {qna.title}
-              </Link>
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {formatDateTime(qna.created_at)}
-            </Typography>
-          </div>
-          <div>
-            <Typography variant="body2" color="textSecondary" dangerouslySetInnerHTML={{ __html: qna.content.replace(/<img[^>]*>/g, "") }} />
-           </div>
-          {index !== sortedQnas.length - 1 && <hr className="my-4 border-gray-300" />} {/* 마지막 항목이 아닐 경우에만 회색 선 추가 */}
-        {/* </div>
-      ))}
-    </div>  */}
 
    
     </Container>
