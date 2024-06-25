@@ -20,13 +20,17 @@ from operator import itemgetter
 import logging
 from django.core.cache import cache
 
-load_dotenv()
+# Construct the path to the .env file
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+
+# Load the .env file
+load_dotenv(dotenv_path=env_path)
 logging.basicConfig(level=logging.DEBUG)
 
-
-
 ca_cert_path = os.path.join(settings.BASE_DIR, 'certs/http_ca.crt')
+
 ELASTIC_PASSWORD = os.getenv('ELASTIC_PASSWORD')
+
 es = Elasticsearch(
     ['https://localhost:9200', 'https://127.0.0.1:9200'],
     basic_auth=('elastic', ELASTIC_PASSWORD),

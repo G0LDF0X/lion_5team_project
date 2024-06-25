@@ -45,7 +45,11 @@ from elasticsearch import Elasticsearch
 # from requests_aws4auth import AWS4Auth
 # import urllib3
 # Load environment variables
-load_dotenv()
+# Construct the path to the .env file
+env_path = os.path.join(os.path.dirname(__file__), '.env')
+
+# Load the .env file
+load_dotenv(dotenv_path=env_path)
 
 # Ensure correct Django setup
 sys.path.append(os.path.join(os.path.dirname(__file__), 'be'))
@@ -59,7 +63,7 @@ elastic_password = os.getenv('ELASTIC_PASSWORD', 'petpals')
 # urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Path to the http_ca.crt file
-ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'elasticsearch.crt')
+ca_cert_path = os.path.join(settings.BASE_DIR, 'certs', 'http_ca.crt')
 print (ca_cert_path)
 
 # Debugging information
