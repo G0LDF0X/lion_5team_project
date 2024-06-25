@@ -133,3 +133,50 @@ export const updateQNAAnswer = createAsyncThunk(
     }
   }
 );
+
+export const deleteQNAAnswer = createAsyncThunk(
+  "qnaAnswerDelete/deleteQNAAnswer",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.delete(`/qna/delete/answer/${id}/`,{headers});
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);
+
+
+// export const updateQnAAnswer = createAsyncThunk(
+//   "qnaAnswerUpdate/updateQNAAnswer",
+//   async (answer, { getState, rejectWithValue }) => {
+//     try {
+//       const headers = getAuthHeaders(getState);
+//       const res = await mainAxiosInstance.put(
+//         `/qna/update/answer/${answer.id}`,{ answer },{headers});
+//       const data = await res.json();
+//       return data;
+//     } catch (error) {
+//       return rejectWithValue(handleError(error));
+//     }
+//   }
+// );
+
+export const updateQnAAnswer = createAsyncThunk(
+  "qnaAnswerUpdate/updateQNAAnswer",
+  async ({ id, content, title }, { getState, rejectWithValue }) => {
+    console.log("qnaActions id :", id);
+    console.log("qnaActions content :", content);
+    console.log("qnaActions title :", title);
+    try {
+      const headers = getAuthHeaders(getState);
+      const res = await mainAxiosInstance.put(
+        `/qna/update/answer/${id}/`, {content:content, title: title}, { headers });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(handleError(error));
+    }
+  }
+);

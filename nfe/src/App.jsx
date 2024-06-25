@@ -49,7 +49,7 @@ const routers = createBrowserRouter([
       { path: '/users/:id', element: <OtherUserProfile /> },
       { path: '/shipping', element: <ShippingScreen /> },
       { path: '/order/detail/:id', element: <OrderDetail /> },
-      {path: '/items/qna/update/:id', element: <ProductQnAUpdate />}
+      { path: '/items/qna/update/:id', element: <ProductQnAUpdate />},
     ]
   }
 ]);
